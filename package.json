@@ -1,0 +1,27 @@
+{
+  "name": "barcampkolin-web",
+  "version": "1.0.0",
+  "description": "Web Kolínského barcampu ======================",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barcampkolin/barcampkolin-web.git"
+  },
+  "author": "Redbit s.r.o.",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/barcampkolin/barcampkolin-web/issues"
+  },
+  "homepage": "https://github.com/barcampkolin/barcampkolin-web#readme",
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-less": "^1.4.1",
+    "grunt-contrib-uglify": "^3.3.0"
+  }
+}

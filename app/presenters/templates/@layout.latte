@@ -1,0 +1,134 @@
+{**
+ * @param string   $basePath web base path
+ * @param array    $flashes  flash messages
+ *}
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#001630">
+    <title>{ifset title}{include title|stripHtml} | {/ifset}Barcamp Kolín</title>
+    <script>
+        window.dataLayer = [
+            {'gtm.start': new Date().getTime(), event:'gtm.js'}
+        ];
+    </script>
+    <script src="https://www.googletagmanager.com/gtm.js?id=GTM-N5SJSZW" async></script>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700,800,900|Roboto:300,300i,400,400i,700,900&amp;subset=latin-ext"
+          rel="stylesheet">
+    <link rel="stylesheet" href="{$basePath}/css/main.css">
+    <link rel="shortcut icon" href="{$basePath}/favicon.ico">
+    <script src="{$basePath}/js/main.js" async></script>
+    <meta name="google-site-verification" content="GFEt0ZfmjMebcNwHAGLHD7Mg6JL5WEbmwnrcGgetftQ">
+</head>
+
+<body class="preload {ifset $isHp}hp{/ifset}">
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-N5SJSZW" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<header>
+    <div class="header">
+        <div class="header-inner">
+            <h1 class="logo">
+                <a href="{link :Homepage:}">
+                    <img src="{$basePath}/img/logo.png" width="310" height="70" alt="Barcamp Kolín">
+                </a>
+            </h1>
+
+            <div class="header-nav">
+                <ul class="nav">
+                    <li {ifCurrent Homepage:}class="active"{/ifCurrent}><a href="{link :Homepage:}"><span class="nav-link">Home</span></a></li>
+                    {*<li><a href="#"><span class="nav-link">O akci</span></a></li>
+                    <li><a href="#program" class="scrollto"><span class="nav-link">Program</span></a></li>
+                    <li><a href="prednasky.html"><span class="nav-link">Přednášky</span></a></li>
+                    <li><a href="#"><span class="nav-link">Workshopy</span></a></li>
+                    <li><a href="#"><span class="nav-link">Afterpárty</span></a></li>
+                    <li><a href="https://blog.barcampkolin.cz/"><span class="nav-link">Blog</span></a></li>*}
+                    <li {ifCurrent Homepage:contact}class="active"{/ifCurrent}><a href="{link :Homepage:contact}"><span class="nav-link">Kontakt</span></a></li>
+                </ul>
+            </div>
+
+            <div class="btn-mobile-menu-open-container">
+                <span class="btn-mobile-menu-open"><span></span></span>
+                <span class="item-text">Menu</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="flash-wrapper" n:if="$flashes">
+        <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
+    </div>
+
+    {include content}
+
+</main>
+
+<footer>
+    <div class="footer">
+        <div class="container">
+
+            <div class="row pure-g pure-p">
+                <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-4">
+                    <h4 class="footer-title">Registrace</h4>
+                    <ul class="footer-nav">
+                        {*<li><a href="#">Registrovat se přes Facebook</a></li>
+                        <li><a href="#">Registrovat se přes Twitter</a></li>*}
+                        <li><a href="{link :Sign:up}">Registrovat se e-mailem</a></li>
+                        <li><a href="{link :Sign:in}">Přihlášení</a></li>
+                    </ul>
+                </div>
+                {*<div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-4">
+                    <h4 class="footer-title">Přednášející</h4>
+                    <ul class="footer-nav">
+                        <li><a href="#">Hlasovat pro přednášejícího</a></li>
+                        <li><a href="#">Vypsat svou přednášku</a></li>
+                    </ul>
+                </div>*}
+                <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-4">
+                    <h4 class="footer-title">O Barcampu</h4>
+                    <ul class="footer-nav">
+                        {*<li><a href="https://blog.barcampkolin.cz/kulate-stoly/">Kulaté stoly</a></li>*}
+                        {*<li><a href="#">Chci být partner zlínského Barcampu</a></li>
+                        <li><a href="#">Chci být dobrovolník</a></li>
+                        <li><a href="#">O nás</a></li>*}
+                        <li><a href="{link :Homepage:contact}">Všechny kontakty</a></li>
+                    </ul>
+                </div>
+                <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-4">
+                    <h4 class="footer-title">Ke stažení</h4>
+                    <ul class="footer-nav">
+                        <li><a href="https://github.com/barcampkolin/barcampkolin-web/">Zdrojový kód webu (GitHub)</a></li>
+                        {*<li><a href="https://github.com/barcampkolin/barcampkolin-layout/tree/master/logo">Logo (GitHub)</a></li>*}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-social">
+                Jsme lapeni v sítích
+
+                <a href="{$socialUrls->facebook}" class="item">
+                    <span class="icon icon-facebook"></span>
+                </a>
+                <a href="{$socialUrls->twitter}" class="item">
+                    <span class="icon icon-twitter-1"></span>
+                </a>
+                <a href="{$socialUrls->youtube}" class="item">
+                    <span class="icon icon-youtube"><span class="path1"></span><span class="path2"></span></span>
+                </a>
+                <a href="{$socialUrls->instagram}" class="item">
+                    <span class="icon">
+                        <img src="{$basePath}/img/instagram.svg" alt="instagram" width="32" height="32">
+                    </span>
+                </a>
+            </div>
+
+            <div class="footer-copyright">
+                © 2018 Barcamp Kolín | <a href="https://www.redbit.cz/">Redbit s.r.o.</a> | Webdesign Roman Káčerek
+            </div>
+        </div>
+    </div>
+</footer>
+</body>
+</html>

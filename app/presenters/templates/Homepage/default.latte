@@ -1,0 +1,153 @@
+{block content}
+<div class="hero">
+    <div class="hero-slider-container">
+        <div class="hero-slider">
+            <div class="hero-slide" style="background-image: url('{$basePath}/img/hero-slider-1.jpg')"></div>
+        </div>
+    </div>
+
+    <div class="hero-content">
+        <div class="container">
+            <div class="hero-slogan">
+                <span class="dot-end">Sejdeme se u Kolína</span>
+            </div>
+            <h2 class="hero-subtitle">KREATIVNÍ KONFERENCE O PODNIKÁNÍ</h2>
+            <h1 class="hero-title">#barcampkolin</h1>
+            <span class="hero-date">{$eventDate|date:'j. n. Y \o\d G:i'}</span>
+            Podnikatelský inkubátor CEROP Kolín
+
+            <div class="hero-numbers">
+                <div class="item">
+                    <span class="item-number">{$counts->conferee}<span>+</span></span> účastníků
+                </div>
+                <div class="item">
+                    <span class="item-number">{$counts->talks}<span>+</span></span> přednášek
+                </div>
+                <div class="item">
+                    <span class="item-number">{$counts->workshops}</span> workshopů
+                </div>
+                <div class="item">
+                    <span class="item-number">{$counts->party}</span> afterparty
+                </div>
+            </div>
+
+            <div class="hero-buttons">
+                <a href="#" class="btn disabled btn-lg btn-brand btn-section">Registrace</a>
+                <a href="#" class="btn disabled btn-lg btn-default-bordered btn-section">Vypsat přednášku</a>
+            </div>
+
+            <span class="hero-note">Přihlašování a registrace přednášek už od <span>3. 4.</span> </span>
+            {*<span class="hero-note">Už se přihlásilo <span>219</span> účastníků a je vypsáno <span>32</span> přednášek</span>*}
+        </div>
+    </div>
+</div>
+
+<div class="icons-info">
+    <div class="item">
+        <span class="icon icon-calendar"></span>
+        <b>{$eventDate|date:'j. n. Y'}</b><br />
+        {$eventDate|date:'G:i'}
+    </div>
+    <div class="item">
+        <span class="icon icon-placeholder"></span>
+        <b>CEROP Kolín</b><br />
+        Sokolská 1095, 280 02 Kolín<br />
+        <a href="https://goo.gl/maps/oSkA2JYyEfS2">Zobrazit na mapě</a>
+    </div>
+    <div class="item">
+        <span class="icon icon-transport"></span>
+        <b>Parkoviště</b> s celkovou<br />
+        kapacitou 60 míst
+    </div>
+    <div class="item">
+        <span class="icon icon-cutlery"></span>
+        <b>Malé občerstvení zajištěno</b><br />
+        + v okolí jsou skvělé restaurace
+    </div>
+    <div class="item">
+        <span class="icon icon-meeting"></span>
+        <b>Doprovodný program: </b><br />
+        Bude upřesněno
+    </div>
+</div>
+
+{*<section>
+    <div class="wrapper bg-gray">
+        <div class="container-wide text-center">
+            <h1><span class="dot-end" id="schedule-scroll-point">Harmonogram</span></h1>
+            <div class="perex">Barcamp v České republice snad už nemusíme představovat. Tenhle je přesto speciální. Jako první se zaměřuje na téma podnikání.</div>
+
+            {control schedule}
+
+        </div>
+    </div>
+</section>*}
+
+{*<section>
+    <div class="wrapper">
+        <div class="container-wide text-center">
+            <h1><span class="dot-end">Registrace</span></h1>
+
+            {control signupButtons}
+
+            <div class="social">
+                <a href="{$socialUrls->facebook}" class="item">
+                    <span class="icon icon-facebook"></span>
+                    Facebook
+                </a>
+                <a href="{$socialUrls->twitter}" class="item">
+                    <span class="icon icon-twitter-1"></span>
+                    Twitter
+                </a>
+                <a href="{$socialUrls->youtube}" class="item">
+                    <span class="icon icon-youtube"><span class="path1"></span><span class="path2"></span></span>
+                    Youtube
+                </a>
+                <a href="{$socialUrls->instagram}" class="item">
+                        <span class="icon">
+                            <img src="{$basePath}/img/instagram.svg" alt="instagram" width="50" height="50">
+                        </span>
+                    Instagram
+                </a>
+            </div>
+
+            {control newsletterForm}
+
+        </div>
+    </div>
+</section>*}
+
+
+{*<section>
+    <div class="wrapper">
+        <div class="container">
+            <h1 class="lg"><span class="dot-end">Faq</span></h1>
+            {control faq}
+        </div>
+    </div>
+</section>*}
+
+
+
+{*<section>
+    <div class="wrapper">
+        <div class="container text-center">
+            <h1 class="lg"><span class="dot-end">Partneři</span></h1>
+
+            <div class="partners">
+                <div class="text-gray text-normal mt-sm">Generální partner</div>
+                <a href="#"><img src="{$basePath}/img/partners/bata.png" alt="Baťa"></a>
+
+                <div class="text-gray text-normal mt-sm">Hlavní partneři</div>
+                <a href="#"><img src="{$basePath}/img/partners/zlin.png" alt="Zlín"></a>
+                <a href="#"><img src="{$basePath}/img/partners/utb.png" alt="Univerzita Tomáše Bati"></a>
+
+                <div class="text-gray text-normal mt-sm">Mediální partneři</div>
+                <img src="{$basePath}/img/partners/medialni.png" alt="Mediální partneři">
+            </div>
+
+            <a href="#" class="link-arrow text-brand mt-md text-sm">Staňte se také partnerem zlínského Barcampu</a>
+
+        </div>
+    </div>
+</section>*}

@@ -1,0 +1,16 @@
+.git
+.gitignore
+.idea
+.rsync-exclude
+node_modules
+asset
+composer.json
+composer.lock
+deploy.sh
+package.json
+Gruntfile.js
+/docker
+/log/*
+/temp/*
+/tests
+/app/config/config.local.neon

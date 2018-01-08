@@ -1,0 +1,26 @@
+version: '3'
+services:
+    web:
+        build:
+            context: docker/web
+        ports:
+            - "8001:80"
+        volumes:
+            - ".:/var/www/html"
+        restart: always
+        environment:
+            - NETTE_DEBUG=1
+        depends_on:
+            - mysqldb
+    mysqldb:
+        image: mysql
+        container_name: barcampkolinweb_mysqldb_1
+        restart: always
+        ports:
+            - "8687:3306"
+        volumes:
+            - "./docker/mysql/data:/var/lib/mysql"
+            - "./docker/mysql/conf.d:/etc/mysql/conf.d"
+        environment:
+            - MYSQL_DATABASE=barcampkolin
+            - MYSQL_ROOT_PASSWORD=redbitmasters
