@@ -21,6 +21,17 @@ session:
     debugger: true
 
 
+security:
+    debugger: true
+
+
+http:
+    csp:                          # Content Security Policy
+        script-src: [
+            strict-dynamic, nonce # for browsers that support CSP2
+            self, unsafe-inline   # for browsers that support CSP1
+        ]
+
 database:
     dsn: 'mysql:host=barcampkolinweb_mysqldb_1;dbname=barcampkolin'
     user: root

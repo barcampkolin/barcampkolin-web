@@ -9,18 +9,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#001630">
     <title>{ifset title}{include title|stripHtml} | {/ifset}Barcamp Kolín</title>
-    <script>
+    <script n:nonce>
         window.dataLayer = [
             {'gtm.start': new Date().getTime(), event:'gtm.js'}
         ];
     </script>
-    <script src="https://www.googletagmanager.com/gtm.js?id=GTM-N5SJSZW" async></script>
+    <script src="https://www.googletagmanager.com/gtm.js?id=GTM-N5SJSZW" async n:nonce></script>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700,800,900|Roboto:300,300i,400,400i,700,900&amp;subset=latin-ext"
           rel="stylesheet">
     <link rel="stylesheet" href="{$basePath}/css/main.css">
     <link rel="shortcut icon" href="{$basePath}/favicon.ico">
-    <script src="{$basePath}/js/main.js" async></script>
     <meta name="google-site-verification" content="GFEt0ZfmjMebcNwHAGLHD7Mg6JL5WEbmwnrcGgetftQ">
+    <script src="{$basePath}/js/main.js" async n:nonce></script>
 </head>
 
 <body class="preload {ifset $isHp}hp{/ifset}">
