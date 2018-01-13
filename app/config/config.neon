@@ -26,11 +26,12 @@ security:
 
 
 http:
-    csp:                          # Content Security Policy
+    csp:
         script-src: [
-            strict-dynamic, nonce # for browsers that support CSP2
-            self, unsafe-inline   # for browsers that support CSP1
+            strict-dynamic, nonce
+            self, unsafe-inline
         ]
+
 
 database:
     dsn: 'mysql:host=barcampkolinweb_mysqldb_1;dbname=barcampkolin'
@@ -45,6 +46,7 @@ services:
     - App\Model\EventInfoProvider
     - App\Model\FaqManager
     - App\Model\NewsletterSignupManager
+    - App\Model\ScheduleManager
     - App\Model\UserManager
     - App\Forms\FormFactory
     - App\Forms\SignInFormFactory
