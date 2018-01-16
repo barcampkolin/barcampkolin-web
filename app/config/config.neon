@@ -42,6 +42,7 @@ database:
 
 services:
     - App\Model\ConfigManager
+    - App\Model\ConfereeManager
     - App\Model\EventInfoProvider
     - App\Model\FaqManager
     - App\Model\NewsletterSignupManager
@@ -49,6 +50,7 @@ services:
     - App\Model\UserManager
     - App\Model\WordpressPostReader(%wordpress%)
     - App\Forms\FormFactory
+    - App\Forms\RegisterConfereeForm
     - App\Forms\SignInFormFactory
     - App\Forms\SignUpFormFactory
     - App\Components\Faq\FaqFactory
