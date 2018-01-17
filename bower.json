@@ -1,0 +1,19 @@
+{
+  "name": "barcampkolin-web",
+  "description": "Web Kolínksého barcampu",
+  "authors": [
+    "Redbit s.r.o."
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/barcampkolin/barcampkolin-web.git",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "ublaboo-datagrid": "^5.5.3"
+  }
+}
