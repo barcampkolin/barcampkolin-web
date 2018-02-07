@@ -14,6 +14,7 @@ if (App\Model\DebugEnabler::isDebug()) {
 }
 
 $configurator->enableTracy(__DIR__ . '/../log', 'pan@jakubboucek.cz');
+\Tracy\Debugger::getLogger()->emailSnooze = '1 hour';
 
 $configurator->setTimeZone('Europe/Prague');
 $configurator->setTempDirectory(__DIR__ . '/../temp');
