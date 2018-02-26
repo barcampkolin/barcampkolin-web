@@ -3,10 +3,6 @@
 # https://nette.org/security-warning
 #
 parameters:
-    wordpress:
-        url: https://blog.zlinskybarcamp.cz/
-        maxItems: 4
-
 
 application:
     errorPresenter: Error
