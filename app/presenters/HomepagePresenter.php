@@ -47,21 +47,18 @@ class HomepagePresenter extends BasePresenter
      * @param SignupButtonsFactory $buttonsFactory
      * @param NewsletterSignupFactory $newsletterFormFactory
      * @param IFaqControlFactory $faqFactory
-     * @param FeedFactory $feedFactory
      */
     public function __construct(
         IScheduleControlFactory $scheduleFactory,
         SignupButtonsFactory $buttonsFactory,
         NewsletterSignupFactory $newsletterFormFactory,
-        IFaqControlFactory $faqFactory,
-        FeedFactory $feedFactory
+        IFaqControlFactory $faqFactory
     ) {
         parent::__construct();
         $this->scheduleFactory = $scheduleFactory;
         $this->buttonsFactory = $buttonsFactory;
         $this->newsletterFactory = $newsletterFormFactory;
         $this->faqFactory = $faqFactory;
-        $this->feedFactory = $feedFactory;
     }
 
 
@@ -91,15 +88,6 @@ class HomepagePresenter extends BasePresenter
     protected function createComponentSignupButtons()
     {
         return $this->buttonsFactory->create();
-    }
-
-
-    /**
-     * @return FeedControl
-     */
-    protected function createComponentFeed()
-    {
-        return $this->feedFactory->create();
     }
 
 

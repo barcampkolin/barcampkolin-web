@@ -78,7 +78,6 @@ services:
     - App\Model\ScheduleManager
     - App\Model\TalkManager
     - App\Model\UserManager
-    - App\Model\WordpressPostReader(%wordpress%)
 
     - App\Forms\FormFactory
     - App\Forms\ConfereeForm
@@ -88,7 +87,6 @@ services:
 
     - App\Components\Enumerator\IEnumeratorFormControlFactory
     - App\Components\Faq\IFaqControlFactory
-    - App\Components\Feed\FeedFactory
     - App\Components\Newsletter\NewsletterSignupFactory
     - App\Components\Program\IProgramControlFactory
     - App\Components\Schedule\IScheduleControlFactory
