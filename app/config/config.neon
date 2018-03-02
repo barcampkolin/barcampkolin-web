@@ -5,13 +5,13 @@
 parameters:
     database:
         driver: mysqli
-        host: zlinskybarcampweb_mysqldb_1
-        dbname: zlinskybarcamp
+        host: barcampkolinweb_mysqldb_1
+        dbname: barcampkolin
         user: root
         password: redbitmasters
         port: 3306
     facebook:
-        app_id: '332760430570010'
+        app_id: '166646454130570'
         app_secret: {app-secret}
         default_graph_version: v2.2
 
