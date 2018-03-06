@@ -145,14 +145,16 @@ h1,
 }
 
 .btn-brand {
-  color: @color-default;
+  color: @color-default-contrast;
   background-color: @color-brand;
 
   &:hover,
   &:focus {
+    color: @color-default;
     background-color: darken(@color-brand,7%);
   }
   &:hover:active {
+    color: @color-default;
     background-color: darken(@color-brand,10%);
   }
 }
