@@ -7,13 +7,13 @@
         <span class="item-title">Chci se účastnit</span>
 
         <div>
-            {*<span class="item-number">219</span> přihlášených účastníků.<br/>
-            Zbývá <span class="item-number">81</span> volných míst.*}
             Přihlášení je možné od {$dates->talks|date:'j. n. Y'}
         </div>
 
         <a n:tag-if="$features->conferee" href="{plink Sign:conferee}">
-            <span class="btn btn-sm btn-action {if !$features->conferee}disabled{/if}">CHCI PŘIJÍT NA BARCAMP</span>
+            <span class="btn btn-sm btn-action {if !$features->conferee}disabled{/if}" title="Přihlášení je možné od {$dates->talks|date:'j. n. Y'}">
+                CHCI PŘIJÍT NA BARCAMP
+            </span>
         </a>
     </div>
 
@@ -25,13 +25,13 @@
         <span class="item-title">Chci přednášet</span>
 
         <div>
-            {*<b>107 přednášek v hlasování a 60 z nich v programu.</b><br/>
-            Přednášky můžete vypsat do 31.1 2018, 23:59.*}
             Přihlášení je možné od {$dates->talks|date:'j. n. Y'}
         </div>
 
         <a n:tag-if="$features->talks" href="{plink Sign:talk}">
-            <span class="btn btn-sm btn-action {if !$features->talks}disabled{/if}">CHCI VYPSAT PŘEDNÁŠKU</span>
+            <span class="btn btn-sm btn-action {if !$features->talks}disabled{/if}" title="Vypsání přednášky je možné od {$dates->talks|date:'j. n. Y'}">
+                CHCI VYPSAT PŘEDNÁŠKU
+            </span>
         </a>
     </div>
 </div>
