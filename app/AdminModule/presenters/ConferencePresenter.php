@@ -76,8 +76,7 @@ class ConferencePresenter extends BasePresenter
                 "Registrace",
                 "Souhlas získán",
                 "Bio",
-                "Firma",
-                "Adresa"
+                "Firma"
             ],
             $delimiter,
             '"'
@@ -100,7 +99,6 @@ class ConferencePresenter extends BasePresenter
                 $conferee->consens ? $conferee->consens->format(\DateTime::ATOM) : null,
                 $conferee->bio,
                 isset($extended['company']) ? $extended['company'] : null,
-                isset($extended['address']) ? $extended['address'] : null,
             ], $delimiter, '"');
         }
 

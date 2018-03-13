@@ -48,13 +48,8 @@ class ConfereeForm
 
         $form->addGroup('Dotační dotazník');
 
-        $form->addText('extendedCompany', 'Firma/organizace/škola/instituce:')
-            ->setOption('description', 'Údaj nikde nezobrazujeme, slouží pouze pro potřeby sponzorování Barcampu')
-            ->setRequired('Prosíme, vyplňte jméno instituce, za kterou přicházíte');
-
-        $form->addTextArea('extendedAddress', 'Celá adresa bydlíště, nebo sídla firmy:')
-            ->setOption('description', 'Údaj nikde nezobrazujeme, slouží pouze pro potřeby sponzorování Barcampu')
-            ->setRequired('Prosíme, vyplňte jméno instituce, za kterou přicházíte (nebo adresu bydliště)');
+        $form->addText('extendedCompany', 'Firma či organizace:')
+            ->setOption('description', 'Odkud k nám přicházíte? (nepovinné, mlže se zobrazit na profilu)');
 
         $form->addGroup();
 
@@ -78,7 +73,6 @@ class ConfereeForm
             $conferee->bio = $values->bio;
             $conferee->extended = Json::encode([
                 'company' => $values->extendedCompany,
-                'address' => $values->extendedAddress,
             ]);
             if (isset($values->consens)) {
                 $conferee->consens = $values->consens ? new \DateTimeImmutable() : null;
@@ -93,7 +87,6 @@ class ConfereeForm
             try {
                 $extended = Json::decode($conferee->extended, Json::FORCE_ARRAY);
                 $values['extendedCompany'] = isset($extended['company']) ? $extended['company'] : null;
-                $values['extendedAddress'] = isset($extended['address']) ? $extended['address'] : null;
             } catch (JsonException $e) {
                 // void
             }
