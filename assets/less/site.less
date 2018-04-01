@@ -2195,5 +2195,95 @@ form .error {
       text-decoration: none;
     }
   }
+}
 
+.organizers {
+  overflow: hidden;
+  text-align: center;
+  .organizer {
+    display: inline-block;
+    text-align: center;
+    width: 297px;
+    h3 {
+      margin-bottom: 20px;
+    }
+    .networks li {
+      margin: 0 10px;
+    }
+    .photo-pic {
+      width: 180px;
+      height: 180px;
+      border-radius: 90px;
+      background-clip: padding-box;
+    }
+  }
+}
+
+ul.networks {
+  vertical-align: middle;
+  margin: 0; padding: 0;
+  overflow: hidden;
+  display: inline-block;
+
+  li {
+    list-style: none;
+    margin: 0; padding: 0;
+    float: left;
+    display: block;
+
+    a {
+      position: relative;
+      width: 50px; height: 50px;
+      border-radius: 25px;
+      display: inline-block;
+    }
+
+    &.fb a {
+      background-color: @facebook;
+    }
+    &.tw a {
+      background-color: @twitter;
+    }
+    &.ln a {
+      background-color: @linkedin;
+    }
+    &.gplus a {
+      background-color: @gplus;
+    }
+    &.email a {
+      background-color: @mail;
+    }
+
+    i {
+      background: transparent url(../img/choose-network.png) -9999px -9999px no-repeat;
+      position: absolute; top: 50%; left: 50%;
+      text-align: left; text-indent: -9999px;
+      display: inline-block;
+    }
+    &.fb i {
+      background-position: -1px -1px;
+      width: 12px; height: 25px;
+      margin: -12px 0 0 -6px;
+    }
+    &.tw i {
+      background-position: -15px -1px;
+      width: 24px; height: 20px;
+      margin: -10px 0 0 -12px;
+    }
+    &.ln i {
+      background-position: -41px -1px;
+      width: 24px; height: 22px;
+      margin: -12px 0 0 -11px;
+    }
+    &.gplus i {
+      background-position: -67px -1px;
+      width: 28px; height: 24px;
+      margin: -12px 0 0 -14px;
+    }
+    &.email i {
+      background-position: -97px -1px;
+      width: 24px; height: 18px;
+      margin: -8px 0 0 -11px;
+    }
+  }
 }
