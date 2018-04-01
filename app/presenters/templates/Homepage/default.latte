@@ -14,7 +14,7 @@
             <h2 class="hero-subtitle">Otevřená konference o podnikání, vzdělávání  a osobním rozvoji. Vstup zdarma.</h2>
             <h1 class="hero-title">#barcampkolin</h1>
             <span class="hero-date">{$dates->event|date:'j. n. Y \o\d G:i'}</span>
-            Podnikatelský inkubátor CEROP Kolín
+            <a href="#jak-k-nam" class="scrollto">Podnikatelský inkubátor CEROP Kolín</a>
 
             <div class="hero-numbers">
                 <div n:if="$counts->conferee" class="item">
@@ -131,6 +131,27 @@
                 </a>
             </div>
             {/if $socialCount}
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="cta-basic" id="jak-k-nam" style="background-image: url('../img/bg-cerop.jpg');">
+        <div class="container-condensed">
+            <h2>Kde se bude konat Barcamp Kolín?</h2>
+
+            <p>Barcamp bude probíhat v krásných renovovaných prostorech <a
+                        href="http://www.cestyapamatky.cz/kolinsko/kolin/zamek">bývalého kolínského zámku</a>, dnes
+                známých jako podnikatelský inkubátor CEROP. Přednášet se bude v horním a dolním historickém sálu.</p>
+
+            <div class="item-note"><a href="https://goo.gl/maps/au928nicYFC2" class="link-barcamp" target="_blank">Zobrazit CEROP na mapě</a></div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="wrapper">
+        <div class="container-wide text-center">
 
             {control newsletterForm}
 

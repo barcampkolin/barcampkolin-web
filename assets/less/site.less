@@ -210,6 +210,10 @@ body.no-js .js-only {
   .container {
     padding: 17rem 1.5rem 7rem 1.5rem;
   }
+
+  a {
+    color: white;
+  }
 }
 
 .hero-slide {
@@ -1981,13 +1985,17 @@ a.program-item {
   }
 }
 
-.cta-twitter {
+.cta-basic, .cta-twitter {
   padding: 5rem 0;
-  background: #0a64ab url('../img/bg-twitter.jpg') no-repeat center;
+  background: black no-repeat center;
   background-size: cover;
   text-align: center;
   color: @color-default;
   font-size: 2.4rem;
+
+  &.cta-twitter {
+    background: #0a64ab url('../img/bg-twitter.jpg') no-repeat center;
+  }
 
   .icon {
     display: block;
