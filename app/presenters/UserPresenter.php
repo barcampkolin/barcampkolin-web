@@ -17,6 +17,7 @@ use App\Orm\Talk;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\Http\IResponse;
+use Nette\Http\Response;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
