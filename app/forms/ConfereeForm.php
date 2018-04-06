@@ -49,7 +49,7 @@ class ConfereeForm
         $form->addGroup('Dotační dotazník');
 
         $form->addText('extendedCompany', 'Firma či organizace:')
-            ->setOption('description', 'Odkud k nám přicházíte? (nepovinné, mlže se zobrazit na profilu)');
+            ->setOption('description', 'Odkud k nám přicházíte? (nepovinné, může se zobrazit na profilu)');
 
         $form->addGroup();
 
