@@ -22,7 +22,7 @@
     <script src="{$basePath}/js/main.js?{=filemtime($wwwDir . '/js/main.js')}" async n:nonce></script>
     <meta name="google-site-verification" content="gpFlLqYslNgekLMtYLdBfTMo3JX7sYSjA02yTM6IMEc">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="{include title|striptags}">
+    <meta property="og:title" content="{block title|striptags}{/block}">
     <meta property="og:site_name" content="Barcamp Kolín">
     <meta property="og:url" content="{link //this}">
     <meta property="og:description" content="{block metaDescription|stripHtml|truncate:300}{/block}">
