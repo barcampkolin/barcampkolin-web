@@ -65,7 +65,7 @@
                 <div class="item-content">
                     <div class="item-content-perex js-lecture-control">
                         <h2 class="item-title">{$talk->title}</h2>
-                        <div class="item-text">{$talk->description|truncate:150}</div>
+                        <div class="item-text">{$talk->description|stripHtml|truncate:150}</div>
 
                         <div class="item-tags">
                             <span n:if="$category" class="item-tag"><span>{$category}</span></span>
