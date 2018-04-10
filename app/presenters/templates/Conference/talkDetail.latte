@@ -11,7 +11,7 @@
                     <div class="item-content">
                         <h2 class="item-title">{$talk->title}</h2>
                         <div class="item-text">
-                            {$talk->description|breaklines}
+                            {block metaDescription}{$talk->description|breaklines}{/block}
                         </div>
                         <h3>Komu je přednáška určena?</h3>
                         <div class="item-text">
@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="pure-u-1 pure-u-md-1-3 item-author">
-                    <img class="item-image" src="{$talk->conferee->pictureUrl}">
+                    <img class="item-image" src="{block ogImage}{$talk->conferee->pictureUrl}{/block}">
                     <div class="item-author-name">{$talk->conferee->name}</div>
                     <div n:ifcontent class="item-meta">{$talk->company}</div>
                     <div class="item-author-contact">
