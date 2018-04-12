@@ -26,6 +26,7 @@
                     <img class="item-image failover" src="{block ogImage}{$talk->conferee->pictureUrl}{/block}">
                     <div class="item-author-name">{$talk->conferee->name}</div>
                     <div n:ifcontent class="item-meta">{$talk->company}</div>
+                    <p n:ifcontent class="item-author-bio">{$talk->conferee->bio}</p>
                     <div class="item-author-contact">
                         <div class="item-social">
                             <a n:if="isset($extended['url']['facebook']) && $extended['url']['facebook']" href="{$extended['url']['facebook']}" target="_blank">
