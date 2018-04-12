@@ -91,5 +91,6 @@ services:
     - App\Components\Program\IProgramControlFactory
     - App\Components\Schedule\IScheduleControlFactory
     - App\Components\SignupButtons\SignupButtonsFactory
+    - App\Components\SpeakerList\ISpeakerListControlFactory
 
     router: App\RouterFactory::createRouter

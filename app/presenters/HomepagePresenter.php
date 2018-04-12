@@ -12,6 +12,8 @@ use App\Components\Schedule\ScheduleControl;
 use App\Components\Schedule\IScheduleControlFactory;
 use App\Components\SignupButtons\SignupButtonsControl;
 use App\Components\SignupButtons\SignupButtonsFactory;
+use App\Components\SpeakerList\ISpeakerListControlFactory;
+use App\Components\SpeakerList\SpeakerListControl;
 
 /**
  * Class HomepagePresenter
@@ -39,6 +41,10 @@ class HomepagePresenter extends BasePresenter
      * @var FeedFactory
      */
     private $feedFactory;
+    /**
+     * @var ISpeakerListControlFactory
+     */
+    private $speakerListFactory;
 
 
     /**
@@ -47,18 +53,21 @@ class HomepagePresenter extends BasePresenter
      * @param SignupButtonsFactory $buttonsFactory
      * @param NewsletterSignupFactory $newsletterFormFactory
      * @param IFaqControlFactory $faqFactory
+     * @param ISpeakerListControlFactory $speakerListFactory
      */
     public function __construct(
         IScheduleControlFactory $scheduleFactory,
         SignupButtonsFactory $buttonsFactory,
         NewsletterSignupFactory $newsletterFormFactory,
-        IFaqControlFactory $faqFactory
+        IFaqControlFactory $faqFactory,
+        ISpeakerListControlFactory $speakerListFactory
     ) {
         parent::__construct();
         $this->scheduleFactory = $scheduleFactory;
         $this->buttonsFactory = $buttonsFactory;
         $this->newsletterFactory = $newsletterFormFactory;
         $this->faqFactory = $faqFactory;
+        $this->speakerListFactory = $speakerListFactory;
     }
 
 
@@ -106,5 +115,14 @@ class HomepagePresenter extends BasePresenter
     protected function createComponentFaq()
     {
         return $this->faqFactory->create();
+    }
+
+
+    /**
+     * @return SpeakerListControl
+     */
+    protected function createComponentSpeakerList()
+    {
+        return $this->speakerListFactory->create();
     }
 }
