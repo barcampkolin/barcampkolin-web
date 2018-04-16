@@ -4,12 +4,11 @@ namespace App\Presenters;
 
 use App\Components\Faq\FaqControl;
 use App\Components\Faq\IFaqControlFactory;
-use App\Components\Feed\FeedControl;
 use App\Components\Feed\FeedFactory;
 use App\Components\Newsletter\NewsletterSignupControl;
 use App\Components\Newsletter\NewsletterSignupFactory;
-use App\Components\Schedule\ScheduleControl;
 use App\Components\Schedule\IScheduleControlFactory;
+use App\Components\Schedule\ScheduleControl;
 use App\Components\SignupButtons\SignupButtonsControl;
 use App\Components\SignupButtons\SignupButtonsFactory;
 use App\Components\SpeakerList\ISpeakerListControlFactory;
