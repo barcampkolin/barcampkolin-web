@@ -9,6 +9,7 @@ use App\Model\ConfereeNotFound;
 use App\Model\EventInfoProvider;
 use App\Model\IdentityManager;
 use App\Model\IdentityNotFoundException;
+use App\Model\MailerManager;
 use App\Model\NoUserLoggedIn;
 use App\Model\RestoredUserIdentity;
 use App\Model\TalkManager;
@@ -71,6 +72,10 @@ class SignPresenter extends BasePresenter
      * @var EventInfoProvider
      */
     private $eventInfoProvider;
+    /**
+     * @var MailerManager
+     */
+    private $mailer;
 
 
     /**
@@ -85,6 +90,7 @@ class SignPresenter extends BasePresenter
      * @param UserManager $userManager
      * @param TalkManager $talkManager
      * @param EventInfoProvider $eventInfoProvider
+     * @param MailerManager $mailer
      */
     public function __construct(
         AuthenticatorProvider $authenticatorProvider,
@@ -96,7 +102,8 @@ class SignPresenter extends BasePresenter
         ConfereeManager $confereeManager,
         UserManager $userManager,
         TalkManager $talkManager,
-        EventInfoProvider $eventInfoProvider
+        EventInfoProvider $eventInfoProvider,
+        MailerManager $mailer
     ) {
         parent::__construct();
         $this->signInFormFactory = $signInFactory;
@@ -109,6 +116,7 @@ class SignPresenter extends BasePresenter
         $this->userManager = $userManager;
         $this->talkManager = $talkManager;
         $this->eventInfoProvider = $eventInfoProvider;
+        $this->mailer = $mailer;
     }
 
 
@@ -360,6 +368,8 @@ class SignPresenter extends BasePresenter
 
             $this->login($user);
             $this->removePartialLoginSession();
+
+            $this->mailer->getRegistrationMessage($user->email)->send();
 
             $this->flashMessage('Právě jste se zaregistrovali na Barcamp!');
             $this->restoreRequest($this->backlink);
