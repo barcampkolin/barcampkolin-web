@@ -106,20 +106,6 @@ class MailPresenter extends BasePresenter
 
 
     /**
-     * @param $recipient
-     * @throws EntityNotFound
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function renderSendVoteAnnounce($recipient)
-    {
-        $this->mailer->getVoteAnnounceMessage($recipient)->send();
-
-        $this->sendJson(["status"=>"OK"]);
-    }
-
-
-    /**
      * @param $id
      * @return array
      * @throws BadRequestException
