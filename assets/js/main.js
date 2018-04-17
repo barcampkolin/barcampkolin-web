@@ -438,6 +438,13 @@ barcamp.talkVote = function () {
         var $item = $button.closest('li');
         var url = $button.attr('href');
 
+        dataLayer.push({
+            'event': 'bck-talk-vote',
+            'action': 'vote-list',
+            'label': $button.data('id'),
+            'value': ($button.data('dir') == 'unvote') ? -1 : 1
+        });
+
         $.ajax({
             url: url,
             dataType: 'json'
