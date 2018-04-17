@@ -16,7 +16,11 @@ class MailDynamicLoader
         'registration' => [
             'title' => 'Registrace',
             'params' => [],
-        ]
+        ],
+        'vote-announce' => [
+            'title' => 'Ohlášení hlasování přednášek',
+            'params' => [],
+        ],
     ];
 
 

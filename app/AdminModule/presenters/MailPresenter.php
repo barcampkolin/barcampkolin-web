@@ -4,8 +4,8 @@ namespace App\AdminModule\Presenters;
 
 use App\Model\EntityNotFound;
 use App\Model\MailDynamicLoader;
+use App\Model\MailerManager;
 use Nette\Application\BadRequestException;
-use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Ublaboo\DataGrid\DataGrid;
@@ -16,15 +16,21 @@ class MailPresenter extends BasePresenter
      * @var MailDynamicLoader
      */
     private $mailLoader;
+    /**
+     * @var MailerManager
+     */
+    private $mailer;
 
 
     /**
      * MailPresenter constructor.
      * @param MailDynamicLoader $mailLoader
+     * @param MailerManager $mailer
      */
-    public function __construct(MailDynamicLoader $mailLoader)
+    public function __construct(MailDynamicLoader $mailLoader, MailerManager $mailer)
     {
         $this->mailLoader = $mailLoader;
+        $this->mailer = $mailer;
     }
 
 
@@ -47,6 +53,7 @@ class MailPresenter extends BasePresenter
 
         $grid->setDataSource($mails);
         $grid->addColumnLink('title', 'Typ e-mailu', 'edit', null, ['id']);
+        $grid->addAction('edit', 'Upravit')->setTitle('Upravit e-mail');
         $grid->addAction('view', 'Zobrazit')->setTitle('Zobrazit náhled e-mailu');
         $grid->setPagination(false);
     }
@@ -59,11 +66,7 @@ class MailPresenter extends BasePresenter
      */
     public function renderEdit($id)
     {
-        try {
-            $mail = $this->mailLoader->getMailById($id);
-        } catch (EntityNotFound $e) {
-            throw new BadRequestException('Tento e-mail nebyl nalezen', 404, $e);
-        }
+        $mail = $this->getMailById($id);
 
         $this->template->id = $id;
 
@@ -74,16 +77,61 @@ class MailPresenter extends BasePresenter
     }
 
 
+    /**
+     * @param $id
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Utils\JsonException
+     */
     public function renderView($id)
     {
-        try {
-            $mail = $this->mailLoader->getMailById($id);
-        } catch (EntityNotFound $e) {
-            throw new BadRequestException('Tento e-mail nebyl nalezen', 404, $e);
-        }
+        $this->forward('preview', ['id' => $id]); //temporary
+        $mail = $this->getMailById($id);
+    }
+
+
+    /**
+     * @param $id
+     * @throws BadRequestException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Utils\JsonException
+     */
+    public function renderPreview($id)
+    {
+        $mail = $this->getMailById($id);
 
         echo $mail['body'];
         $this->terminate();
+    }
+
+
+    /**
+     * @param $recipient
+     * @throws EntityNotFound
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Utils\JsonException
+     */
+    public function renderSendVoteAnnounce($recipient)
+    {
+        $this->mailer->getVoteAnnounceMessage($recipient)->send();
+
+        $this->sendJson(["status"=>"OK"]);
+    }
+
+
+    /**
+     * @param $id
+     * @return array
+     * @throws BadRequestException
+     * @throws \Nette\Utils\JsonException
+     */
+    private function getMailById($id)
+    {
+        try {
+            return $this->mailLoader->getMailById($id);
+        } catch (EntityNotFound $e) {
+            throw new BadRequestException('Tento e-mail nebyl nalezen', 404, $e);
+        }
     }
 
 

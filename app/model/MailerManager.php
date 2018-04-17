@@ -7,6 +7,7 @@ use App\Mails\ITemplate;
 use App\Mails\MessageLatteTemplate;
 use App\Mails\MessageStringTemplate;
 use App\Mails\RegistrationMessage;
+use App\Mails\VoteAnnounceMessage;
 use Latte;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
@@ -50,12 +51,30 @@ class MailerManager
     /**
      * @param $recipient
      * @return RegistrationMessage
+     * @throws EntityNotFound
+     * @throws \Nette\Utils\JsonException
      */
     public function getRegistrationMessage($recipient)
     {
         $mail = $this->mailLoader->getMailById('registration');
 
         $message = new RegistrationMessage($recipient, $mail);
+        $message->setManager($this);
+        return $message;
+    }
+
+
+    /**
+     * @param $recipient
+     * @return VoteAnnounceMessage
+     * @throws EntityNotFound
+     * @throws \Nette\Utils\JsonException
+     */
+    public function getVoteAnnounceMessage($recipient)
+    {
+        $mail = $this->mailLoader->getMailById('vote-announce');
+
+        $message = new VoteAnnounceMessage($recipient, $mail);
         $message->setManager($this);
         return $message;
     }
