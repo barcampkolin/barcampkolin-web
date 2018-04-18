@@ -7,6 +7,7 @@ use App\Mails\ITemplate;
 use App\Mails\MessageLatteTemplate;
 use App\Mails\MessageStringTemplate;
 use App\Mails\RegistrationMessage;
+use App\Mails\ResetPasswordMessage;
 use App\Mails\VoteAnnounceMessage;
 use Latte;
 use Nette\Mail\IMailer;
@@ -59,6 +60,14 @@ class MailerManager
         $mail = $this->mailLoader->getMailById('registration');
 
         $message = new RegistrationMessage($recipient, $mail);
+        $message->setManager($this);
+        return $message;
+    }
+
+
+    public function getResetPasswordMessage($recipient, $tokenUrl)
+    {
+        $message = new ResetPasswordMessage($recipient, $tokenUrl);
         $message->setManager($this);
         return $message;
     }

@@ -22,6 +22,8 @@ abstract class BaseMessage
      */
     protected $subject;
 
+    protected $parameters = [];
+
 
     /**
      * @param string $recipient
@@ -37,7 +39,26 @@ abstract class BaseMessage
      */
     public function getTemplateParameters()
     {
-        return [];
+        return $this->parameters;
+    }
+
+
+    /**
+     * @param array $parameters
+     */
+    public function setTemplateParameters($parameters)
+    {
+        $this->parameters = $parameters;
+    }
+
+
+    /**
+     * @param string $name
+     * @param string $value
+     */
+    public function addTemplateParameter($name, $value)
+    {
+        $this->parameters[$name] = $value;
     }
 
 

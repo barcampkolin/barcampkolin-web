@@ -84,7 +84,7 @@ services:
     - App\Model\EventInfoProvider
     - App\Model\EnumeratorManager
     - App\Model\IdentityManager
-    - App\Model\MailerManager(%mail%, %tempDir%)
+    - App\Model\MailerManager(%mail%, '%tempDir%/cache')
     - App\Model\MailDynamicLoader
     - App\Model\NewsletterSignupManager
     - App\Model\ScheduleManager

@@ -3,7 +3,9 @@
 namespace App\Presenters;
 
 use App\Forms;
+use App\Model\AuthenticationException as AppAuthenticationException;
 use App\Model\Authenticator\AuthenticatorProvider;
+use App\Model\Authenticator\Email as EmailAuthenticator;
 use App\Model\ConfereeManager;
 use App\Model\ConfereeNotFound;
 use App\Model\EventInfoProvider;
@@ -76,6 +78,10 @@ class SignPresenter extends BasePresenter
      * @var MailerManager
      */
     private $mailer;
+    /**
+     * @var EmailAuthenticator
+     */
+    private $authenticator;
 
 
     /**
@@ -91,6 +97,7 @@ class SignPresenter extends BasePresenter
      * @param TalkManager $talkManager
      * @param EventInfoProvider $eventInfoProvider
      * @param MailerManager $mailer
+     * @param EmailAuthenticator $authenticator
      */
     public function __construct(
         AuthenticatorProvider $authenticatorProvider,
@@ -103,7 +110,8 @@ class SignPresenter extends BasePresenter
         UserManager $userManager,
         TalkManager $talkManager,
         EventInfoProvider $eventInfoProvider,
-        MailerManager $mailer
+        MailerManager $mailer,
+        EmailAuthenticator $authenticator
     ) {
         parent::__construct();
         $this->signInFormFactory = $signInFactory;
@@ -117,6 +125,7 @@ class SignPresenter extends BasePresenter
         $this->talkManager = $talkManager;
         $this->eventInfoProvider = $eventInfoProvider;
         $this->mailer = $mailer;
+        $this->authenticator = $authenticator;
     }
 
 
@@ -276,6 +285,174 @@ class SignPresenter extends BasePresenter
 
     /**
      *
+     */
+    public function renderResetPasswordSent($email)
+    {
+        $domain = substr(strrchr($email, "@"), 1);
+
+        $this->template->mailUrl = $this->getMailboxByDomain($domain);
+    }
+
+
+    private function getMailboxByDomain($domain)
+    {
+        switch ($domain) {
+            case 'gmail.com':
+                return 'https://mail.google.com/';
+                break;
+            case 'seznam.cz':
+            case 'email.cz':
+            case 'post.cz':
+                return 'https://email.seznam.cz/';
+                break;
+            case 'outlook.cz':
+            case 'outlook.com':
+            case 'hotmail.com':
+                return 'https://outlook.live.com/';
+                break;
+        }
+
+        getmxrr($domain, $mxhosts);
+
+        if (isset($mxhosts[0])) {
+            if (preg_match('/google\.com$/', $mxhosts[0])) {
+                return 'https://mail.google.com/';
+            } elseif (preg_match('/seznam\.cz$/', $mxhosts[0])) {
+                return 'https://email.seznam.cz/';
+            } elseif (preg_match('/outlook\.com$/', $mxhosts[0])) {
+                return 'https://outlook.live.com/';
+            }
+        }
+
+        return 'https://'.$domain;
+    }
+
+
+    /**
+     * @return Form
+     */
+    protected function createComponentResetPasswordForm()
+    {
+        $form = new Form();
+
+        $form->addEmail('email', 'E-mail')
+            ->setRequired('Vyplňte prosím e-mail');
+
+        $form->addSubmit('submit', 'Odeslat žádost o nové heslo')
+            ->setOption('itemClass', 'text-center')
+            ->getControlPrototype()->setName('button')
+            ->setText('Odeslat žádost o nové heslo');
+
+        $form->onSuccess[] = function (Form $form, $values) {
+            try {
+                $this->submitResetPasswordToken($values->email);
+            } catch (IdentityNotFoundException $e) {
+                $form['email']->addError('Na tento e-mail není nikdo registrován, nemůžeme mu tedy ani poslat heslo');
+            }
+        };
+
+        return $form;
+    }
+
+
+    /**
+     * @param string $email
+     * @throws IdentityNotFoundException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Utils\JsonException
+     */
+    public function submitResetPasswordToken($email)
+    {
+        $token = $this->authenticator->createResetPasswordToken($email);
+
+        $tokenUrl = $this->link('//resetPasswordConfirm', ['email' => $email, 'resetToken' => $token]);
+
+        $this->mailer->getResetPasswordMessage($email, $tokenUrl)->send();
+
+        $this->redirect('resetPasswordSent', ['email' => $email]);
+    }
+
+
+    /**
+     * @param string $email
+     * @param string $resetToken
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Utils\JsonException
+     */
+    public function renderResetPasswordConfirm($email, $resetToken)
+    {
+        try {
+            $identity = $this->authenticator->getIdentityByResetPasswordToken($email, $resetToken);
+        } catch (AppAuthenticationException $e) {
+            Debugger::log($e);
+            $this->flashMessage('Omlouváme se, ale odkaz je neplatný, možná zastaralý. Prosím zkuste to znovu');
+            $this->redirect('resetPassword');
+        }
+
+        $this->template->username = $identity->user->name;
+
+        /** @var Form $form */
+        $form = $this['updatePasswordForm'];
+        $form->setDefaults([
+            'email' => $email,
+            'token' => $resetToken,
+        ]);
+    }
+
+
+    /**
+     * @return Form
+     */
+    protected function createComponentUpdatePasswordForm()
+    {
+        $form = new Form();
+
+        $form->addHidden('email');
+        $form->addHidden('token');
+
+        $form->addPassword('password', 'Nové heslo')
+            ->setOption('description', sprintf('alespoň %d znaků', Forms\SignUpFormFactory::PASSWORD_MIN_LENGTH))
+            ->setRequired('Vytvořte si prosím heslo')
+            ->addRule($form::MIN_LENGTH, null, Forms\SignUpFormFactory::PASSWORD_MIN_LENGTH);
+
+        $form->addSubmit('submit', 'Nastavit heslo')
+            ->setOption('itemClass', 'text-center')
+            ->getControlPrototype()->setName('button')
+            ->setText('Nastavit nové heslo');
+
+        $form->onSuccess[] = function (Form $form, $values) {
+            $this->resetPassword($values->email, $values->token, $values->password);
+        };
+
+        return $form;
+    }
+
+
+    /**
+     * @param $email
+     * @param $resetToken
+     * @param $password
+     * @throws \App\Model\TokenInvalidException
+     * @throws \App\Model\UserNotFoundException
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Utils\JsonException
+     */
+    public function resetPassword($email, $resetToken, $password)
+    {
+        $identity = $this->authenticator->getIdentityByResetPasswordToken($email, $resetToken);
+
+        $this->authenticator->invalidateResetPasswordToken($identity);
+
+        $this->authenticator->setPassword($identity, $password);
+
+        $this->flashMessage('Heslo bylo nastaveno, nyní se můžeš přihlásit.');
+
+        $this->redirect('in');
+    }
+
+
+    /**
+     *
      * @throws \Nette\Application\AbortException
      */
     public function actionOut()
@@ -333,8 +510,10 @@ class SignPresenter extends BasePresenter
          * @param Conferee $conferee
          * @throws AuthenticationException
          * @throws UserNotFound
+         * @throws \App\Model\EntityNotFound
          * @throws \Nette\Application\AbortException
          * @throws \Nette\Application\BadRequestException
+         * @throws \Nette\Utils\JsonException
          */
         $onSubmitCallback = function ($conferee) {
 
@@ -569,6 +748,9 @@ class SignPresenter extends BasePresenter
     }
 
 
+    /**
+     *
+     */
     private function removePartialLoginSession()
     {
         if ($session = $this->getPartialLoginSession()) {

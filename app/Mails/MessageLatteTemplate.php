@@ -16,7 +16,6 @@ class MessageLatteTemplate implements ITemplate
      */
     public function __construct($filename)
     {
-
         $this->filename = $filename;
     }
 
