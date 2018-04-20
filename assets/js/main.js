@@ -425,7 +425,7 @@ barcamp.avatarUploader = function () {
 };
 
 barcamp.talkVote = function () {
-    var $list = $('.lectures-list');
+    var $list = $('.lectures-list,.talk-detail');
 
     if($list.length === 0) {
         return;
@@ -435,14 +435,14 @@ barcamp.talkVote = function () {
         e.preventDefault();
         var $button = $(this);
         $button.addClass('disabled');
-        var $item = $button.closest('li');
+        var $item = $button.closest('.item-vote-box');
         var url = $button.attr('href');
 
         dataLayer.push({
             'event': 'bck-talk-vote',
             'action': 'vote-list',
             'label': $button.data('id'),
-            'value': ($button.data('dir') == 'unvote') ? -1 : 1
+            'value': ($button.data('dir') === 'unvote') ? -1 : 1
         });
 
         $.ajax({

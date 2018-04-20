@@ -26,6 +26,27 @@
                     <img class="item-image failover" src="{block ogImage}{$talk->conferee->pictureUrl}{/block}">
                     <div class="item-author-name">{$talk->conferee->name}</div>
                     <div n:ifcontent class="item-meta">{$talk->company}</div>
+
+                    <div n:ifcontent class="item-options item-vote-box">
+                        {if $features->show_vote}
+                            <span class="item-count">{$talk->votes}</span> hlasů
+                        {/if}
+                        <div n:ifcontent class="item-buttons">
+                            {if $allowVote}
+                                {if !$user->isLoggedIn()}
+                                    <a href="{link signToVote!}" class="btn btn-sm btn-secondary">Přihlas se a hlasuj</a>
+                                {else}
+                                    <a href="{link unvote!, talkId => $talk->id}" class="btn btn-sm btn-action-bordered vote-ajax is-voted" data-id="{$talk->id}" data-dir="unvote" {if !isset($votes[$talk->id])}style="display:none;"{/if}>Má můj hlas</a>
+                                    <a href="{link vote!, talkId => $talk->id}" class="btn btn-sm btn-secondary vote-ajax is-not-voted" data-id="{$talk->id}" data-dir="vote" {if isset($votes[$talk->id])}style="display:none;"{/if}>Dej mi svůj hlas!</a>
+                                {/if}
+                            {/if}
+
+                            {*<div class="show-full">*}
+                            {*<a href="#" class="btn btn-sm btn-action-bordered">Chci přijít</a>*}
+                            {*</div>*}
+                        </div>
+                    </div>
+
                     <p n:ifcontent class="item-author-bio">{$talk->conferee->bio}</p>
                     <div class="item-author-contact">
                         <div class="item-social">

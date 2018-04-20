@@ -177,6 +177,15 @@ class ConferencePresenter extends BasePresenter
 
         $this->template->talk = $talk;
         $this->template->extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
+        $this->template->allowVote = $this->eventInfoProvider->getFeatures()['vote'];
+
+        $votes = [];
+
+        if ($this->user->isLoggedIn()) {
+            $votes = $this->talkManager->getUserVotes($this->user->id);
+        }
+
+        $this->template->votes = $votes;
     }
 
 
