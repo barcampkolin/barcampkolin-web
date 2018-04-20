@@ -342,8 +342,6 @@ class ScheduleManager
     {
         $steps = $this->getSteps(true);
 
-        bdump($steps);
-
         foreach ($steps as $step) {
             if ($step['isNext']) {
                 foreach ($step['config'] as $config) {

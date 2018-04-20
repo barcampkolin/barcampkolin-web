@@ -2,7 +2,7 @@
 
 namespace App\Mails;
 
-class MessageLatteTemplate implements ITemplate
+class MessageLatteFileTemplate implements ITemplate
 {
     /**
      * @var string
@@ -11,7 +11,7 @@ class MessageLatteTemplate implements ITemplate
 
 
     /**
-     * MessageLatteTemplate constructor.
+     * MessageLatteFileTemplate constructor.
      * @param string $filename
      */
     public function __construct($filename)
