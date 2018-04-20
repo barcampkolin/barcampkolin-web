@@ -4,10 +4,12 @@ namespace App\Model;
 
 use App\Mails\IMessage;
 use App\Mails\ITemplate;
-use App\Mails\MessageLatteTemplate;
+use App\Mails\MessageLatteFileTemplate;
+use App\Mails\MessageLatteStringTemplate;
 use App\Mails\MessageStringTemplate;
 use App\Mails\RegistrationMessage;
 use App\Mails\ResetPasswordMessage;
+use App\Mails\UniversalDynamicMessage;
 use App\Mails\VoteAnnounceMessage;
 use Latte;
 use Nette\Mail\IMailer;
@@ -73,6 +75,18 @@ class MailerManager
     }
 
 
+    public function getDynamicMessage($recipient, $mailTemplateId, array $parameters = [])
+    {
+        $mail = $this->mailLoader->getMailById($mailTemplateId);
+        $layout = $this->mailLoader->getLayout();
+
+        $message = new UniversalDynamicMessage($recipient, $mail, $layout, $parameters);
+        $message->setManager($this);
+
+        return $message;
+    }
+
+
     /**
      * @param $recipient
      * @return VoteAnnounceMessage
@@ -94,16 +108,22 @@ class MailerManager
      */
     public function send(IMessage $message)
     {
-        /** @var ITemplate|MessageLatteTemplate|MessageStringTemplate $template */
+        /** @var ITemplate|MessageLatteFileTemplate|MessageStringTemplate $template */
         $template = $message->getTemplate();
 
         $mail = new Message();
 
-        if ($template instanceof MessageLatteTemplate) {
+        if ($template instanceof MessageLatteFileTemplate) {
             $latte = new Latte\Engine();
             $latte->setTempDirectory($this->tempdir);
 
             $body = $latte->renderToString($template->getFilename(), $message->getTemplateParameters());
+        } elseif ($template instanceof MessageLatteStringTemplate) {
+            $latte = new Latte\Engine();
+            $latte->setTempDirectory($this->tempdir);
+
+            $latte->setLoader(new Latte\Loaders\StringLoader($template->getTemplates()));
+            $body = $latte->renderToString('main', $message->getTemplateParameters());
         } else {
             $body = $template->getContent();
         }

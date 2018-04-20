@@ -23,6 +23,6 @@ class ResetPasswordMessage extends BaseMessage implements IMessage
      */
     public function getTemplate()
     {
-        return new MessageLatteTemplate(__DIR__ . '/templates/resetPassword.latte');
+        return new MessageLatteFileTemplate(__DIR__ . '/templates/resetPassword.latte');
     }
 }

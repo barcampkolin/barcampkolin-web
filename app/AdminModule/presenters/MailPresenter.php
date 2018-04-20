@@ -8,6 +8,7 @@ use App\Model\MailerManager;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
+use Nette\Utils\Json;
 use Ublaboo\DataGrid\DataGrid;
 
 class MailPresenter extends BasePresenter
@@ -59,6 +60,26 @@ class MailPresenter extends BasePresenter
     }
 
 
+    public function createComponentLayoutsDatagrid($name)
+    {
+        $grid = new DataGrid($this, $name);
+
+        $mails = [];
+
+        foreach ($this->mailLoader->getLayouts() as $key => $title) {
+            $mails[] = [
+                'id' => $key,
+                'title' => $title,
+            ];
+        }
+
+        $grid->setDataSource($mails);
+        $grid->addColumnLink('title', 'Layout', 'edit', null, ['id']);
+        $grid->addAction('edit', 'Upravit')->setTitle('Upravit e-mail');
+        $grid->setPagination(false);
+    }
+
+
     /**
      * @param string $id
      * @throws BadRequestException
@@ -66,13 +87,22 @@ class MailPresenter extends BasePresenter
      */
     public function renderEdit($id)
     {
-        $mail = $this->getMailById($id);
 
         $this->template->id = $id;
 
 
         /** @var Form $form */
         $form = $this['editForm'];
+
+        if ($id === 'layout') {
+            $mail = $this->mailLoader->getLayout();
+            $form->removeComponent($form['subject']);
+            $form->removeComponent($form['header']);
+            $form->removeComponent($form['preheader']);
+            $form->removeComponent($form['purpose']);
+        } else {
+            $mail = $this->getMailById($id);
+        }
         $form->setDefaults($mail);
     }
 
@@ -106,6 +136,23 @@ class MailPresenter extends BasePresenter
 
 
     /**
+     * @param $templateId
+     * @param $recipient
+     * @param string $parametersJson
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Utils\JsonException
+     */
+    public function renderSend($templateId, $recipient, $parametersJson = '{}')
+    {
+        $parameters = Json::decode($parametersJson, Json::FORCE_ARRAY);
+
+        $this->mailer->getDynamicMessage($recipient, $templateId, $parameters)->send();
+
+        $this->sendJson(['status' => 'ok']);
+    }
+
+
+    /**
      * @param $id
      * @return array
      * @throws BadRequestException
@@ -130,10 +177,23 @@ class MailPresenter extends BasePresenter
         $form = new Form();
 
         $form->addHidden('id');
-        $form->addText('subject', 'Předmět');
+        $form->addSubmit('submit', 'Uložit');
+
+        $form->addText('subject', 'Předmět e-mailu');
+
         $form->addTextArea('body', 'Tělo e-mailu', null, 20)
             ->setOption('description', 'Editace HTML');
-        $form->addSubmit('submit', 'Uložit');
+
+        $form->addText('header', 'Nadpis')
+            ->setOption('description', 'Zobrazí se v e-mailu jako velký nadpis (a propíše se technicky na víc míst)');
+
+        $form->addText('preheader', 'Náhledový text')
+            ->setOption('description', 'Pár slov, které někteří klienti mohou zobrazit v náhledu e-mailu');
+
+        $form->addText('purpose', 'Odůvodnění poslání e-mailu')
+            ->setOption('description', 'Zobrazuje se v patičce e-mailu (doporučeno v rámci GDPR)');
+
+        $form->addSubmit('submit2', 'Uložit');
 
         $form->addProtection();
 
@@ -148,12 +208,23 @@ class MailPresenter extends BasePresenter
      * @param ArrayHash $values
      * @throws EntityNotFound
      * @throws \Nette\Application\AbortException
+     * @throws \Nette\Utils\JsonException
      */
     public function save(Form $form, $values)
     {
         $id = $values->id;
-
-        $this->mailLoader->setMail($id, $values['subject'], $values['body']);
+        if ($id === 'layout') {
+            $this->mailLoader->setLayout($values['body']);
+        } else {
+            $this->mailLoader->setMail(
+                $id,
+                $values['subject'],
+                $values['body'],
+                $values['header'],
+                $values['preheader'],
+                $values['purpose']
+            );
+        }
 
         $this->flashMessage('Uloženo', 'success');
         $this->redirect('this');
