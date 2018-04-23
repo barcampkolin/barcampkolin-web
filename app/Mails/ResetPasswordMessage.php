@@ -2,27 +2,19 @@
 
 namespace App\Mails;
 
-class ResetPasswordMessage extends BaseMessage implements IMessage
+class ResetPasswordMessage extends UniversalDynamicMessage implements IMessage
 {
-
     /**
      * RegistrationMessage constructor.
      * @param string $recipient
+     * @param array $mail
      * @param string $tokenUrl
      */
-    public function __construct($recipient, $tokenUrl)
+    public function __construct($recipient, $mail, $tokenUrl)
     {
         $this->addRecipient($recipient);
-        $this->setSubject('Reset tvého hesla');
+        $this->setSubject($mail['subject']);
+        $this->setTemlateFromString($mail);
         $this->addTemplateParameter('tokenUrl', $tokenUrl);
-    }
-
-
-    /**
-     * @return ITemplate
-     */
-    public function getTemplate()
-    {
-        return new MessageLatteFileTemplate(__DIR__ . '/templates/resetPassword.latte');
     }
 }

@@ -123,13 +123,16 @@ class MailPresenter extends BasePresenter
 
     /**
      * @param $id
+     * @param string $parametersJson
      * @throws EntityNotFound
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function renderPreview($id)
+    public function renderPreview($id, $parametersJson = '{}')
     {
-        $message = $this->mailer->getDynamicMessage(null, $id);
+        $parameters = Json::decode($parametersJson, Json::FORCE_ARRAY);
+
+        $message = $this->mailer->getDynamicMessage(null, $id, $parameters);
 
         $body = $this->mailer->compileBody($message);
 

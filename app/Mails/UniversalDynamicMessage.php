@@ -11,25 +11,9 @@ class UniversalDynamicMessage extends BaseMessage implements IMessage
 
 
     /**
-     * RegistrationMessage constructor.
-     * @param string $recipient
      * @param array $mail
-     * @param $layout
-     * @param array $parameters
+     * @return string
      */
-    public function __construct($recipient, $mail, $layout, $parameters)
-    {
-        $this->addRecipient($recipient);
-        $this->setSubject($mail['subject']);
-        $this->setTemplateParameters($parameters);
-
-        $this->setTemplate(new MessageLatteStringTemplate([
-            'main' => $this->injectLatteConnectors($mail),
-            'layout' => $layout['body'],
-        ]));
-    }
-
-
     private function injectLatteConnectors($mail)
     {
 
@@ -68,4 +52,33 @@ EOT;
     {
         $this->template = $template;
     }
+
+
+    /**
+     * @param array $mail
+     * @param array $layout
+     */
+    public function setTemlateFromString($mail, $layout = null)
+    {
+        $template = new MessageLatteStringTemplate();
+
+        $template->setMainTemplate($this->injectLatteConnectors($mail));
+
+        if ($layout) {
+            $this->setLayout($layout);
+        }
+
+        $this->setTemplate($template);
+    }
+
+
+    /**
+     * @param array $layout
+     */
+    public function setLayout($layout)
+    {
+        $this->template->setLayout($layout['body']);
+    }
+
+
 }

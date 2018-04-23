@@ -2,48 +2,17 @@
 
 namespace App\Mails;
 
-class VoteAnnounceMessage extends BaseMessage implements IMessage
+class VoteAnnounceMessage extends UniversalDynamicMessage implements IMessage
 {
-    private $body;
-
-
     /**
-     * RegistrationMessage constructor.
+     * VoteAnnounceMessage constructor.
      * @param string $recipient
+     * @param array $mail
      */
-    public function __construct($recipient, $data)
+    public function __construct($recipient, $mail)
     {
         $this->addRecipient($recipient);
-        $this->setSubject($data['subject']);
-        $this->body = $data['body'];
+        $this->setSubject($mail['subject']);
+        $this->setTemlateFromString($mail);
     }
-
-
-    /**
-     * @return ITemplate
-     */
-    public function getTemplate()
-    {
-        return new MessageStringTemplate($this->body);
-    }
-
-
-    /**
-     * @return mixed
-     */
-    public function getBody()
-    {
-        return $this->body;
-    }
-
-
-    /**
-     * @param mixed $body
-     */
-    public function setBody($body)
-    {
-        $this->body = $body;
-    }
-
-
 }

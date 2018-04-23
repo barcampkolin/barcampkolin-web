@@ -26,6 +26,12 @@ class MailDynamicLoader
             'title' => 'Registrace',
             'params' => [],
         ],
+        'reset-password' => [
+            'title' => 'Reset hesla',
+            'params' => [
+                'tokenUrl' => 'URL na reset hesla'
+            ],
+        ],
         'vote-announce' => [
             'title' => 'Ohlášení hlasování přednášek',
             'params' => [],
