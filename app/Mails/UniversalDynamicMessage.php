@@ -48,7 +48,6 @@ EOT;
             ($mail['purpose'] ? "{block purpose}$mail[purpose]{/block}" : ''),
             $mail['body']
         );
-bdump($output);
         return $output;
     }
 

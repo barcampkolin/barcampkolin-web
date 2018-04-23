@@ -60,6 +60,10 @@ class MailPresenter extends BasePresenter
     }
 
 
+    /**
+     * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     */
     public function createComponentLayoutsDatagrid($name)
     {
         $grid = new DataGrid($this, $name);
@@ -109,28 +113,28 @@ class MailPresenter extends BasePresenter
 
     /**
      * @param $id
-     * @throws BadRequestException
      * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
      */
     public function renderView($id)
     {
         $this->forward('preview', ['id' => $id]); //temporary
-        $mail = $this->getMailById($id);
     }
 
 
     /**
      * @param $id
-     * @throws BadRequestException
+     * @throws EntityNotFound
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
     public function renderPreview($id)
     {
-        $mail = $this->getMailById($id);
+        $message = $this->mailer->getDynamicMessage(null, $id);
 
-        echo $mail['body'];
+        $body = $this->mailer->compileBody($message);
+
+        echo $body;
+
         $this->terminate();
     }
 
@@ -141,6 +145,7 @@ class MailPresenter extends BasePresenter
      * @param string $parametersJson
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
+     * @throws EntityNotFound
      */
     public function renderSend($templateId, $recipient, $parametersJson = '{}')
     {
@@ -169,10 +174,9 @@ class MailPresenter extends BasePresenter
 
 
     /**
-     * @param string $name
      * @return Form
      */
-    public function createComponentEditForm($name)
+    public function createComponentEditForm()
     {
         $form = new Form();
 

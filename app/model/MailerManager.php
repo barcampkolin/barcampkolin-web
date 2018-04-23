@@ -67,6 +67,11 @@ class MailerManager
     }
 
 
+    /**
+     * @param $recipient
+     * @param $tokenUrl
+     * @return ResetPasswordMessage
+     */
     public function getResetPasswordMessage($recipient, $tokenUrl)
     {
         $message = new ResetPasswordMessage($recipient, $tokenUrl);
@@ -75,6 +80,14 @@ class MailerManager
     }
 
 
+    /**
+     * @param $recipient
+     * @param $mailTemplateId
+     * @param array $parameters
+     * @return UniversalDynamicMessage
+     * @throws EntityNotFound
+     * @throws \Nette\Utils\JsonException
+     */
     public function getDynamicMessage($recipient, $mailTemplateId, array $parameters = [])
     {
         $mail = $this->mailLoader->getMailById($mailTemplateId);
@@ -108,10 +121,31 @@ class MailerManager
      */
     public function send(IMessage $message)
     {
+        $mail = new Message();
+        $body = $this->compileBody($message);
+
+        $mail->setHtmlBody($body);
+
+        $mail->setFrom($this->config['from']);
+        $mail->setSubject($message->getSubject());
+
+        foreach ($message->getRecipients() as $recipient) {
+            $mail->addTo($recipient);
+        }
+
+        $this->mailer->send($mail);
+    }
+
+
+    /**
+     * @param IMessage $message
+     * @return string
+     */
+    public function compileBody(IMessage $message)
+    {
         /** @var ITemplate|MessageLatteFileTemplate|MessageStringTemplate $template */
         $template = $message->getTemplate();
 
-        $mail = new Message();
 
         if ($template instanceof MessageLatteFileTemplate) {
             $latte = new Latte\Engine();
@@ -127,17 +161,7 @@ class MailerManager
         } else {
             $body = $template->getContent();
         }
-
-        $mail->setHtmlBody($body);
-
-        $mail->setFrom($this->config['from']);
-        $mail->setSubject($message->getSubject());
-
-        foreach ($message->getRecipients() as $recipient) {
-            $mail->addTo($recipient);
-        }
-
-        $this->mailer->send($mail);
+        return $body;
     }
 
 }
