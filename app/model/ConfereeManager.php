@@ -34,10 +34,29 @@ class ConfereeManager
 
 
     /**
+     * @param Conferee $conferee
+     */
+    public function remove(Conferee $conferee)
+    {
+        $this->confereeRepository->removeAndFlush($conferee);
+    }
+
+
+    /**
      * @return \Nextras\Orm\Collection\ICollection
      */
     public function findAll()
     {
         return $this->confereeRepository->findAll();
+    }
+
+
+    /**
+     * @param int $id
+     * @return Conferee|null
+     */
+    public function getById($id)
+    {
+        return $this->confereeRepository->getById($id);
     }
 }

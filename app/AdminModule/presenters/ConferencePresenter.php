@@ -3,12 +3,18 @@
 namespace App\AdminModule\Presenters;
 
 use App\Model\ConfereeManager;
+use App\Model\IdentityManager;
 use App\Model\TalkManager;
+use App\Model\UserManager;
 use App\Orm\Conferee;
+use App\Orm\Identity;
 use App\Orm\Program;
 use App\Orm\Talk;
+use App\Orm\UserRole;
 use DateInterval;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\HiddenField;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -25,22 +31,39 @@ class ConferencePresenter extends BasePresenter
      * @var TalkManager
      */
     private $talkManager;
+    /**
+     * @var IdentityManager
+     */
+    private $identityManager;
+    /**
+     * @var UserManager
+     */
+    private $userManager;
 
 
     /**
      * ConferencePreseneter constructor.
      * @param ConfereeManager $confereeManager
      * @param TalkManager $talkManager
+     * @param IdentityManager $identityManager
+     * @param UserManager $userManager
      */
-    public function __construct(ConfereeManager $confereeManager, TalkManager $talkManager)
-    {
+    public function __construct(
+        ConfereeManager $confereeManager,
+        TalkManager $talkManager,
+        IdentityManager $identityManager,
+        UserManager $userManager
+    ) {
         $this->confereeManager = $confereeManager;
         $this->talkManager = $talkManager;
+        $this->identityManager = $identityManager;
+        $this->userManager = $userManager;
     }
 
 
     /**
      * @param $name
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
     public function createComponentConfereeDatagrid($name)
     {
@@ -50,6 +73,156 @@ class ConferencePresenter extends BasePresenter
 
         $grid->addColumnText('name', 'Jméno');
         $grid->addColumnText('email', 'E-mail');
+        $grid->addAction('confereeEdit', 'Upravit')->setTitle('Upravit uživatele');
+    }
+
+
+    /**
+     * @param $id
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function renderConfereeEdit($id)
+    {
+        $conferee = $this->confereeManager->getById($id);
+
+        $this->validateConferee($conferee);
+
+        $this->template->conferee = $conferee;
+
+        /** @var HiddenField $idField */
+        $idField = $this['confereeDeleteForm']['id'];
+        $idField->setDefaultValue($id);
+
+        $this['confereeEditForm']->setDefaults([
+            'id' => $conferee->id,
+            'name' => $conferee->name,
+            'email' => $conferee->email,
+            'pictureUrl' => $conferee->pictureUrl,
+            'bio' => $conferee->bio,
+        ]);
+    }
+
+
+    /**
+     * @return Form
+     */
+    public function createComponentConfereeEditForm()
+    {
+        $form = new Form();
+
+        $form->addHidden('id');
+
+        $form->addText('name', 'Jméno')->setRequired();
+        $form->addEmail('email', 'E-mail')->setRequired();
+        $form->addText('pictureUrl', 'URL obrázku')
+            ->setOption('description', 'URL profilového obrázku.');
+        $form->addText('bio', 'Bio');
+
+
+        $form->addSubmit('submit', 'Uložit')->setOption('primary', true);
+
+        $form->addProtection();
+
+        $form->onSuccess[] = [$this, 'onConfereeEditFormSuccess'];
+
+        return $form;
+    }
+
+
+    /**
+     * @return Form
+     */
+    public function createComponentConfereeDeleteForm()
+    {
+        $form = new Form();
+
+        $form->addHidden('id');
+        $form->addSubmit('delete', 'Smazat')->setOption('primary', true);
+
+        $form->addProtection();
+
+        $form->onSuccess[] = [$this, 'onConfereeDeleteFormSuccess'];
+
+        return $form;
+    }
+
+
+    /**
+     * @param Form $form
+     * @param $values
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function onConfereeEditFormSuccess(Form $form, $values)
+    {
+        $id = $values->id;
+        $conferee = $this->confereeManager->getById($id);
+        $this->validateConferee($conferee);
+
+        $conferee->name = $values->name;
+        $conferee->email = $values->email;
+        $conferee->pictureUrl = $values->pictureUrl;
+        $conferee->bio = $values->bio;
+
+        $user = $conferee->user;
+
+        $user->name = $values->name;
+        $user->email = $values->email;
+        $user->pictureUrl = $values->pictureUrl;
+
+        $this->confereeManager->save($conferee);
+
+        $this->flashMessage('Uživatel uložen', 'success');
+        $this->redirect('conferee');
+    }
+
+
+    /**
+     * @param Form $form
+     * @param $values
+     * @throws \Nette\Application\AbortException
+     * @throws \Nette\Application\BadRequestException
+     */
+    public function onConfereeDeleteFormSuccess(Form $form, $values)
+    {
+        /** @var SubmitButton $delete */
+        $delete = $form['delete'];
+        if ($delete->isSubmittedBy()) {
+            $id = $values->id;
+            $conferee = $this->confereeManager->getById($id);
+            $this->validateConferee($conferee);
+            $this->deleteConferee($conferee);
+
+            $this->flashMessage('Uživatel smazán', 'success');
+        }
+        $this->redirect('conferee');
+    }
+
+
+    /**
+     * Remove user with all dependecies
+     * @param Conferee $conferee
+     */
+    private function deleteConferee(Conferee $conferee)
+    {
+        /** @var Talk $talk */
+        foreach ($conferee->talk as $talk) {
+            $this->talkManager->remove($talk);
+        }
+
+        /** @var Identity $identity */
+        foreach ($conferee->user->identity as $identity) {
+            $this->identityManager->remove($identity);
+        }
+
+        /** @var UserRole $role */
+        foreach ($conferee->user->role as $role) {
+            $this->userManager->removeRole($role);
+        }
+
+        $this->userManager->remove($conferee->user);
+
+        $this->confereeManager->remove($conferee);
     }
 
 
@@ -265,6 +438,9 @@ class ConferencePresenter extends BasePresenter
     }
 
 
+    /**
+     * @return array
+     */
     public function getProgramTypes()
     {
         return [
@@ -365,6 +541,10 @@ class ConferencePresenter extends BasePresenter
     }
 
 
+    /**
+     * @param null $id
+     * @throws \Nette\Application\BadRequestException
+     */
     public function renderProgramEdit($id = null)
     {
         if ($id === null) {
@@ -492,5 +672,17 @@ class ConferencePresenter extends BasePresenter
 
         $this->flashMessage('Uloženo', 'success');
         $this->redirect('program');
+    }
+
+
+    /**
+     * @param $conferee
+     * @throws \Nette\Application\BadRequestException
+     */
+    private function validateConferee($conferee)
+    {
+        if (!$conferee instanceof Conferee) {
+            $this->error('Tento účastník nebyl nalezen');
+        }
     }
 }

@@ -6,6 +6,7 @@ use App\Orm\IdentityRepository;
 use App\Orm\Orm;
 use App\Orm\User;
 use App\Orm\UserRepository;
+use App\Orm\UserRole;
 
 /**
  * Users management.
@@ -18,6 +19,9 @@ class UserManager
     /** @var IdentityRepository */
     private $identityRepository;
 
+    /** @var \App\Orm\UserRoleRepository */
+    private $userRoleRepository;
+
 
     /**
      * UserManager constructor.
@@ -27,6 +31,7 @@ class UserManager
     {
         $this->userRepository = $orm->user;
         $this->identityRepository = $orm->identity;
+        $this->userRoleRepository = $orm->role;
     }
 
 
@@ -46,6 +51,20 @@ class UserManager
     public function save(User $user)
     {
         $this->userRepository->persistAndFlush($user);
+    }
+
+
+    /**
+     * @param User $user
+     */
+    public function remove(User $user)
+    {
+        $this->userRepository->removeAndFlush($user);
+    }
+
+    public function removeRole(UserRole $role)
+    {
+        $this->userRoleRepository->removeAndFlush($role);
     }
 
 

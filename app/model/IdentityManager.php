@@ -79,4 +79,13 @@ class IdentityManager
     {
         $this->identityRepository->persistAndFlush($identity, $withCascade);
     }
+
+
+    /**
+     * @param Identity $identity
+     */
+    public function remove(Identity $identity)
+    {
+        $this->identityRepository->removeAndFlush($identity);
+    }
 }

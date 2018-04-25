@@ -55,6 +55,15 @@ class TalkManager
 
 
     /**
+     * @param Talk $talk
+     */
+    public function remove(Talk $talk)
+    {
+        $this->talkRepository->removeAndFlush($talk);
+    }
+
+
+    /**
      * @param Program $program
      */
     public function saveProgram(Program $program)
