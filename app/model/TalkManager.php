@@ -164,9 +164,9 @@ class TalkManager
     protected function recountVote($talkId)
     {
         $result = $this->database
-            ->query('SELECT COUNT(*) as `count` FROM `talk_votes` WHERE `talk_id` = ?', $talkId)
+            ->query('SELECT SUM(`value`) AS `value` FROM `talk_votes` WHERE `talk_id` = ?', $talkId)
             ->fetch();
-        $sum = $result['count'];
+        $sum = intval($result['value']);
 
         /** @var Talk $talk */
         $talk = $this->talkRepository->getById($talkId);
