@@ -438,9 +438,11 @@ barcamp.talkVote = function () {
         var $item = $button.closest('.item-vote-box');
         var url = $button.attr('href');
 
+        var isDetail = !! $item.closest('.talk-detail').length;
+
         dataLayer.push({
             'event': 'bck-talk-vote',
-            'action': 'vote-list',
+            'action': isDetail ? 'vote-detail' : 'vote-list',
             'label': $button.data('id'),
             'value': ($button.data('dir') === 'unvote') ? -1 : 1
         });
