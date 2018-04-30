@@ -320,6 +320,18 @@ class ConferencePresenter extends BasePresenter
         $grid->addColumnText('votes', 'Hlasy')
             ->setSortable();
 
+        $grid->addColumnCallback('votes', function ($column, $talk) {
+            /** @var Talk $talk */
+            $column->setRenderer(function () use ($talk) {
+                if ($talk->voteCoefficient != 0) {
+                    return $talk->votes . " (koef: $talk->voteCoefficient)";
+                } else {
+                    return $talk->votes;
+
+                }
+            });
+        });
+
 
         $grid->addColumnText('category', 'Kategorie')
             ->setReplacement($categories);
@@ -391,6 +403,10 @@ class ConferencePresenter extends BasePresenter
         $form->addTextArea('purpose', 'Pro koho je určena');
         $form->addSelect('category', 'Kategorie', $this->talkManager->getCategories());
         $form->addText('company', 'Firma');
+        $form->addText('voteCoefficient', 'Hlasovací koeficient')
+            ->setRequired('Hlasovací koeficient musí být vyplněn - zadejte 0.')
+            ->addRule(Form::INTEGER, 'Hlasovací koeficient musí být číslo')
+            ->setHtmlType('number');
 
         $form->addSubmit('submit', 'Odeslat')->setOption('primary', true);
 
@@ -432,6 +448,7 @@ class ConferencePresenter extends BasePresenter
         }
 
         $this->talkManager->save($talk);
+        $this->talkManager->recountVote($id);
 
         $this->flashMessage('Uloženo', 'success');
         $this->redirect('talks');

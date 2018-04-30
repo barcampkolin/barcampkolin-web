@@ -161,7 +161,7 @@ class TalkManager
     /**
      * @param int $talkId
      */
-    protected function recountVote($talkId)
+    public function recountVote($talkId)
     {
         $result = $this->database
             ->query('SELECT SUM(`value`) AS `value` FROM `talk_votes` WHERE `talk_id` = ?', $talkId)
@@ -170,7 +170,7 @@ class TalkManager
 
         /** @var Talk $talk */
         $talk = $this->talkRepository->getById($talkId);
-        $talk->votes = $sum;
+        $talk->votes = max(0, $sum + $talk->voteCoefficient);
         $this->talkRepository->persistAndFlush($talk);
     }
 
