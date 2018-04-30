@@ -11,8 +11,8 @@
                             <div class="item-image" style="background-image: url({$conferee->pictureUrl})"></div>
                             <div class="item-content">
                                 <h2 class="item-title">{$conferee->name}</h2>
-                                <span class="item-meta">{$conferee->bio|stripHtml|truncate:40}</span>
-                                <div class="item-text">{$talk->description|stripHtml|truncate:70}</div>
+                                <span class="item-meta" title="{$conferee->bio|stripHtml}">{$conferee->bio|stripHtml|truncate:40}</span>
+                                <div class="item-text" title="{$talk->description|stripHtml}">{$talk->description|stripHtml|truncate:70}</div>
                                 <span class="item-link">{$talk->title}</span>
                             </div>
                         </a>
