@@ -24,9 +24,31 @@ class DashboardPresenter extends BasePresenter
      * @var array
      */
     private $simpleConfigs = [
-        Event::COUNTS_CONFEREE => ['int', 'Počet účastníků', self::REQUIRED, 'Pozor, zobrazuje se na úvodní stránce'],
-        Event::COUNTS_TALKS => ['int', 'Počet přednášek', self::REQUIRED, 'Pozor, zobrazuje se na úvodní stránce'],
-        Event::COUNTS_WORKSHOPS => ['int', 'Počet workshopů', self::REQUIRED, 'Pozor, zobrazuje se na úvodní stránce'],
+        Event::COUNTS_CONFEREE => [
+            'int',
+            'Počet účastníků',
+            self::REQUIRED,
+            'Pozor, zobrazuje se na úvodní stránce'
+        ],
+
+        Event::COUNTS_TALKS => [
+            'int',
+            'Počet přednášek (prezentační počet)',
+            self::REQUIRED,
+            'Pozor, zobrazuje se na úvodní stránce'
+        ],
+        Event::COUNTS_TALKS_LIMIT => [
+            'int',
+            'Počet přednášek (skutečný limit)',
+            self::REQUIRED,
+            'V seznamu přednášek zobrazuje čáru, jsou-li přednášky řazeny podle hlasů. Nastavte 0 pro vypnutí.'
+        ],
+        Event::COUNTS_WORKSHOPS => [
+            'int',
+            'Počet workshopů',
+            self::REQUIRED,
+            'Pozor, zobrazuje se na úvodní stránce'
+        ],
         Event::COUNTS_WARMUPPARTY => [
             'int',
             'Počet warm-up párty',
@@ -55,11 +77,17 @@ class DashboardPresenter extends BasePresenter
         Event::FEATURE_TALK_EDIT => ['bool', 'Povolit editace zapsaných přednášek'],
         Event::FEATURE_VOTE => ['bool', 'Povolit hlasování přednášek'],
         Event::FEATURE_SHOW_VOTE => ['bool', 'Povolit zobrazení hlasů'],
-        Event::FEATURE_TALK_ORDER => ['select', 'Přednášky', self::NOFLAG, null, [
-            '' => 'Řazené podle přihlášení',
-            'random' => 'Řazené náhodně',
-            'vote' => 'Řazené podle hlasů',
-        ]],
+        Event::FEATURE_TALK_ORDER => [
+            'select',
+            'Přednášky',
+            self::NOFLAG,
+            null,
+            [
+                '' => 'Řazené podle přihlášení',
+                'random' => 'Řazené náhodně',
+                'vote' => 'Řazené podle hlasů',
+            ]
+        ],
         Event::FEATURE_PROGRAM => ['bool', 'Zobrazit program přednášek'],
         Event::FEATURE_REPORT => ['bool', 'Zobrazit výstupy (YouTube/Reporty)'],
     ];

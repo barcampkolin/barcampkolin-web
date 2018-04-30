@@ -101,11 +101,11 @@ class ConferencePresenter extends BasePresenter
         $this->template->allowVote = $this->eventInfoProvider->getFeatures()['vote'];
         $this->template->selectedLimit = false;
 
-        if ($sort === 'vote' && $this->eventInfoProvider->getFeatures()['show_vote']) {
-            $this->template->selectedLimit = $this->eventInfoProvider->getCounts()['talks'];
+        $talks_limit = $this->eventInfoProvider->getCounts()['talks_limit'];
+
+        if ($sort === 'vote' && $talks_limit > 0) {
+            $this->template->selectedLimit = $talks_limit;
         }
-
-
     }
 
 
