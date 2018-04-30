@@ -35,7 +35,9 @@
                 {var $conferee = $talk->conferee}
                 {var $extended = $talkInfo['extended']}
                 {var $category = $talkInfo['category']}
-            <li>
+                {var $isOver = $selectedLimit && $iterator->getCounter() > $selectedLimit}
+                {var $isFirstOver = $isOver && $iterator->getCounter() == $selectedLimit + 1}
+            <li n:class="$isOver ? old, $isFirstOver ? first">
                 <div class="item-header">
                     <span class="item-number">{$iterator->counter}</span>
                     <img src="{$conferee->pictureUrl}" alt="author" class="item-image failover" width="65" height="65">
