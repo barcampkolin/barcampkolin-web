@@ -285,7 +285,7 @@ class ConferencePresenter extends BasePresenter
         $csv = ob_get_clean();
 
         if ($msExcel) {
-            $csv = iconv("UTF-8", "WINDOWS-1250", $csv);
+            $csv = iconv("UTF-8", "WINDOWS-1250//IGNORE", $csv);
         }
 
         $fileDatePostfix = gmdate("Ymd.his");
@@ -318,6 +318,7 @@ class ConferencePresenter extends BasePresenter
     {
         $categories = $this->talkManager->getCategories();
         $rooms = $this->talkManager->getRooms();
+
 
         $grid = new DataGrid($this, $name);
         DataGrid::$icon_prefix = 'glyphicon glyphicon-';
