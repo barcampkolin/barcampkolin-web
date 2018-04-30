@@ -59,4 +59,13 @@ class ConfereeManager
     {
         return $this->confereeRepository->getById($id);
     }
+
+
+    /**
+     * @return int
+     */
+    public function getCount()
+    {
+        return $this->findAll()->countStored();
+    }
 }

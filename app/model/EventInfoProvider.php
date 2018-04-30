@@ -38,20 +38,24 @@ class EventInfoProvider
     const SCHEDULE_VISUAL_DATE_END = 'schedule.visualDate.end';
 
 
-
     /**
      * @var ConfigManager
      */
     private $config;
+    /**
+     * @var ConfereeManager
+     */
+    private $confereeManager;
 
 
     /**
      * EventInfoProvider constructor.
      * @param ConfigManager $config
      */
-    public function __construct(ConfigManager $config)
+    public function __construct(ConfigManager $config, ConfereeManager $confereeManager)
     {
         $this->config = $config;
+        $this->confereeManager = $confereeManager;
     }
 
 
@@ -95,8 +99,13 @@ class EventInfoProvider
      */
     public function getCounts()
     {
+        $confereeLimit = $this->config->get(self::COUNTS_CONFEREE);
+        $confereeCount = $this->getConfereeRegisteredCount();
+
         return ArrayHash::from([
-            'conferee' => $this->config->get(self::COUNTS_CONFEREE),
+            'conferee' => $confereeLimit,
+            'conferee_registered' => $confereeCount,
+            'conferee_left' => max(0, $confereeLimit - $confereeCount),
             'talks' => $this->config->get(self::COUNTS_TALKS),
             'workshops' => $this->config->get(self::COUNTS_WORKSHOPS),
             'warmupparty' => $this->config->get(self::COUNTS_WARMUPPARTY),
@@ -125,5 +134,11 @@ class EventInfoProvider
         $features['talks_show'] = $features['talks'] || $features['vote'] || $features['show_vote'];
 
         return $features;
+    }
+
+
+    public function getConfereeRegisteredCount()
+    {
+        return $this->confereeManager->getCount();
     }
 }
