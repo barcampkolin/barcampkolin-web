@@ -3,9 +3,11 @@
 
 <section>
     <div class="wrapper bg-gray">
-        <div class="container">
+        <div class="container text-center">
+            <span class="heading-subtitle"><a n:href="talks">« Zpět na seznam přednášek</a></span>
             <h1><span class="dot-end">Přednáška</span></h1>
-
+        </div>
+        <div class="container">
             <div class="pure-g talk-detail">
                 <div class="pure-u-1 pure-u-md-2-3">
                     <div class="item-content">
@@ -20,6 +22,14 @@
                         <div class="item-text">
                             {$talk->purpose|breaklines}
                         </div>
+
+                        {if $program}
+                            <h3>Kde se přednáška koná?</h3>
+                            <div class="item-text">
+                                Přednáška se koná <strong>od {$program['time']}</strong> v místnosti <strong>{$program['room']}</strong>.<br>
+                                <a n:href="program">Podívej se na celý program</a>
+                            </div>
+                        {/if}
                     </div>
                 </div>
                 <div class="pure-u-1 pure-u-md-1-3 item-author">

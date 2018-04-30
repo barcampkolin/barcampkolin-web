@@ -6,6 +6,7 @@ use App\Components\Program\IProgramControlFactory;
 use App\Model\EventInfoProvider;
 use App\Model\TalkManager;
 use App\Orm\Orm;
+use App\Orm\Program;
 use App\Orm\Talk;
 use App\Orm\TalkRepository;
 use Nette\Http\IResponse;
@@ -184,7 +185,20 @@ class ConferencePresenter extends BasePresenter
 
         $this->template->talk = $talk;
         $this->template->extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
-        $this->template->allowVote = $this->eventInfoProvider->getFeatures()['vote'];
+
+        $features = $this->eventInfoProvider->getFeatures();
+        $this->template->allowVote = $features['vote'];
+
+        $this->template->program = null;
+        if ($features['program'] && $talk->program->countStored()) {
+            /** @var Program $program */
+            $program = $talk->program->get()->fetch();
+
+            $this->template->program = [
+                'time' => $program->time->format('%H:%I'),
+                'room' => $this->talkManager->getRooms()[$program->room],
+            ];
+        }
 
         $votes = [];
 

@@ -3,6 +3,7 @@
 namespace App\Orm;
 
 use Nextras\Orm\Entity\Entity;
+use Nextras\Orm\Relationships\OneHasMany;
 
 /**
  * @property int                        $id                 {primary}
