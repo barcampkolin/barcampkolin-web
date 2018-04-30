@@ -469,20 +469,6 @@ class ConferencePresenter extends BasePresenter
 
 
     /**
-     * @return array
-     */
-    public function getProgramTypes()
-    {
-        return [
-            'talk' => 'Přednáška',
-            'coffee' => 'Coffee break',
-            'lunch' => 'Přestávka na oběd',
-            'custom' => 'Vlastní blok',
-        ];
-    }
-
-
-    /**
      * @param $name
      * @throws JsonException
      * @throws \App\Model\InvalidEnumeratorSetException
@@ -501,7 +487,7 @@ class ConferencePresenter extends BasePresenter
         $grid->setDataSource($program);
 
         $grid->addColumnText('type', 'Typ')
-            ->setReplacement($this->getProgramTypes());
+            ->setReplacement($this->talkManager->getProgramTypes());
 
         $grid->addColumnText('title', 'Název')->setRenderer(function ($row) {
             /** @var Program $row */
@@ -549,7 +535,7 @@ class ConferencePresenter extends BasePresenter
     {
         $talks = $this->talkManager->findAll();
 
-        $merged = $this->getProgramTypes();
+        $merged = $this->talkManager->getProgramTypes();
 
         unset($merged['talk']);
 

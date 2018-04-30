@@ -74,7 +74,10 @@ class ProgramControl extends Control
             }
 
             $minutes = $this->dateIntervalToMinutes($programItem->time);
-            $rooms[$programItem->room][$minutes] = new InternalProgramEnvelope($programItem);
+            $internalProgramEnvelope = new InternalProgramEnvelope($programItem);
+            $internalProgramEnvelope->setDefaultTitle($this->talkManager->getProgramTypes()[$programItem->type]);
+
+            $rooms[$programItem->room][$minutes] = $internalProgramEnvelope;
         }
 
         foreach ($rooms as $key => $cat) {

@@ -15,6 +15,11 @@ class InternalProgramEnvelope extends InternalProgram
      */
     private $program;
 
+    /**
+     * @var string
+     */
+    private $defaultTitle;
+
 
     /**
      * InternalProgramEnvelope constructor.
@@ -60,6 +65,8 @@ class InternalProgramEnvelope extends InternalProgram
     {
         if (empty($this->program->title) && $this->program->talk) {
             return $this->program->talk->title;
+        } elseif (empty($this->program->title)) {
+            return $this->defaultTitle;
         } else {
             return $this->program->title;
         }
@@ -85,5 +92,14 @@ class InternalProgramEnvelope extends InternalProgram
     public function getType()
     {
         return $this->program->type;
+    }
+
+
+    /**
+     * @param string $defaultTitle
+     */
+    public function setDefaultTitle($defaultTitle)
+    {
+        $this->defaultTitle = $defaultTitle;
     }
 }

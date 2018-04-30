@@ -231,8 +231,22 @@ class TalkManager
     {
         $choice = [];
         foreach (range(5, 120, 5) as $min) {
-            $choice[$min]= "$min minut";
+            $choice[$min] = "$min minut";
         }
         return $choice;
+    }
+
+
+    /**
+     * @return array
+     */
+    public function getProgramTypes()
+    {
+        return [
+            'talk' => 'Přednáška',
+            'coffee' => 'Coffee break',
+            'lunch' => 'Přestávka na oběd',
+            'custom' => 'Vlastní blok',
+        ];
     }
 }
