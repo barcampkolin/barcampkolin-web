@@ -61,6 +61,12 @@ class ConferencePresenter extends BasePresenter
     }
 
 
+    public function renderConferee()
+    {
+        $this->template->count = $this->confereeManager->findAll()->countStored();
+    }
+
+
     /**
      * @param $name
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
@@ -292,6 +298,12 @@ class ConferencePresenter extends BasePresenter
         echo $csv;
 
         $this->terminate();
+    }
+
+
+    public function renderTalks()
+    {
+        $this->template->count = $this->talkManager->findAll()->countStored();
     }
 
 

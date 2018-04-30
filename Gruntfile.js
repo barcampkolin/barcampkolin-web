@@ -30,6 +30,7 @@ module.exports = function(grunt) {
                         'assets/bower_components/ublaboo-datagrid/assets/dist/datagrid.css',
                         'assets/bower_components/ublaboo-datagrid/assets/dist/datagrid-spinners.css',
                         'assets/bower_components/bootstrap-select/dist/css/bootstrap-select.css',
+                        'assets/less/admin.less'
                     ]
                 }
             }

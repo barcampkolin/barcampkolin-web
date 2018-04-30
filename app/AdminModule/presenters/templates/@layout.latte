@@ -46,7 +46,7 @@
 
 <div class="container" style="margin-top:50px">
     <div class="page-header">
-        <h1>{block h1}Konfigurace{/block}</h1>
+        <h1>{block h1}{/block} {ifset #subtitle}<i>{block subtitle}{/block}</i>{/ifset}</h1>
     </div>
     <div n:foreach="$flashes as $flash" class="alert {if $flash->type}alert-{$flash->type}{/if}">{$flash->message}</div>
 
