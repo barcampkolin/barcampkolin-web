@@ -594,7 +594,7 @@ class ConferencePresenter extends BasePresenter
         $program = $this->talkManager->getProgramById($id);
 
         if (!$program) {
-            $this->error('Program nenalezena');
+            $this->error('Program nenalezen');
         }
 
         /** @var Form $form */
