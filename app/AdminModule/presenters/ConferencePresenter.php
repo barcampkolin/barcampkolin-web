@@ -621,7 +621,7 @@ class ConferencePresenter extends BasePresenter
             ->setRequired(true);
         $form->addRadioList('room', 'Místnost', $this->talkManager->getRooms())->setRequired(true);
         $form->addText('time', 'Čas konání')->setType('time')->setRequired(true);
-        $form->addRadioList('duration', 'Délka v minutách', $durations);
+        $form->addRadioList('duration', 'Délka v minutách', $durations)->setRequired();
 
         $form->addSubmit('submit', 'Uložit')->setOption('primary', true);
 
@@ -671,13 +671,6 @@ class ConferencePresenter extends BasePresenter
                     $value = new DateInterval("PT{$m[2]}H{$m[3]}M");
                 } else {
                     $values = null;
-                }
-            }
-
-            if ($key === 'duration') {
-                if (!(empty($value) || in_array($value, [10, 20, 30, 40, 50, 60, 90]))) {
-                    $form['duration']->addError('Délka přednášky musí být jeden z časů: 10, 20, 30, 40, 50, 60, nebo 90 minut');
-                    return;
                 }
             }
 
