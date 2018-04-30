@@ -12,6 +12,7 @@ class EventInfoProvider
 
     const COUNTS_CONFEREE = 'counts.conferee';
     const COUNTS_TALKS = 'counts.talks';
+    const COUNTS_TALKS_LIMIT = 'counts.talks.limit';
     const COUNTS_WORKSHOPS = 'counts.workshops';
     const COUNTS_WARMUPPARTY = 'counts.warmupparty';
     const COUNTS_AFTERPARTY = 'counts.afterparty';
@@ -107,6 +108,7 @@ class EventInfoProvider
             'conferee_registered' => $confereeCount,
             'conferee_left' => max(0, $confereeLimit - $confereeCount),
             'talks' => $this->config->get(self::COUNTS_TALKS),
+            'talks_limit' => $this->config->get(self::COUNTS_TALKS_LIMIT),
             'workshops' => $this->config->get(self::COUNTS_WORKSHOPS),
             'warmupparty' => $this->config->get(self::COUNTS_WARMUPPARTY),
             'afterparty' => $this->config->get(self::COUNTS_AFTERPARTY),
