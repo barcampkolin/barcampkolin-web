@@ -533,27 +533,51 @@ class ConferencePresenter extends BasePresenter
      */
     public function getMergedTalks()
     {
-        $talks = $this->talkManager->findAll();
+        $talks = $this->talkManager->findAll()->orderBy('votes', ICollection::DESC);
+
+        $usedTalksIds = $this->getProgramListedTalksId();
 
         $merged = $this->talkManager->getProgramTypes();
-
         unset($merged['talk']);
 
         /** @var Talk $talk */
         foreach ($talks as $talk) {
             $id = $talk->id;
 
-            $requestedDuration = null;
+            $requestedDuration = "";
             $extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
             $duration = isset($extended['requested_duration']) ? intval($extended['requested_duration']) : null;
             if ($duration) {
                 $requestedDuration = " (požadováno $duration minut)";
             }
 
-            $merged['talk|' . $id] = "Přednáška: " . $talk->title . $requestedDuration;
+            $merged['talk|' . $id] = sprintf(
+                'Přednáška: %s [%s] %s | %s%s',
+                in_array($id, $usedTalksIds) ? '●' : '○',
+                $talk->votes,
+                $talk->conferee->name,
+                $talk->title,
+                $requestedDuration
+            );
         }
 
         return $merged;
+    }
+
+
+    private function getProgramListedTalksId()
+    {
+        $program = $this->talkManager->findAllProgram();
+        $ids = [];
+
+        /** @var Program $item */
+        foreach ($program as $item) {
+            if ($item->talk) {
+                $ids[] = $item->talk->id;
+            }
+        }
+
+        return $ids;
     }
 
 
@@ -604,7 +628,8 @@ class ConferencePresenter extends BasePresenter
         $form->addHidden('id');
 
         $form->addSelect('type', 'Type', [null => '== Vyberte =='] + $this->getMergedTalks())
-            ->setRequired(true);
+            ->setRequired(true)
+            ->setOption('description', 'Legenda symbolů: ● - již v programu; ○ - není v programu; [123] - počet hlasů');
         $form->addRadioList('room', 'Místnost', $this->talkManager->getRooms())->setRequired(true);
         $form->addText('time', 'Čas konání')->setType('time')->setRequired(true);
         $form->addRadioList('duration', 'Délka v minutách', $durations)->setRequired();
