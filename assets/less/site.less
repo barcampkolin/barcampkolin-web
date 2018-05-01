@@ -1336,6 +1336,7 @@ body.no-js .js-only {
         display: block;
         margin: 0;
         line-height: 1.2;
+        font-weight: normal;
     }
 
     .item-footer {
@@ -1343,16 +1344,15 @@ body.no-js .js-only {
         left: 0;
         bottom: 0;
         width: 100%;
-        padding: 0 1.3rem 0.8rem 1.3rem;
+        padding: 0 1rem 0.4rem 1rem;
         line-height: 1.2;
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         z-index: 1;
+        opacity: 0.5;
     }
 
-    .author,
-    .time {
-        float: right;
-    }
+    .author{float: left;}
+    .time{float: right;}
 
     .btn {
         font-size: 1rem;
@@ -1367,6 +1367,21 @@ body.no-js .js-only {
 
         &:before {
             content: "\e901";
+            font-family: icomoon;
+            font-size: 1.5rem;
+            vertical-align: middle;
+            display: inline-block;
+            margin-right: 0.7rem;
+            position: relative;
+            top: -0.1rem;
+            .opacity(0.5);
+        }
+    }
+    .author {
+        margin-top: 0.5rem;
+
+        &:before {
+            content: "\E922";
             font-family: icomoon;
             font-size: 1.5rem;
             vertical-align: middle;
@@ -1418,6 +1433,9 @@ a.program-item {
     position: relative;
 
     &:hover {
+        .item-footer {
+            opacity: 1;
+        }
         .author {
             //display: none;
         }
@@ -1519,7 +1537,7 @@ a.program-item {
     .t15 {
         height: 2.375rem;
         .item-content{padding-top:0.2rem;padding-bottom:0px;
-            .item-footer{padding-bottom:0.2rem;}
+            .item-footer{padding-bottom:0rem;}
 
         }
     }

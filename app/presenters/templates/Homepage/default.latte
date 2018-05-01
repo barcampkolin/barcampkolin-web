@@ -42,14 +42,14 @@
             <div class="hero-buttons">
                 <a n:tag-if="$features->conferee" href="{link Sign:conferee}">
                     <span class="btn btn-lg btn-brand btn-section {if !$features->conferee}disabled{/if}" title="Přihlášení je možné od {$dates->talks|date:'j. n. Y'}">
-                        Registrace
+                        Získat vstupenku (zdarma)
                     </span>
                 </a>
-                <a n:tag-if="$features->talks" href="{link Sign:talk}">
+                {*<a n:tag-if="$features->talks" href="{link Sign:talk}">
                     <span class="btn btn-lg btn-default-bordered btn-section {if !$features->talks}disabled{/if}" title="Vypsání přednášky je možné od {$dates->talks|date:'j. n. Y'}">
                         Vypsat přednášku
                     </span>
-                </a>
+                </a>*}
             </div>
 
             <span class="hero-note">Zbývá <span>{$counts->conferee_left}</span> vstupenek</span>

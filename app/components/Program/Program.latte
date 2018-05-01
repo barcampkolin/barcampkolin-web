@@ -2,8 +2,8 @@
     <div class="wrapper">
         <div class="container text-center">
             <h1 class="program-heading"><span class="icon icon-calendar"></span><span class="dot-end">Program</span></h1>
-            <p>Konference Barcampu Kolín nabízí 3 přednáškové sály. Přednáškové sály jsou doplněny dvěma workshopovými místnostmi.<br />
-                Všechny přednášky jsou volně přístupné pro účastníky konference. A bude spoustu prostoru pro networking.</p>
+            <p>Konference Barcampu Kolín nabízí 2 přednáškové sály. Přednáškové sály jsou doplněny workshopy, které budou probíhat v prostorých CEROPu.<br />
+                Všechny přednášky jsou volně přístupné pro účastníky konference. Bude také spoustu prostoru pro networking.</p>
 
 
             <div id="program">
@@ -50,6 +50,9 @@
                     <div class="program-wrapper">
                         <ul class="timerows timerows-mobile">
                             <li>
+                                <span class="time">08:00</span>
+                            </li>
+                            <li>
                                 <span class="time">09:00</span>
                             </li>
                             <li>
@@ -81,6 +84,9 @@
                         <div class="program-container">
 
                             <ul class="timerows">
+                                <li>
+                                    <span class="time">08:00</span>
+                                </li>
                                 <li>
                                     <span class="time">09:00</span>
                                 </li>
@@ -130,7 +136,7 @@
                                             {case 'coffee'}
                                                 <div class="program-item t{$program->duration}">
                                                     <div class="item-content">
-                                                        <h3 class="item-title">{$program->title}</h3>
+                                                        <h3 class="item-title">{$program->title|noescape}</h3>
 
                                                         <div class="item-footer">
                                                             <span class="author"><span class="icon icon-coffee-cup"></span></span>
@@ -144,11 +150,12 @@
                                             {case 'lunch'}
                                                 <div class="program-item t{$program->duration}">
                                                     <div class="item-content">
-                                                        <h3 class="item-title">{$program->title}</h3>
+                                                        <h3 class="item-title">{$program->title|noescape}</h3>
 
                                                         <span class="icon icon-cutlery"></span>
 
                                                         <div class="item-footer">
+                                                            <span class="time">{$program->startClock} - {$program->endClock}</span>
                                                             <div class="hover">
                                                                 <span class="time">{$program->startClock} - {$program->endClock}</span>
                                                             </div>
@@ -158,11 +165,12 @@
                                             {case 'custom'}
                                                 <div class="program-item t{$program->duration} style4">
                                                     <div class="item-content">
-                                                        <h3 class="item-title">{$program->title}</h3>
+                                                        <h3 class="item-title">{$program->title|noescape}</h3>
 
                                                         <div class="item-footer">
-                                                            <span n:ifcontent class="author">{$program->speaker} {$program->startClock} - {$program->endClock}</span>
+                                                            <span n:ifcontent class="author">{$program->speaker}</span>
 
+                                                            <span class="time">{$program->startClock} - {$program->endClock}</span>
                                                             <div class="hover">
                                                                 <span class="time">{$program->startClock} - {$program->endClock}</span>
                                                             </div>
@@ -175,8 +183,8 @@
                                                         <h3 class="item-title">{$program->title}</h3>
 
                                                         <div class="item-footer">
-                                                            <span class="author">{$program->speaker} | {$program->startClock} - {$program->endClock}</span>
-
+                                                            <span class="author">{$program->speaker}</span>
+                                                            <span class="time">{$program->startClock} - {$program->endClock}</span>
                                                             {*<div class="hover">*}
                                                                 {*<span class="btn">Chci přijít</span>*}
                                                                 {*<span class="time">{$program->startClock} - {$program->endClock}</span>*}

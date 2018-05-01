@@ -12,8 +12,8 @@ use Tracy\ILogger;
 class ProgramControl extends Control
 {
 
-    const HOUR_START = 9;
-    const HOUR_END = 17;
+    const HOUR_START = 8;
+    const HOUR_END = 18;
 
     /**
      * @var EventInfoProvider

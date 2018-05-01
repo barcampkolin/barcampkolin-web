@@ -33,9 +33,9 @@ class SpeakerListControl extends Control
 
     public function render()
     {
-        if (!$this->eventInfoProvider->getFeatures()->talks) {
-            return;
-        }
+//        if (!$this->eventInfoProvider->getFeatures()->talks) {
+//            return;
+//        }
 
         $talks = $this->talkManager->findActive();
 
