@@ -72,6 +72,12 @@ class TalkManager
     }
 
 
+    public function removeProgram(Program $program)
+    {
+        $this->programRepository->removeAndFlush($program);
+    }
+
+
     /**
      * @return array
      * @throws InvalidEnumeratorSetException

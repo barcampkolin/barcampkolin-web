@@ -233,8 +233,8 @@ class ConferencePresenter extends BasePresenter
 
 
     /**
+     * @param bool $msExcel
      * @throws \Nette\Application\AbortException
-     * @secured
      */
     public function handleExportConfereeCsv($msExcel = false)
     {
@@ -529,6 +529,31 @@ class ConferencePresenter extends BasePresenter
         $grid->addAction('edit', '', 'programEdit')
             ->setIcon('pencil')
             ->setTitle('Upravit');
+
+        $grid->addAction('delete', null, 'deleteProgram!')
+            ->setIcon('trash')
+            ->setTitle('Smazat')
+            ->setClass('btn btn-xs btn-danger ajax')
+            ->setConfirm('Opravdu chcete smazat z programu přednášku %s?', 'title');
+    }
+
+
+    /**
+     * @param $id
+     * @throws \Nette\Application\AbortException
+     * @secured
+     */
+    public function handleDeleteProgram($id)
+    {
+        $program = $this->talkManager->getProgramById($id);
+
+        $this->talkManager->removeProgram($program);
+
+        if ($this->isAjax()) {
+            $this['programDatagrid']->reload();
+        } else {
+            $this->redirect('this');
+        }
     }
 
 
@@ -570,6 +595,9 @@ class ConferencePresenter extends BasePresenter
     }
 
 
+    /**
+     * @return array
+     */
     private function getProgramListedTalksId()
     {
         $program = $this->talkManager->findAllProgram();
