@@ -326,7 +326,9 @@ class ConferencePresenter extends BasePresenter
         $grid->setDataSource($this->talkManager->findAll());
 
         $grid->addColumnLink('title', 'Název', ':Conference:talkDetail', 'title', ['id'])
-            ->setSortable();
+            ->setSortable()
+            ->setFilterText('title');
+
         $grid->addColumnText('speaker', 'Jméno', 'conferee.name')
             ->setSortable();
 
