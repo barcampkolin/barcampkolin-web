@@ -115,7 +115,7 @@
                                 <div class="item-header-container">
                                     <div class="item-header program-header">
                                         <div n:foreach="$rooms as $roomName" class="hall">
-                                            <span class="item-heading">Přednáškový sál: {$roomName}</span>
+                                            <span class="item-heading">{$roomName}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -156,12 +156,12 @@
                                                     </div>
                                                 </div>
                                             {case 'custom'}
-                                                <div class="program-item t{$program->duration} style2">
+                                                <div class="program-item t{$program->duration} style4">
                                                     <div class="item-content">
                                                         <h3 class="item-title">{$program->title}</h3>
 
                                                         <div class="item-footer">
-                                                            <span n:ifcontent class="author">{$program->speaker}</span>
+                                                            <span n:ifcontent class="author">{$program->speaker} {$program->startClock} - {$program->endClock}</span>
 
                                                             <div class="hover">
                                                                 <span class="time">{$program->startClock} - {$program->endClock}</span>
@@ -170,17 +170,17 @@
                                                     </div>
                                                 </div>
                                             {default}
-                                                <a href="{plink :Conference:talkDetail, id => $program->talkId}" class="program-item t{$program->duration} style2">
+                                                <a href="{plink :Conference:talkDetail, id => $program->talkId}" class="program-item t{$program->duration} style1">
                                                     <div class="item-content">
                                                         <h3 class="item-title">{$program->title}</h3>
 
                                                         <div class="item-footer">
-                                                            <span class="author">{$program->speaker}</span>
+                                                            <span class="author">{$program->speaker} | {$program->startClock} - {$program->endClock}</span>
 
-                                                            <div class="hover">
+                                                            {*<div class="hover">*}
                                                                 {*<span class="btn">Chci přijít</span>*}
-                                                                <span class="time">{$program->startClock} - {$program->endClock}</span>
-                                                            </div>
+                                                                {*<span class="time">{$program->startClock} - {$program->endClock}</span>*}
+                                                            {*</div>*}
                                                         </div>
                                                     </div>
                                                 </a>
