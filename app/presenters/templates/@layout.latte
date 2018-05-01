@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#001630">
-    <title>{ifset title}{include title|stripHtml} | {/ifset}Barcamp Kolín</title>
+    <title>{ifset #title}{include title|stripHtml} | {/ifset}Barcamp Kolín</title>
     <script n:nonce>
         window.dataLayer = [
             {'gtm.start': new Date().getTime(), event:'gtm.js'}
@@ -22,10 +22,10 @@
     <script src="{$basePath}/js/main.js?{=filemtime($wwwDir . '/js/main.js')}" async n:nonce></script>
     <meta name="google-site-verification" content="gpFlLqYslNgekLMtYLdBfTMo3JX7sYSjA02yTM6IMEc">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="{block title|striptags}{/block}">
+    <meta property="og:title" content="{ifset #title}{include title|stripHtml}{else}Barcamp Kolín{/ifset}">
     <meta property="og:site_name" content="Barcamp Kolín">
     <meta property="og:url" content="{link //this}">
-    <meta property="og:description" content="{block metaDescription|stripHtml|truncate:300}{/block}">
+    {ifset #metaDescription}<meta property="og:description" content="{include metaDescription|stripHtml|truncate:300}">{/ifset}
     <meta property="og:locale" content="cs_CZ">
     <meta property="og:image" content="{block ogImage}{$baseUri}/img/barcamp-og.png{/block}">
 </head>
