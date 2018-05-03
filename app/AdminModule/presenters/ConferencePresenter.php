@@ -599,6 +599,7 @@ class ConferencePresenter extends BasePresenter
     {
         return [
             null => 'Výchozí barva',
+            'style0' => 'Šedá',
             'style1' => 'Modrá',
             'style2' => 'Oranžová',
             'style3' => 'Červená',
