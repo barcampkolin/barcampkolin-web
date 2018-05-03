@@ -4,9 +4,9 @@ namespace App\Presenters;
 
 use App\Components\Faq\FaqControl;
 use App\Components\Faq\IFaqControlFactory;
-use App\Components\Feed\FeedFactory;
 use App\Components\Newsletter\NewsletterSignupControl;
 use App\Components\Newsletter\NewsletterSignupFactory;
+use App\Components\Partners\IPartnersControlFactory;
 use App\Components\Program\IProgramControlFactory;
 use App\Components\Schedule\IScheduleControlFactory;
 use App\Components\Schedule\ScheduleControl;
@@ -38,10 +38,6 @@ class HomepagePresenter extends BasePresenter
      */
     private $faqFactory;
     /**
-     * @var FeedFactory
-     */
-    private $feedFactory;
-    /**
      * @var ISpeakerListControlFactory
      */
     private $speakerListFactory;
@@ -49,6 +45,10 @@ class HomepagePresenter extends BasePresenter
      * @var IProgramControlFactory
      */
     private $programFactory;
+    /**
+     * @var IPartnersControlFactory
+     */
+    private $partnersControlFactory;
 
 
     /**
@@ -59,6 +59,7 @@ class HomepagePresenter extends BasePresenter
      * @param IFaqControlFactory $faqFactory
      * @param ISpeakerListControlFactory $speakerListFactory
      * @param IProgramControlFactory $programFactory
+     * @param IPartnersControlFactory $partnersControlFactory
      */
     public function __construct(
         IScheduleControlFactory $scheduleFactory,
@@ -66,7 +67,8 @@ class HomepagePresenter extends BasePresenter
         NewsletterSignupFactory $newsletterFormFactory,
         IFaqControlFactory $faqFactory,
         ISpeakerListControlFactory $speakerListFactory,
-        IProgramControlFactory $programFactory
+        IProgramControlFactory $programFactory,
+        IPartnersControlFactory $partnersControlFactory
     ) {
         parent::__construct();
         $this->scheduleFactory = $scheduleFactory;
@@ -75,6 +77,7 @@ class HomepagePresenter extends BasePresenter
         $this->faqFactory = $faqFactory;
         $this->speakerListFactory = $speakerListFactory;
         $this->programFactory = $programFactory;
+        $this->partnersControlFactory = $partnersControlFactory;
     }
 
 
@@ -140,5 +143,14 @@ class HomepagePresenter extends BasePresenter
     public function createComponentProgram()
     {
         return $this->programFactory->create();
+    }
+
+
+    /**
+     * @return \App\Components\Partners\PartnersControl
+     */
+    protected function createComponentPartners()
+    {
+        return $this->partnersControlFactory->create();
     }
 }

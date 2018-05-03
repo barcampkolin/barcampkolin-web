@@ -1,0 +1,18 @@
+{block title}{block h1}Partneři{/block} - Barcamp Kolín{/block}
+{block content}
+
+<ul>
+    <li n:foreach="$report as $group">
+        <a n:href="group, id => $group[id]">{$group[name]}</a>
+        <ul>
+            <li n:foreach="$group['partners'] as $partner">
+                <a n:href="partner, id => $partner[id]">{$partner[name]}</a>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<div>
+    <a n:href="partner" class="btn btn-primary">Přidat partnera</a>
+    <a n:href="group" class="btn btn-default">Přidat skupinu</a>
+</div>
