@@ -595,6 +595,18 @@ class ConferencePresenter extends BasePresenter
     }
 
 
+    private function getProgramStyles()
+    {
+        return [
+            null => 'Výchozí barva',
+            'style1' => 'Modrá',
+            'style2' => 'Oranžová',
+            'style3' => 'Červená',
+            'style4' => 'Tyrkysová',
+        ];
+    }
+
+
     /**
      * @return array
      */
@@ -681,6 +693,8 @@ class ConferencePresenter extends BasePresenter
                 'description',
                 'Volitelné. Zadejte jen pokud je potřeba v programu název speakera přepsat. Max. 200 znaků'
             );
+
+        $form->addSelect('style', 'Styl (barva)', $this->getProgramStyles());
 
         $form->addGroup();
 

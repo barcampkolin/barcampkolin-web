@@ -15,6 +15,7 @@ use Nette\SmartObject;
  * @property-read string $endClock
  * @property-read string $type
  * @property-read string $duration
+ * @property-read string $style
  */
 abstract class InternalProgram implements IInternalProgram
 {
@@ -61,6 +62,12 @@ abstract class InternalProgram implements IInternalProgram
      * @return int
      */
     abstract public function getDuration();
+
+
+    /**
+     * @return string|null
+     */
+    abstract public function getStyle();
 
 
     /**

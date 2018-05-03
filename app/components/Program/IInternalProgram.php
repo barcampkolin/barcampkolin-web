@@ -43,4 +43,9 @@ interface IInternalProgram
      */
     public function getDuration();
 
+
+    /**
+     * @return string|null
+     */
+    public function getStyle();
 }

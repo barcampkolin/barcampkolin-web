@@ -134,7 +134,7 @@
                                             {case 'space'}
                                                 <div class="program-item t{$program->duration} empty"></div>
                                             {case 'coffee'}
-                                                <div class="program-item t{$program->duration}">
+                                                <div class="program-item t{$program->duration} {$program->style}">
                                                     <div class="item-content">
                                                         <h3 class="item-title">{nl2br($program->title)|noescape}</h3>
 
@@ -148,7 +148,7 @@
                                                     </div>
                                                 </div>
                                             {case 'lunch'}
-                                                <div class="program-item t{$program->duration}">
+                                                <div class="program-item t{$program->duration} {$program->style}">
                                                     <div class="item-content">
                                                         <h3 class="item-title">{nl2br($program->title)|noescape}</h3>
 
@@ -163,7 +163,7 @@
                                                     </div>
                                                 </div>
                                             {case 'custom'}
-                                                <div class="program-item t{$program->duration} style4">
+                                                <div class="program-item t{$program->duration} {$program->style ?: style4}">
                                                     <div class="item-content">
                                                         <h3 class="item-title">{nl2br($program->title)|noescape}</h3>
 
@@ -178,7 +178,7 @@
                                                     </div>
                                                 </div>
                                             {default}
-                                                <a href="{plink :Conference:talkDetail, id => $program->talkId}" class="program-item t{$program->duration} style1">
+                                                <a href="{plink :Conference:talkDetail, id => $program->talkId}" class="program-item t{$program->duration} {$program->style ?: style1}">
                                                     <div class="item-content">
                                                         <h3 class="item-title">
                                                             {if $program->isTitleOverridden()}

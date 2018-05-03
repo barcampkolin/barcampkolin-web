@@ -28,6 +28,10 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
      * @var int
      */
     private $duration;
+    /**
+     * @var string
+     */
+    private $style;
 
 
     /**
@@ -86,6 +90,24 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
     public function setDuration($duration)
     {
         $this->duration = $duration;
+    }
+
+
+    /**
+     * @return string|null
+     */
+    public function getStyle()
+    {
+        return $this->style;
+    }
+
+
+    /**
+     * @param string|null $style
+     */
+    public function setStyle($style)
+    {
+        $this->style = $style;
     }
 
 

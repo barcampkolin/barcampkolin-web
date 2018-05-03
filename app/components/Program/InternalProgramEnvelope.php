@@ -50,6 +50,15 @@ class InternalProgramEnvelope extends InternalProgram
 
 
     /**
+     * @return null|string
+     */
+    public function getStyle()
+    {
+        return $this->program->style;
+    }
+
+
+    /**
      * @return int
      */
     public function getTalkId()
