@@ -334,7 +334,7 @@ class ConferencePresenter extends BasePresenter
 
         $grid->addColumnText('mail', 'Mail', 'conferee.email')
             ->setSortable();
-        
+
         $grid->addColumnText('votes', 'Hlasy')
             ->setSortable();
 
@@ -671,10 +671,16 @@ class ConferencePresenter extends BasePresenter
 
         $form->addGroup('Vlastní název přednášky v programu');
 
-        $form->addText('title', 'Název')
-            ->setOption('description', 'Volitelné. Zadejte jen pokud je potřeba v programu název přednášky přepsat');
-        $form->addTextArea('speaker', 'Přednášející')
-            ->setOption('description', 'Volitelné. Zadejte jen pokud je potřeba v programu název speakera přepsat');
+        $form->addTextArea('title', 'Název')
+            ->setOption(
+                'description',
+                'Volitelné. Zadejte jen pokud je potřeba v programu název přednášky přepsat. Povolené HTML'
+            );
+        $form->addText('speaker', 'Přednášející', null, 200)
+            ->setOption(
+                'description',
+                'Volitelné. Zadejte jen pokud je potřeba v programu název speakera přepsat. Max. 200 znaků'
+            );
 
         $form->addGroup();
 

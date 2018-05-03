@@ -74,6 +74,15 @@ class InternalProgramEnvelope extends InternalProgram
 
 
     /**
+     * @return bool
+     */
+    public function isTitleOverridden()
+    {
+        return !empty($this->program->title);
+    }
+
+
+    /**
      * @return null|string
      */
     public function getSpeaker()

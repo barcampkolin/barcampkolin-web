@@ -126,6 +126,15 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
 
 
     /**
+     * @return bool
+     */
+    public function isTitleOverridden()
+    {
+        return true;
+    }
+
+
+    /**
      * @return mixed
      */
     public function getSpeaker()

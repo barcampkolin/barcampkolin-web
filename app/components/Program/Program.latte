@@ -136,7 +136,7 @@
                                             {case 'coffee'}
                                                 <div class="program-item t{$program->duration}">
                                                     <div class="item-content">
-                                                        <h3 class="item-title">{$program->title|noescape}</h3>
+                                                        <h3 class="item-title">{nl2br($program->title)|noescape}</h3>
 
                                                         <div class="item-footer">
                                                             <span class="author"><span class="icon icon-coffee-cup"></span></span>
@@ -150,7 +150,7 @@
                                             {case 'lunch'}
                                                 <div class="program-item t{$program->duration}">
                                                     <div class="item-content">
-                                                        <h3 class="item-title">{$program->title|noescape}</h3>
+                                                        <h3 class="item-title">{nl2br($program->title)|noescape}</h3>
 
                                                         <span class="icon icon-cutlery"></span>
 
@@ -165,7 +165,7 @@
                                             {case 'custom'}
                                                 <div class="program-item t{$program->duration} style4">
                                                     <div class="item-content">
-                                                        <h3 class="item-title">{$program->title|noescape}</h3>
+                                                        <h3 class="item-title">{nl2br($program->title)|noescape}</h3>
 
                                                         <div class="item-footer">
                                                             <span n:ifcontent class="author">{$program->speaker}</span>
@@ -180,7 +180,13 @@
                                             {default}
                                                 <a href="{plink :Conference:talkDetail, id => $program->talkId}" class="program-item t{$program->duration} style1">
                                                     <div class="item-content">
-                                                        <h3 class="item-title">{$program->title}</h3>
+                                                        <h3 class="item-title">
+                                                            {if $program->isTitleOverridden()}
+                                                                {nl2br($program->title)|noescape}
+                                                            {else}
+                                                                {$program->title}
+                                                            {/if}
+                                                        </h3>
 
                                                         <div class="item-footer">
                                                             <span class="author">{$program->speaker}</span>

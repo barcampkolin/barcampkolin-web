@@ -34,6 +34,12 @@ abstract class InternalProgram implements IInternalProgram
 
 
     /**
+     * @return bool
+     */
+    abstract public function isTitleOverridden();
+
+
+    /**
      * @return string
      */
     abstract public function getSpeaker();

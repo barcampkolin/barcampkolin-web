@@ -15,6 +15,12 @@ interface IInternalProgram
 
 
     /**
+     * @return bool
+     */
+    public function isTitleOverridden();
+
+
+    /**
      * @return string
      */
     public function getSpeaker();
