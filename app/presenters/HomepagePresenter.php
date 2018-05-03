@@ -7,6 +7,7 @@ use App\Components\Faq\IFaqControlFactory;
 use App\Components\Feed\FeedFactory;
 use App\Components\Newsletter\NewsletterSignupControl;
 use App\Components\Newsletter\NewsletterSignupFactory;
+use App\Components\Program\IProgramControlFactory;
 use App\Components\Schedule\IScheduleControlFactory;
 use App\Components\Schedule\ScheduleControl;
 use App\Components\SignupButtons\SignupButtonsControl;
@@ -44,6 +45,10 @@ class HomepagePresenter extends BasePresenter
      * @var ISpeakerListControlFactory
      */
     private $speakerListFactory;
+    /**
+     * @var IProgramControlFactory
+     */
+    private $programFactory;
 
 
     /**
@@ -53,13 +58,15 @@ class HomepagePresenter extends BasePresenter
      * @param NewsletterSignupFactory $newsletterFormFactory
      * @param IFaqControlFactory $faqFactory
      * @param ISpeakerListControlFactory $speakerListFactory
+     * @param IProgramControlFactory $programFactory
      */
     public function __construct(
         IScheduleControlFactory $scheduleFactory,
         SignupButtonsFactory $buttonsFactory,
         NewsletterSignupFactory $newsletterFormFactory,
         IFaqControlFactory $faqFactory,
-        ISpeakerListControlFactory $speakerListFactory
+        ISpeakerListControlFactory $speakerListFactory,
+        IProgramControlFactory $programFactory
     ) {
         parent::__construct();
         $this->scheduleFactory = $scheduleFactory;
@@ -67,6 +74,7 @@ class HomepagePresenter extends BasePresenter
         $this->newsletterFactory = $newsletterFormFactory;
         $this->faqFactory = $faqFactory;
         $this->speakerListFactory = $speakerListFactory;
+        $this->programFactory = $programFactory;
     }
 
 
@@ -123,5 +131,14 @@ class HomepagePresenter extends BasePresenter
     protected function createComponentSpeakerList()
     {
         return $this->speakerListFactory->create();
+    }
+
+
+    /**
+     * @return mixed
+     */
+    public function createComponentProgram()
+    {
+        return $this->programFactory->create();
     }
 }
