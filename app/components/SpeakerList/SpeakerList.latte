@@ -5,6 +5,8 @@
 
             <ul class="row people-list mt-md">
                 {foreach $talks as $talk}
+                    {* When program visible, skip speakers not listed in Program *}
+                    {php if($isProgram && $talk->program->countStored() == 0) continue;}
                     {var $conferee = $talk->conferee}
                     <li>
                         <a href="{plink :Conference:talkDetail, 'id' => $talk->id}" class="item">
