@@ -107,7 +107,9 @@ class PartnersPresenter extends BasePresenter
             ->setRequired(false)
             ->addRule(Form::URL);
         $form->addInteger('height', 'Výška obrázku')->setDefaultValue(100);
-        $form->addInteger('order', 'Pořadí');
+        $form->addInteger('order', 'Pořadí')
+            ->setRequired()
+            ->setDefaultValue(0);
         $form->addCheckbox('enabled', 'Viditelný')
             ->setDefaultValue(true);
         $form->addSubmit('submit', 'Uložit');
@@ -148,7 +150,9 @@ class PartnersPresenter extends BasePresenter
         $form->addText('name', 'Název')
             ->setOption('description', 'Povolené HTML');
         $form->addInteger('height', 'Výchozí výška obrázku')->setDefaultValue(null);
-        $form->addInteger('order', 'Pořadí');
+        $form->addInteger('order', 'Pořadí')
+            ->setRequired()
+            ->setDefaultValue(0);
         $form->addCheckbox('enabled', 'Viditelný')
             ->setDefaultValue(true);
         $form->addSubmit('submit', 'Uložit');
