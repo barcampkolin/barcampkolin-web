@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use Nette\Http\FileUpload;
 use Nette\Http\Request;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
@@ -56,15 +57,42 @@ class PartnerLogoStorage
 
 
     /**
+     * @param FileUpload $file
      * @param string|null $name
      * @return string
      */
-    private function getFilename($name = null)
+    public function saveUploaded(FileUpload $file, $name = null)
+    {
+        $filename = $this->getFilename($name, $this->getExtension($file->name));
+
+        $storageFile = $this->getStorageFilename($filename);
+
+        $file->move($storageFile);
+
+        return $this->getUrl($filename);
+    }
+
+
+    /**
+     * @param $name
+     * @return string
+     */
+    private function getExtension($name)
+    {
+        return pathinfo($name, PATHINFO_EXTENSION);
+    }
+
+    /**
+     * @param string|null $name
+     * @param string $ext
+     * @return string
+     */
+    private function getFilename($name = null, $ext = 'png')
     {
         if ($name) {
             $name = Strings::webalize($name) . '-';
         }
-        return $name . Random::generate(5) . '.png';
+        return $name . Random::generate(5) . '.' . $ext;
     }
 
 

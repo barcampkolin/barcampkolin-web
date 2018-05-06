@@ -5,7 +5,10 @@ namespace App\AdminModule\Presenters;
 use App\Model\PartnerLogoStorage;
 use App\Model\PartnersManager;
 use Nette\Application\UI\Form;
+use Nette\Database\ForeignKeyConstraintViolationException;
+use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
+use Ublaboo\DataGrid\DataGrid;
 
 /**
  * Class PartnersPresenter
@@ -26,6 +29,7 @@ class PartnersPresenter extends BasePresenter
     /**
      * PartnersPresenter constructor.
      * @param PartnersManager $partners
+     * @param PartnerLogoStorage $storage
      */
     public function __construct(PartnersManager $partners, PartnerLogoStorage $storage)
     {
@@ -81,9 +85,6 @@ class PartnersPresenter extends BasePresenter
      */
     public function renderDefault()
     {
-        $report = $this->partners->getReport(false);
-
-        $this->template->report = $report;
     }
 
 
@@ -100,16 +101,13 @@ class PartnersPresenter extends BasePresenter
         $form->addText('url', 'URL')
             ->setRequired(false)
             ->addRule(Form::URL);
-//        $form->addCheckbox('is_picture', 'Obrázek')
-//            ->setDefaultValue(true)
-//            ->setOption('description', 'Zaškrtnutím se obrázek uloží, zrušením zaškrtnutí se smaže');
-        $form->addText('picture_url', 'URL obrázku')
-            ->setRequired(false)
-            ->addRule(Form::URL);
+        $form->addUpload('picture', 'Obrázek')
+            ->getControlPrototype()->addAttributes(['accept' => 'image/*'])
+            ->setOption('description', 'Pokud při úpravě chcete obrázek ponechat původní, nevyplňujte');
+        $form->addCheckbox('keep_picture', 'Ponechat obrázek')
+            ->setDefaultValue(true)
+            ->setOption('description', 'Zaškrtnutím se obrázek ponechá nebo uloží; zrušením zaškrtnutí se smaže');
         $form->addInteger('height', 'Výška obrázku')->setDefaultValue(100);
-        $form->addInteger('order', 'Pořadí')
-            ->setRequired()
-            ->setDefaultValue(0);
         $form->addCheckbox('enabled', 'Viditelný')
             ->setDefaultValue(true);
         $form->addSubmit('submit', 'Uložit');
@@ -131,12 +129,123 @@ class PartnersPresenter extends BasePresenter
     {
         $id = $values->id ?: null;
 
+        if ($values->picture instanceof FileUpload && $values->picture->isImage()) {
+            $values->picture_url = $this->storage->saveUploaded($values->picture, $values->name);
+        } elseif ($values->keep_picture === false) {
+            $values->picture_url = null;
+        }
+
         unset($values->id);
+        unset($values->picture);
+        unset($values->keep_picture);
 
         $this->partners->insertUpdatePartner($values, $id);
 
         $this->flashMessage("Uloženo", 'success');
         $this->redirect('default');
+    }
+
+
+    /**
+     * @return DataGrid
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     */
+    public function createComponentPartnersDatagrid()
+    {
+        DataGrid::$icon_prefix = 'glyphicon glyphicon-';
+
+        $grid = new DataGrid();
+
+        $grid->addToolbarButton('partner', 'Nový partner')
+            ->setClass('btn btn-xs btn-primary')
+            ->setIcon('plus');
+
+        $grid->setDataSource($this->partners->getPartners(false));
+
+        $grid->setSortable(true);
+        $grid->setSortableHandler('sortPartner!');
+
+        $grid->addColumnLink('name', 'Jméno', 'partner');
+
+        $groups = $this->partners->getGroups(false)->fetchPairs('id', 'name');
+        $grid->addColumnText('group', 'Skupina')
+            ->setRenderer(function ($item) use ($groups) {
+                return $groups[$item->group_id];
+            });
+
+        $grid->addColumnText('url', 'Odkaz')
+            ->setRenderer(function ($item) {
+                return $item->url ? 'Ano' : 'Ne';
+            });
+
+        $grid->addColumnText('picture', 'Obrázek')
+            ->setRenderer(function ($item) {
+                return $item->picture_url ? 'Ano' : 'Ne';
+            });
+
+        $grid->addColumnText('visible', 'Zobrazen')
+            ->setRenderer(function ($item) {
+                return $item->enabled ? 'Ano' : 'Ne';
+            });
+
+        $grid->addAction('partner', null)
+            ->setIcon('pencil')
+            ->setTitle('Upravit');
+
+        $grid->addAction('delete', null, 'deletePartner!')
+            ->setIcon('trash')
+            ->setTitle('Smazat')
+            ->setClass('btn btn-xs btn-danger ajax')
+            ->setConfirm('Opravdu chcete smazat partnera %s?', 'name');
+
+        return $grid;
+    }
+
+
+    /**
+     * @param $item_id
+     * @param $prev_id
+     * @param $next_id
+     * @throws \Nette\Application\AbortException
+     */
+    public function handleSortPartner($item_id, $prev_id, $next_id)
+    {
+        $item = $this->partners->getPartnerById($item_id);
+        $prevItem = $prev_id ? $this->partners->getPartnerById($prev_id) : null;
+        $nextItem = $next_id ? $this->partners->getPartnerById($next_id) : null;
+
+        $this->partners->changePartnersOrder($item, $prevItem, $nextItem);
+
+        $this->flashMessage("Partner " . $item->name . " byl přesunut", 'success');
+
+        if ($this->isAjax()) {
+            $this->redrawControl('flashes');
+            $this['partnersDatagrid']->reload();
+        } else {
+            $this->redirect('this');
+        }
+    }
+
+
+    /**
+     * @param $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function handleDeletePartner($id)
+    {
+        $partner = $this->partners->getPartnerById($id);
+
+        $name = $partner->name;
+
+        $this->partners->delete($partner);
+        $this->flashMessage("Partner \"$name\" smazán", 'success');
+
+        if ($this->isAjax()) {
+            $this->redrawControl('flashes');
+            $this['partnersDatagrid']->reload();
+        } else {
+            $this->redirect('this');
+        }
     }
 
 
@@ -150,9 +259,6 @@ class PartnersPresenter extends BasePresenter
         $form->addText('name', 'Název')
             ->setOption('description', 'Povolené HTML');
         $form->addInteger('height', 'Výchozí výška obrázku')->setDefaultValue(null);
-        $form->addInteger('order', 'Pořadí')
-            ->setRequired()
-            ->setDefaultValue(0);
         $form->addCheckbox('enabled', 'Viditelný')
             ->setDefaultValue(true);
         $form->addSubmit('submit', 'Uložit');
@@ -180,5 +286,96 @@ class PartnersPresenter extends BasePresenter
 
         $this->flashMessage("Uloženo", 'success');
         $this->redirect('default');
+    }
+
+
+    /**
+     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     */
+    public function createComponentGroupsDatagrid()
+    {
+        DataGrid::$icon_prefix = 'glyphicon glyphicon-';
+
+        $grid = new DataGrid();
+
+        $grid->addToolbarButton('group', 'Nová skupina')
+            ->setClass('btn btn-xs btn-primary')
+            ->setIcon('plus');
+
+        $grid->setDataSource($this->partners->getGroups(false));
+
+        $grid->setSortable(true);
+        $grid->setSortableHandler('sortGroup!');
+
+        $grid->addColumnLink('name', 'Jméno', 'group');
+
+        $grid->addColumnText('visible', 'Zobrazen')
+            ->setRenderer(function ($item) {
+                return $item->enabled ? 'Ano' : 'Ne';
+            });
+
+        $grid->addAction('group', null)
+            ->setIcon('pencil')
+            ->setTitle('Upravit');
+
+        $grid->addAction('delete', null, 'deleteGroup!')
+            ->setIcon('trash')
+            ->setTitle('Smazat')
+            ->setClass('btn btn-xs btn-danger ajax')
+            ->setConfirm('Opravdu chcete smazat z skupinu %s?', 'name');
+
+        return $grid;
+    }
+
+
+    /**
+     * @param  int $item_id
+     * @param  int|NULL $prev_id
+     * @param  int|NULL $next_id
+     * @return void
+     * @throws \Nette\Application\AbortException
+     */
+    public function handleSortGroup($item_id, $prev_id, $next_id)
+    {
+        $item = $this->partners->getGroupById($item_id);
+        $prevItem = $prev_id ? $this->partners->getGroupById($prev_id) : null;
+        $nextItem = $next_id ? $this->partners->getGroupById($next_id) : null;
+
+        $this->partners->changeGroupsOrder($item, $prevItem, $nextItem);
+
+        $this->flashMessage("Skupina " . $item->name . " byla přesunuta", 'success');
+
+        if ($this->isAjax()) {
+            $this->redrawControl('flashes');
+            $this['groupsDatagrid']->reload();
+        } else {
+            $this->redirect('this');
+        }
+    }
+
+
+    /**
+     * @param $id
+     * @throws \Nette\Application\AbortException
+     */
+    public function handleDeleteGroup($id)
+    {
+        $group = $this->partners->getGroupById($id);
+
+        $name = $group->name;
+
+        try {
+            $this->partners->delete($group);
+            $this->flashMessage("Skupina \"$name\" smazána", 'success');
+        } catch (ForeignKeyConstraintViolationException $e) {
+            $this->flashMessage("Nelze smazat skupinu, ve které je nějaký partner", 'danger');
+        }
+
+        if ($this->isAjax()) {
+            $this->redrawControl('flashes');
+            $this['groupsDatagrid']->reload();
+        } else {
+            $this->redirect('this');
+        }
     }
 }
