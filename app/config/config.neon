@@ -87,6 +87,8 @@ services:
     - App\Model\MailerManager(%mail%, '%tempDir%/cache')
     - App\Model\MailDynamicLoader
     - App\Model\NewsletterSignupManager
+    - App\Model\PartnersManager
+    - App\Model\PartnerLogoStorage('%wwwDir%/upload/partner', 'upload/partner')
     - App\Model\ScheduleManager
     - App\Model\TalkManager
     - App\Model\UserManager
@@ -100,6 +102,7 @@ services:
     - App\Components\Enumerator\IEnumeratorFormControlFactory
     - App\Components\Faq\IFaqControlFactory
     - App\Components\Newsletter\NewsletterSignupFactory
+    - App\Components\Partners\IPartnersControlFactory
     - App\Components\Program\IProgramControlFactory
     - App\Components\Schedule\IScheduleControlFactory
     - App\Components\SignupButtons\SignupButtonsFactory
