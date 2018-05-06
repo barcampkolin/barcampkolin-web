@@ -30,6 +30,8 @@ module.exports = function(grunt) {
                         'assets/bower_components/ublaboo-datagrid/assets/dist/datagrid.css',
                         'assets/bower_components/ublaboo-datagrid/assets/dist/datagrid-spinners.css',
                         'assets/bower_components/bootstrap-select/dist/css/bootstrap-select.css',
+                        'assets/bower_components/semantic-ui-transition/transition.css',
+                        'assets/bower_components/semantic-ui-dropdown/dropdown.css',
                         'assets/less/admin.less'
                     ]
                 }
@@ -62,7 +64,10 @@ module.exports = function(grunt) {
                         'assets/bower_components/ublaboo-datagrid/assets/dist/datagrid-spinners.js',
                         'assets/bower_components/bootstrap/dist/js/bootstrap.js',
                         'assets/bower_components/bootstrap-select/dist/js/bootstrap-select.js',
-                        'assets/bower_components/clipboard/dist/clipboard.js'
+                        'assets/bower_components/semantic-ui-transition/transition.js',
+                        'assets/bower_components/semantic-ui-dropdown/dropdown.js',
+                        'assets/bower_components/clipboard/dist/clipboard.js',
+                        'assets/js/admin.js'
                     ]
                 }
             }

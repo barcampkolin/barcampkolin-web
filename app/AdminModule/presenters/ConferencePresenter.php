@@ -673,9 +673,10 @@ class ConferencePresenter extends BasePresenter
 
         $form->addHidden('id');
 
-        $form->addSelect('type', 'Type', [null => '== Vyberte =='] + $this->getMergedTalks())
+        $type = $form->addSelect('type', 'Type', [null => '== Vyberte =='] + $this->getMergedTalks())
             ->setRequired(true)
-            ->setOption('description', 'Legenda symbolů: ● - již v programu; ○ - není v programu; [123] - počet hlasů');
+            ->setOption('description', 'Legenda symbolů: ● - již v programu; ○ - není v programu; [123] - počet hlasů')
+            ->getControlPrototype()->appendAttribute('class', 'ui search dropdown');
         $form->addRadioList('room', 'Místnost', $this->talkManager->getRooms())->setRequired(true);
         $form->addText('time', 'Čas konání')->setType('time')->setRequired(true);
         $form->addRadioList('duration', 'Délka v minutách', $durations)->setRequired();

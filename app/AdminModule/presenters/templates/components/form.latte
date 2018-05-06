@@ -48,7 +48,8 @@
 
         <div class="col-sm-10">
             {if $input->getOption(type) in [text, select, textarea]}
-                {input $input class => form-control}
+                {php $input->controlPrototype->class = $input->controlPrototype->class ?: 'form-control'}
+                {input $input}
             {elseif $input->getOption(type) === button}
                 {input $input class => $input->getOption(primary) ? "btn btn-primary" : "btn btn-default"}
             {elseif $input->getOption(type) === checkbox}
