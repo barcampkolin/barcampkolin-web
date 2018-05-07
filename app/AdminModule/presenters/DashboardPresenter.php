@@ -66,6 +66,7 @@ class DashboardPresenter extends BasePresenter
         Event::URL_YOUTUBE => ['url', 'URL profilu na YouTube'],
         Event::URL_INSTAGRAM => ['url', 'URL profilu na Instagram'],
         Event::URL_WAY_TO_EVENT => ['url', 'URL na článek Jak se k nám dostanete'],
+        Event::URL_OG_IMAGE => ['url', 'URL na OG image', self::NOFLAG, 'Při nevyplnění se použije systémové logo'],
     ];
 
     /**
@@ -224,8 +225,8 @@ class DashboardPresenter extends BasePresenter
                 case 'url':
                     $item = $form->addText($formId, $data[1])
                         ->setType($data[0])
-                        ->setDefaultValue($this->configManager->get($key, ''))
-                        ->addCondition(Form::FILLED)
+                        ->setDefaultValue($this->configManager->get($key, ''));
+                    $item->addCondition(Form::FILLED)
                         ->addRule(Form::URL, 'Toto není platné URL');
                     break;
                 case 'date':
