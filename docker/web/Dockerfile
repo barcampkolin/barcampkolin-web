@@ -10,7 +10,7 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
     && docker-php-ext-install gd \
     && curl -sS https://getcomposer.org/installer | php \
     && mv ./composer.phar /usr/local/bin/composer \
-    && a2enmod rewrite \
+    && a2enmod rewrite expires  \
     && service apache2 restart
 
 #RUN pecl install xdebug \
