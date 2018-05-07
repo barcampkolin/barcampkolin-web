@@ -27,7 +27,7 @@
     <meta property="og:url" content="{link //this}">
     {ifset #metaDescription}<meta property="og:description" content="{include metaDescription|stripHtml|truncate:300}">{/ifset}
     <meta property="og:locale" content="cs_CZ">
-    <meta property="og:image" content="{block ogImage}{$baseUri}/img/barcamp-og2.png{/block}">
+    <meta property="og:image" content="{block ogImage}{$socialUrls->ogImage ?: $baseUri.'/img/barcamp-og.png'}{/block}">
     <!-- Facebook Pixel Code -->
     <script n:syntax="off" n:nonce>
         !function(f,b,e,v,n,t,s)
