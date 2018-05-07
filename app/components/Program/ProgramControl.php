@@ -6,14 +6,12 @@ use App\Model\EventInfoProvider;
 use App\Model\TalkManager;
 use App\Orm\Program;
 use Nette\Application\UI\Control;
+use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
 class ProgramControl extends Control
 {
-
-    const HOUR_START = 8;
-    const HOUR_END = 18;
 
     /**
      * @var EventInfoProvider
@@ -49,7 +47,12 @@ class ProgramControl extends Control
 
         $this->template->dates = $this->infoProvider->getDates();
 
-        $this->template->items = $this->getRenderableItems();
+        $sortedItems = $this->getSortedItems();
+        $minMaxBorder = $this->getMinMaxBorder($sortedItems);
+
+        $this->template->items = $this->getRenderableItems($sortedItems, $minMaxBorder);
+
+        $this->template->timeRows = $this->getTimeRows($minMaxBorder);
 
         $this->template->categories = $this->talkManager->getCategories();
         $this->template->rooms = $this->talkManager->getRooms();
@@ -89,24 +92,56 @@ class ProgramControl extends Control
 
 
     /**
+     * Get min-max minute mantilels of all exists program items.
+     * For spped is using array key (that represent minutes delay of item begin from midnight).
+     * @param array $sortedItems
+     * @param bool $roundWholeHour
+     * @return ArrayHash
+     * @throws \Exception
+     */
+    private function getMinMaxBorder(array $sortedItems, $roundWholeHour = true)
+    {
+        $max = $min = null;
+
+        foreach ($sortedItems as $room) {
+            $min = is_null($min) ? min(array_keys($room)) : min(array_merge([$min], array_keys($room)));
+
+
+            /** @var InternalProgramEnvelope $maxItem */
+            $maxKey = max(array_keys($room));
+            $maxItem = $room[$maxKey];
+            $maxItemValue = $maxItem->getDuration() + $maxKey;
+            $max = is_null($max) ? $maxItemValue : max($max, $maxItemValue);
+        }
+
+        if ($roundWholeHour) {
+            $min = $min - ($min % 60);
+            $max = $max + 60 - (($max % 60) ?: 60);
+        }
+
+        return ArrayHash::from([
+            'min' => $this->minutesToDateInterval($min),
+            'max' => $this->minutesToDateInterval($max),
+        ]);
+    }
+
+
+    /**
+     * @param array $sortedItems
+     * @param ArrayHash $minMaxBorder
      * @return array
      * @throws \Exception
      */
-    public function getRenderableItems()
+    private function getRenderableItems(array $sortedItems, ArrayHash $minMaxBorder)
     {
-        $renderStart = new \DateInterval(sprintf('PT%dH', self::HOUR_START));
-        $renderEnd = new \DateInterval(sprintf('PT%dH', self::HOUR_END));
-
-        $sortedItems = $this->getSortedItems();
-
         $renderableItems = [];
         foreach ($sortedItems as $roomKey => $roomItems) {
             $renderableItems[$roomKey] = [];
             $items = [];
-            $prevEnd = $renderStart;
+            $prevEnd = $minMaxBorder->min;
 
             /** @var InternalProgramEnvelope $program */
-            foreach ($roomItems as $minutes => $program) {
+            foreach ($roomItems as $program) {
                 $spaceMinutes = $program->computePreviousSpaceMinutes($prevEnd);
 
                 if ($spaceMinutes < 0) {
@@ -139,6 +174,28 @@ class ProgramControl extends Control
     }
 
 
+    private function getTimeRows(ArrayHash $minMaxBorder)
+    {
+        $rows = [];
+
+        $time = new \DateInterval('PT0H');
+        $time->h = $minMaxBorder->min->h;
+        $time->i = $minMaxBorder->min->i;
+
+        do {
+            $rows[] = $this->formatClock($time);
+            $time->h++;
+        } while ($minMaxBorder->max->h >= $time->h);
+
+        return $rows;
+    }
+
+
+    /**
+     * @param \DateInterval $start
+     * @param int $minutes
+     * @return InternalProgramVirtual
+     */
     private function getSpacer(\DateInterval $start, $minutes)
     {
         return new InternalProgramVirtual('space', $start, $minutes);
@@ -155,8 +212,36 @@ class ProgramControl extends Control
 
         $minutes = intval($dateInterval->i);
 
-        $minutes += max(0, $hours - self::HOUR_START) * 60;
+        $minutes += max(0, $hours) * 60;
 
         return $minutes;
+    }
+
+
+    /**
+     * @param int $minutes
+     * @return \DateInterval
+     * @throws \Exception
+     */
+    private function minutesToDateInterval($minutes)
+    {
+        $dateInterval = new \DateInterval('PT0H');
+        $h = 0;
+        $i = $minutes;
+
+        while ($i >= 60) {
+            $i -= 60;
+            $h++;
+        }
+
+        $dateInterval->i = $i;
+        $dateInterval->h = $h;
+        return $dateInterval;
+    }
+
+
+    private function formatClock(\DateInterval $dateInterval)
+    {
+        return $dateInterval->format('%H:%I');
     }
 }

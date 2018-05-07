@@ -49,70 +49,15 @@
 
                     <div class="program-wrapper">
                         <ul class="timerows timerows-mobile">
-                            <li>
-                                <span class="time">08:00</span>
-                            </li>
-                            <li>
-                                <span class="time">09:00</span>
-                            </li>
-                            <li>
-                                <span class="time">10:00</span>
-                            </li>
-                            <li>
-                                <span class="time">11:00</span>
-                            </li>
-                            <li>
-                                <span class="time">12:00</span>
-                            </li>
-                            <li>
-                                <span class="time">13:00</span>
-                            </li>
-                            <li>
-                                <span class="time">14:00</span>
-                            </li>
-                            <li>
-                                <span class="time">15:00</span>
-                            </li>
-                            <li>
-                                <span class="time">16:00</span>
-                            </li>
-                            <li>
-                                <span class="time">17:00</span>
+                            <li n:foreach="$timeRows as $time">
+                                <span class="time">{$time}</span>
                             </li>
                         </ul>
 
                         <div class="program-container">
-
                             <ul class="timerows">
-                                <li>
-                                    <span class="time">08:00</span>
-                                </li>
-                                <li>
-                                    <span class="time">09:00</span>
-                                </li>
-                                <li>
-                                    <span class="time">10:00</span>
-                                </li>
-                                <li>
-                                    <span class="time">11:00</span>
-                                </li>
-                                <li>
-                                    <span class="time">12:00</span>
-                                </li>
-                                <li>
-                                    <span class="time">13:00</span>
-                                </li>
-                                <li>
-                                    <span class="time">14:00</span>
-                                </li>
-                                <li>
-                                    <span class="time">15:00</span>
-                                </li>
-                                <li>
-                                    <span class="time">16:00</span>
-                                </li>
-                                <li>
-                                    <span class="time">17:00</span>
+                                <li n:foreach="$timeRows as $time">
+                                    <span class="time">{$time}</span>
                                 </li>
                             </ul>
 
