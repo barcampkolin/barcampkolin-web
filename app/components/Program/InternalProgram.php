@@ -7,14 +7,14 @@ use Nette\SmartObject;
 /**
  * Class InternalProgram
  * @package App\Components\Program
- * @property-read string $talkId
+ * @property-read int $talkId
  * @property-read string $title
  * @property-read string $speaker
  * @property-read \DateInterval $time
  * @property-read string $startClock
  * @property-read string $endClock
  * @property-read string $type
- * @property-read string $duration
+ * @property-read int $duration
  * @property-read string $style
  */
 abstract class InternalProgram implements IInternalProgram
@@ -23,7 +23,7 @@ abstract class InternalProgram implements IInternalProgram
 
 
     /**
-     * @return string
+     * @return int
      */
     abstract public function getTalkId();
 
