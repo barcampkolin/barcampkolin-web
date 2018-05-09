@@ -207,8 +207,9 @@ class PartnersPresenter extends BasePresenter
      * @param $prev_id
      * @param $next_id
      * @throws \Nette\Application\AbortException
+     * @secured
      */
-    public function handleSortPartner($item_id, $prev_id, $next_id)
+    public function handleSortPartner($item_id = null, $prev_id = null, $next_id = null)
     {
         $item = $this->partners->getPartnerById($item_id);
         $prevItem = $prev_id ? $this->partners->getPartnerById($prev_id) : null;
@@ -230,6 +231,7 @@ class PartnersPresenter extends BasePresenter
     /**
      * @param $id
      * @throws \Nette\Application\AbortException
+     * @secured
      */
     public function handleDeletePartner($id)
     {
@@ -334,8 +336,9 @@ class PartnersPresenter extends BasePresenter
      * @param  int|NULL $next_id
      * @return void
      * @throws \Nette\Application\AbortException
+     * @secured
      */
-    public function handleSortGroup($item_id, $prev_id, $next_id)
+    public function handleSortGroup($item_id = null, $prev_id = null, $next_id = null)
     {
         $item = $this->partners->getGroupById($item_id);
         $prevItem = $prev_id ? $this->partners->getGroupById($prev_id) : null;
@@ -357,6 +360,7 @@ class PartnersPresenter extends BasePresenter
     /**
      * @param $id
      * @throws \Nette\Application\AbortException
+     * @secured
      */
     public function handleDeleteGroup($id)
     {
