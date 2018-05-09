@@ -491,6 +491,10 @@ class ConferencePresenter extends BasePresenter
 
         $grid->setDataSource($program);
 
+        $grid->addToolbarButton('programEdit', 'Přidat do programu…')
+            ->setClass('btn btn-xs btn-primary')
+            ->setIcon('plus');
+
         $grid->addColumnText('type', 'Typ')
             ->setReplacement($this->talkManager->getProgramTypes());
 
