@@ -23,6 +23,10 @@ class RouterFactory
         $adminRouter[] = new Route('admin/<presenter>/<action>', 'Dashboard:default');
         $router[] = $adminRouter;
 
+        $apiRouter = new RouteList('Api');
+        $apiRouter[] = new Route('api/<presenter>/<action>');
+        $router[] = $apiRouter;
+
         //Custom routes
         $router[] = new Route('kontakt', 'Homepage:contact');
         $router[] = new Route('o-akci', 'Homepage:history');

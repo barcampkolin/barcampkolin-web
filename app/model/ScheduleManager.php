@@ -161,6 +161,7 @@ class ScheduleManager
 
     /**
      * @param bool $withValues
+     * @param bool $withConfig
      * @return array
      * @throws \Nette\Utils\JsonException
      */
