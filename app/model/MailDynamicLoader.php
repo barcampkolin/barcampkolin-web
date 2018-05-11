@@ -36,6 +36,10 @@ class MailDynamicLoader
             'title' => 'Ohlášení hlasování přednášek',
             'params' => [],
         ],
+        'before-event-announce' => [
+            'title' => 'E-mail před konáním barcampu',
+            'params' => [],
+        ],
     ];
 
 
