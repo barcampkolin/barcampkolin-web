@@ -785,6 +785,18 @@ body.no-js .js-only {
     }
 
     li {
+        &.item-active, &.item-done {
+
+            .item-circle {
+                background-color: @color-brand-logo;
+                background-image: none;
+                color: @color-default;
+                border-color: @color-brand-logo;
+                font-weight: 700;
+                font-size: 2.1rem;
+            }
+        }
+
         &.item-primary {
 
             .item-circle {
@@ -796,18 +808,6 @@ body.no-js .js-only {
                 span {
                     display: none;
                 }
-            }
-        }
-
-        &.item-active, &.item-done {
-
-            .item-circle {
-                background-color: @color-brand-logo;
-                background-image: none;
-                color: @color-default;
-                border-color: @color-brand-logo;
-                font-weight: 700;
-                font-size: 2.1rem;
             }
         }
 
