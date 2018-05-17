@@ -172,41 +172,6 @@ class DashboardPresenter extends BasePresenter
 
 
     /**
-     *
-     */
-    public function renderDebug()
-    {
-        $this->template->isDebug = DebugEnabler::isDebug();
-        $this->template->isDebugByEnv = DebugEnabler::isDebugByEnv();
-        $this->template->secured = $this->getRequest()->hasFlag(Request::SECURED);
-    }
-
-
-    /**
-     * @throws \Nette\Application\AbortException
-     * @secured
-     */
-    public function handleTurnOff()
-    {
-        DebugEnabler::turnOff();
-        $this->flashMessage('Ladící režim vypnut', 'success');
-        $this->redirect('this');
-    }
-
-
-    /**
-     * @throws \Nette\Application\AbortException
-     * @secured
-     */
-    public function handleTurnOn()
-    {
-        DebugEnabler::turnOn();
-        $this->flashMessage('Ladící režim zapnut', 'success');
-        $this->redirect('this');
-    }
-
-
-    /**
      * @return Form
      * @throws \Nette\Utils\JsonException
      */

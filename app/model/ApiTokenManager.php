@@ -48,7 +48,7 @@ class ApiTokenManager
     {
         $hash = hash_hmac('sha256', $token, $this->secretKey);
 
-        $hashes = $this->configManager->get('api.token.hashes', []);
+        $hashes = $this->getTokenHashes();
 
         foreach ($hashes as $hashItem) {
             if ($hashItem['value'] == $hash) {
@@ -58,4 +58,17 @@ class ApiTokenManager
 
         return false;
     }
+
+
+    /**
+     * @return mixed
+     * @throws \Nette\Utils\JsonException
+     */
+    public function getTokenHashes()
+    {
+        $hashes = $this->configManager->get('api.token.hashes', []);
+
+        return $hashes;
+    }
+
 }

@@ -44,6 +44,27 @@ Spusťte Docker
 
 Na stránce `http://localhost:8001` by se měl objevit aktuální web.
 
+Nastavení cronu
+--------------
+
+Vy systému není univerzální cron, který by obsluhoval všechny služby, ale pro každý cronem obsluhovaný
+job je samostatné volání cronu. 
+
+Volání cronu je přes HTTPS REST API a je chráněno API tokenem, který si lze vygenerovat v administraci.
+Samotné volání lze pak zajistit externí službou nebo přes `curl` či `wget`.
+
+Volání cronu musí být metodou `POST` a musí obsahovat HTTP hlavičku `authtoken` jejíž hodnotou bude
+jeden platný token.
+
+Tělem odpovědi je vždy JSON s povinnou hodnotou `status`, který označuje úspěšnost akce. 
+
+Seznam cronů:
+
+### Cron pro automatický posun harmonogramu
+
+- Endpoint: `/api/schedule/step-next`
+- Parametry: (bez parametrů)
+
 
 Požadavky pro běh
 -----------------
