@@ -156,7 +156,14 @@ class MailPresenter extends BasePresenter
 
         $this->mailer->getDynamicMessage($recipient, $templateId, $parameters)->send();
 
-        $this->sendJson(['status' => 'ok']);
+        $reponse = [
+            'status' => 'ok',
+            'templateId' => $templateId,
+            'recipient' => $recipient,
+            'parameters' => $parameters,
+        ];
+
+        $this->sendJson($reponse);
     }
 
 
