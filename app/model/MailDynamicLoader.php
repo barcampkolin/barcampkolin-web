@@ -40,6 +40,12 @@ class MailDynamicLoader
             'title' => 'E-mail před konáním barcampu',
             'params' => [],
         ],
+        'after-event-announce' => [
+            'title' => 'E-mail po konání barcampu',
+            'params' => [
+                'formLink' => 'URL na formulář'
+            ],
+        ],
     ];
 
 
