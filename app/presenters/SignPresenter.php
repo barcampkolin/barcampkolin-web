@@ -549,10 +549,7 @@ class SignPresenter extends BasePresenter
             $this->removePartialLoginSession();
 
             $this->mailer->getRegistrationMessage($user->email)->send();
-
-            //temoporary
-            $this->mailer->getDynamicMessage($user->email, 'before-event-announce')->send();
-
+            
             $this->flashMessage('Právě jste se zaregistrovali na Barcamp!');
             $this->restoreRequest($this->backlink);
             $this->redirect('User:profil');
