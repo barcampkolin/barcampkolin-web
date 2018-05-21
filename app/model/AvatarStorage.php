@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use Nette\Http\Request;
+use Nette\Utils\FileSystem;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
 
@@ -45,7 +46,9 @@ class AvatarStorage
 
     private function getStorageFilename($filename)
     {
-        return $this->uploadDir . '/' . $filename;
+        $uploadDir = $this->uploadDir;
+        FileSystem::createDir($uploadDir);
+        return $uploadDir . '/' . $filename;
     }
 
 

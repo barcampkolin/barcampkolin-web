@@ -20,7 +20,7 @@ class RouterFactory
 
         // Admin
         $adminRouter = new RouteList('Admin');
-        $adminRouter[] = new Route('admin/<presenter>/<action>', 'Dashboard:default');
+        $adminRouter[] = new Route('admin/<presenter>/<action>[/<id \d+>]', 'Dashboard:default');
         $router[] = $adminRouter;
 
         $apiRouter = new RouteList('Api');
@@ -28,9 +28,9 @@ class RouterFactory
         $router[] = $apiRouter;
 
         //Custom routes
-        $router[] = new Route('kontakt', 'Homepage:contact');
-        $router[] = new Route('o-akci', 'Homepage:history');
-        $router[] = new Route('partneri', 'Homepage:partners');
+        $router[] = new Route('[2018/]kontakt', 'Homepage:contact');
+        $router[] = new Route('[!2018/]o-akci', 'Homepage:history');
+        $router[] = new Route('[!2018/]partneri', 'Homepage:partners');
         $router[] = new Route('prihlaseni', 'Sign:in');
         $router[] = new Route('odhlaseni', 'Sign:out');
         $router[] = new Route('obnovit-heslo', 'Sign:resetPassword');
@@ -38,11 +38,11 @@ class RouterFactory
         $router[] = new Route('obnovit-heslo/odeslano', 'Sign:resetPasswordSent');
         $router[] = new Route('registrace', 'Sign:conferee');
         $router[] = new Route('vypsani-prednasky', 'Sign:talk');
-        $router[] = new Route('prednasky', 'Conference:talks');
-        $router[] = new Route('prednaska', 'Conference:talks', Route::ONE_WAY);
-        $router[] = new Route('prednaska/<id \d+>', 'Conference:talkDetail');
-        $router[] = new Route('prednasky/<id \d+>', 'Conference:talkDetail', Route::ONE_WAY);
-        $router[] = new Route('program', 'Conference:program');
+        $router[] = new Route('[!2018/]prednasky', 'Conference:talks');
+        $router[] = new Route('[!2018/]prednaska', 'Conference:talks', Route::ONE_WAY);
+        $router[] = new Route('[!2018/]prednaska/<id \d+>', 'Conference:talkDetail');
+        $router[] = new Route('[!2018/]prednasky/<id \d+>', 'Conference:talkDetail', Route::ONE_WAY);
+        $router[] = new Route('[!2018/]program', 'Conference:program');
         $router[] = new Route('profil', 'User:profil');
         $router[] = new Route('upravit-profil', 'User:conferee');
         $router[] = new Route('upravit-prednasku', 'User:talk');

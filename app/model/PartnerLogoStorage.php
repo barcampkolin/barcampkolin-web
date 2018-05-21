@@ -4,6 +4,7 @@ namespace App\Model;
 
 use Nette\Http\FileUpload;
 use Nette\Http\Request;
+use Nette\Utils\FileSystem;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
@@ -102,7 +103,9 @@ class PartnerLogoStorage
      */
     private function getStorageFilename($filename)
     {
-        return $this->uploadDir . '/' . $filename;
+        $uploadDir = $this->uploadDir;
+        FileSystem::createDir($uploadDir);
+        return $uploadDir . '/' . $filename;
     }
 
 
