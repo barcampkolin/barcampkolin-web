@@ -394,7 +394,7 @@ class ConferencePresenter extends BasePresenter
         }
 
         $this->template->talk = $talk;
-        $this->template->extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
+        $this->template->extended = $talk->getExpandedExtensions();
 
         /** @var Form $form */
         $form = $this['talkForm'];
@@ -402,6 +402,88 @@ class ConferencePresenter extends BasePresenter
         $values = $talk->toArray();
 
         $form->setDefaults($values);
+    }
+
+
+    public function renderEditLink($talkId, $type, $key)
+    {
+        $talk = $this->talkManager->getById($talkId);
+        $links = $talk->getLinksByType($type);
+
+        if (isset($links[$key])) {
+            $link = $links[$key];
+        } elseif ($key == 'new') {
+            $link = [
+                'name' => '',
+                'url' => '',
+            ];
+        } else {
+            $this->error('Odkaz nemáme');
+        }
+
+        /** @var Form $form */
+        $form = $this['linkEditForm'];
+        $form->setDefaults([
+            'name' => $link['name'],
+            'url' => $link['url'],
+            'talkId' => $talkId,
+            'type' => $type,
+            'key' => $key,
+        ]);
+    }
+
+
+    public function createComponentLinkEditForm()
+    {
+        $form = new Form();
+
+        $form->addText('name', 'Popis')->setRequired();
+        $form->addText('url', 'URL odkazu')->setRequired()->addRule(Form::URL);
+
+        $form->addHidden('talkId');
+        $form->addHidden('key');
+        $form->addHidden('type');
+
+        $form->addProtection();
+
+        $form->addSubmit('submit', 'Uložit');
+
+        $form->onSuccess[] = function (Form $form, $values) {
+            $talk = $this->talkManager->getById($values->talkId);
+            $links = $talk->getLinksByType($values->type);
+            $link = [
+                'name' => $values->name,
+                'url' => $values->url,
+            ];
+            if ($values->key == 'new') {
+                $links[] = $link;
+            } else {
+                $links[$values->key] = $link;
+            }
+            $talk->setLinksByType($values->type, $links);
+            $this->talkManager->save($talk);
+            $this->redirect('talkEdit', ['id' => $values->talkId]);
+        };
+
+        return $form;
+    }
+
+
+    /**
+     * @secured
+     * @param $talkId
+     * @param $type
+     * @param $key
+     * @throws \Nette\Application\AbortException
+     */
+    public function handleDeleteLink($talkId, $type, $key)
+    {
+        $talk = $this->talkManager->getById($talkId);
+        $links = $talk->getLinksByType($type);
+        unset($links[$key]);
+        $talk->setLinksByType($type, $links);
+        $this->talkManager->save($talk);
+        $this->redirect('talkEdit', ['id' => $talkId]);
     }
 
 
