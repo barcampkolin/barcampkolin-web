@@ -188,6 +188,7 @@ class ConferencePresenter extends BasePresenter
 
         $features = $this->eventInfoProvider->getFeatures();
         $this->template->allowVote = $features['vote'];
+        $this->template->showReport = $features['report'];
 
         $this->template->program = null;
         if ($features['program'] && $talk->program->countStored()) {
@@ -207,6 +208,39 @@ class ConferencePresenter extends BasePresenter
         }
 
         $this->template->votes = $votes;
+
+        $this->template->addFilter('embedizeYouTube', [$this, 'embedizeYouTube']);
+        $this->template->addFilter('campainizeYouTube', [$this, 'campainizeYouTube']);
+    }
+
+
+    public function embedizeYouTube($url, $campainId = null)
+    {
+        $matches = null;
+        if (preg_match('~youtu\\.?be(?:\\.com)?/(?:watch\\?v=)?([-_a-z0-9]{8,15})~i', $url, $matches)) {
+            return $this->buildCampainUrl(
+                "https://www.youtube.com/embed/$matches[1]",
+                'yt-video-embed',
+                $campainId
+            );
+        }
+    }
+
+
+    public function campainizeYouTube($url, $campainId = null)
+    {
+        return $this->buildCampainUrl(
+            $url,
+            'yt-video-youtube',
+            $campainId
+        );
+    }
+
+
+    private function buildCampainUrl($url, $medium, $campainId)
+    {
+        $postfix = "utm_source=pbc-web&utm_medium=$medium&utm_content=$campainId&utm_campaign=talk-detail";
+        return $url . (strpos($url, '?') !== false ? '&' : '?') . $postfix;
     }
 
 

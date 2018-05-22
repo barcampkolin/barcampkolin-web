@@ -410,11 +410,17 @@ class ConferencePresenter extends BasePresenter
         $talk = $this->talkManager->getById($talkId);
         $links = $talk->getLinksByType($type);
 
+        if (!$talk) {
+            $this->error('Talk nemáme');
+        }
+
+        $this->template->talk = $talk;
+
         if (isset($links[$key])) {
             $link = $links[$key];
         } elseif ($key == 'new') {
             $link = [
-                'name' => '',
+                'name' => $talk->conferee->name . ": " . $talk->title,
                 'url' => '',
             ];
         } else {
