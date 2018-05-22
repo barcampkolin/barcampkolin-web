@@ -122,7 +122,7 @@ class ConferencePresenter extends BasePresenter
         $form->addEmail('email', 'E-mail')->setRequired();
         $form->addText('pictureUrl', 'URL obrázku')
             ->setOption('description', 'URL profilového obrázku.');
-        $form->addText('bio', 'Bio');
+        $form->addTextArea('bio', 'Bio');
 
 
         $form->addSubmit('submit', 'Uložit')->setOption('primary', true);
