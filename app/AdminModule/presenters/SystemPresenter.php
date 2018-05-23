@@ -3,6 +3,7 @@
 namespace App\AdminModule\Presenters;
 
 use App\Model\ApiTokenManager;
+use App\Model\ArchiveManager;
 use App\Model\DebugEnabler;
 use Nette\Application\Request;
 use Ublaboo\DataGrid\DataGrid;
@@ -13,11 +14,16 @@ class SystemPresenter extends BasePresenter
      * @var ApiTokenManager
      */
     private $apiTokenManager;
+    /**
+     * @var ArchiveManager
+     */
+    private $archiveManager;
 
 
-    public function __construct(ApiTokenManager $apiTokenManager)
+    public function __construct(ApiTokenManager $apiTokenManager, ArchiveManager $archiveManager)
     {
         $this->apiTokenManager = $apiTokenManager;
+        $this->archiveManager = $archiveManager;
     }
 
 
@@ -93,5 +99,26 @@ class SystemPresenter extends BasePresenter
     {
         $this->flashMessage('Token smazán', 'success');
         $this->redirect('this');
+    }
+
+    public function renderArchive()
+    {
+        $pages = [
+            ['Homepage:default'],
+            ['Homepage:contact'],
+            ['Homepage:history'],
+            ['Homepage:partners'],
+            ['Conference:talks'],
+            ['Conference:talks'],
+            ['Conference:program'],
+        ];
+
+        $rows = [];
+        foreach ($pages as $page) {
+            $abslink = $this->link('//:'.$page[0]);
+            $path = $this->archiveManager->getStoragePath($this->link(':'.$page[0]));
+            $rows[] = "curl -o \"$path\" \"$abslink\"";
+        }
+        $this->template->commands = implode("\n", $rows);
     }
 }

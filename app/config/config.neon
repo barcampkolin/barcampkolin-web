@@ -3,7 +3,7 @@
 # https://nette.org/security-warning
 #
 parameters:
-    currentYear: 2018
+    current_year: 2018
     database:
         driver: mysqli
         host: barcampkolinweb_mysqldb_1
@@ -78,10 +78,11 @@ database:
 
 services:
     - App\Model\ApiTokenManager(%api_token_secretkey%)
+    - App\Model\ArchiveManager(%current_year%, 'archive/')
     - App\Model\Authenticator\AuthenticatorProvider
     - App\Model\Authenticator\Email
     - App\Model\Authenticator\Facebook(%facebook%)
-    - App\Model\AvatarStorage('%wwwDir%/upload/%currentYear%', 'upload/%currentYear%')
+    - App\Model\AvatarStorage('%wwwDir%/upload/%current_year%', 'upload/%current_year%')
     - App\Model\ConfigManager
     - App\Model\ConfereeManager
     - App\Model\EventInfoProvider
@@ -91,7 +92,7 @@ services:
     - App\Model\MailDynamicLoader
     - App\Model\NewsletterSignupManager
     - App\Model\PartnersManager
-    - App\Model\PartnerLogoStorage('%wwwDir%/upload/%currentYear%/partner', 'upload/%currentYear%/partner')
+    - App\Model\PartnerLogoStorage('%wwwDir%/upload/%current_year%/partner', 'upload/%current_year%/partner')
     - App\Model\ScheduleManager
     - App\Model\TalkManager
     - App\Model\UserManager

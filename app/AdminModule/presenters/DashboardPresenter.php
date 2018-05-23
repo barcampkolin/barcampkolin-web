@@ -3,12 +3,11 @@
 namespace App\AdminModule\Presenters;
 
 use App\Components\Enumerator\IEnumeratorFormControlFactory;
+use App\Model\ArchiveManager;
 use App\Model\ConfigManager;
-use App\Model\DebugEnabler;
 use App\Model\EnumeratorManager;
 use App\Model\EventInfoProvider as Event;
 use App\Model\ScheduleManager;
-use Nette\Application\Request;
 use Nette\Application\UI\Form;
 use Nette\Http\IResponse;
 use Nette\Utils\ArrayHash;
