@@ -20,7 +20,7 @@ class RouterFactory
 
         // Admin
         $adminRouter = new RouteList('Admin');
-        $adminRouter[] = new Route('admin/<presenter>/<action>[/<id \d+>]', 'Dashboard:default');
+        $adminRouter[] = new Route('admin/<presenter>/<action>[/<id>]', 'Dashboard:default');
         $router[] = $adminRouter;
 
         $apiRouter = new RouteList('Api');
