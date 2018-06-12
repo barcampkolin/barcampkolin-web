@@ -37,7 +37,7 @@
                                 <h3>Prezentace</h3>
                                 <ul>
                                     <li n:foreach="$slides as $slide">
-                                        <a href="{$slide[url]}" target="_blank">{$slide[name]}</a>
+                                        <a href="{$slide[url]}" target="_blank" rel="noopener">{$slide[name]}</a>
                                     </li>
                                 </ul>
                             {/if}
@@ -49,7 +49,7 @@
                                     <li n:foreach="$videos as $video">
                                         <h4>{$video[name]}</h4>
                                         <iframe width="540" height="304" src="{$video['url']|embedizeYouTube}" frameborder="0" allowfullscreen></iframe>
-                                        <a href="{$video['url']|campainizeYouTube}" target="_blank" class="yt-link">
+                                        <a href="{$video['url']|campainizeYouTube}" target="_blank" rel="noopener" class="yt-link">
                                             Zobrazit na YouTube
                                         </a>
 
@@ -87,21 +87,21 @@
                     <p n:ifcontent class="item-author-bio">{$talk->conferee->bio}</p>
                     <div class="item-author-contact">
                         <div class="item-social">
-                            <a n:if="isset($extended['url']['facebook']) && $extended['url']['facebook']" href="{$extended['url']['facebook']}" target="_blank">
+                            <a n:if="isset($extended['url']['facebook']) && $extended['url']['facebook']" href="{$extended['url']['facebook']}" target="_blank" rel="noopener">
                                 <span class="icon icon-facebook-1"><span class="path1"></span><span class="path2"></span></span>
                             </a>
-                            <a n:if="isset($extended['url']['twitter']) && $extended['url']['twitter']" href="{$extended['url']['twitter']}" target="_blank">
+                            <a n:if="isset($extended['url']['twitter']) && $extended['url']['twitter']" href="{$extended['url']['twitter']}" target="_blank" rel="noopener">
                                 <span class="icon icon-twitter-2"><span class="path1"></span><span class="path2"></span></span>
                             </a>
-                            <a n:if="isset($extended['url']['google']) && $extended['url']['google']" href="{$extended['url']['google']}" target="_blank">
+                            <a n:if="isset($extended['url']['google']) && $extended['url']['google']" href="{$extended['url']['google']}" target="_blank" rel="noopener">
                                 <span class="icon icon-google-plus"><span class="path1"></span><span class="path2"></span><span class="path3"></span></span>
                             </a>
-                            <a n:if="isset($extended['url']['linkedin']) && $extended['url']['linkedin']" href="{$extended['url']['linkedin']}" target="_blank">
+                            <a n:if="isset($extended['url']['linkedin']) && $extended['url']['linkedin']" href="{$extended['url']['linkedin']}" target="_blank" rel="noopener">
                                 <span class="icon icon-linkedin"><span class="path1"></span><span class="path2"></span></span>
                             </a>
                         </div>
 
-                        <a n:if="isset($extended['url']['www']) && $extended['url']['www']" href="{$extended['url']['www']}" target="_blank">{$extended['url']['www']}</a>
+                        <a n:if="isset($extended['url']['www']) && $extended['url']['www']" href="{$extended['url']['www']}" target="_blank" rel="noopener">{$extended['url']['www']}</a>
                     </div>
                 </div>
 
