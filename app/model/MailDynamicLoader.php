@@ -46,6 +46,10 @@ class MailDynamicLoader
                 'formLink' => 'URL na formulář'
             ],
         ],
+        'report-publish-announce' => [
+            'title' => 'E-mail po vydání vídeí na YouTube',
+            'params' => [],
+        ],
     ];
 
 
