@@ -2,26 +2,22 @@
 
 namespace App\Model;
 
-use Nette\Http\Request;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
 
 class AvatarStorage
 {
-    private $uploadDir;
-    private $urlPrefix;
+
     /**
-     * @var Request
+     * @var StoragePrefix
      */
-    private $request;
+    private $storagePrefix;
 
 
-    public function __construct($uploadDir, $urlPrefix, Request $request)
+    public function __construct(StoragePrefix $storagePrefix)
     {
-        $this->uploadDir = $uploadDir;
-        $this->urlPrefix = $urlPrefix;
-        $this->request = $request;
+        $this->storagePrefix = $storagePrefix;
     }
 
 
@@ -46,7 +42,7 @@ class AvatarStorage
 
     private function getStorageFilename($filename)
     {
-        $uploadDir = $this->uploadDir;
+        $uploadDir = $this->storagePrefix->getStoragePath();
         FileSystem::createDir($uploadDir);
         return $uploadDir . '/' . $filename;
     }
@@ -54,7 +50,7 @@ class AvatarStorage
 
     private function getUrl($filename)
     {
-        $baseUrl = $this->request->getUrl()->getBaseUrl();
-        return $baseUrl . $this->urlPrefix . '/' . $filename;
+
+        return $this->storagePrefix->getUrlPath() . '/' . $filename;
     }
 }

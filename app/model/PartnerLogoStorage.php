@@ -12,31 +12,14 @@ use Nette\Utils\Strings;
 class PartnerLogoStorage
 {
     /**
-     * @var string
+     * @var StoragePrefix
      */
-    private $uploadDir;
-    /**
-     * @var string
-     */
-    private $urlPrefix;
-
-    /**
-     * @var Request
-     */
-    private $request;
+    private $storagePrefix;
 
 
-    /**
-     * PartnerLogoStorage constructor.
-     * @param string $uploadDir
-     * @param string $urlPrefix
-     * @param Request $request
-     */
-    public function __construct($uploadDir, $urlPrefix, Request $request)
+    public function __construct(StoragePrefix $storagePrefix)
     {
-        $this->uploadDir = $uploadDir;
-        $this->urlPrefix = $urlPrefix;
-        $this->request = $request;
+        $this->storagePrefix = $storagePrefix;
     }
 
 
@@ -103,7 +86,7 @@ class PartnerLogoStorage
      */
     private function getStorageFilename($filename)
     {
-        $uploadDir = $this->uploadDir;
+        $uploadDir = $this->storagePrefix->getStoragePath();
         FileSystem::createDir($uploadDir);
         return $uploadDir . '/' . $filename;
     }
@@ -115,7 +98,6 @@ class PartnerLogoStorage
      */
     private function getUrl($filename)
     {
-        $baseUrl = $this->request->getUrl()->getBaseUrl();
-        return $baseUrl . $this->urlPrefix . '/' . $filename;
+        return $this->storagePrefix->getUrlPath() . '/' . $filename;
     }
 }

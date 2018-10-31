@@ -10,6 +10,8 @@ class EventInfoProvider
 {
     use SmartObject;
 
+    const CURRENT_YEAR = 'dates.currentYear';
+
     const COUNTS_CONFEREE = 'counts.conferee';
     const COUNTS_TALKS = 'counts.talks';
     const COUNTS_TALKS_LIMIT = 'counts.talks.limit';
@@ -68,6 +70,8 @@ class EventInfoProvider
     public function getDates()
     {
         return ArrayHash::from([
+            'year' => (int)$this->config->get(self::CURRENT_YEAR, (new DateTime())->format('Y')),
+
             'talks' => DateTime::from($this->config->get(self::DATE_TALKS)),
             'vote' => DateTime::from($this->config->get(self::DATE_VOTE)),
             'program' => DateTime::from($this->config->get(self::DATE_PROGRAM)),
