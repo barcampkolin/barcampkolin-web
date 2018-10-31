@@ -16,14 +16,14 @@ module.exports = function(grunt) {
                     sourceMap: false
                 },
                 files: {
-                    'www/css/main.css': [
+                    'www/static/2018/css/main.css': [
                         'assets/css/pure/pure.css',
                         'www/css/fonts.css',
                         'www/plugins/slick/slick.css',
                         'assets/less/main.less',
                         'assets/less/flash.less'
                     ],
-                    'www/css/admin.css': [
+                    'www/static/2018/css/admin.css': [
                         'assets/bower_components/bootstrap/dist/css/bootstrap.css',
                         'assets/bower_components/happy/dist/happy.css',
                         'assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
             },
             default: {
                 files: {
-                    'www/js/main.js': [
+                    'www/static/2018/js/main.js': [
                         'assets/js/jquery-3.1.1.js',
                         'www/plugins/jquery-ui/jquery-ui.js',
                         'www/plugins/slick/slick.js',
@@ -52,7 +52,7 @@ module.exports = function(grunt) {
                         'assets/bower_components/nette.ajax.js/nette.ajax.js',
                         'assets/js/main.js'
                     ],
-                    'www/js/admin.js': [
+                    'www/static/2018/js/admin.js': [
                         'assets/bower_components/jquery/dist/jquery.js',
                         'assets/bower_components/nette-forms/src/assets/netteForms.js',
                         'assets/bower_components/nette.ajax.js/nette.ajax.js',
