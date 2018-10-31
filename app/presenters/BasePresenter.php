@@ -38,8 +38,11 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $parameters = $this->context->getParameters();
         $this->template->wwwDir = $parameters['wwwDir'];
 
-        $this->template->dates = $this->eventInfo->getDates();
+        $dates = $this->eventInfo->getDates();
+
+        $this->template->dates = $dates;
         $this->template->features = $this->eventInfo->getFeatures();
         $this->template->socialUrls = $this->eventInfo->getSocialUrls();
+        $this->template->year = $dates['year'];
     }
 }
