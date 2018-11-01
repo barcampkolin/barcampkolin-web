@@ -3,8 +3,6 @@
 namespace App\Model;
 
 use Nette\Http\Request;
-use Nette\Utils\DateTime;
-use Nette\Utils\JsonException;
 
 /**
  * Class LocalArchivableStoragePrefixFactory
@@ -51,15 +49,15 @@ class LocalArchivableStoragePrefixFactory
     /**
      * @param string $storageBase Absolute path (without trailing /)
      * @param string $urlPrefix Relative URL from project root
-     * @param ConfigManager $config
+     * @param ArchiveManager $archiveManager
      * @param Request $httpRequest
      */
-    public function __construct($storageBase, $urlPrefix, ConfigManager $config, Request $httpRequest)
+    public function __construct($storageBase, $urlPrefix, ArchiveManager $archiveManager, Request $httpRequest)
     {
         $this->storageBase = $storageBase;
         $this->urlBase = rtrim($httpRequest->getUrl()->getBaseUrl(), '/') . '/' . $urlPrefix;
 
-        $this->currentYear = $this->loadCurrentYear($config);
+        $this->currentYear = $archiveManager->getCurrentYear();
     }
 
 
@@ -73,21 +71,4 @@ class LocalArchivableStoragePrefixFactory
         $pathPrefix = $pathYearPrefix . $this->currentYear . $pathYearSuffix;
         return new StoragePrefix($this->storageBase, $this->urlBase, $pathPrefix);
     }
-
-
-    /**
-     * @param ConfigManager $config
-     * @return int
-     */
-    private function loadCurrentYear(ConfigManager $config)
-    {
-        $currentYear = (new DateTime)->format('Y');
-        try {
-            return (int)$config->get('dates.currentYear', $currentYear);
-        } catch (JsonException $e) {
-            return $currentYear;
-        }
-    }
-
-
 }

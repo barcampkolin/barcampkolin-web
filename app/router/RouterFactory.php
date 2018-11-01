@@ -12,9 +12,12 @@ class RouterFactory
 
 
     /**
+     * @param int $year
+     * @param bool $isArchivationProcess
      * @return Nette\Application\IRouter
+     * @throws Nette\InvalidArgumentException
      */
-    public static function createRouter()
+    public static function createRouter($year, $isArchivationProcess)
     {
         $router = new RouteList;
 
@@ -27,10 +30,12 @@ class RouterFactory
         $apiRouter[] = new Route('api/<presenter>/<action>');
         $router[] = $apiRouter;
 
+        $requiredWhenArchive = $isArchivationProcess ? '!' : '';
+
         //Custom routes
-        $router[] = new Route('[2018/]kontakt', 'Homepage:contact');
-        $router[] = new Route('[!2018/]o-akci', 'Homepage:history');
-        $router[] = new Route('[!2018/]partneri', 'Homepage:partners');
+        $router[] = new Route('[' . $requiredWhenArchive . $year . '/]kontakt', 'Homepage:contact');
+        $router[] = new Route('[!' . $year . '/]o-akci', 'Homepage:history');
+        $router[] = new Route('[!' . $year . '/]partneri', 'Homepage:partners');
         $router[] = new Route('prihlaseni', 'Sign:in');
         $router[] = new Route('odhlaseni', 'Sign:out');
         $router[] = new Route('obnovit-heslo', 'Sign:resetPassword');
@@ -38,11 +43,11 @@ class RouterFactory
         $router[] = new Route('obnovit-heslo/odeslano', 'Sign:resetPasswordSent');
         $router[] = new Route('registrace', 'Sign:conferee');
         $router[] = new Route('vypsani-prednasky', 'Sign:talk');
-        $router[] = new Route('[!2018/]prednasky', 'Conference:talks');
-        $router[] = new Route('[!2018/]prednaska', 'Conference:talks', Route::ONE_WAY);
-        $router[] = new Route('[!2018/]prednaska/<id \d+>', 'Conference:talkDetail');
-        $router[] = new Route('[!2018/]prednasky/<id \d+>', 'Conference:talkDetail', Route::ONE_WAY);
-        $router[] = new Route('[!2018/]program', 'Conference:program');
+        $router[] = new Route('[!' . $year . '/]prednasky', 'Conference:talks');
+        $router[] = new Route('[!' . $year . '/]prednaska', 'Conference:talks', Route::ONE_WAY);
+        $router[] = new Route('[!' . $year . '/]prednaska/<id \d+>', 'Conference:talkDetail');
+        $router[] = new Route('[!' . $year . '/]prednasky/<id \d+>', 'Conference:talkDetail', Route::ONE_WAY);
+        $router[] = new Route('[!' . $year . '/]program', 'Conference:program');
         $router[] = new Route('profil', 'User:profil');
         $router[] = new Route('upravit-profil', 'User:conferee');
         $router[] = new Route('upravit-prednasku', 'User:talk');

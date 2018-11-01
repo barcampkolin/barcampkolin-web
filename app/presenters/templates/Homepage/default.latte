@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <div class="hero-buttons">
+            <div class="hero-buttons" n:if="$isArchivationProcess === false">
                 <a n:tag-if="$features->conferee" href="{link Sign:conferee}">
                     <span class="btn btn-lg btn-brand btn-section {if !$features->conferee}disabled{/if}" title="Přihlášení je možné od {$dates->talks|date:'j. n. Y'}">
                         Získat vstupenku (zdarma)
@@ -87,7 +87,7 @@
     </div>
 </div>
 
-<section>
+<section n:if="$isArchivationProcess === false">
     <div class="wrapper bg-gray">
         <div class="container-wide text-center">
             <h1><span class="dot-end" id="schedule-scroll-point">Harmonogram</span></h1>
@@ -101,7 +101,7 @@
 
 {control program}
 
-<section>
+<section n:if="$isArchivationProcess === false">
     <div class="wrapper">
         <div class="container-wide text-center">
             <h1><span class="dot-end">Registrace</span></h1>
@@ -156,7 +156,7 @@
     </div>
 </section>
 
-<section>
+<section n:if="$isArchivationProcess === false">
     <div class="wrapper">
         <div class="container-wide text-center">
 

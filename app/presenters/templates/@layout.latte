@@ -69,10 +69,12 @@
                     {*<li><a href="#"><span class="nav-link">Workshopy</span></a></li>*}
                     {*<li><a href="#"><span class="nav-link">Afterpárty</span></a></li>*}
                     <li {ifCurrent Homepage:contact}class="active"{/ifCurrent}><a href="{link :Homepage:contact}"><span class="nav-link">Kontakt</span></a></li>
-                    {if $user->isLoggedIn()}
-                        <li {ifCurrent User:*}class="active"{/ifCurrent}><a href="{link User:profil}"><span class="nav-link">{$user->identity->name}</span></a></li>
-                    {else}
-                        <li {ifCurrent Sign:*}class="active"{/ifCurrent}><a href="{link Sign:in}"><span class="nav-link">Přihlásit</span></a></li>
+                    {if $isArchivationProcess === false}
+                        {if $user->isLoggedIn()}
+                            <li {ifCurrent User:*}class="active"{/ifCurrent}><a href="{link User:profil}"><span class="nav-link">{$user->identity->name}</span></a></li>
+                        {else}
+                            <li {ifCurrent Sign:*}class="active"{/ifCurrent}><a href="{link Sign:in}"><span class="nav-link">Přihlásit</span></a></li>
+                        {/if}
                     {/if}
 
                 </ul>
@@ -101,18 +103,22 @@
 
             <div class="row pure-g pure-p">
                 <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-4">
+                    {if $isArchivationProcess === false}
                     <h4 class="footer-title">Registrace</h4>
                     <ul class="footer-nav">
                         <li><a n:if="$features->conferee" href="{link :Sign:up}">Registrovat se</a></li>
                         <li><a href="{link :Sign:in}">Přihlášení</a></li>
                     </ul>
+                    {/if}
                 </div>
                 <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-4">
+                    {if $isArchivationProcess === false}
                     <h4 class="footer-title">Přednášející</h4>
                     <ul class="footer-nav">
                         {*<li><a href="#">Hlasovat pro přednášejícího</a></li>*}
                         <li><a href="{link :Sign:talk}">Vypsat svou přednášku</a></li>
                     </ul>
+                    {/if}
                 </div>
                 <div class="pure-u-1 pure-u-sm-1-2 pure-u-md-1-4">
                     <h4 class="footer-title">O Barcampu</h4>

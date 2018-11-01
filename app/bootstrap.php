@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnhandledExceptionInspection */
 
 require __DIR__ . '/../vendor/autoload.php';
 
