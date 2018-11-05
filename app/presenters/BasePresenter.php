@@ -47,7 +47,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $dates = $this->eventInfo->getDates();
 
         $dataLayer = new Nette\Utils\ArrayHash();
-        if ($this->isArchivationProcess || 1) {
+        if ($this->isArchivationProcess) {
             $dataLayer['isArchive'] = true;
             $dataLayer['archiveYear'] = $dates['year'];
         }
