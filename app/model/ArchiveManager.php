@@ -271,7 +271,7 @@ class ArchiveManager
      */
     private function getDateDiff(DateTime $oldDate, DateTime $newDate)
     {
-        return $newDate->diff($oldDate, true);
+        return $oldDate->diff($newDate, false);
     }
 
 
