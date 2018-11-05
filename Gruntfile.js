@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
 
+    let currentYear = '2018';
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         copy: {
@@ -16,14 +18,14 @@ module.exports = function(grunt) {
                     sourceMap: false
                 },
                 files: {
-                    'www/static/2018/css/main.css': [
+                    ['www/static/' + currentYear + '/css/main.css']: [
                         'assets/css/pure/pure.css',
                         'www/css/fonts.css',
                         'www/plugins/slick/slick.css',
                         'assets/less/main.less',
                         'assets/less/flash.less'
                     ],
-                    'www/static/2018/css/admin.css': [
+                    ['www/static/' + currentYear + '/css/admin.css']: [
                         'assets/bower_components/bootstrap/dist/css/bootstrap.css',
                         'assets/bower_components/happy/dist/happy.css',
                         'assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
@@ -44,7 +46,7 @@ module.exports = function(grunt) {
             },
             default: {
                 files: {
-                    'www/static/2018/js/main.js': [
+                    ['www/static/' + currentYear + '/js/main.js']: [
                         'assets/js/jquery-3.1.1.js',
                         'www/plugins/jquery-ui/jquery-ui.js',
                         'www/plugins/slick/slick.js',
@@ -52,7 +54,7 @@ module.exports = function(grunt) {
                         'assets/bower_components/nette.ajax.js/nette.ajax.js',
                         'assets/js/main.js'
                     ],
-                    'www/static/2018/js/admin.js': [
+                    ['www/static/' + currentYear + '/js/admin.js']: [
                         'assets/bower_components/jquery/dist/jquery.js',
                         'assets/bower_components/nette-forms/src/assets/netteForms.js',
                         'assets/bower_components/nette.ajax.js/nette.ajax.js',

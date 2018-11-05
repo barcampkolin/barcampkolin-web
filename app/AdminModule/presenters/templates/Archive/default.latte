@@ -1,0 +1,130 @@
+{block title}{block h1}Archivace webu{/block} - Barcamp Kolín{/block}
+{block content}
+
+<h2>Archivace </h2>
+<p>
+    Archivace provede archivaci webových stránek daného ročníku a připravý systém na nový ročník. Při archivaci
+    dojde k následujícím změnám v datech:
+</p>
+<ul>
+    <li>Smazání všech přednášek, včetně programu</li>
+    <li>Smazání všech účasníků</li>
+    <li>Smazání všech partnerů</li>
+</ul>
+<p>
+    <span class="label label-danger">POZOR</span>
+    Provedené změny není možné vrátit zpět! Stránky budou archivovány ve stavu, v jakém se nacházejí, do HTML douborů, které nebude možné měnit.
+</p>
+
+<div id="process" style="display:none">
+    <h3>Probíhá archivace ročníku {$year}</h3>
+    <ol>
+
+    </ol>
+</div>
+
+{include bootstrap-form archiveForm}
+
+<script n:nonce>
+    // Static archviation
+    (() => {
+        const urls = {$pages};
+        const csrfToken = {$csrfToken};
+        const cookieKey = {$cookieKey};
+        const saveEndpoint = {link uploadArchive};
+        document.querySelector("input[type=submit]").addEventListener('click', (e) => {
+            e.preventDefault();
+
+            e.currentTarget.disabled = true;
+
+            setCookie(cookieKey, urls.length);
+            let promises = start(urls, csrfToken, cookieKey, saveEndpoint);
+            Promise.all(promises).then(() => {
+                removeCookie(cookieKey);
+                document.querySelector('#archivedPagesValue').value = promises.length;
+                document.querySelector("form").submit();
+            });
+        });
+
+        function start(urls, csrfToken, cookieKey, saveEndpoint) {
+            const stepDelay = 500;
+            let promises = [];
+            const process = document.querySelector('#process');
+            process.style.display = '';
+
+            const ol = process.querySelector('ol');
+
+            urls.forEach((url, index) => {
+                promises.push(new Promise((resolve, reject) => {
+                    let li = document.createElement('li');
+                    li.textContent = url;
+                    ol.appendChild(li);
+
+                    setBadge(li, "default", "Čekám");
+
+                    setTimeout(() => {
+                        setBadge(li, "warning", "Stahuji");
+                        fetch(url, {
+                            method: "GET",
+                            credentials: "same-origin"
+                        })
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw Error(response.statusText);
+                                }
+                                setBadge(li, "info", "Ukládám");
+                                return response.text();
+                            })
+                            .then((body) => {
+                                const form = new FormData();
+                                form.append('url', url);
+                                form.append('csrfToken', csrfToken);
+                                form.append('content', body);
+                                return fetch(saveEndpoint, {
+                                    method: "POST",
+                                    credentials: "same-origin",
+                                    body: form,
+                                });
+                            })
+                            .then((response) => {
+                                if (!response.ok) {
+                                    throw Error(response.statusText);
+                                }
+                                setBadge(li, "success", "Hotovo");
+                                resolve();
+                            })
+                            .catch((error) => {
+                                console.error(error);
+                                setBadge(li, "danger", "Chyba");
+                                reject();
+                            });
+                    }, index * stepDelay);
+                }));
+            });
+
+            return promises;
+        }
+
+        function setCookie(cookieKey, count) {
+            document.cookie = cookieKey + "=1;path=/;max-age=" + (count * 2);
+        }
+
+        function removeCookie(cookieKey) {
+            document.cookie = cookieKey + "=1;path=/;max-age=0";
+        }
+
+        function setBadge(li, type, text) {
+            const html = "<span class=\"label label-" + type + "\">" + text + "</span> ";
+            let badge = li.querySelector('span');
+
+            if (badge !== null) {
+                badge.outerHTML = html;
+            }
+            else {
+                badge = document.createElement("span");
+                li.insertBefore(badge, li.firstChild);
+                badge.outerHTML = html;
+            }
+        }
+    })();
+</script>

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Model\ArchiveManager;
 use Nette;
 use Nette\Application\Routers\Route;
 use Nette\Application\Routers\RouteList;
@@ -12,12 +13,11 @@ class RouterFactory
 
 
     /**
-     * @param int $year
-     * @param bool $isArchivationProcess
+     * @param ArchiveManager $archiveManager
      * @return Nette\Application\IRouter
      * @throws Nette\InvalidArgumentException
      */
-    public static function createRouter($year, $isArchivationProcess)
+    public static function createRouter(ArchiveManager $archiveManager)
     {
         $router = new RouteList;
 
@@ -30,7 +30,8 @@ class RouterFactory
         $apiRouter[] = new Route('api/<presenter>/<action>');
         $router[] = $apiRouter;
 
-        $requiredWhenArchive = $isArchivationProcess ? '!' : '';
+        $year = $archiveManager->getCurrentYear();
+        $requiredWhenArchive = $archiveManager->isArchivationProcess() ? '!' : '';
 
         //Custom routes
         $router[] = new Route('[' . $requiredWhenArchive . $year . '/]kontakt', 'Homepage:contact');
@@ -52,6 +53,10 @@ class RouterFactory
         $router[] = new Route('upravit-profil', 'User:conferee');
         $router[] = new Route('upravit-prednasku', 'User:talk');
 
+        $router[] = self::createArchiveRoutes($archiveManager->getArchivedYears());
+
+        $router[] = new Route('[' . $requiredWhenArchive . $year . '/]', 'Homepage:default');
+
         // Simple page unger Homepage presenter
         $router[] = new Route('<action>', 'Homepage:default');
 
@@ -72,4 +77,27 @@ class RouterFactory
 
         return $router;
     }
+
+
+    /**
+     * @param array $archiverYears
+     * @return RouteList
+     * @throws Nette\InvalidArgumentException
+     */
+    private static function createArchiveRoutes(array $archiverYears)
+    {
+        $archiveRouter = new RouteList();
+
+        foreach ($archiverYears as $year) {
+            $archiveRouter[] = new Route($year . '/[<page [-a-z0-9/]+>]', [
+                'presenter' => 'Archived',
+                'action' => 'default',
+                'year' => $year,
+            ]);
+        }
+
+        return $archiveRouter;
+    }
+
+
 }

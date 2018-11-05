@@ -7,6 +7,7 @@ use App\Orm\Program;
 use App\Orm\ProgramRepository;
 use App\Orm\Talk;
 use App\Orm\TalkRepository;
+use InvalidArgumentException;
 use Nette\Database\Context;
 use Nette\Database\ForeignKeyConstraintViolationException;
 use Nette\Database\Table\ActiveRow;
@@ -254,5 +255,41 @@ class TalkManager
             'lunch' => 'Přestávka na oběd',
             'custom' => 'Vlastní blok',
         ];
+    }
+
+
+    /**
+     * DANGER remove all
+     * @param bool $really
+     * @throws InvalidArgumentException
+     */
+    public function purgeAll($really = false)
+    {
+        if ($really !== true) {
+            throw new InvalidArgumentException('Purging all items MUST be confirmed');
+        }
+
+        $talks = $this->findAll();
+        foreach ($talks as $talk) {
+            $this->remove($talk);
+        }
+    }
+
+
+    /**
+     * DANGER remove all
+     * @param bool $really
+     * @throws InvalidArgumentException
+     */
+    public function purgeAllProgram($really = false)
+    {
+        if ($really !== true) {
+            throw new InvalidArgumentException('Purging all items MUST be confirmed');
+        }
+
+        $programItems = $this->findAllProgram();
+        foreach ($programItems as $program) {
+            $this->removeProgram($program);
+        }
     }
 }

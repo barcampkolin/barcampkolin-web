@@ -17,7 +17,18 @@ parameters:
     mail:
         from: "Barcamp Kolín <info@barcampkolin.cz>"
     api_token_secretkey: {secret-token}
-
+    archive:
+    	archivedFolders:
+    		- '%wwwDir%/static'
+    	pages:
+    		simple:
+    			- '/'
+    			- '/kontakt'
+    			- '/program'
+    			- '/prednasky'
+    			- '/o-akci'
+    			- '/partneri'
+    		talks: '/prednaska/%d'
 
 application:
     errorPresenter: Error
@@ -59,14 +70,12 @@ session:
 security:
     debugger: true
 
-
 http:
     csp:
         script-src: [
             strict-dynamic, nonce
             self, unsafe-inline
         ]
-
 
 database:
     dsn: 'mysql:host=%database.host%;dbname=%database.dbname%'
@@ -76,8 +85,9 @@ database:
         lazy: yes
 
 services:
+    # Managers
+    - App\Model\ArchiveManager(%archive.archivedFolders%, %archive.pages%)
     - App\Model\ApiTokenManager(%api_token_secretkey%)
-    archiveManager: App\Model\ArchiveManager
     - App\Model\Authenticator\AuthenticatorProvider
     - App\Model\Authenticator\Email
     - App\Model\Authenticator\Facebook(%facebook%)
@@ -94,17 +104,14 @@ services:
     - App\Model\TalkManager
     - App\Model\UserManager
 
-    publicStoragePrefixer: App\Model\LocalArchivableStoragePrefixFactory('%wwwDir%/upload', '/upload')
-
-    - App\Model\AvatarStorage(@publicStoragePrefixer::create('/', '/user-avatar'))
-    - App\Model\PartnerLogoStorage(@publicStoragePrefixer::create('/', '/partner-logo'))
-
+    # Form
     - App\Forms\FormFactory
     - App\Forms\ConfereeForm
     - App\Forms\TalkForm
     - App\Forms\SignInFormFactory
     - App\Forms\SignUpFormFactory
 
+    # Components
     - App\Components\Enumerator\IEnumeratorFormControlFactory
     - App\Components\Faq\IFaqControlFactory
     - App\Components\Newsletter\NewsletterSignupFactory
@@ -114,7 +121,12 @@ services:
     - App\Components\SignupButtons\SignupButtonsFactory
     - App\Components\SpeakerList\ISpeakerListControlFactory
 
-    router: App\RouterFactory::createRouter(
-    	@archiveManager::getCurrentYear(),
-    	@archiveManager::isArchivationProcess()
-    )
+    # Storages
+    publicStoragePrefixer: App\Model\LocalArchivableStoragePrefixFactory('%wwwDir%/upload', '/upload')
+    - App\Model\ArchiveStorage('%wwwDir%/archive')
+    - App\Model\LocalFileStorage(@publicStoragePrefixer::create('/', '/'))
+    - App\Model\AvatarStorage(@publicStoragePrefixer::create('/', '/user-avatar'))
+    - App\Model\PartnerLogoStorage(@publicStoragePrefixer::create('/', '/partner-logo'))
+
+    # Router
+    router: App\RouterFactory::createRouter

@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use InvalidArgumentException;
 use Nette\Database\Context;
 use Nette\Database\ForeignKeyConstraintViolationException;
 use Nette\Database\Table\ActiveRow;
@@ -178,6 +179,21 @@ EOT;
     public function delete(ActiveRow $group)
     {
         $group->delete();
+    }
+
+
+    /**
+     * DANGER remove all partners
+     * @param bool $really
+     * @throws InvalidArgumentException
+     */
+    public function purgeAll($really = false)
+    {
+        if ($really !== true) {
+            throw new InvalidArgumentException('Purging all items MUST be confirmed');
+        }
+
+        $this->database->query('DELETE FROM `' . self::TABLE_PARTNERS . '`;');
     }
 
 

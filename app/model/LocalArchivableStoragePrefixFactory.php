@@ -30,7 +30,7 @@ use Nette\Http\Request;
  * Storage parts:
  * It has only $storageBase - it's used whole without dynamic prefix
  */
-class LocalArchivableStoragePrefixFactory
+class LocalArchivableStoragePrefixFactory implements IStoragePrefixFactory
 {
     /**
      * @var string

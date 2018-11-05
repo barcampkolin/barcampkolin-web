@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Orm\Conferee;
 use App\Orm\ConfereeRepository;
 use App\Orm\Orm;
+use InvalidArgumentException;
 
 class ConfereeManager
 {
@@ -67,5 +68,22 @@ class ConfereeManager
     public function getCount()
     {
         return $this->findAll()->countStored();
+    }
+
+
+    /**
+     * @param bool $really
+     * @throws InvalidArgumentException
+     */
+    public function purgeAll($really = false)
+    {
+        if ($really !== true) {
+            throw new InvalidArgumentException('Purging all items MUST be confirmed');
+        }
+
+        $talks = $this->findAll();
+        foreach ($talks as $talk) {
+            $this->remove($talk);
+        }
     }
 }

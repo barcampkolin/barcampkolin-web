@@ -26,6 +26,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
     /**
      * @param EventInfoProvider $eventInfo
+     * @param ArchiveManager $archiveManager
      */
     public function inject(EventInfoProvider $eventInfo, ArchiveManager $archiveManager)
     {

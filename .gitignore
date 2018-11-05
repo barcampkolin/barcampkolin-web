@@ -8,5 +8,7 @@ vendor/*
 !web.config
 app/config/config.local.neon
 docker/mysql/data/*
-/nbproject/
-www/upload
+nbproject/*
+.idea/*
+/www/upload
+/www/archive
