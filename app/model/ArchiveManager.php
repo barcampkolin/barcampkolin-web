@@ -108,7 +108,7 @@ class ArchiveManager
      */
     private function setCurrentYear($year)
     {
-        $this->config->set('dates.currentYear', $year);
+        $this->config->set('dates.currentYear', (int)$year);
     }
 
 
@@ -132,7 +132,7 @@ class ArchiveManager
     public function addArchivedYear($year)
     {
         $years = $this->getArchivedYears();
-        $years[] = $year;
+        $years[] = (int)$year;
         $this->config->set('archive.years', $years);
     }
 
@@ -217,6 +217,7 @@ class ArchiveManager
     {
         return $this->archiveStorage->loadPage($url);
     }
+
 
     /**
      * @param int $fromYear

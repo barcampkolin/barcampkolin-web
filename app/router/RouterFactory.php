@@ -45,9 +45,9 @@ class RouterFactory
         $router[] = new Route('registrace', 'Sign:conferee');
         $router[] = new Route('vypsani-prednasky', 'Sign:talk');
         $router[] = new Route('[!' . $year . '/]prednasky', 'Conference:talks');
-        $router[] = new Route('[!' . $year . '/]prednaska', 'Conference:talks', Route::ONE_WAY);
-        $router[] = new Route('[!' . $year . '/]prednaska/<id \d+>', 'Conference:talkDetail');
-        $router[] = new Route('[!' . $year . '/]prednasky/<id \d+>', 'Conference:talkDetail', Route::ONE_WAY);
+        $router[] = new Route($year . '/prednaska', 'Conference:talks', Route::ONE_WAY);
+        $router[] = new Route($year . '/prednaska/<id \d+>', 'Conference:talkDetail');
+        $router[] = new Route($year . '/prednasky/<id \d+>', 'Conference:talkDetail', Route::ONE_WAY);
         $router[] = new Route('[!' . $year . '/]program', 'Conference:program');
         $router[] = new Route('profil', 'User:profil');
         $router[] = new Route('upravit-profil', 'User:conferee');
@@ -56,7 +56,7 @@ class RouterFactory
 
         $router[] = self::createArchiveRoutes($archiveManager->getArchivedYears());
 
-        $router[] = new Route('[' . $requiredWhenArchive . $year . '/]', 'Homepage:default');
+        $router[] = new Route('[' . $requiredWhenArchive . $year . ']', 'Homepage:default');
 
         // Simple page unger Homepage presenter
         $router[] = new Route('<action>', 'Homepage:default');
@@ -90,7 +90,7 @@ class RouterFactory
         $archiveRouter = new RouteList();
 
         foreach ($archiverYears as $year) {
-            $archiveRouter[] = new Route($year . '/[<page [-a-z0-9/]+>]', [
+            $archiveRouter[] = new Route($year . '[/<page [-a-z0-9/]+>]', [
                 'presenter' => 'Archived',
                 'action' => 'render',
                 'year' => $year,
