@@ -47,4 +47,10 @@ class ArchivedPresenter extends BasePresenter
             throw new BadRequestException("$url not found", IResponse::S404_NOT_FOUND, $e);
         }
     }
+
+
+    public function renderList()
+    {
+        $this->template->archivedYears = $this->archiveManager->getArchivedYears();
+    }
 }

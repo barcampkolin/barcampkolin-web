@@ -1,0 +1,23 @@
+{block title}Všechny ročníky{/block}
+{block content}
+<section>
+    <div class="wrapper bg-gray">
+        <div class="container">
+            <h1><span class="dot-end">Všechny ročníky</span></h1>
+
+            <h2>Aktuální ročník</h2>
+            <p><strong>Aktuální ročník je <a n:href=":Homepage:">{$year}</a>.</strong></p>
+
+            {if count($archivedYears)}
+            <h2>Předchozí ročníky</h2>
+                <ul>
+                {foreach $archivedYears as $archivedYear}
+                    <li><a n:href=":Archived:render 'year'=>$archivedYear">Ročník {$archivedYear}</a></li>
+                {/foreach}
+                </ul>
+
+            {/if}
+
+        </div>
+    </div>
+</section>
