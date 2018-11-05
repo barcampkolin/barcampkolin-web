@@ -208,6 +208,11 @@ class ArchiveManager
     }
 
 
+    /**
+     * @param string $url
+     * @return string
+     * @throws \Nette\FileNotFoundException
+     */
     public function loadArchivedPage($url)
     {
         return $this->archiveStorage->loadPage($url);
