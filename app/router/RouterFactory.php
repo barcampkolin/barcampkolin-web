@@ -92,7 +92,7 @@ class RouterFactory
         foreach ($archiverYears as $year) {
             $archiveRouter[] = new Route($year . '/[<page [-a-z0-9/]+>]', [
                 'presenter' => 'Archived',
-                'action' => 'default',
+                'action' => 'render',
                 'year' => $year,
             ]);
         }

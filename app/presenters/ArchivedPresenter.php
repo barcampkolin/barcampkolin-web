@@ -32,7 +32,7 @@ class ArchivedPresenter extends BasePresenter
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function actionDefault($year, $page)
+    public function actionRender($year, $page)
     {
         try {
             $url = "/$year/$page";
