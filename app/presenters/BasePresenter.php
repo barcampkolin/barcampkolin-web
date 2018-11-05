@@ -43,14 +43,23 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     {
         parent::beforeRender();
         $parameters = $this->context->getParameters();
-        $this->template->wwwDir = $parameters['wwwDir'];
 
         $dates = $this->eventInfo->getDates();
+
+        $dataLayer = new Nette\Utils\ArrayHash();
+        if ($this->isArchivationProcess || 1) {
+            $dataLayer['isArchive'] = true;
+            $dataLayer['archiveYear'] = $dates['year'];
+        }
+
+        $this->template->wwwDir = $parameters['wwwDir'];
 
         $this->template->dates = $dates;
         $this->template->features = $this->eventInfo->getFeatures();
         $this->template->socialUrls = $this->eventInfo->getSocialUrls();
         $this->template->year = $dates['year'];
+
+        $this->template->dataLayer = $dataLayer;
 
         $this->template->isArchivationProcess = $this->isArchivationProcess;
     }

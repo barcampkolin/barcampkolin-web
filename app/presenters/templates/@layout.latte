@@ -11,7 +11,8 @@
     <title>{ifset #title}{include title|stripHtml} | {/ifset}Barcamp Kolín</title>
     <script n:nonce>
         window.dataLayer = [
-            {'gtm.start': new Date().getTime(), event:'gtm.js'}
+            {"event":"gtm.js", "gtm.start": new Date().getTime()},
+            {ifset $dataLayer}{$dataLayer}{/ifset}
         ];
     </script>
     <script src="https://www.googletagmanager.com/gtm.js?id=GTM-N5SJSZW" async n:nonce></script>
