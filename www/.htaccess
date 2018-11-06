@@ -30,6 +30,8 @@
     </IfModule>
 </IfModule>
 
+AddCharset UTF-8 .html .js .css
+
 AddType application/vnd.ms-fontobject .eot
 AddType image/svg+xml .svg
 AddType application/x-font-ttf .ttf
