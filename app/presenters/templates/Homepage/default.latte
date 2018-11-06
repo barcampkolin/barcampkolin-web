@@ -99,7 +99,9 @@
     </div>
 </section>
 
-{control program}
+{if $features->program}
+    {control program}
+{/if}
 
 <section n:if="$isArchivationProcess === false">
     <div class="wrapper">
