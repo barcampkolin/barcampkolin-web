@@ -489,7 +489,7 @@ barcamp.init = function () {
     barcamp.smoothScroll();
     barcamp.schedule();
     barcamp.lectures();
-    barcamp.tabs();
+    //barcamp.tabs(); //require jQueryUI
     barcamp.program();
     barcamp.avatarUploader();
     barcamp.talkVote();
