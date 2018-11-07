@@ -7,7 +7,8 @@ module.exports = function(grunt) {
         copy: {
             main: {
                 files: [
-                    {expand: true, cwd: 'bower_components/bootstrap/fonts/', src: ['**'], dest: 'www/fonts/'},
+                    {expand: true, cwd: 'assets/bower_components/bootstrap/fonts/', src: ['**'], dest: 'www/static/' + currentYear + '/fonts/'},
+                    {expand: true, cwd: 'assets/fonts/icomoon/', src: ['**'], dest: 'www/static/' + currentYear + '/fonts/'},
                 ],
             },
         },
@@ -20,10 +21,10 @@ module.exports = function(grunt) {
                 files: {
                     ['www/static/' + currentYear + '/css/main.css']: [
                         'assets/css/pure/pure.css',
-                        'www/css/fonts.css',
-                        'www/plugins/slick/slick.css',
+                        'assets/css/icomoon.css',
                         'assets/less/main.less',
-                        'assets/less/flash.less'
+                        'assets/less/flash.less',
+                        'assets/bower_components/slick-carousel/slick/slick.less'
                     ],
                     ['www/static/' + currentYear + '/css/admin.css']: [
                         'assets/bower_components/bootstrap/dist/css/bootstrap.css',
@@ -48,8 +49,7 @@ module.exports = function(grunt) {
                 files: {
                     ['www/static/' + currentYear + '/js/main.js']: [
                         'assets/js/jquery-3.1.1.js',
-                        'www/plugins/jquery-ui/jquery-ui.js',
-                        'www/plugins/slick/slick.js',
+                        'assets/bower_components/slick-carousel/slick/slick.js',
                         'vendor/nette/forms/src/assets/netteForms.js',
                         'assets/bower_components/nette.ajax.js/nette.ajax.js',
                         'assets/js/main.js'

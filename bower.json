@@ -15,6 +15,9 @@
   ],
   "dependencies": {
     "bootstrap": ">= 3.3.0 <4.0",
-    "ublaboo-datagrid": "5.5.3"
+    "ublaboo-datagrid": "5.5.3",
+    "slick-carousel": ">=1.8.0",
+    "semantic-ui-dropdown": ">=2.4.0",
+    "semantic-ui-transition": ">=2.4.0"
   }
 }
