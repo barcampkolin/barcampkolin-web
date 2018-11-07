@@ -49,6 +49,12 @@ class DashboardPresenter extends BasePresenter
             self::REQUIRED,
             'Pozor, zobrazuje se na úvodní stránce'
         ],
+        Event::COUNTS_HALLS => [
+            'int',
+            'Počet sálů',
+            self::REQUIRED,
+            'Pozor, zobrazuje se na úvodní stránce'
+        ],
         Event::COUNTS_WARMUPPARTY => [
             'int',
             'Počet warm-up párty',

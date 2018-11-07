@@ -16,6 +16,7 @@ class EventInfoProvider
     const COUNTS_TALKS = 'counts.talks';
     const COUNTS_TALKS_LIMIT = 'counts.talks.limit';
     const COUNTS_WORKSHOPS = 'counts.workshops';
+    const COUNTS_HALLS = 'counts.halls';
     const COUNTS_WARMUPPARTY = 'counts.warmupparty';
     const COUNTS_AFTERPARTY = 'counts.afterparty';
     const DATE_TALKS = 'schedule.talks.date';
@@ -116,6 +117,7 @@ class EventInfoProvider
             'talks' => $this->config->get(self::COUNTS_TALKS),
             'talks_limit' => $this->config->get(self::COUNTS_TALKS_LIMIT),
             'workshops' => $this->config->get(self::COUNTS_WORKSHOPS),
+            'halls' => $this->config->get(self::COUNTS_HALLS),
             'warmupparty' => $this->config->get(self::COUNTS_WARMUPPARTY),
             'afterparty' => $this->config->get(self::COUNTS_AFTERPARTY),
         ]);
