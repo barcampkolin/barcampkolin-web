@@ -40,6 +40,7 @@ barcamp.slider = function () {
         dots: false,
         arrows: false,
         infinite: true,
+        draggable: false,
         fade: true,
         slidesToShow: 1,
         slidesToScroll: 1,
@@ -47,35 +48,6 @@ barcamp.slider = function () {
         autoplay: true,
         autoplaySpeed: 5000
     });
-
-    $('.slider-main').slick({
-        dots: true,
-        arrows: false,
-        infinite: true,
-        fade: false,
-        slidesToShow: 3,
-        slidesToScroll: 3,
-        adaptiveHeight: true,
-        autoplay: true,
-        autoplaySpeed: 5000,
-        responsive: [
-            {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 2,
-                    slidesToScroll: 2
-                }
-            },
-            {
-                breakpoint: 568,
-                settings: {
-                    slidesToShow: 1,
-                    slidesToScroll: 1
-                }
-            }
-        ]
-    });
-
 };
 
 barcamp.accordion = function () {
