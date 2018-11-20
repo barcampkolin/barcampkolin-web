@@ -56,7 +56,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 
         $this->template->dates = $dates;
         $this->template->features = $this->eventInfo->getFeatures();
-        $this->template->socialUrls = $this->eventInfo->getSocialUrls();
+        $this->template->socialUrls = $this->eventInfo->getUrls();
         $this->template->year = $dates['year'];
 
         $this->template->dataLayer = $dataLayer;

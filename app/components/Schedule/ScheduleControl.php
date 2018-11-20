@@ -45,7 +45,7 @@ class ScheduleControl extends Control
         $this->template->setFile(__DIR__ . '/Schedule.latte');
         $this->template->features = $this->infoProvider->getFeatures();
         $this->template->dates = $dates;
-        $this->template->urls = $this->infoProvider->getSocialUrls();
+        $this->template->urls = $this->infoProvider->getUrls();
 
         $this->template->config = [
             'dates' => $dates,

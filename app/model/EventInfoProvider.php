@@ -88,7 +88,7 @@ class EventInfoProvider
      * @return ArrayHash
      * @throws \Nette\Utils\JsonException
      */
-    public function getSocialUrls()
+    public function getUrls()
     {
         return ArrayHash::from([
             'facebook' => $this->config->get(self::URL_FACEBOOK),
