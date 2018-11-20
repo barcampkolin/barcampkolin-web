@@ -34,14 +34,14 @@ class LocalFileStorage
     /**
      * @param string $content
      * @param string $name
-     * @param string $ext
+     * @param string $extextOverride
      * @return string
      * @throws InvalidArgumentException
      * @throws \Nette\IOException
      */
-    public function saveContent($content, $name = null, $ext = null)
+    public function saveContent($content, $name = null, $extextOverride = null)
     {
-        $filename = $this->getSafeFilename($name, $ext);
+        $filename = $this->getSafeFilename($name, $extextOverride);
         $storageFile = $this->getStorageFilename($filename);
 
         FileSystem::write($storageFile, $content);
@@ -108,10 +108,78 @@ class LocalFileStorage
 
 
     /**
+     * @param string $url
+     * @return bool
+     */
+    public function match($url)
+    {
+        $urlPrefix = $this->storagePrefix->getUrlPath();
+        return strpos($url, $urlPrefix) === 0;
+    }
+
+
+    /**
+     * @param string $url
+     * @return bool
+     * @throws InvalidArgumentException
+     */
+    public function exists($url)
+    {
+        $filename = $this->urlToFilename($url);
+        return file_exists($filename);
+    }
+
+
+    /**
+     * @param string $url
+     * @return string
+     * @throws InvalidArgumentException
+     * @throws \Nette\IOException
+     */
+    public function getFileContent($url)
+    {
+        $filename = $this->urlToFilename($url);
+        return FileSystem::read($filename);
+    }
+
+
+    /**
+     * @param string $url
+     * @throws InvalidArgumentException
+     * @throws \Nette\IOException
+     */
+    public function delete($url)
+    {
+        $filename = $this->urlToFilename($url);
+        FileSystem::delete($filename);
+    }
+
+
+    /**
+     * @param string $url
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    protected function urlToFilename($url)
+    {
+        $urlPrefix = $this->storagePrefix->getUrlPath();
+        $storagePrefix = $this->storagePrefix->getStoragePath();
+
+        // Check jurisdiction
+        if($this->match($url) === false)
+        throw new InvalidArgumentException("URL \"$url\" is not matching to prefix \"$urlPrefix\"");
+
+        $filename = str_replace($urlPrefix, $storagePrefix, $url);
+
+        return $filename;
+    }
+
+
+    /**
      * @param string $name
      * @return string
      */
-    private function getExtension($name)
+    protected function getExtension($name)
     {
         return pathinfo($name, PATHINFO_EXTENSION);
     }
@@ -122,7 +190,7 @@ class LocalFileStorage
      * @return string
      * @throws \Nette\IOException
      */
-    private function getStorageFilename($filename)
+    protected function getStorageFilename($filename)
     {
         $uploadDir = $this->storagePrefix->getStoragePath();
         FileSystem::createDir($uploadDir);
@@ -134,7 +202,7 @@ class LocalFileStorage
      * @param string $filename
      * @return string
      */
-    private function getUrl($filename)
+    protected function getUrl($filename)
     {
         return $this->storagePrefix->getUrlPath() . '/' . $filename;
     }

@@ -11,6 +11,6 @@ class TestStoragePrefixFactory implements IStoragePrefixFactory
      */
     public function create($pathYearPrefix, $pathYearSuffix)
     {
-        return new StoragePrefix('/', 'http://example.com/', '/');
+        return new StoragePrefix('/local/path', 'http://example.com/url-path', '/prefix');
     }
 }

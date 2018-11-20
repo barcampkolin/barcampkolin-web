@@ -124,7 +124,7 @@ services:
     # Storages
     publicStoragePrefixer: App\Model\LocalArchivableStoragePrefixFactory('%wwwDir%/upload', '/upload')
     - App\Model\ArchiveStorage('%wwwDir%/archive')
-    - App\Model\LocalFileStorage(@publicStoragePrefixer::create('/', '/'))
+    - App\Model\LocalFileStorage(@publicStoragePrefixer::create('/', '/file'))
     - App\Model\AvatarStorage(@publicStoragePrefixer::create('/', '/user-avatar'))
     - App\Model\PartnerLogoStorage(@publicStoragePrefixer::create('/', '/partner-logo'))
 

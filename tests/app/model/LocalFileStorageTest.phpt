@@ -100,6 +100,33 @@ class LocalFileStorageTest extends \Tester\TestCase
     }
 
 
+    public function testFilenameToStorageFilename()
+    {
+        $localStorage = $this->getTestStorage();
+        Assert::equal('http://example.com/url-path/prefix/experiment.jpg',
+            $localStorage->publicGetUrl('experiment.jpg'));
+    }
+
+
+    public function testUrlToFilename()
+    {
+        $localStorage = $this->getTestStorage();
+        Assert::equal('/local/path/prefix/experiment.jpg',
+            $localStorage->publicUrlToFilename('http://example.com/url-path/prefix/experiment.jpg'));
+    }
+
+
+    public function testNonMatchingUrlToFilename()
+    {
+        $localStorage = $this->getTestStorage();
+        Assert::exception(function () use ($localStorage) {
+            $localStorage->publicUrlToFilename('http://another.com/url-path/prefix/experiment.jpg');
+        }, InvalidArgumentException::class,
+            'URL "http://another.com/url-path/prefix/experiment.jpg"'
+            . ' is not matching to prefix "http://example.com/url-path/prefix"');
+    }
+
+
     /**
      * @return LocalFileStorage
      */
@@ -115,6 +142,40 @@ class LocalFileStorageTest extends \Tester\TestCase
     private function getStorageWithoutRandom()
     {
         return new LocalFileStorage($this->storagePrefix, false);
+    }
+
+
+    /**
+     * @return TestLocalFileStorage
+     */
+    private function getTestStorage()
+    {
+        return new TestLocalFileStorage($this->storagePrefix, false);
+    }
+}
+
+
+
+class TestLocalFileStorage extends LocalFileStorage
+{
+    /**
+     * @param string $url
+     * @return string
+     * @throws InvalidArgumentException
+     */
+    public function publicUrlToFilename($url)
+    {
+        return $this->urlToFilename($url);
+    }
+
+
+    /**
+     * @param string $filename
+     * @return string
+     */
+    public function publicGetUrl($filename)
+    {
+        return $this->getUrl($filename);
     }
 }
 
