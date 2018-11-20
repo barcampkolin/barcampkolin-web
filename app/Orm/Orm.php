@@ -6,6 +6,7 @@ use Nextras\Orm\Model\Model;
 
 /**
  * @property-read ConfereeRepository $conferee
+ * @property-read FileRepository $file
  * @property-read IdentityRepository $identity
  * @property-read ProgramRepository $program
  * @property-read TalkRepository $talk

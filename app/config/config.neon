@@ -95,6 +95,7 @@ services:
     - App\Model\ConfereeManager
     - App\Model\EventInfoProvider
     - App\Model\EnumeratorManager
+    - App\Model\FileManager
     - App\Model\IdentityManager
     - App\Model\MailerManager(%mail%, '%tempDir%/cache')
     - App\Model\MailDynamicLoader
