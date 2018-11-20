@@ -73,6 +73,7 @@ class DashboardPresenter extends BasePresenter
         Event::URL_INSTAGRAM => ['url', 'URL profilu na Instagram'],
         Event::URL_WAY_TO_EVENT => ['url', 'URL na článek Jak se k nám dostanete'],
         Event::URL_OG_IMAGE => ['url', 'URL na OG image', self::NOFLAG, 'Při nevyplnění se použije systémové logo'],
+        Event::URL_PARTNER_PROPOSAL => ['url', 'URL na Informace pro partnery (PDF)'],
     ];
 
     /**
