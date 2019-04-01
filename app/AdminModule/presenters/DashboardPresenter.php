@@ -287,7 +287,8 @@ class DashboardPresenter extends BasePresenter
         foreach ($this->visualDates as $key => $name) {
             $form->addText($this->ideable($key), $name)
                 ->setType('datetime-local')
-                ->setDefaultValue($this->dateToHtml5($this->configManager->get($key)));
+                ->setDefaultValue($this->dateToHtml5($this->configManager->get($key)))
+                ->getControlPrototype()->addAttributes(['step'=>1]);
         }
 
         $form->addGroup();
@@ -349,7 +350,8 @@ class DashboardPresenter extends BasePresenter
                     case 'datetime-local':
                         $item = $form->addText($fomId, $config['name'])
                             ->setType($config['type'])
-                            ->setDefaultValue($config['value'] ? $this->dateToHtml5($config['value']) : null);
+                            ->setDefaultValue($config['value'] ? $this->dateToHtml5($config['value']) : null)
+                            ->getControlPrototype()->addAttributes(['step'=>1]);
                         break;
                     default:
                         throw new \LogicException("Invalid form field type: $config[type]");
