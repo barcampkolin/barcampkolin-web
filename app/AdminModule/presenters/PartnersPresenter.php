@@ -276,7 +276,9 @@ class PartnersPresenter extends BasePresenter
     /**
      * @param Form $form
      * @param ArrayHash $values
+     * @throws \App\Model\PartnerNotFound
      * @throws \Nette\Application\AbortException
+     * @throws \Nette\InvalidStateException
      */
     public function onGroupFormSuccess(Form $form, ArrayHash $values)
     {

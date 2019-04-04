@@ -65,3 +65,9 @@ class ConfereeNotFound extends EntityNotFound
 class TalkNotFound extends EntityNotFound
 {
 }
+
+
+
+class PartnerNotFound extends EntityNotFound
+{
+}

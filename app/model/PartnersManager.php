@@ -5,7 +5,11 @@ namespace App\Model;
 use InvalidArgumentException;
 use Nette\Database\Context;
 use Nette\Database\ForeignKeyConstraintViolationException;
+use Nette\Database\ResultSet;
 use Nette\Database\Table\ActiveRow;
+use Nette\Database\Table\Selection;
+use Nette\InvalidStateException;
+use Traversable;
 
 class PartnersManager
 {
@@ -57,7 +61,7 @@ class PartnersManager
 
     /**
      * @param bool $onlyEnabled
-     * @return \Nette\Database\ResultSet
+     * @return ResultSet
      */
     public function getAll($onlyEnabled = true)
     {
@@ -80,7 +84,7 @@ EOT;
 
     /**
      * @param bool $onlyEnabled
-     * @return \Nette\Database\Table\Selection
+     * @return Selection
      */
     public function getGroups($onlyEnabled = true)
     {
@@ -97,7 +101,7 @@ EOT;
 
     /**
      * @param bool $onlyEnabled
-     * @return \Nette\Database\Table\Selection
+     * @return Selection
      */
     public function getPartners($onlyEnabled = true)
     {
@@ -114,17 +118,24 @@ EOT;
 
     /**
      * @param int $id
-     * @return false|ActiveRow
+     * @return ActiveRow
+     * @throws PartnerNotFound
      */
     public function getPartnerById($id)
     {
-        return $this->database->table(self::TABLE_PARTNERS)->get($id);
+        $row = $this->database->table(self::TABLE_PARTNERS)->get($id);
+        if(!$row instanceof ActiveRow) {
+           throw new PartnerNotFound("partner with id $id not found");
+        }
+        return $row;
     }
 
 
     /**
-     * @param \Traversable $values
+     * @param Traversable $values
      * @param int|null $id
+     * @throws InvalidStateException
+     * @throws PartnerNotFound
      */
     public function insertUpdatePartner($values, $id = null)
     {
@@ -136,7 +147,13 @@ EOT;
     }
 
 
-    public function changePartnersOrder(ActiveRow $item = null, ActiveRow $prevItem = null, ActiveRow $nextItem = null)
+    /**
+     * @param ActiveRow $item
+     * @param ActiveRow|null $prevItem
+     * @param ActiveRow|null $nextItem
+     * @throws InvalidArgumentException
+     */
+    public function changePartnersOrder(ActiveRow $item, ActiveRow $prevItem = null, ActiveRow $nextItem = null)
     {
         $this->sort(self::TABLE_PARTNERS, $item, $prevItem, $nextItem);
     }
@@ -144,29 +161,42 @@ EOT;
 
     /**
      * @param $id
-     * @return false|ActiveRow
+     * @return ActiveRow
+     * @throws PartnerNotFound
      */
     public function getGroupById($id)
     {
-        return $this->database->table(self::TABLE_GROUPS)->get($id);
+        $row = $this->database->table(self::TABLE_GROUPS)->get($id);
+        if(!$row instanceof ActiveRow) {
+            throw new PartnerNotFound("Partner group with id $id not found");
+        }
+        return $row;
     }
 
 
     /**
-     * @param \Traversable $values
+     * @param Traversable $values
      * @param int|null $id
+     * @throws PartnerNotFound
+     * @throws InvalidStateException
      */
     public function insertUpdateGroup($values, $id = null)
     {
         if ($id) {
-            $this->getPartnerById($id)->update($values);
+            $this->getGroupById($id)->update($values);
         } else {
             $this->database->table(self::TABLE_GROUPS)->insert($values);
         }
     }
 
 
-    public function changeGroupsOrder(ActiveRow $item = null, ActiveRow $prevItem = null, ActiveRow $nextItem = null)
+    /**
+     * @param ActiveRow|null $item
+     * @param ActiveRow|null $prevItem
+     * @param ActiveRow|null $nextItem
+     * @throws InvalidArgumentException
+     */
+    public function changeGroupsOrder(ActiveRow $item, ActiveRow $prevItem = null, ActiveRow $nextItem = null)
     {
         $this->sort(self::TABLE_GROUPS, $item, $prevItem, $nextItem);
     }
@@ -197,19 +227,26 @@ EOT;
     }
 
 
-    private function sort($table, ActiveRow $item = null, ActiveRow $prevItem = null, ActiveRow $nextItem = null)
+    /**
+     * @param $table
+     * @param ActiveRow $item
+     * @param ActiveRow|null $prevItem
+     * @param ActiveRow|null $nextItem
+     * @throws InvalidArgumentException
+     */
+    private function sort($table, ActiveRow $item, ActiveRow $prevItem = null, ActiveRow $nextItem = null)
     {
-        if (!in_array($table, [self::TABLE_GROUPS, self::TABLE_PARTNERS])) {
-            throw new \InvalidArgumentException("Table name $table is invalid");
+        if (!in_array($table, [self::TABLE_GROUPS, self::TABLE_PARTNERS], true)) {
+            throw new InvalidArgumentException("Table name $table is invalid");
         }
 
-        $itemOrder = intval($item->order);
+        $itemOrder = (int)$item->order;
 
         if ($prevItem) {
             $this->database->query(
                 "UPDATE `$table` 
                 SET `order` = `order` - 1
-                WHERE `order` <= " . intval($prevItem->order) . "
+                WHERE `order` <= " . (int)$prevItem->order . "
                 AND `order` > $itemOrder;"
             );
         }
@@ -217,7 +254,7 @@ EOT;
             $this->database->query(
                 "UPDATE `$table` 
                 SET `order` = `order` + 1
-                WHERE `order` >= " . intval($nextItem->order) . "
+                WHERE `order` >= " . (int)$nextItem->order . "
                 AND `order` < $itemOrder;"
             );
         }
@@ -233,7 +270,7 @@ EOT;
         $this->database->query(
             "UPDATE `$table` 
                 SET `order` = $itemOrder
-                WHERE `id` = " . $item->id . ";"
+                WHERE `id` = " . $item->id . ';'
         );
     }
 }
