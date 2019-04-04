@@ -32,14 +32,15 @@ class MailDynamicLoader
                 'tokenUrl' => 'URL na reset hesla'
             ],
         ],
+        'registration-announce' => [
+            'title' => 'Ohlášení spuštění možnosti vypsání si přednášky',
+            'params' => [],
+        ],
         'vote-announce' => [
             'title' => 'Ohlášení hlasování přednášek',
             'params' => [],
         ],
-        'registration-announce' => [
-            'title' => 'Ohlášení spuštění registrace',
-            'params' => [],
-        ],
+
         'before-event-announce' => [
             'title' => 'E-mail před konáním barcampu',
             'params' => [],
