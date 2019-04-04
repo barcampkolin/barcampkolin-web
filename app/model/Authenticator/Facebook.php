@@ -140,7 +140,7 @@ class Facebook implements IAuthenticator
             $accessToken = $helper->getAccessToken($callbackUrl);
         } catch (FacebookSDKException $e) {
             Debugger::log($e, ILogger::EXCEPTION);
-            throw new AuthenticationException('Autorizace na API selhalo', 0, $e);
+            throw new AuthenticationException('Omlouváme se, ale Facebook si s námi nepovídá, zkuste to prosím znovu.', 0, $e);
         }
 
         if (!isset($accessToken)) {
