@@ -124,8 +124,8 @@ EOT;
     public function getPartnerById($id)
     {
         $row = $this->database->table(self::TABLE_PARTNERS)->get($id);
-        if(!$row instanceof ActiveRow) {
-           throw new PartnerNotFound("partner with id $id not found");
+        if (!$row instanceof ActiveRow) {
+            throw new PartnerNotFound("partner with id $id not found");
         }
         return $row;
     }
@@ -142,6 +142,9 @@ EOT;
         if ($id) {
             $this->getPartnerById($id)->update($values);
         } else {
+            if (!isset($values['order'])) {
+                $values['order'] = $this->getNextOrderValue(self::TABLE_PARTNERS);
+            }
             $this->database->table(self::TABLE_PARTNERS)->insert($values);
         }
     }
@@ -167,7 +170,7 @@ EOT;
     public function getGroupById($id)
     {
         $row = $this->database->table(self::TABLE_GROUPS)->get($id);
-        if(!$row instanceof ActiveRow) {
+        if (!$row instanceof ActiveRow) {
             throw new PartnerNotFound("Partner group with id $id not found");
         }
         return $row;
@@ -185,8 +188,32 @@ EOT;
         if ($id) {
             $this->getGroupById($id)->update($values);
         } else {
+            if (!isset($values['order'])) {
+                $values['order'] = $this->getNextOrderValue(self::TABLE_GROUPS);
+            }
             $this->database->table(self::TABLE_GROUPS)->insert($values);
         }
+    }
+
+
+    /**
+     * @param string $table
+     * @param int $default
+     * @return int
+     */
+    protected function getNextOrderValue($table, $default = 0)
+    {
+        $latestValue = $this->database->table($table)
+            ->select('order')
+            ->order('order DESC')
+            ->limit(1)
+            ->fetchField();
+
+        if ($latestValue === false) {
+            $latestValue = $default;
+        }
+
+        return $latestValue + 100;
     }
 
 

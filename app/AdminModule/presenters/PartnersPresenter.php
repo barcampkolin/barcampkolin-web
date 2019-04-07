@@ -274,7 +274,6 @@ class PartnersPresenter extends BasePresenter
      */
     public function onGroupFormSuccess(Form $form, ArrayHash $values)
     {
-        bdump($values);
         $id = $values->id ?: null;
 
         unset($values->id);
