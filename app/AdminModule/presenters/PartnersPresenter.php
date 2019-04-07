@@ -44,11 +44,7 @@ class PartnersPresenter extends BasePresenter
      */
     public function renderPartner($id = null)
     {
-
-        $partner = $this->partners->getPartnerById($id);
-        if ($id && !$partner) {
-            $this->error("Partner not found");
-        }
+        $partner = $id !== null ? $this->partners->getPartnerById($id) : null;
 
         /** @var Form $form */
         $form = $this['partnerForm'];
@@ -65,11 +61,7 @@ class PartnersPresenter extends BasePresenter
      */
     public function renderGroup($id = null)
     {
-
-        $group = $this->partners->getGroupById($id);
-        if ($id && !$group) {
-            $this->error("Group not found");
-        }
+        $group = $id !== null ? $this->partners->getGroupById($id) : null;
 
         /** @var Form $form */
         $form = $this['groupForm'];
@@ -282,9 +274,11 @@ class PartnersPresenter extends BasePresenter
      */
     public function onGroupFormSuccess(Form $form, ArrayHash $values)
     {
+        bdump($values);
         $id = $values->id ?: null;
 
         unset($values->id);
+
 
         $this->partners->insertUpdateGroup($values, $id);
 
@@ -333,9 +327,9 @@ class PartnersPresenter extends BasePresenter
 
 
     /**
-     * @param  int $item_id
-     * @param  int|NULL $prev_id
-     * @param  int|NULL $next_id
+     * @param int $item_id
+     * @param int|NULL $prev_id
+     * @param int|NULL $next_id
      * @return void
      * @throws \Nette\Application\AbortException
      * @secured
