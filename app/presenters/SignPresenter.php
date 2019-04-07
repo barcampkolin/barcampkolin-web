@@ -585,7 +585,7 @@ class SignPresenter extends BasePresenter
             //Reset app login - to reload roles
             $this->login($conferee->user);
 
-            $this->flashMessage('Hurá! Mate zapasanou přednášku, díky!');
+            $this->flashMessage('Hurá! Máate zapsanou přednášku, díky!');
             $this->redirect('User:profil');
         };
 
