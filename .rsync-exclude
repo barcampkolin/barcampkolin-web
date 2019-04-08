@@ -1,5 +1,6 @@
 .git
 .gitignore
+.DS_Store
 /.bowerrc
 /.idea
 /.rsync-exclude
