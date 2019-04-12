@@ -253,7 +253,6 @@ class ConferencePresenter extends BasePresenter
                 "Newsletter",
                 "Přednášející",
                 "Registrace",
-                "Souhlas získán",
                 "Bio",
                 "Firma"
             ],
@@ -275,7 +274,6 @@ class ConferencePresenter extends BasePresenter
                 $conferee->allowMail ? 'Ano' : 'Ne',
                 count($conferee->talk) ? 'Ano' : 'Ne',
                 $conferee->created->format(\DateTime::ATOM),
-                $conferee->consens ? $conferee->consens->format(\DateTime::ATOM) : null,
                 $conferee->bio,
                 isset($extended['company']) ? $extended['company'] : null,
             ], $delimiter, '"');

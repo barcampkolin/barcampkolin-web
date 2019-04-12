@@ -53,10 +53,6 @@ class ConfereeForm
 
         $form->addGroup();
 
-        $form->addCheckbox('consens', 'Souhlasím se zpracováním osobních údajů de zákona č. 101/2000 Sb.')
-            ->setRequired('Pro dokončení registrace potřebujeme Váš souhlas se zopracováním osobních údajů. '
-                . 'Bez něho nemůžeme registraci dokončit.');
-
         $form->addSubmit('send')
             ->setOption('itemClass', 'text-center')
             ->getControlPrototype()->setName('button')->setText('Odeslat');
@@ -74,16 +70,12 @@ class ConfereeForm
             $conferee->extended = Json::encode([
                 'company' => $values->extendedCompany,
             ]);
-            if (isset($values->consens)) {
-                $conferee->consens = $values->consens ? new \DateTimeImmutable() : null;
-            }
 
             $onSuccess($conferee, $values);
         };
 
         if ($conferee) {
             $values = $conferee->toArray();
-            $values['consens'] = (bool)$conferee->consens;
             try {
                 $extended = Json::decode($conferee->extended, Json::FORCE_ARRAY);
                 $values['extendedCompany'] = isset($extended['company']) ? $extended['company'] : null;
