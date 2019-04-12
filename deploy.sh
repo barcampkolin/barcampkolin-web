@@ -2,7 +2,7 @@
 
 REMOTE_DIR="/home/www/barcampkolin.cz/subdomains/www"
 LOCAL_DIR=""
-SERVER_NAME="cst-barcampkolin.cz@webovky-1.superhosting.cz"
+SERVER_NAME="cst-barcampkolin.cz@redbit-1-www3.superhosting.cz"
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SSH="ssh ${SERVER_NAME}"
