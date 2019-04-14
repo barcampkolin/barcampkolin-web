@@ -50,13 +50,13 @@
                 </a>
 
                 {if $features->program}
-                    <a n:tag-if="$features->vote" href="{link Conferee:program}">
+                    <a n:tag-if="$features->vote" href="{link Conference:program}">
                         <span class="btn btn-lg btn-default-bordered btn-section" title="Program je možné zobrazit od {$dates->program|date:'j. n. Y'}">
                             Zobrazit program
                         </span>
                     </a>
                 {elseif $features->vote}
-                    <a href="{link Conferee:talks}">
+                    <a href="{link Conference:talks}">
                         <span class="btn btn-lg btn-default-bordered btn-section" title="Hlasování je možné od {$dates->vote|date:'j. n. Y'}">
                             Hlasovat pro přednášky
                         </span>
