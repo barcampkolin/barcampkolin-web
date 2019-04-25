@@ -125,6 +125,7 @@ class MailerManager
     /**
      * @param IMessage $message
      * @throws \Nette\Utils\JsonException
+     * @throws \Nette\Mail\SendException
      */
     public function send(IMessage $message)
     {

@@ -4,6 +4,7 @@ namespace App\Mails;
 
 use App\Model\MailerManager;
 use Nette\InvalidStateException;
+use Nette\Mail\SendException;
 
 abstract class BaseMessage
 {
@@ -72,7 +73,8 @@ abstract class BaseMessage
 
 
     /**
-     *  Short way to send mail
+     * Short way to send mail
+     * @throws SendException
      */
     public function send()
     {

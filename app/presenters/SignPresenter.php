@@ -25,10 +25,12 @@ use App\Orm\UserRole;
 use Nette\Application\UI\Form;
 use Nette\Http\IResponse;
 use Nette\Http\Response;
+use Nette\Mail\SendException;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\Random;
 use Nextras\Orm\Entity\Entity;
 use Tracy\Debugger;
+use Tracy\ILogger;
 use Tracy\Logger;
 
 class SignPresenter extends BasePresenter
@@ -324,7 +326,7 @@ class SignPresenter extends BasePresenter
             }
         }
 
-        return 'https://'.$domain;
+        return 'https://' . $domain;
     }
 
 
@@ -348,6 +350,9 @@ class SignPresenter extends BasePresenter
                 $this->submitResetPasswordToken($values->email);
             } catch (IdentityNotFoundException $e) {
                 $form['email']->addError('Na tento e-mail není nikdo registrován, nemůžeme mu tedy ani poslat heslo');
+            }catch (SendException $e) {
+                Debugger::log($e, ILogger::EXCEPTION);
+                $form['email']->addError('Na zadaný e-mail se nám nedaří doručit zprávu s novým heslem – při doručování zprávy došlo k chybě.');
             }
         };
 
@@ -358,6 +363,8 @@ class SignPresenter extends BasePresenter
     /**
      * @param string $email
      * @throws IdentityNotFoundException
+     * @throws SendException
+     * @throws \App\Model\EntityNotFound
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
@@ -548,9 +555,16 @@ class SignPresenter extends BasePresenter
             $this->login($user);
             $this->removePartialLoginSession();
 
-            $this->mailer->getRegistrationMessage($user->email)->send();
+            $flashMessage = 'Právě jste se zaregistrovali na Barcamp!';
 
-            $this->flashMessage('Právě jste se zaregistrovali na Barcamp!');
+            try {
+                $this->mailer->getRegistrationMessage($user->email)->send();
+            } catch (SendException $e) {
+                Debugger::log($e, ILogger::EXCEPTION);
+                $flashMessage .= ' Nicméně na Váš e-mail bohužel nebylo možné potvrzení doručit.';
+            }
+
+            $this->flashMessage($flashMessage);
             $this->restoreRequest($this->backlink);
             $this->redirect('User:profil');
         };

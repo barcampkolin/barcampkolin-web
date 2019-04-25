@@ -2,9 +2,12 @@
 
 namespace App\Mails;
 
+use Nette\Mail\SendException;
+
 interface IMessage
 {
     /**
+     * @throws SendException
      */
     public function send();
 
