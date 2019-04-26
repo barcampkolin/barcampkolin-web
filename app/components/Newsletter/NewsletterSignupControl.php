@@ -46,8 +46,6 @@ class NewsletterSignupControl extends Control
         $form->addEmail('email', 'E-mail')
             ->setRequired('Zadejte prosím svůj e-mail')
             ->addRule(Form::EMAIL, 'Toto není platná e-mailová adresa');
-        $form->addCheckbox('consent', 'Souhlasím se zpracováním osobních údajů de zákona č. 101/2000 Sb.')
-            ->setRequired('Pro zpracování Vaší e-mailové adresy potřebujeme Váš souhlas');
         $form->addSubmit('submit', 'Přihlásit odběr');
 
         $form->onSuccess[] = [$this, 'formSucceeded'];
@@ -68,7 +66,7 @@ class NewsletterSignupControl extends Control
             $this->presenter->flashMessage('Váš e-mail jsme přidali k příjemcům zpráv o Barcampu');
             $this->presenter->redirect(302, ':Homepage:');
         } catch (DuplicateNameException $e) {
-            $form['email']->addError("Tento e-mail je již přihlášen.");
+            $form['email']->addError('Tento e-mail je již přihlášen.');
         }
     }
 }
