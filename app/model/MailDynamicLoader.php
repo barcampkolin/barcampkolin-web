@@ -68,7 +68,7 @@ class MailDynamicLoader
             'params' => [],
         ],
         'free-template-1' => [
-            'title' => 'Volná šablona 1',
+            'title' => 'Informace pro přednášející',
             'params' => [],
         ],
         'free-template-2' => [
