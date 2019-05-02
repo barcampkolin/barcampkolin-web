@@ -183,8 +183,11 @@ class ConferencePresenter extends BasePresenter
             $this->error('Přednáška nenalezena');
         }
 
+        $extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
+
         $this->template->talk = $talk;
-        $this->template->extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
+        $this->template->extended = $extended;
+        $this->template->ogImageUrl = isset($extended['ogImageUrl']) ? $extended['ogImageUrl'] : null;
 
         $features = $this->eventInfoProvider->getFeatures();
         $this->template->allowVote = $features['vote'];

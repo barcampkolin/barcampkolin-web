@@ -391,13 +391,16 @@ class ConferencePresenter extends BasePresenter
             $this->error('přednáška nenalezena');
         }
 
+        $extensions = $talk->getExpandedExtensions();
+
         $this->template->talk = $talk;
-        $this->template->extended = $talk->getExpandedExtensions();
+        $this->template->extended = $extensions;
 
         /** @var Form $form */
         $form = $this['talkForm'];
 
         $values = $talk->toArray();
+        $values['ogImageUrl'] = isset($extensions['ogImageUrl']) ? $extensions['ogImageUrl'] : null;
 
         $form->setDefaults($values);
     }
@@ -511,6 +514,9 @@ class ConferencePresenter extends BasePresenter
             ->setRequired('Hlasovací koeficient musí být vyplněn - zadejte 0.')
             ->addRule(Form::INTEGER, 'Hlasovací koeficient musí být číslo')
             ->setHtmlType('number');
+        $form->addText('ogImageUrl', 'OG obrázek')
+            ->setRequired(false)
+            ->addRule(Form::URL, 'OG obrázek musí být ve tvaru URL');
 
         $form->addSubmit('submit', 'Odeslat')->setOption('primary', true);
 
@@ -541,7 +547,14 @@ class ConferencePresenter extends BasePresenter
         }
 
         foreach ($values as $key => $value) {
-            if (in_array($key, ['id'])) {
+            if ($key === 'id') {
+                continue;
+            }
+
+            if ($key === 'ogImageUrl') {
+                $extended = $talk->getExpandedExtensions();
+                $extended['ogImageUrl'] = empty($value) ? null : $value;
+                $talk->setExpandedExtenstios($extended);
                 continue;
             }
 
