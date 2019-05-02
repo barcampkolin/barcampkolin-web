@@ -55,6 +55,34 @@ class MailDynamicLoader
             'title' => 'E-mail po vydání vídeí na YouTube',
             'params' => [],
         ],
+        'announce-speakers-success' => [
+            'title' => 'Informace o úšpěšném prohlasování do Programu (řečníci)',
+            'params' => [],
+        ],
+        'announce-speakers-unsuccess' => [
+            'title' => 'Informacemi o neúšpěšném prohlasování do Programu (řečníci)',
+            'params' => [],
+        ],
+        'program-announce' => [
+            'title' => 'Oznámení zveřejněného programu',
+            'params' => [],
+        ],
+        'free-template-1' => [
+            'title' => 'Volná šablona 1',
+            'params' => [],
+        ],
+        'free-template-2' => [
+            'title' => 'Volná šablona 2',
+            'params' => [],
+        ],
+        'free-template-3' => [
+            'title' => 'Volná šablona 3',
+            'params' => [],
+        ],
+        'free-template-4' => [
+            'title' => 'Volná šablona 4',
+            'params' => [],
+        ],
     ];
 
 

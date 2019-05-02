@@ -9,6 +9,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 use Ublaboo\DataGrid\DataGrid;
 
 class MailPresenter extends BasePresenter
@@ -54,6 +55,7 @@ class MailPresenter extends BasePresenter
 
         $grid->setDataSource($mails);
         $grid->addColumnLink('title', 'Typ e-mailu', 'edit', null, ['id']);
+        $grid->addAction('bulkSender', 'Rozeslat')->setTitle('Rozeslat e-mail');
         $grid->addAction('edit', 'Upravit')->setTitle('Upravit e-mail');
         $grid->addAction('view', 'Zobrazit')->setTitle('Zobrazit náhled e-mailu');
         $grid->setPagination(false);
@@ -143,6 +145,29 @@ class MailPresenter extends BasePresenter
 
 
     /**
+     * @param $id
+     * @throws \Nette\Utils\JsonException
+     * @throws BadRequestException
+     */
+    public function renderBulkSender($id)
+    {
+        try {
+            $mail = $this->mailLoader->getMailById($id);
+        } catch (EntityNotFound $e) {
+            throw new BadRequestException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        $this->template->title = $mail['title'];
+        $this->template->mailParamsCount = count($mail['params']);
+
+        $this->template->endpoint = $this->link('//send', [
+            'templateId' => $id,
+            'recipient' => '{{recipient}}'
+        ]);
+    }
+
+
+    /**
      * @param $templateId
      * @param $recipient
      * @param string $parametersJson
@@ -150,7 +175,7 @@ class MailPresenter extends BasePresenter
      * @throws \Nette\Utils\JsonException
      * @throws EntityNotFound
      */
-    public function renderSend($templateId, $recipient, $parametersJson = '{}')
+    public function actionSend($templateId, $recipient, $parametersJson = '{}')
     {
         $parameters = Json::decode($parametersJson, Json::FORCE_ARRAY);
 

@@ -43,7 +43,7 @@ module.exports = function(grunt) {
         uglify: {
             options: {
                 sourceMap: false,
-                beautify: false
+                beautify: true
             },
             default: {
                 files: {

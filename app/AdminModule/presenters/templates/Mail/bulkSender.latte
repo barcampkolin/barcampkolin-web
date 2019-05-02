@@ -1,0 +1,25 @@
+{block title}{block h1}Rozesílání{/block} - Barcamp Kolín{/block}
+{block content}
+
+<h2>E-mail: {$title}</h2>
+
+{if $mailParamsCount > 0}
+    <div class="alert alert-warning" role="alert">
+        <strong>POZOR!</strong>
+        Tato šablona vyžaduje nastavení nejméně jednoho dynamického parametru, k tomu se tento nástroj nehodí!
+    </div>
+{/if}
+
+<p>Vložte e-maiy adresátů, každý na samostatný řádek:</p>
+<textarea class="form-control" rows="15" id="buldSenderRecipients"></textarea>
+<button type="button" class="btn btn-primary btn-lg btn-block" id="buldSenderSend" data-endpoint="{$endpoint}">Rozeslat</button>
+
+<h3>Průběh rozesílky</h3>
+<p>Po dobu rozesílání nezavírejte okno!</p>
+
+<table class="table" id="buldSenderTable">
+    <tr>
+        <th>E-mail</th>
+        <th>Stav</th>
+    </tr>
+</table>
