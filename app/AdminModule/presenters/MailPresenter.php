@@ -7,9 +7,9 @@ use App\Model\MailDynamicLoader;
 use App\Model\MailerManager;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 use Ublaboo\DataGrid\DataGrid;
 
 class MailPresenter extends BasePresenter
@@ -216,7 +216,8 @@ class MailPresenter extends BasePresenter
         $form = new Form();
 
         $form->addHidden('id');
-        $form->addSubmit('submit', 'Uložit');
+        $form->addSubmit('submit', 'Uložit')->setOption('primary', true);
+        $form->addSubmit('submitAndShow', 'Zobrazit');
 
         $form->addText('subject', 'Předmět e-mailu');
 
@@ -232,7 +233,7 @@ class MailPresenter extends BasePresenter
         $form->addText('purpose', 'Odůvodnění poslání e-mailu')
             ->setOption('description', 'Zobrazuje se v patičce e-mailu (doporučeno v rámci GDPR)');
 
-        $form->addSubmit('submit2', 'Uložit');
+        $form->addSubmit('submit2', 'Uložit')->setOption('primary', true);
 
         $form->addProtection();
 
@@ -266,6 +267,13 @@ class MailPresenter extends BasePresenter
         }
 
         $this->flashMessage('Uloženo', 'success');
+
+
+        /** @var SubmitButton $submitAndShow */
+        $submitAndShow = $form['submitAndShow'];
+        if ($submitAndShow->isSubmittedBy()) {
+            $this->redirect('preview', ['id' => $id]);
+        }
         $this->redirect('this');
     }
 }
