@@ -85,7 +85,7 @@
                         </div>
                     </div>
 
-                    <p n:ifcontent class="item-author-bio">{$talk->conferee->bio}</p>
+                    <p n:ifcontent class="item-author-bio">{$talk->conferee->bio|breaklines}</p>
                     <div class="item-author-contact">
                         <div class="item-social">
                             <a n:if="isset($extended['url']['facebook']) && $extended['url']['facebook']" href="{$extended['url']['facebook']}" target="_blank" rel="noopener">
