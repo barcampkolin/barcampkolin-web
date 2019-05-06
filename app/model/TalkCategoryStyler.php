@@ -20,7 +20,7 @@ class TalkCategoryStyler
      */
     public function __construct(array $categories, $default = 'style0')
     {
-        $this->keys = array_flip(array_keys($categories));
+        $this->keys = $categories;
         $this->default = $default;
     }
 
@@ -37,7 +37,7 @@ class TalkCategoryStyler
         }
 
         if ($categoryKey !== null && isset($this->keys[$categoryKey])) {
-            return 'style' . ($this->keys[$categoryKey] + 1);
+            return 'style-' . $categoryKey;
         }
 
         return $this->default;

@@ -56,7 +56,10 @@ class ProgramControl extends Control
         $this->template->timeRows = $this->getTimeRows($minMaxBorder);
 
         $this->template->rooms = $this->talkManager->getRooms();
-        $this->template->styler = new TalkCategoryStyler($this->talkManager->getCategories(), 'style1');
+
+        $categories = $this->talkManager->getCategories();
+        $this->template->categories = $categories;
+        $this->template->styler = new TalkCategoryStyler($categories, 'style1');
 
         $this->template->render();
     }

@@ -24,28 +24,18 @@
 
                 <div id="main-program">
 
-                    {*<div class="program-filter js-program-filter">
+                    <div class="program-filter js-program-filter">
                         <div class="checkbox">
                             <input type="checkbox" id="f1" name="filter-main" value="*" checked class="check-all"/>
                             <label for="f1"><span></span>Všechny kategorie</label>
                         </div>
+                        {foreach $categories as $categoryKey=>$category}
                         <div class="checkbox">
-                            <input type="checkbox" id="f2" name="filter-main" value="marketing"/>
-                            <label for="f2"><span></span>Marketing a média</label>
+                            <input type="checkbox" id="f-{$categoryKey}" name="filter-main" value="style-{$categoryKey}"/>
+                            <label for="f-{$categoryKey}"><span></span>{$category}</label>
                         </div>
-                        <div class="checkbox">
-                            <input type="checkbox" id="f3" name="filter-main" value="leadership"/>
-                            <label for="f3"><span></span>Leadership</label>
-                        </div>
-                        <div class="checkbox">
-                            <input type="checkbox" id="f4" name="filter-main" value="podnikani"/>
-                            <label for="f4"><span></span>Podnikání na volné noze</label>
-                        </div>
-                        <div class="checkbox">
-                            <input type="checkbox" id="f5" name="filter-main" value="teambuilding"/>
-                            <label for="f5"><span></span>Teambuilding</label>
-                        </div>
-                    </div>*}
+                        {/foreach}
+                    </div>
 
                     <div class="program-wrapper">
                         <ul class="timerows timerows-mobile">
