@@ -55,7 +55,7 @@ class InternalProgramEnvelope extends InternalProgram
      */
     public function getCategory()
     {
-        return $this->program->talk->category;
+        return $this->program->talk ? $this->program->talk->category : $this->program->category;
     }
 
 

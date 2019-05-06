@@ -98,7 +98,7 @@
                                                     </div>
                                                 </div>
                                             {case 'custom'}
-                                                <div class="program-item t{$program->duration} {$program->style ?: style4}">
+                                                <div class="program-item t{$program->duration} {$styler->getStyleClass($program->category, $program->style, 'style4')}">
                                                     <div class="item-content">
                                                         <h3 class="item-title">{nl2br($program->title)|noescape}</h3>
 

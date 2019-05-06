@@ -14,6 +14,7 @@ use Nextras\Orm\Entity\Entity;
  * @property string|null                $title
  * @property string|null                $speaker
  * @property string|null                $style
+ * @property string|null                $category
  * @property \DateTimeImmutable         $created        {default now}
  */
 class Program extends Entity

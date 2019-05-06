@@ -28,9 +28,10 @@ class TalkCategoryStyler
     /**
      * @param string|null $categoryKey
      * @param string|null $color
+     * @param string|null $default
      * @return string
      */
-    public function getStyleClass($categoryKey, $color = null)
+    public function getStyleClass($categoryKey, $color = null, $default = null)
     {
         if ($color !== null) {
             return $color;
@@ -38,6 +39,10 @@ class TalkCategoryStyler
 
         if ($categoryKey !== null && isset($this->keys[$categoryKey])) {
             return 'style-' . $categoryKey;
+        }
+
+        if($default !== null) {
+            return $default;
         }
 
         return $this->default;

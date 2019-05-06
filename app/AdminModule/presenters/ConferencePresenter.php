@@ -708,7 +708,9 @@ class ConferencePresenter extends BasePresenter
             'style3' => 'Červená',
             'style4' => 'Tyrkysová',
             'style5' => 'Fialová',
-            'style6' => 'Hnědá',
+            'style6' => 'Zelená (Osobní rozvoj)',
+            'style7' => 'Oranžová (Byznys)',
+            'style8' => 'Modrá (Technická)',
         ];
     }
 
@@ -801,7 +803,13 @@ class ConferencePresenter extends BasePresenter
                 'Volitelné. Zadejte jen pokud je potřeba v programu název speakera přepsat. Max. 200 znaků'
             );
 
-        $form->addSelect('style', 'Styl (barva)', $this->getProgramStyles());
+        $form->addSelect('style', 'Styl (barva)', $this->getProgramStyles())
+            ->setOption(
+                'description',
+                'Volitelné. Nastavení barvy přetíží barvu kategorie.'
+            );
+
+        $form->addSelect('category', 'Kategorie', $this->talkManager->getCategories());
 
         $form->addGroup();
 
