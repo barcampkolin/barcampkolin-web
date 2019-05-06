@@ -707,6 +707,8 @@ class ConferencePresenter extends BasePresenter
             'style2' => 'Oranžová',
             'style3' => 'Červená',
             'style4' => 'Tyrkysová',
+            'style5' => 'Fialová',
+            'style6' => 'Hnědá',
         ];
     }
 
@@ -731,7 +733,7 @@ class ConferencePresenter extends BasePresenter
 
 
     /**
-     * @param null $id
+     * @param null|id $id
      * @throws \Nette\Application\BadRequestException
      */
     public function renderProgramEdit($id = null)

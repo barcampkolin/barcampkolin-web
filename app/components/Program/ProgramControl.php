@@ -3,6 +3,7 @@
 namespace App\Components\Program;
 
 use App\Model\EventInfoProvider;
+use App\Model\TalkCategoryStyler;
 use App\Model\TalkManager;
 use App\Orm\Program;
 use Nette\Application\UI\Control;
@@ -54,8 +55,8 @@ class ProgramControl extends Control
 
         $this->template->timeRows = $this->getTimeRows($minMaxBorder);
 
-        $this->template->categories = $this->talkManager->getCategories();
         $this->template->rooms = $this->talkManager->getRooms();
+        $this->template->styler = new TalkCategoryStyler($this->talkManager->getCategories(), 'style1');
 
         $this->template->render();
     }

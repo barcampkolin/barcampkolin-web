@@ -7,6 +7,7 @@ use App\Orm\Program;
 /**
  * Class InternalProgramEnvelope
  * @package App\components\Program
+ * @property-read string|null $category
  */
 class InternalProgramEnvelope extends InternalProgram
 {
@@ -46,6 +47,15 @@ class InternalProgramEnvelope extends InternalProgram
     public function getDuration()
     {
         return $this->program->duration;
+    }
+
+
+    /**
+     * @return string|null
+     */
+    public function getCategory()
+    {
+        return $this->program->talk->category;
     }
 
 

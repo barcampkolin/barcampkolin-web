@@ -95,6 +95,17 @@ class TalkManager
      * @throws InvalidEnumeratorSetException
      * @throws \Nette\Utils\JsonException
      */
+    public function getCategoriesKeys()
+    {
+        return array_keys($this->getCategories());
+    }
+
+
+    /**
+     * @return array
+     * @throws InvalidEnumeratorSetException
+     * @throws \Nette\Utils\JsonException
+     */
     public function getDurations()
     {
         return $this->enumerator->getPairs(EnumeratorManager::SET_TALK_DURATIONS);

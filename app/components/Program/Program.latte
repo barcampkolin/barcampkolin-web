@@ -123,7 +123,7 @@
                                                     </div>
                                                 </div>
                                             {default}
-                                                <a href="{plink :Conference:talkDetail, id => $program->talkId}" class="program-item t{$program->duration} {$program->style ?: style1}">
+                                                <a href="{plink :Conference:talkDetail, id => $program->talkId}" class="program-item t{$program->duration} {$styler->getStyleClass($program->category, $program->style)}">
                                                     <div class="item-content">
                                                         <h3 class="item-title">
                                                             {if $program->isTitleOverridden()}
