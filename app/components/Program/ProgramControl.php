@@ -57,6 +57,8 @@ class ProgramControl extends Control
 
         $this->template->rooms = $this->talkManager->getRooms();
 
+        $this->template->counts = $this->infoProvider->getCounts();
+
         $categories = $this->talkManager->getCategories();
         $this->template->categories = $categories;
         $this->template->styler = new TalkCategoryStyler($categories, 'style1');
