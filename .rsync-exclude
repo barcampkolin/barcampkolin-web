@@ -3,6 +3,7 @@
 .DS_Store
 /.bowerrc
 /.idea
+/.install
 /.rsync-exclude
 /app/config/config.local.neon
 /assets
