@@ -8,6 +8,7 @@ use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
+use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
 
 class FilePresenter extends BasePresenter
@@ -33,7 +34,7 @@ class FilePresenter extends BasePresenter
     public function createComponentFileDatagrid($name)
     {
         $grid = new DataGrid($this, $name);
-        DataGrid::$icon_prefix = 'glyphicon glyphicon-';
+        DataGrid::$iconPrefix = 'glyphicon glyphicon-';
 
         $grid->setDataSource($this->fileManager->findAll());
 
@@ -54,7 +55,7 @@ class FilePresenter extends BasePresenter
 
         $grid->addAction('delete', 'Smazat', 'deleteFile!')->setIcon('trash')
             ->setClass('btn btn-xs btn-danger ajax')
-            ->setConfirm('Opravdu chcete smazat soubor %s?', 'name')
+            ->setConfirmation(new StringConfirmation('Opravdu chcete smazat soubor %s?', 'name'))
             ->setRenderCondition(function ($item) {
                 /** @var File $item */
                 return $this->fileManager->isManagable($item->url);

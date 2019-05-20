@@ -22,7 +22,6 @@ class NewsletterSignupControl extends Control
      */
     public function __construct(NewsletterSignupManager $signupManager)
     {
-        parent::__construct();
         $this->manager = $signupManager;
     }
 

@@ -5,6 +5,7 @@ namespace App\AdminModule\Presenters;
 use App\Model\ApiTokenManager;
 use App\Model\DebugEnabler;
 use Nette\Application\Request;
+use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
 
 class SystemPresenter extends BasePresenter
@@ -64,7 +65,7 @@ class SystemPresenter extends BasePresenter
         $hashes = $this->apiTokenManager->getTokenHashes();
 
         $grid = new DataGrid($this, $name);
-        DataGrid::$icon_prefix = 'glyphicon glyphicon-';
+        DataGrid::$iconPrefix = 'glyphicon glyphicon-';
 
         $grid->setPrimaryKey('key');
         $grid->setDataSource($hashes);
@@ -75,11 +76,13 @@ class SystemPresenter extends BasePresenter
 
         $grid->addColumnText('key', 'Název klíče');
 
-        $grid->addAction('delete', null, 'deleteApiToken!')
+        $grid->addAction('delete', '', 'deleteApiToken!')
             ->setIcon('trash')
             ->setTitle('Smazat')
             ->setClass('btn btn-xs btn-danger ajax')
-            ->setConfirm('Smazáním tokenu může dojít k poškození funkčnosti. Opravdu chcete smazat token %s?', 'key');
+            ->setConfirmation(
+                new StringConfirmation('Smazáním tokenu může dojít k poškození funkčnosti. Opravdu chcete smazat token %s?', 'key')
+            );
 
         return $grid;
     }

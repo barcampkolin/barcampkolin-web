@@ -28,7 +28,7 @@
     <meta property="og:url" content="{link //this}">
     {ifset #metaDescription}<meta property="og:description" content="{include metaDescription|stripHtml|truncate:300}">{/ifset}
     <meta property="og:locale" content="cs_CZ">
-    <meta property="og:image" content="{block ogImage}{$socialUrls->ogImage ?: $baseUri.'/static/'.$year.'/img/barcamp-og.png'}{/block}">
+    <meta property="og:image" content="{block ogImage}{$socialUrls->ogImage ?: $basePath.'/static/'.$year.'/img/barcamp-og.png'}{/block}">
 </head>
 
 <body class="preload no-js {ifset $isHp}hp{/ifset}">

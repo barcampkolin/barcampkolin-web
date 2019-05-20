@@ -8,6 +8,7 @@ use Nette\Application\UI\Form;
 use Nette\Database\ForeignKeyConstraintViolationException;
 use Nette\Http\FileUpload;
 use Nette\Utils\ArrayHash;
+use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
 
 /**
@@ -144,7 +145,7 @@ class PartnersPresenter extends BasePresenter
      */
     public function createComponentPartnersDatagrid()
     {
-        DataGrid::$icon_prefix = 'glyphicon glyphicon-';
+        DataGrid::$iconPrefix = 'glyphicon glyphicon-';
 
         $grid = new DataGrid();
 
@@ -180,15 +181,15 @@ class PartnersPresenter extends BasePresenter
                 return $item->enabled ? 'Ano' : 'Ne';
             });
 
-        $grid->addAction('partner', null)
+        $grid->addAction('partner', '')
             ->setIcon('pencil')
             ->setTitle('Upravit');
 
-        $grid->addAction('delete', null, 'deletePartner!')
+        $grid->addAction('delete', '', 'deletePartner!')
             ->setIcon('trash')
             ->setTitle('Smazat')
             ->setClass('btn btn-xs btn-danger ajax')
-            ->setConfirm('Opravdu chcete smazat partnera %s?', 'name');
+            ->setConfirmation(new StringConfirmation('Opravdu chcete smazat partnera %s?', 'name'));
 
         return $grid;
     }
@@ -291,7 +292,7 @@ class PartnersPresenter extends BasePresenter
      */
     public function createComponentGroupsDatagrid()
     {
-        DataGrid::$icon_prefix = 'glyphicon glyphicon-';
+        DataGrid::$iconPrefix = 'glyphicon glyphicon-';
 
         $grid = new DataGrid();
 
@@ -311,15 +312,15 @@ class PartnersPresenter extends BasePresenter
                 return $item->enabled ? 'Ano' : 'Ne';
             });
 
-        $grid->addAction('group', null)
+        $grid->addAction('group', '')
             ->setIcon('pencil')
             ->setTitle('Upravit');
 
-        $grid->addAction('delete', null, 'deleteGroup!')
+        $grid->addAction('delete', '', 'deleteGroup!')
             ->setIcon('trash')
             ->setTitle('Smazat')
             ->setClass('btn btn-xs btn-danger ajax')
-            ->setConfirm('Opravdu chcete smazat z skupinu %s?', 'name');
+            ->setConfirmation(new StringConfirmation('Opravdu chcete smazat z skupinu %s?', 'name'));
 
         return $grid;
     }
