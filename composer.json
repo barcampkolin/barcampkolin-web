@@ -40,12 +40,11 @@
 		"nette/utils": "^3.0",
 		"latte/latte": "^2.5",
 		"tracy/tracy": "^2.6",
-		"kdyby/forms-replicator": "^2.0@dev",
-		"ublaboo/datagrid": "v6.x-dev",
-		"nextras/orm": "^3.1@dev",
-		"nextras/secured-links": "^1.4@dev"
+		"kdyby/forms-replicator": "^2.0",
+		"ublaboo/datagrid": "^6.0",
+		"nextras/orm": "^3.1",
+		"nextras/secured-links": "^1.4"
 	},
-	"require-dev": {
-	},
+	"prefer-stable": true,
 	"minimum-stability": "dev"
 }
