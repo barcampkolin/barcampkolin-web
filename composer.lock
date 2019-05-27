@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2c42d40b3f91dff1f33fa01559597a7",
+    "content-hash": "657ea846592910314793fdd5490fdbde",
     "packages": [
         {
             "name": "contributte/application",
@@ -2020,16 +2020,16 @@
         },
         {
             "name": "ublaboo/datagrid",
-            "version": "v6.x-dev",
+            "version": "v6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contributte/datagrid.git",
-                "reference": "348a0b801af222f196d4ee27f5be84f316147f3d"
+                "reference": "237088fc29b314a0ff0c6979dcc8f3cb647c9961"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contributte/datagrid/zipball/348a0b801af222f196d4ee27f5be84f316147f3d",
-                "reference": "348a0b801af222f196d4ee27f5be84f316147f3d",
+                "url": "https://api.github.com/repos/contributte/datagrid/zipball/237088fc29b314a0ff0c6979dcc8f3cb647c9961",
+                "reference": "237088fc29b314a0ff0c6979dcc8f3cb647c9961",
                 "shasum": ""
             },
             "require": {
@@ -2058,8 +2058,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-v5.x": "5.8.x-dev",
-                    "dev-v6.x": "6.0.x-dev"
+                    "dev-master": "6.1.x-dev"
                 }
             },
             "autoload": {
@@ -2083,7 +2082,7 @@
                 "grid",
                 "nette"
             ],
-            "time": "2019-05-15T18:01:38+00:00"
+            "time": "2019-05-25T10:32:19+00:00"
         }
     ],
     "packages-dev": [],
