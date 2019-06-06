@@ -63,7 +63,7 @@ class NewsletterSignupControl extends Control
         try {
             $this->manager->add($values->email, 'Subscribed by newsletter form');
             $this->presenter->flashMessage('Váš e-mail jsme přidali k příjemcům zpráv o Barcampu');
-            $this->presenter->redirect(302, ':Homepage:');
+            $this->presenter->redirect(':Homepage:');
         } catch (DuplicateNameException $e) {
             $form['email']->addError('Tento e-mail je již přihlášen.');
         }
