@@ -21,6 +21,7 @@ use Nette\Utils\JsonException;
 use Nextras\Orm\Collection\ICollection;
 use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
+use Ublaboo\DataGrid\Exception\DataGridException;
 
 class ConferencePresenter extends BasePresenter
 {
@@ -70,7 +71,9 @@ class ConferencePresenter extends BasePresenter
 
     /**
      * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridException
+     * @throws \InvalidArgumentException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
      */
     public function createComponentConfereeDatagrid($name)
     {
@@ -80,6 +83,26 @@ class ConferencePresenter extends BasePresenter
 
         $grid->addColumnText('name', 'Jméno');
         $grid->addColumnText('email', 'E-mail');
+
+        $onStatusChange = function ($id, $status) use ($grid) {
+            /** @var Conferee $conferee */
+            $conferee = $this->confereeManager->getById($id);
+            $conferee->setValue('enabled', $status);
+            $this->confereeManager->save($conferee);
+
+            if ($this->isAjax()) {
+                $grid->redrawItem($id);
+            }
+        };
+
+        $grid->addColumnStatus('enabled', 'Účast')
+            ->addOption(true, 'Přihlášený')
+            ->endOption()
+            ->addOption(false, 'Účast zrušena')
+            ->setClass('btn-danger')
+            ->endOption()
+            ->onChange[] = $onStatusChange;
+
         $grid->addAction('confereeEdit', 'Upravit')->setTitle('Upravit uživatele');
     }
 
@@ -311,7 +334,7 @@ class ConferencePresenter extends BasePresenter
      * @throws \App\Model\InvalidEnumeratorSetException
      * @throws \Nette\Utils\JsonException
      * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridException
      */
     public function createComponentTalksDatagrid($name)
     {
@@ -577,7 +600,7 @@ class ConferencePresenter extends BasePresenter
      * @param $name
      * @throws JsonException
      * @throws \App\Model\InvalidEnumeratorSetException
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
+     * @throws DataGridException
      */
     public function createComponentProgramDatagrid($name)
     {
