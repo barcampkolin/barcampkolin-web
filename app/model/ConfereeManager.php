@@ -65,9 +65,18 @@ class ConfereeManager
     /**
      * @return int
      */
-    public function getCount()
+    public function getCount(): int
     {
         return $this->findAll()->countStored();
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getActiveCount(): int
+    {
+        return $this->confereeRepository->findBy(['enabled' => true])->countStored();
     }
 
 

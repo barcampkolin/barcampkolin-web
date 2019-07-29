@@ -12,6 +12,7 @@ use Nextras\Orm\Relationships\OneHasMany;
  * @property string                     $email
  * @property string|null                $pictureUrl
  * @property string|null                $bio
+ * @property bool                       $enabled        {default true}
  * @property bool                       $allowMail      {default false}
  * @property \DateTimeImmutable|null    $consens
  * @property string|null                $extended

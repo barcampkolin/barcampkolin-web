@@ -86,6 +86,7 @@ CREATE TABLE `user_role` (
 
 ALTER TABLE `conferee` CHANGE `allow_mail` `allow_mail` TINYINT(1)  UNSIGNED  NOT NULL  DEFAULT '0'  COMMENT 'Boolean - allow to send e-mails';
 
+ALTER TABLE `conferee` ADD `enabled` TINYINT(1)  NOT NULL  DEFAULT 1  COMMENT 'Boolean - is active?';
 
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

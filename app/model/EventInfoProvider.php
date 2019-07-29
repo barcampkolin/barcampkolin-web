@@ -57,6 +57,7 @@ class EventInfoProvider
     /**
      * EventInfoProvider constructor.
      * @param ConfigManager $config
+     * @param ConfereeManager $confereeManager
      */
     public function __construct(ConfigManager $config, ConfereeManager $confereeManager)
     {
@@ -69,7 +70,7 @@ class EventInfoProvider
      * @return ArrayHash
      * @throws \Nette\Utils\JsonException
      */
-    public function getDates()
+    public function getDates(): ArrayHash
     {
         return ArrayHash::from([
             'year' => (int)$this->config->get(self::CURRENT_YEAR, (new DateTime())->format('Y')),
@@ -89,7 +90,7 @@ class EventInfoProvider
      * @return ArrayHash
      * @throws \Nette\Utils\JsonException
      */
-    public function getUrls()
+    public function getUrls(): ArrayHash
     {
         return ArrayHash::from([
             'facebook' => $this->config->get(self::URL_FACEBOOK),
@@ -107,15 +108,12 @@ class EventInfoProvider
      * @return ArrayHash
      * @throws \Nette\Utils\JsonException
      */
-    public function getCounts()
+    public function getCounts(): ArrayHash
     {
-        $confereeLimit = $this->config->get(self::COUNTS_CONFEREE);
-        $confereeCount = $this->getConfereeRegisteredCount();
-
         return ArrayHash::from([
-            'conferee' => $confereeLimit,
-            'conferee_registered' => $confereeCount,
-            'conferee_left' => max(0, $confereeLimit - $confereeCount),
+            'conferee' => $this->config->get(self::COUNTS_CONFEREE),
+            'conferee_registered' => $this->getConfereeRegisteredCount(),
+            'conferee_left' => $this->getConfereeAvailableCount(),
             'talks' => $this->config->get(self::COUNTS_TALKS),
             'talks_limit' => $this->config->get(self::COUNTS_TALKS_LIMIT),
             'workshops' => $this->config->get(self::COUNTS_WORKSHOPS),
@@ -130,10 +128,11 @@ class EventInfoProvider
      * @return ArrayHash
      * @throws \Nette\Utils\JsonException
      */
-    public function getFeatures()
+    public function getFeatures(): ArrayHash
     {
         $features = ArrayHash::from([
-            'conferee' => $this->config->get(self::FEATURE_CONFEREE),
+            'conferee' => $this->isConfereeRegistrationAvailable(),
+            'conferee_enabled' => $this->config->get(self::FEATURE_CONFEREE),
             'talks' => $this->config->get(self::FEATURE_TALK),
             'talks_edit' => $this->config->get(self::FEATURE_TALK_EDIT),
             'talks_order' => $this->config->get(self::FEATURE_TALK_ORDER),
@@ -149,8 +148,34 @@ class EventInfoProvider
     }
 
 
-    public function getConfereeRegisteredCount()
+    /**
+     * @return int Count of registered conferee count (without removed)
+     */
+    public function getConfereeRegisteredCount(): int
     {
-        return $this->confereeManager->getCount();
+        return $this->confereeManager->getActiveCount();
+    }
+
+
+    /**
+     * @return int Count of left available conferee tickets
+     * @throws \Nette\Utils\JsonException
+     */
+    public function getConfereeAvailableCount(): int
+    {
+        $confereeLimit = $this->config->get(self::COUNTS_CONFEREE);
+        $confereeCount = $this->getConfereeRegisteredCount();
+
+        return max(0, $confereeLimit - $confereeCount);
+    }
+
+
+    /**
+     * @return bool True if conferee registration available (enabled & free tickets)
+     * @throws \Nette\Utils\JsonException
+     */
+    public function isConfereeRegistrationAvailable(): bool
+    {
+        return $this->config->get(self::FEATURE_CONFEREE, false) && $this->getConfereeAvailableCount() > 0;
     }
 }
