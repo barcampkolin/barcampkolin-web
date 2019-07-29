@@ -23,7 +23,7 @@
 		}
 	],
 	"require": {
-		"php": ">=7.1.0",
+		"php": ">=7.3.0",
 		"facebook/graph-sdk": "^5.7",
 		"nette/application": "^3.0",
 		"nette/bootstrap": "^3.0",
@@ -33,7 +33,7 @@
 		"nette/finder": "^2.5",
 		"nette/forms": "^3.0",
 		"nette/http": "^3.0",
-		"nette/mail": "^3.0",
+		"nette/mail": "^3.1",
 		"nette/robot-loader": "^3.2",
 		"nette/safe-stream": "^2.4",
 		"nette/security": "^3.0",
@@ -41,7 +41,7 @@
 		"latte/latte": "^2.5",
 		"tracy/tracy": "^2.6",
 		"kdyby/forms-replicator": "^2.0",
-		"ublaboo/datagrid": "^6.0",
+		"ublaboo/datagrid": "^6.2",
 		"nextras/orm": "^3.1",
 		"nextras/secured-links": "^1.4"
 	},
