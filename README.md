@@ -69,7 +69,7 @@ Seznam cronů:
 Požadavky pro běh
 -----------------
 
-PHP 5.6 nebo vyšší, Mysql 5 nebo vyšší, Git, Unzip. 
+PHP 7.3 nebo vyšší, Mysql 5 nebo vyšší, Git, Unzip. 
 
 V PHP jsou potřeba rozšření: mysqli, pdo_mysql.
 
