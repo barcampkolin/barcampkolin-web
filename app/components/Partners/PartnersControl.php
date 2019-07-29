@@ -19,7 +19,6 @@ class PartnersControl extends Control
      */
     public function __construct(PartnersManager $partnersManager)
     {
-        parent::__construct();
         $this->partnerManager = $partnersManager;
     }
 

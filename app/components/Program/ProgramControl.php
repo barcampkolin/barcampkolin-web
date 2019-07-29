@@ -31,7 +31,6 @@ class ProgramControl extends Control
      */
     public function __construct(EventInfoProvider $infoProvider, TalkManager $talkManager)
     {
-
         $this->infoProvider = $infoProvider;
         $this->talkManager = $talkManager;
     }

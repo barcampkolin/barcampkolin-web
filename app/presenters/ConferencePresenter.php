@@ -126,7 +126,7 @@ class ConferencePresenter extends BasePresenter
                 'hasVoted' => true,
             ]);
         }
-        $this->redirect(IResponse::S303_SEE_OTHER, 'this');
+        $this->redirect('this');
     }
 
 
@@ -147,7 +147,7 @@ class ConferencePresenter extends BasePresenter
             ]);
         }
 
-        $this->redirect(IResponse::S303_SEE_OTHER, 'this');
+        $this->redirect('this');
     }
 
 
@@ -157,9 +157,9 @@ class ConferencePresenter extends BasePresenter
     public function handleSignToVote()
     {
         if ($this->user->isLoggedIn()) {
-            $this->redirect(IResponse::S303_SEE_OTHER, 'this');
+            $this->redirect('this');
         } else {
-            $this->redirect(IResponse::S303_SEE_OTHER, 'Sign:in', [
+            $this->redirect('Sign:in', [
                 'backlink' => $this->storeRequest()
             ]);
         }

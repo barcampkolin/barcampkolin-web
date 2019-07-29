@@ -1,8 +1,21 @@
 #!/bin/bash
 
-REMOTE_DIR="/home/www/barcampkolin.cz/subdomains/www"
-LOCAL_DIR=""
-SERVER_NAME="cst-barcampkolin.cz@redbit-1-www3.superhosting.cz"
+if [ ! $# == 1 ]; then
+  echo "Usage: $0 <test|prod>"
+  exit
+fi
+
+if [ "$1" == "test" ] ; then
+  REMOTE_DIR="/var/www/barcampkolin.cz/www"
+  LOCAL_DIR=""
+  SERVER_NAME="mlh"
+  echo "Deploying to TEST environment"
+else
+  REMOTE_DIR="/home/www/barcampkolin.cz/subdomains/www"
+  LOCAL_DIR=""
+  SERVER_NAME="cst-barcampkolin.cz@redbit-1-www4.superhosting.cz"
+  echo "Deploying to LIVE environment"
+fi
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 SSH="ssh ${SERVER_NAME}"

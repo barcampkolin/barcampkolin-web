@@ -19,6 +19,7 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Nextras\Orm\Collection\ICollection;
+use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
 
 class ConferencePresenter extends BasePresenter
@@ -319,7 +320,7 @@ class ConferencePresenter extends BasePresenter
 
 
         $grid = new DataGrid($this, $name);
-        DataGrid::$icon_prefix = 'glyphicon glyphicon-';
+        DataGrid::$iconPrefix = 'glyphicon glyphicon-';
 
         $grid->setDataSource($this->talkManager->findAll());
 
@@ -586,7 +587,7 @@ class ConferencePresenter extends BasePresenter
             ->orderBy('time', ICollection::ASC);
 
         $grid = new DataGrid($this, $name);
-        DataGrid::$icon_prefix = 'glyphicon glyphicon-';
+        DataGrid::$iconPrefix = 'glyphicon glyphicon-';
 
         $grid->setDataSource($program);
 
@@ -633,11 +634,11 @@ class ConferencePresenter extends BasePresenter
             ->setIcon('pencil')
             ->setTitle('Upravit');
 
-        $grid->addAction('delete', null, 'deleteProgram!')
+        $grid->addAction('delete', '', 'deleteProgram!')
             ->setIcon('trash')
             ->setTitle('Smazat')
             ->setClass('btn btn-xs btn-danger ajax')
-            ->setConfirm('Opravdu chcete smazat z programu přednášku %s?', 'title');
+            ->setConfirmation(new StringConfirmation('Opravdu chcete smazat z programu přednášku %s?', 'title'));
     }
 
 

@@ -14,7 +14,7 @@ services:
         depends_on:
             - mysqldb
     mysqldb:
-        image: mysql:5.7
+        image: mariadb
         container_name: barcampkolinweb_mysqldb_1
         restart: always
         ports:

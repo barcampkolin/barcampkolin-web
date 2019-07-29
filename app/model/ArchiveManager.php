@@ -142,7 +142,7 @@ class ArchiveManager
      */
     public function isArchivationProcess()
     {
-        return (bool)$this->httpRequest->getCookie(self::IN_ARCHIVATION_COOKIE_KEY, false);
+        return (bool)$this->httpRequest->getCookie(self::IN_ARCHIVATION_COOKIE_KEY);
     }
 
 

@@ -26,7 +26,6 @@ class ScheduleControl extends Control
      */
     public function __construct(EventInfoProvider $infoProvider, ScheduleManager $scheduleManager)
     {
-        parent::__construct();
         $this->infoProvider = $infoProvider;
         $this->scheduleManager = $scheduleManager;
     }

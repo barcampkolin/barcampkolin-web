@@ -3,6 +3,7 @@
 .DS_Store
 /.bowerrc
 /.idea
+/.install
 /.rsync-exclude
 /app/config/config.local.neon
 /assets
@@ -11,11 +12,13 @@
 /composer.lock
 /deploy.sh
 /docker
+/docker-compose.yml
 /Gruntfile.js
 /log/*
 /node_modules
 /package.json
 /package-lock.json
+/README.md
 /temp/*
 /tests
 /www/upload/*
