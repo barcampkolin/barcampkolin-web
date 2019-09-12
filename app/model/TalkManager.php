@@ -7,10 +7,12 @@ use App\Orm\Program;
 use App\Orm\ProgramRepository;
 use App\Orm\Talk;
 use App\Orm\TalkRepository;
+use App\Orm\TalkVoteRepository;
 use InvalidArgumentException;
 use Nette\Database\Context;
 use Nette\Database\ForeignKeyConstraintViolationException;
 use Nette\Database\Table\ActiveRow;
+use Nextras\Orm\Collection\ICollection;
 
 class TalkManager
 {
@@ -20,13 +22,17 @@ class TalkManager
 
     /** @var TalkRepository $talkRepository */
     private $talkRepository;
+
+    /** @var TalkVoteRepository */
+    private $talkVoteRepository;
+
     /** @var ProgramRepository $talkRepository */
     private $programRepository;
+
     /** @var Context */
     private $database;
-    /**
-     * @var EnumeratorManager
-     */
+
+    /** @var EnumeratorManager */
     private $enumerator;
 
 
@@ -39,6 +45,7 @@ class TalkManager
     public function __construct(Orm $orm, Context $database, EnumeratorManager $enumerator)
     {
         $this->talkRepository = $orm->talk;
+        $this->talkVoteRepository = $orm->talkVote;
         $this->programRepository = $orm->program;
 
         $this->database = $database;
@@ -177,7 +184,7 @@ class TalkManager
 
         /** @var Talk $talk */
         $talk = $this->talkRepository->getById($talkId);
-        $talk->votes = max(0, $sum + $talk->voteCoefficient);
+        $talk->votesCount = max(0, $sum + $talk->voteCoefficient);
         $this->talkRepository->persistAndFlush($talk);
     }
 
@@ -203,7 +210,7 @@ class TalkManager
 
 
     /**
-     * @return \Nextras\Orm\Collection\ICollection
+     * @return ICollection
      */
     public function findActive()
     {
@@ -214,7 +221,7 @@ class TalkManager
 
 
     /**
-     * @return \Nextras\Orm\Collection\ICollection
+     * @return ICollection
      */
     public function findAll()
     {
@@ -223,11 +230,30 @@ class TalkManager
 
 
     /**
-     * @return \Nextras\Orm\Collection\ICollection
+     * @return ICollection
      */
     public function findAllProgram()
     {
         return $this->programRepository->findAll();
+    }
+
+
+    /**
+     * @param int|null $userId
+     * @param int|null $talkId
+     * @return ICollection
+     */
+    public function findVotes(?int $userId = null, ?int $talkId = null): ICollection
+    {
+        $conditionals = [];
+        if($userId !== null) {
+            $conditionals['user_id'] = $userId;
+        }
+        if($userId !== null) {
+            $conditionals['talk_id'] = $talkId;
+        }
+
+        return $this->talkVoteRepository->findBy($conditionals);
     }
 
 

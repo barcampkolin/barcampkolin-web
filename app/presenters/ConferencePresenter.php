@@ -122,7 +122,7 @@ class ConferencePresenter extends BasePresenter
         if ($this->isAjax()) {
             $talk = $this->talkManager->getById($talkId);
             $this->sendJson([
-                'votes' => $talk->votes,
+                'votes' => $talk->votesCount,
                 'hasVoted' => true,
             ]);
         }
@@ -142,7 +142,7 @@ class ConferencePresenter extends BasePresenter
         if ($this->isAjax()) {
             $talk = $this->talkManager->getById($talkId);
             $this->sendJson([
-                'votes' => $talk->votes,
+                'votes' => $talk->votesCount,
                 'hasVoted' => false,
             ]);
         }

@@ -88,6 +88,8 @@ ALTER TABLE `conferee` CHANGE `allow_mail` `allow_mail` TINYINT(1)  UNSIGNED  NO
 
 ALTER TABLE `conferee` ADD `enabled` TINYINT(1)  NOT NULL  DEFAULT 1  COMMENT 'Boolean - is active?';
 
+ALTER TABLE `talk` CHANGE `votes` `votes_count` INT(11)  NULL  DEFAULT '0';
+
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -14,6 +14,7 @@ use Nextras\Orm\Relationships\OneHasMany;
  * @property OneHasMany|Identity[]  $identity       {1:m Identity::$user}
  * @property Conferee|null          $conferee       {1:1 Conferee::$user}
  * @property OneHasMany|UserRole[]  $role           {1:m UserRole::$user}
+ * @property OneHasMany|TalkVote[]  $votes          {1:m TalkVote::$user}
  */
 class User extends Entity
 {

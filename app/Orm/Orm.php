@@ -10,6 +10,7 @@ use Nextras\Orm\Model\Model;
  * @property-read IdentityRepository $identity
  * @property-read ProgramRepository $program
  * @property-read TalkRepository $talk
+ * @property-read TalkVoteRepository $talkVote
  * @property-read UserRepository $user
  * @property-read UserRoleRepository $role
  */

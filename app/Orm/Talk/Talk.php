@@ -15,7 +15,8 @@ use Nextras\Orm\Relationships\OneHasMany;
  * @property string|null $description
  * @property string|null $purpose
  * @property int $enabled                           {default 1}
- * @property int $votes                             {default 0}
+ * @property OneHasMany|TalkVote[] $votes           {1:m TalkVote::$talk}
+ * @property int $votesCount                        {default 0}
  * @property int $voteCoefficient                   {default 0}
  * @property string|null $category
  * @property string|null $company

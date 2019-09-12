@@ -71,11 +71,12 @@ class ConferencePresenter extends BasePresenter
 
     /**
      * @param $name
+     * @return DataGrid
      * @throws DataGridException
      * @throws \InvalidArgumentException
      * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
      */
-    public function createComponentConfereeDatagrid($name)
+    public function createComponentConfereeDatagrid($name): DataGrid
     {
         $grid = new DataGrid($this, $name);
 
@@ -104,6 +105,8 @@ class ConferencePresenter extends BasePresenter
             ->onChange[] = $onStatusChange;
 
         $grid->addAction('confereeEdit', 'Upravit')->setTitle('Upravit uživatele');
+
+        return $grid;
     }
 
 
@@ -331,12 +334,13 @@ class ConferencePresenter extends BasePresenter
 
     /**
      * @param $name
+     * @return DataGrid
      * @throws \App\Model\InvalidEnumeratorSetException
      * @throws \Nette\Utils\JsonException
      * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
      * @throws DataGridException
      */
-    public function createComponentTalksDatagrid($name)
+    public function createComponentTalksDatagrid($name): DataGrid
     {
         $categories = $this->talkManager->getCategories();
         $rooms = $this->talkManager->getRooms();
@@ -364,9 +368,9 @@ class ConferencePresenter extends BasePresenter
             /** @var Talk $talk */
             $column->setRenderer(function () use ($talk) {
                 if ($talk->voteCoefficient != 0) {
-                    return $talk->votes . " (koef: $talk->voteCoefficient)";
+                    return $talk->votesCount . " (koef: $talk->voteCoefficient)";
                 } else {
-                    return $talk->votes;
+                    return $talk->votesCount;
 
                 }
             });
@@ -398,6 +402,8 @@ class ConferencePresenter extends BasePresenter
         $grid->addAction('edit', '', 'talkEdit')
             ->setIcon('pencil')
             ->setTitle('Upravit');
+
+        return $grid;
     }
 
 
@@ -598,11 +604,12 @@ class ConferencePresenter extends BasePresenter
 
     /**
      * @param $name
+     * @return DataGrid
      * @throws JsonException
      * @throws \App\Model\InvalidEnumeratorSetException
      * @throws DataGridException
      */
-    public function createComponentProgramDatagrid($name)
+    public function createComponentProgramDatagrid($name): DataGrid
     {
         $rooms = $this->talkManager->getRooms();
         $program = $this->talkManager->findAllProgram()
@@ -662,6 +669,8 @@ class ConferencePresenter extends BasePresenter
             ->setTitle('Smazat')
             ->setClass('btn btn-xs btn-danger ajax')
             ->setConfirmation(new StringConfirmation('Opravdu chcete smazat z programu přednášku %s?', 'title'));
+
+        return $grid;
     }
 
 
@@ -711,7 +720,7 @@ class ConferencePresenter extends BasePresenter
             $merged['talk|' . $id] = sprintf(
                 'Přednáška: %s [%s] %s | %s%s',
                 in_array($id, $usedTalksIds) ? '●' : '○',
-                $talk->votes,
+                $talk->votesCount,
                 $talk->conferee->name,
                 $talk->title,
                 $requestedDuration
@@ -900,6 +909,81 @@ class ConferencePresenter extends BasePresenter
         $this->redirect('program');
     }
 
+
+    public function renderVotes(?int $userId = null, ?int $talkId = null):void
+    {
+        /** @var DataGrid $grid */
+        $grid = $this->getComponent('votesDatagrid');
+        
+        $grid->setDataSource($this->talkManager->findVotes($userId, $talkId));
+    }
+
+
+    /**
+     * @param $name
+     * @return DataGrid
+     * @throws DataGridException
+     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
+     */
+    public function createComponentVotesDatagrid($name): DataGrid
+    {
+        $grid = new DataGrid($this, $name);
+        DataGrid::$iconPrefix = 'glyphicon glyphicon-';
+
+        $grid->addColumnLink('title', 'Název', ':Conference:talkDetail', 'title', ['id'])
+            ->setSortable()
+            ->setFilterText('title');
+
+        $grid->addColumnText('speaker', 'Jméno', 'conferee.name')
+            ->setSortable();
+
+        $grid->addColumnText('mail', 'Mail', 'conferee.email')
+            ->setSortable();
+
+        $grid->addColumnText('votes', 'Hlasy')
+            ->setSortable();
+
+        $grid->addColumnCallback('votes', function ($column, $talk) {
+            /** @var Talk $talk */
+            $column->setRenderer(function () use ($talk) {
+                if ($talk->voteCoefficient != 0) {
+                    return $talk->votesCount . " (koef: $talk->voteCoefficient)";
+                } else {
+                    return $talk->votesCount;
+
+                }
+            });
+        });
+
+
+        $grid->addColumnText('category', 'Kategorie')
+            ->setReplacement($categories);
+
+        $onStatusChange = function ($id, $status) use ($grid) {
+            /** @var Talk $talk */
+            $talk = $this->talkManager->getById($id);
+            $talk->setValue('enabled', $status);
+            $this->talkManager->save($talk);
+
+            if ($this->isAjax()) {
+                $grid->redrawItem($id);
+            }
+        };
+
+        $grid->addColumnStatus('enabled', 'Aktivní')
+            ->addOption(1, 'Aktivní')
+            ->endOption()
+            ->addOption(0, 'Zrušená')
+            ->setClass('btn-danger')
+            ->endOption()
+            ->onChange[] = $onStatusChange;
+
+        $grid->addAction('edit', '', 'talkEdit')
+            ->setIcon('pencil')
+            ->setTitle('Upravit');
+
+        return $grid;
+    }
 
     /**
      * @param $conferee
