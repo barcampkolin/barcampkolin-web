@@ -1,0 +1,4 @@
+[mysqld]
+lower_case_table_names=1
+innodb_flush_method=fsync
+innodb_use_native_aio=0
