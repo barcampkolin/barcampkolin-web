@@ -10,7 +10,7 @@ services:
         restart: always
         environment:
             NETTE_DEBUG: 1
-            XDEBUG_CONFIG: "remote_host=docker.for.mac.localhost"
+            XDEBUG_CONFIG: "remote_host=host.docker.internal"
         depends_on:
             - mysqldb
     mysqldb:
