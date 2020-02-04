@@ -1,8 +1,8 @@
 version: '3'
 services:
     web:
-        build:
-            context: docker/web
+
+        image: jakubboucek/lamp-devstack-php
         ports:
             - "8001:80"
         volumes:
