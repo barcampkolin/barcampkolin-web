@@ -14,11 +14,12 @@
 /docker
 /docker-compose.yml
 /Gruntfile.js
-/log/*
+/log
 /node_modules
 /package.json
 /package-lock.json
 /README.md
-/temp/*
+/temp
 /tests
-/www/upload/*
+/www/upload
+/www/archive
