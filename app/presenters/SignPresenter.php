@@ -29,6 +29,7 @@ use Nette\Mail\SendException;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\Random;
 use Nextras\Orm\Entity\Entity;
+use Nextras\Orm\Entity\ToArrayConverter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 use Tracy\Logger;
@@ -152,7 +153,6 @@ class SignPresenter extends BasePresenter
      */
     public function actionFederatedCallback($platform)
     {
-
         try {
             $authenticator = $this->getAuthenticator($platform);
             $this->backlink = $authenticator->getBacklink($this->getHttpRequest(), $this->backlink);
@@ -245,10 +245,12 @@ class SignPresenter extends BasePresenter
 
         /** @var Form $form */
         $form = $this['confereeForm'];
-        $form->setDefaults([
-            'name' => $user->name,
-            'email' => $user->email,
-        ]);
+        $form->setDefaults(
+            [
+                'name' => $user->name,
+                'email' => $user->email,
+            ]
+        );
     }
 
 
@@ -350,9 +352,11 @@ class SignPresenter extends BasePresenter
                 $this->submitResetPasswordToken($values->email);
             } catch (IdentityNotFoundException $e) {
                 $form['email']->addError('Na tento e-mail není nikdo registrován, nemůžeme mu tedy ani poslat heslo');
-            }catch (SendException $e) {
+            } catch (SendException $e) {
                 Debugger::log($e, ILogger::EXCEPTION);
-                $form['email']->addError('Na zadaný e-mail se nám nedaří doručit zprávu s novým heslem – při doručování zprávy došlo k chybě.');
+                $form['email']->addError(
+                    'Na zadaný e-mail se nám nedaří doručit zprávu s novým heslem – při doručování zprávy došlo k chybě.'
+                );
             }
         };
 
@@ -400,10 +404,12 @@ class SignPresenter extends BasePresenter
 
         /** @var Form $form */
         $form = $this['updatePasswordForm'];
-        $form->setDefaults([
-            'email' => $email,
-            'token' => $resetToken,
-        ]);
+        $form->setDefaults(
+            [
+                'email' => $email,
+                'token' => $resetToken,
+            ]
+        );
     }
 
 
@@ -477,17 +483,19 @@ class SignPresenter extends BasePresenter
      */
     protected function createComponentSignInForm()
     {
-        return $this->signInFormFactory->create(function (Identity $identity) {
-            $user = $identity->user;
-            if (!$user instanceof User) {
-                $this->redirect('conferee');
+        return $this->signInFormFactory->create(
+            function (Identity $identity) {
+                $user = $identity->user;
+                if (!$user instanceof User) {
+                    $this->redirect('conferee');
+                }
+
+                $this->login($user);
+
+                $this->restoreRequest($this->backlink);
+                $this->redirect('User:profil');
             }
-
-            $this->login($user);
-
-            $this->restoreRequest($this->backlink);
-            $this->redirect('User:profil');
-        });
+        );
     }
 
 
@@ -497,14 +505,16 @@ class SignPresenter extends BasePresenter
      */
     protected function createComponentSignUpForm()
     {
-        return $this->signUpFormFactory->create(function (Identity $identity) {
-            $user = new User();
-            $user->email = $identity->key;
+        return $this->signUpFormFactory->create(
+            function (Identity $identity) {
+                $user = new User();
+                $user->email = $identity->key;
 
-            $this->storeEntity($identity, Identity::class);
-            $this->storeEntity($user, User::class);
-            $this->redirect('conferee');
-        });
+                $this->storeEntity($identity, Identity::class);
+                $this->storeEntity($user, User::class);
+                $this->redirect('conferee');
+            }
+        );
     }
 
 
@@ -523,7 +533,6 @@ class SignPresenter extends BasePresenter
          * @throws \Nette\Utils\JsonException
          */
         $onSubmitCallback = function ($conferee) {
-
             $restoredUserIdentity = $this->getRestorableUserIdentity();
 
             $user = $restoredUserIdentity->getUser();
@@ -715,7 +724,7 @@ class SignPresenter extends BasePresenter
 
         $session->{$key} = [
             'class' => get_class($entity),
-            'entity' => $entity->serialize()
+            'entity' => $entity->toArray(ToArrayConverter::RELATIONSHIP_AS_ID)
         ];
     }
 
@@ -736,7 +745,12 @@ class SignPresenter extends BasePresenter
 
         /** @var Entity $entity */
         $entity = new $class();
-        $entity->unserialize($entityPack['entity']);
+        foreach ($entityPack['entity'] as $name => $value) {
+            if ($value === null || (is_array($value) && empty($value))) {
+                continue;
+            }
+            $entity->setRawValue($name, $value);
+        }
 
         return $entity;
     }
