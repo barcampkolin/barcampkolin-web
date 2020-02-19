@@ -56,7 +56,7 @@ mail:
     smtp: true
     host: vip-mail.superhosting.cz
     username: info@barcampkolin.cz
-    password: {app-password}
+    password: app-password
     secure: ssl
 
 tracy:
