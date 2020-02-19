@@ -2,7 +2,7 @@ version: '3'
 services:
     web:
 
-        image: jakubboucek/lamp-devstack-php
+        image: jakubboucek/lamp-devstack-php:debug
         ports:
             - "8001:80"
         volumes:
