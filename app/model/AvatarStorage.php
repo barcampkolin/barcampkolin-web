@@ -2,9 +2,11 @@
 
 namespace App\Model;
 
+use Nette\Http\FileUpload;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
+use Nette\Utils\Strings;
 
 class AvatarStorage
 {
@@ -21,11 +23,33 @@ class AvatarStorage
     }
 
 
-    public function saveImage(Image $image)
+    public function saveUploaded(FileUpload $file, $name = null): array
     {
-        $image->resize(200, 200, Image::EXACT);
-        $filename = $this->getFilename();
+        if ($file->isImage() === false) {
+            throw new \RuntimeException(
+                sprintf('File must by one of image type, \'%s\' type instead', $file->getContentType())
+            );
+        }
 
+        $name = Strings::truncate(Strings::webalize($name ?? $this->getRandom()), 20, '');
+        $url = [$this->saveImage($file, $name)];
+
+        $extension = explode('/', $file->getContentType())[1];
+        $filename = $this->getAttributedFilename($name, 'original', $extension);
+        $file->move($this->getStorageFilename($filename));
+
+        $url[] = $this->getUrl($filename);
+
+        return $url;
+    }
+
+    public function saveImage(FileUpload $file, string $name): string
+    {
+        $image = $file->toImage();
+
+        $image->resize(200, 200, Image::EXACT);
+
+        $filename = $this->getAttributedFilename($name, 'thumb', 'jpeg');
         $storageFile = $this->getStorageFilename($filename);
 
         $image->save($storageFile);
@@ -34,13 +58,18 @@ class AvatarStorage
     }
 
 
-    private function getFilename()
+    private function getRandom(): string
     {
-        return Random::generate() . '.jpg';
+        return Random::generate();
+    }
+
+    private function getAttributedFilename(string $name, string $variant, string $extension): string
+    {
+        return sprintf('%s-%s-%s.%s', $name, $this->getRandom(), $variant, $extension);
     }
 
 
-    private function getStorageFilename($filename)
+    private function getStorageFilename($filename): string
     {
         $uploadDir = $this->storagePrefix->getStoragePath();
         FileSystem::createDir($uploadDir);
@@ -50,7 +79,6 @@ class AvatarStorage
 
     private function getUrl($filename)
     {
-
         return $this->storagePrefix->getUrlPath() . '/' . $filename;
     }
 }

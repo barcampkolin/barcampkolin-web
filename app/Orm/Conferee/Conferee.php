@@ -11,6 +11,7 @@ use Nextras\Orm\Relationships\OneHasMany;
  * @property string                     $name
  * @property string                     $email
  * @property string|null                $pictureUrl
+ * @property string|null                $pictureOriginalUrl
  * @property string|null                $bio
  * @property bool                       $enabled        {default true}
  * @property bool                       $allowMail      {default false}

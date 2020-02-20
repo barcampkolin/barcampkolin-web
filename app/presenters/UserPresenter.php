@@ -263,12 +263,11 @@ class UserPresenter extends BasePresenter
             $this->error('Nelze nahrát jiný soubor než obrázek', IResponse::S403_FORBIDDEN);
         }
 
-        $image = $file->toImage();
-
-        $url = $this->avatarStorage->saveImage($image);
+        [$url, $originalUrl] = $this->avatarStorage->saveUploaded($file, $user->name);
 
         $user->pictureUrl = $url;
         $conferee->pictureUrl = $url;
+        $conferee->pictureOriginalUrl = $originalUrl;
         $this->user->getIdentity()->pictureUrl = $url;
 
         $this->userManager->save($user);
