@@ -43,8 +43,11 @@ class ConfereeForm
             ->setRequired('Prosíme, vyplňte svůj e-mail');
 
         $form->addTextArea('bio', 'Řekni nám něco o sobě:')
-            ->setOption('description', 'Pokud to vyplníte, zobrazíme to na webu u Vašeho jména. '
-                . 'Formátování není dovoleno.');
+            ->setOption(
+                'description',
+                'Pokud to vyplníte, zobrazíme to na webu u Vašeho jména. '
+                . 'Formátování není dovoleno.'
+            );
 
         $form->addGroup('Dotační dotazník');
 
@@ -52,6 +55,16 @@ class ConfereeForm
             ->setOption('description', 'Odkud k nám přicházíte? (nepovinné, může se zobrazit na profilu)');
 
         $form->addGroup();
+
+        $form->addRadioList(
+            'allowPublish',
+            'Souhlasíš se zveřejněním těchto údajů na seznamu účastníků na webu?',
+            [
+                true => 'Ano',
+                false => 'Ne'
+            ]
+        )->setDefaultValue(true)
+            ->setOption('description', 'E-mail samozřejmě nebudeme zobrazovat, pouze tvoje jméno, firmu a pokud vyplníš pár slov o sobě, tak i ty.');
 
         $form->addSubmit('send')
             ->setOption('itemClass', 'text-center')
@@ -67,9 +80,12 @@ class ConfereeForm
             $conferee->name = $values->name;
             $conferee->email = $values->email;
             $conferee->bio = $values->bio;
-            $conferee->extended = Json::encode([
-                'company' => $values->extendedCompany,
-            ]);
+            $conferee->allowPublish = $values->allowPublish;
+            $conferee->extended = Json::encode(
+                [
+                    'company' => $values->extendedCompany,
+                ]
+            );
 
             $onSuccess($conferee, $values);
         };

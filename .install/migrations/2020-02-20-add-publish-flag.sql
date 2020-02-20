@@ -1,0 +1,1 @@
+ALTER TABLE `conferee` ADD COLUMN `allow_publish` TINYINT(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT 'Boolean - allow to publish' AFTER `allow_mail`;

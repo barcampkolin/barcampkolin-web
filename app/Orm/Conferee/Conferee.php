@@ -15,6 +15,7 @@ use Nextras\Orm\Relationships\OneHasMany;
  * @property string|null                $bio
  * @property bool                       $enabled        {default true}
  * @property bool                       $allowMail      {default false}
+ * @property bool                       $allowPublish   {default false}
  * @property \DateTimeImmutable|null    $consens
  * @property string|null                $extended
  * @property \DateTimeImmutable         $created        {default now}
