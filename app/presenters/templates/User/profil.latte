@@ -14,7 +14,7 @@
                             <span n:if="$conferee" class="item-meta" title="{$conferee->bio|stripHtml}">{$conferee->bio|stripHtml|truncate:50}</span>
                             <div class="item-text">
                                 {if $conferee}
-                                    <a href="{link uploadAvatar!}" id="avatar-upload-button" class="btn btn-brand btn-tiny btn-block mt-xs js-only">Nahrát fotku</a>
+                                    <a href="{link uploadAvatar!}" id="avatar-upload-button" class="btn btn-brand btn-tiny btn-block mt-xs js-only">Nahrát avatar (fotku)</a>
 
                                     <a href="{link conferee}" class="btn btn-brand btn-tiny btn-block mt-xs">Upravit profil</a>
                                 {elseif $allowRegisterConferee}

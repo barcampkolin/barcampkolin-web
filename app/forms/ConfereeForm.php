@@ -52,7 +52,10 @@ class ConfereeForm
         $form->addGroup('Dotační dotazník');
 
         $form->addText('extendedCompany', 'Firma či organizace:')
-            ->setOption('description', 'Odkud k nám přicházíte? (nepovinné, může se zobrazit na profilu)');
+            ->setOption('description', 'Odkud k nám přicházíte? (nepovinné, může se zobrazit na profilu a na visačce)');
+
+        $form->addText('extendedCompanyPosition', 'Pozice ve firmě:')
+            ->setOption('description', 'Jakou pozici máte ve firmě (nepovinné, může se zobrazit na profilu a na visačce)');
 
         $form->addGroup();
 
@@ -64,7 +67,7 @@ class ConfereeForm
                 false => 'Ne'
             ]
         )->setDefaultValue(true)
-            ->setOption('description', 'E-mail samozřejmě nebudeme zobrazovat, pouze tvoje jméno, firmu a pokud vyplníš pár slov o sobě, tak i ty.');
+            ->setOption('description', 'E-mail samozřejmě nebudeme zobrazovat, pouze tvoje jméno, avatar, firmu a pokud vyplníš pár slov o sobě, tak i ty.');
 
         $form->addSubmit('send')
             ->setOption('itemClass', 'text-center')
@@ -80,10 +83,11 @@ class ConfereeForm
             $conferee->name = $values->name;
             $conferee->email = $values->email;
             $conferee->bio = $values->bio;
-            $conferee->allowPublish = $values->allowPublish;
+            $conferee->allowPublish = (bool)$values->allowPublish;
             $conferee->extended = Json::encode(
                 [
                     'company' => $values->extendedCompany,
+                    'position' => $values->extendedCompanyPosition,
                 ]
             );
 
@@ -92,9 +96,12 @@ class ConfereeForm
 
         if ($conferee) {
             $values = $conferee->toArray();
+            $values['allowPublish'] = (int)$values['allowPublish'];
+
             try {
                 $extended = Json::decode($conferee->extended, Json::FORCE_ARRAY);
-                $values['extendedCompany'] = isset($extended['company']) ? $extended['company'] : null;
+                $values['extendedCompany'] = $extended['company'] ?? null;
+                $values['extendedCompanyPosition'] = $extended['position'] ?? null;
             } catch (JsonException $e) {
                 // void
             }
