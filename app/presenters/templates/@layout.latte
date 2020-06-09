@@ -74,7 +74,11 @@
 </header>
 
 <main>
-    <div class="flash-wrapper" n:if="$flashes">
+    <div class="flash-wrapper" n:if="$flashes || true">
+        <div class="flash flash-corona">Barcamp Kolín 2020 se na základě
+            <a href="https://www.mzcr.cz/dokumenty/mimoradna-opatreni-ministerstva-zdravotnictvi-zakazuji-konani-hromadnych-akci-na_18698_1.html" target="_blank" rel="noopener">mimořádného opatření Ministerstva zdravotnictví</a> ruší.
+            Další informace doplníme během týdne.
+        </div>
         <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
     </div>
 
