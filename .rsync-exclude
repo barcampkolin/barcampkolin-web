@@ -2,6 +2,7 @@
 .gitignore
 .DS_Store
 /.bowerrc
+/.docker
 /.idea
 /.install
 /.rsync-exclude
@@ -11,7 +12,6 @@
 /composer.json
 /composer.lock
 /deploy.sh
-/docker
 /docker-compose.yml
 /Gruntfile.js
 /log
