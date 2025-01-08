@@ -1,9 +1,13 @@
 {
 	"name": "redbit/barcampkolin.cz",
 	"description": "Web Kolínského barcampu",
-	"homepage": "https://www.barcampkolin.cz/",
+	"license": [
+		"MIT",
+		"BSD-3-Clause",
+		"GPL-2.0",
+		"GPL-3.0"
+	],
 	"type": "project",
-	"license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"authors": [
 		{
 			"name": "Redbit s.r.o.",
@@ -22,9 +26,12 @@
 			"homepage": "https://nette.org/contributors"
 		}
 	],
+	"homepage": "https://www.barcampkolin.cz/",
 	"require": {
 		"php": ">=7.3.0",
 		"facebook/graph-sdk": "^5.7",
+		"kdyby/forms-replicator": "^2.0",
+		"latte/latte": "^2.5",
 		"nette/application": "^3.0.6",
 		"nette/bootstrap": "^3.0",
 		"nette/caching": "^3.0",
@@ -38,13 +45,14 @@
 		"nette/safe-stream": "^2.4",
 		"nette/security": "^3.0",
 		"nette/utils": "^3.0",
-		"latte/latte": "^2.5",
-		"tracy/tracy": "^2.6",
-		"kdyby/forms-replicator": "^2.0",
-		"ublaboo/datagrid": "^6.2",
 		"nextras/orm": "^3.1",
-		"nextras/secured-links": "^1.4"
+		"nextras/secured-links": "^1.4",
+		"tracy/tracy": "^2.6",
+		"ublaboo/datagrid": "^6.2"
 	},
+	"minimum-stability": "dev",
 	"prefer-stable": true,
-	"minimum-stability": "dev"
+	"config": {
+		"sort-packages": true
+	}
 }
