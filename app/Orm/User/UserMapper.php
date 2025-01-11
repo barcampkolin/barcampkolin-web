@@ -2,16 +2,19 @@
 
 namespace App\Orm;
 
-use Nextras\Orm\Mapper\Mapper;
+use Nextras\Dbal\Platforms\Data\Fqn;
+use Nextras\Orm\Mapper\Dbal\Conventions\IConventions;
+use Nextras\Orm\Mapper\Dbal\DbalMapper;
 
-class UserMapper extends Mapper
+class UserMapper extends DbalMapper
 {
-    protected $tableName = 'user';
+    protected string|null|Fqn $tableName = 'user';
 
-    protected function createStorageReflection()
+    protected function createConventions(): IConventions
     {
-        $reflection = parent::createStorageReflection();
+        $reflection = parent::createConventions();
         $reflection->addMapping('pictureUrl', 'picture_url');
+
         return $reflection;
     }
 }

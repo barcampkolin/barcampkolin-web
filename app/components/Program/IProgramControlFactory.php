@@ -8,6 +8,6 @@ interface IProgramControlFactory
     /**
      * @return ProgramControl
      */
-    public function create();
+    public function create(): ProgramControl;
 
 }

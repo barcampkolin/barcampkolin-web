@@ -2,15 +2,11 @@
 
 namespace App\Orm;
 
-use Nextras\Orm\Mapper\Mapper;
 
-class IdentityMapper extends Mapper
+use Nextras\Dbal\Platforms\Data\Fqn;
+use Nextras\Orm\Mapper\Dbal\DbalMapper;
+
+class IdentityMapper extends DbalMapper
 {
-    protected $tableName = 'user_identity';
-
-    protected function createStorageReflection()
-    {
-        $reflection = parent::createStorageReflection();
-        return $reflection;
-    }
+    protected string|null|Fqn $tableName = 'user_identity';
 }

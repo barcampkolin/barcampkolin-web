@@ -2,17 +2,24 @@
 
 namespace App\Orm;
 
-use Nextras\Orm\Mapper\Mapper;
+use Nextras\Dbal\Platforms\Data\Fqn;
+use Nextras\Orm\Mapper\Dbal\Conventions\IConventions;
+use Nextras\Orm\Mapper\Dbal\DbalMapper;
 
-class ConfereeMapper extends Mapper
+class ConfereeMapper extends DbalMapper
 {
-    protected $tableName = 'conferee';
 
-    protected function createStorageReflection()
+    public function getTableName(): string|Fqn
     {
-        $reflection = parent::createStorageReflection();
+        return 'conferee';
+    }
+
+    protected function createConventions(): IConventions
+    {
+        $reflection = parent::createConventions();
         $reflection->addMapping('pictureUrl', 'picture_url');
         $reflection->addMapping('allowMail', 'allow_mail');
+
         return $reflection;
     }
 }

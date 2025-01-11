@@ -11,15 +11,14 @@ class RouterFactory
 {
     use Nette\StaticClass;
 
-
     /**
      * @param ArchiveManager $archiveManager
-     * @return Nette\Application\IRouter
+     *
      * @throws Nette\InvalidArgumentException
      */
-    public static function createRouter(ArchiveManager $archiveManager)
+    public static function createRouter(ArchiveManager $archiveManager): Nette\Routing\Router
     {
-        $router = new RouteList;
+        $router = new RouteList();
 
         // Admin
         $adminRouter = new RouteList('Admin');
@@ -31,7 +30,10 @@ class RouterFactory
         $router[] = $apiRouter;
 
         $year = $archiveManager->getCurrentYear();
-        $requiredWhenArchive = $archiveManager->isArchivationProcess() ? '!' : '';
+        $requiredWhenArchive =
+            $archiveManager->isArchivationProcess()
+                ? '!'
+                : '';
 
         //Custom routes
         $router[] = new Route('[' . $requiredWhenArchive . $year . '/]kontakt', 'Homepage:contact');
@@ -79,9 +81,9 @@ class RouterFactory
         return $router;
     }
 
-
     /**
      * @param array $archiverYears
+     *
      * @return RouteList
      * @throws Nette\InvalidArgumentException
      */
@@ -99,6 +101,5 @@ class RouterFactory
 
         return $archiveRouter;
     }
-
 
 }

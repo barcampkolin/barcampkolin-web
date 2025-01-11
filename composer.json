@@ -1,50 +1,38 @@
 {
-	"name": "redbit/barcampkolin.cz",
-	"description": "Web Kolínského barcampu",
-	"homepage": "https://www.barcampkolin.cz/",
-	"type": "project",
-	"license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
-	"authors": [
-		{
-			"name": "Redbit s.r.o.",
-			"homepage": "https://www.redbit.cz/"
-		},
-		{
-			"name": "Jakub Bouček",
-			"homepage": "https://www.jakub-boucek.cz/"
-		},
-		{
-			"name": "David Grudl",
-			"homepage": "https://davidgrudl.com"
-		},
-		{
-			"name": "Nette Community",
-			"homepage": "https://nette.org/contributors"
-		}
-	],
-	"require": {
-		"php": ">=7.3.0",
-		"facebook/graph-sdk": "^5.7",
-		"nette/application": "^3.0.6",
-		"nette/bootstrap": "^3.0",
-		"nette/caching": "^3.0",
-		"nette/database": "^3.0",
-		"nette/di": "^3.0",
-		"nette/finder": "^2.5",
-		"nette/forms": "^3.0",
-		"nette/http": "^3.0",
-		"nette/mail": "^3.1",
-		"nette/robot-loader": "^3.2",
-		"nette/safe-stream": "^2.4",
-		"nette/security": "^3.0",
-		"nette/utils": "^3.0",
-		"latte/latte": "^2.5",
-		"tracy/tracy": "^2.6",
-		"kdyby/forms-replicator": "^2.0",
-		"ublaboo/datagrid": "^6.2",
-		"nextras/orm": "^3.1",
-		"nextras/secured-links": "^1.4"
-	},
-	"prefer-stable": true,
-	"minimum-stability": "dev"
+  "name": "redbit/barcampkolin.cz",
+  "description": "Web Kolínského barcampu",
+  "homepage": "https://www.barcampkolin.cz/",
+  "type": "project",
+  "license": [
+    "MIT",
+    "BSD-3-Clause",
+    "GPL-2.0",
+    "GPL-3.0"
+  ],
+  "authors": [
+    {
+      "name": "Redbit s.r.o.",
+      "homepage": "https://www.redbit.cz/"
+    },
+    {
+      "name": "Jakub Bouček",
+      "homepage": "https://www.jakub-boucek.cz/"
+    },
+    {
+      "name": "David Grudl",
+      "homepage": "https://davidgrudl.com"
+    },
+    {
+      "name": "Nette Community",
+      "homepage": "https://nette.org/contributors"
+    }
+  ],
+  "require": {
+    "php:": ">=8.3",
+    "nette/nette": "^3.2",
+    "nextras/orm": "^5.0",
+    "nextras/secured-links": "^1.10"
+  },
+  "prefer-stable": true,
+  "minimum-stability": "dev"
 }

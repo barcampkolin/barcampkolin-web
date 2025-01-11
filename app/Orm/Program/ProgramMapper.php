@@ -2,9 +2,10 @@
 
 namespace App\Orm;
 
-use Nextras\Orm\Mapper\Mapper;
+use Nextras\Dbal\Platforms\Data\Fqn;
+use Nextras\Orm\Mapper\Dbal\DbalMapper;
 
-class ProgramMapper extends Mapper
+class ProgramMapper extends DbalMapper
 {
-    protected $tableName = 'program';
+    protected string|null|Fqn $tableName = 'program';
 }

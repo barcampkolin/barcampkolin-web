@@ -36,7 +36,6 @@ application:
         *: App\*Module\Presenters\*Presenter
 
 extensions:
-    replicator: Kdyby\Replicator\DI\ReplicatorExtension
     nextras.dbal: Nextras\Dbal\Bridges\NetteDI\DbalExtension
     nextras.orm: Nextras\Orm\Bridges\NetteDI\OrmExtension
 
