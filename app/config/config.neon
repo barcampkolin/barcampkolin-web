@@ -53,7 +53,7 @@ nextras.orm:
     model: App\Orm\Orm
 
 mail:
-    smtp: true
+    smtp: false
     host: vip-mail.superhosting.cz
     username: info@barcampkolin.cz
     password: app-password
@@ -65,10 +65,10 @@ tracy:
 session:
     expiration: 14 days
     cookie_secure: %productionMode%
-    debugger: true
+    debugger: false
 
 security:
-    debugger: true
+    debugger: false
 
 http:
     csp:
@@ -90,7 +90,6 @@ services:
     - App\Model\ApiTokenManager(%api_token_secretkey%)
     - App\Model\Authenticator\AuthenticatorProvider
     - App\Model\Authenticator\Email
-    - App\Model\Authenticator\Facebook(%facebook%)
     - App\Model\ConfigManager
     - App\Model\ConfereeManager
     - App\Model\EventInfoProvider

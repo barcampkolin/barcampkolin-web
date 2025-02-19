@@ -36,7 +36,7 @@ class User extends Entity
     /**
      * @param $roleName
      */
-    public function addRole($roleName)
+    public function addRole($roleName): void
     {
         $role = new UserRole();
         $role->role = $roleName;

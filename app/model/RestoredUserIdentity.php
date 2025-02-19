@@ -7,27 +7,15 @@ use App\Orm\User;
 
 class RestoredUserIdentity
 {
-    /**
-     * @var User
-     */
-    private $user;
-    /**
-     * @var Identity
-     */
-    private $identity;
-
-
-    public function __construct(User $user, Identity $identity)
+    public function __construct(private readonly User $user, private readonly Identity $identity)
     {
-        $this->user = $user;
-        $this->identity = $identity;
     }
 
 
     /**
      * @return User
      */
-    public function getUser()
+    public function getUser(): \App\Orm\User
     {
         return $this->user;
     }
@@ -36,7 +24,7 @@ class RestoredUserIdentity
     /**
      * @return Identity
      */
-    public function getIdentity()
+    public function getIdentity(): \App\Orm\Identity
     {
         return $this->identity;
     }

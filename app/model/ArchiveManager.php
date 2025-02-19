@@ -12,44 +12,7 @@ use Nette\Utils\JsonException;
 
 class ArchiveManager
 {
-    /**
-     * @var Request
-     */
-    private $httpRequest;
-    /**
-     * @var array
-     */
-    private $archivedStaticFolders;
-    /**
-     * @var ConfigManager
-     */
-    private $config;
-    /**
-     * @var array
-     */
-    private $pages;
-    /**
-     * @var TalkManager
-     */
-    private $talkManager;
-    /**
-     * @var ArchiveStorage
-     */
-    private $archiveStorage;
-
     const IN_ARCHIVATION_COOKIE_KEY = '_in_archivation';
-    /**
-     * @var PartnersManager
-     */
-    private $partnersManager;
-    /**
-     * @var ConfereeManager
-     */
-    private $confereeManager;
-    /**
-     * @var ScheduleManager
-     */
-    private $scheduleManager;
 
 
     /**
@@ -63,40 +26,21 @@ class ArchiveManager
      * @param ConfereeManager $confereeManager
      * @param ScheduleManager $scheduleManager
      */
-    public function __construct(
-        array $archivedStaticFolders,
-        array $pages,
-        ConfigManager $config,
-        Request $httpRequest,
-        TalkManager $talkManager,
-        ArchiveStorage $archiveStorage,
-        PartnersManager $partnersManager,
-        ConfereeManager $confereeManager,
-        ScheduleManager $scheduleManager
-    ) {
-        $this->config = $config;
-
-        $this->httpRequest = $httpRequest;
-        $this->archivedStaticFolders = $archivedStaticFolders;
-        $this->pages = $pages;
-        $this->talkManager = $talkManager;
-        $this->archiveStorage = $archiveStorage;
-        $this->partnersManager = $partnersManager;
-        $this->confereeManager = $confereeManager;
-        $this->scheduleManager = $scheduleManager;
+    public function __construct(private readonly array $archivedStaticFolders, private array $pages, private readonly ConfigManager $config, private readonly Request $httpRequest, private readonly TalkManager $talkManager, private readonly ArchiveStorage $archiveStorage, private readonly PartnersManager $partnersManager, private readonly ConfereeManager $confereeManager, private readonly ScheduleManager $scheduleManager)
+    {
     }
 
 
     /**
      * @return int
      */
-    public function getCurrentYear()
+    public function getCurrentYear(): int
     {
         $currentYear = (new DateTime)->format('Y');
 
         try {
             return (int)$this->config->get('dates.currentYear', $currentYear);
-        } catch (JsonException $e) {
+        } catch (JsonException) {
             return (int)$currentYear;
         }
     }
@@ -106,7 +50,7 @@ class ArchiveManager
      * @param $year
      * @throws JsonException
      */
-    private function setCurrentYear($year)
+    private function setCurrentYear($year): void
     {
         $this->config->set('dates.currentYear', (int)$year);
     }
@@ -115,11 +59,11 @@ class ArchiveManager
     /**
      * @return array
      */
-    public function getArchivedYears()
+    public function getArchivedYears(): array
     {
         try {
             return (array)$this->config->get('archive.years', []);
-        } catch (JsonException $e) {
+        } catch (JsonException) {
             return [];
         }
     }
@@ -129,7 +73,7 @@ class ArchiveManager
      * @param $year
      * @throws JsonException
      */
-    public function addArchivedYear($year)
+    public function addArchivedYear($year): void
     {
         $years = $this->getArchivedYears();
         $years[] = (int)$year;
@@ -140,7 +84,7 @@ class ArchiveManager
     /**
      * @return bool True when archivation process is currently running & in progress
      */
-    public function isArchivationProcess()
+    public function isArchivationProcess(): bool
     {
         return (bool)$this->httpRequest->getCookie(self::IN_ARCHIVATION_COOKIE_KEY);
     }
@@ -155,7 +99,7 @@ class ArchiveManager
      * @throws \Nette\IOException
      * @throws \InvalidArgumentException
      */
-    public function archive($currentYear, $toYear, DateTime $newEventDate)
+    public function archive($currentYear, $toYear, DateTime $newEventDate): void
     {
         $realCurrentYear = (int)$this->getCurrentYear();
         if (((int)$currentYear) !== $realCurrentYear) {
@@ -177,7 +121,7 @@ class ArchiveManager
      * @param $year
      * @return string[]
      */
-    public function getArchiveUrls($year = null)
+    public function getArchiveUrls($year = null): array
     {
         $yearPrefix = $year !== null ? '/' . $year : '';
 
@@ -202,7 +146,7 @@ class ArchiveManager
      * @param $content
      * @throws \Nette\IOException
      */
-    public function saveArchivedPage($url, $content)
+    public function saveArchivedPage($url, string $content): void
     {
         $this->archiveStorage->savePage($url, $content);
     }
@@ -213,7 +157,7 @@ class ArchiveManager
      * @return string
      * @throws \Nette\FileNotFoundException
      */
-    public function loadArchivedPage($url)
+    public function loadArchivedPage($url): string
     {
         return $this->archiveStorage->loadPage($url);
     }
@@ -224,7 +168,7 @@ class ArchiveManager
      * @param int $toYear
      * @throws \Nette\IOException
      */
-    private function archiveStaticFiles($fromYear, $toYear)
+    private function archiveStaticFiles($fromYear, $toYear): void
     {
         foreach ($this->archivedStaticFolders as $folderPrefix) {
             $old = $folderPrefix . '/' . $fromYear;
@@ -239,7 +183,7 @@ class ArchiveManager
      * @param $toDir
      * @throws \Nette\IOException
      */
-    private function copyStaticFiles($fromDir, $toDir)
+    private function copyStaticFiles(string $fromDir, string $toDir): void
     {
         FileSystem::copy($fromDir, $toDir);
     }
@@ -249,7 +193,7 @@ class ArchiveManager
      * @param DateTime $newEventDate
      * @throws JsonException
      */
-    private function updateDates(DateTime $newEventDate)
+    private function updateDates(DateTime $newEventDate): void
     {
         $dateKeys = [
             EventInfoProvider::DATE_EVENT,
@@ -275,7 +219,7 @@ class ArchiveManager
      * @param DateTime $newDate
      * @return DateInterval
      */
-    private function getDateDiff(DateTime $oldDate, DateTime $newDate)
+    private function getDateDiff(DateTime $oldDate, DateTime $newDate): \DateInterval
     {
         return $oldDate->diff($newDate, false);
     }
@@ -310,7 +254,7 @@ class ArchiveManager
      * @param DateTime $date
      * @return string
      */
-    private function formatDate(DateTime $date)
+    private function formatDate(DateTime $date): string
     {
         return $date->format('Y-m-d\TH:i:s');
     }
@@ -319,7 +263,7 @@ class ArchiveManager
     /**
      * @throws \InvalidArgumentException
      */
-    private function purgeAllOldData()
+    private function purgeAllOldData(): void
     {
         $this->partnersManager->purgeAll(true);
         $this->talkManager->purgeAll(true);
@@ -331,7 +275,7 @@ class ArchiveManager
     /**
      * @throws JsonException
      */
-    private function resetSchedule()
+    private function resetSchedule(): void
     {
         $this->scheduleManager->changeCurrentStep(null);
     }

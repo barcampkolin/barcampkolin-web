@@ -5,18 +5,11 @@ namespace App\Mails;
 class MessageLatteFileTemplate implements ITemplate
 {
     /**
-     * @var string
-     */
-    private $filename;
-
-
-    /**
      * MessageLatteFileTemplate constructor.
      * @param string $filename
      */
-    public function __construct($filename)
+    public function __construct(private $filename)
     {
-        $this->filename = $filename;
     }
 
 
@@ -32,7 +25,7 @@ class MessageLatteFileTemplate implements ITemplate
     /**
      * @param string $filename
      */
-    public function setFilename($filename)
+    public function setFilename($filename): void
     {
         $this->filename = $filename;
     }

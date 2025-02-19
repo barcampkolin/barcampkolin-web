@@ -17,36 +17,14 @@ use Nette\Mail\Message;
 class MailerManager
 {
     /**
-     * @var array
-     */
-    private $config;
-    /**
-     * @var string
-     */
-    private $tempdir;
-    /**
-     * @var IMailer
-     */
-    private $mailer;
-    /**
-     * @var MailDynamicLoader
-     */
-    private $mailLoader;
-
-
-    /**
      * MailerManager constructor.
      * @param array $config
      * @param string $tempdir
      * @param IMailer $mailer
      * @param MailDynamicLoader $mailLoader
      */
-    public function __construct($config, $tempdir, IMailer $mailer, MailDynamicLoader $mailLoader)
+    public function __construct(private $config, private $tempdir, private readonly IMailer $mailer, private readonly MailDynamicLoader $mailLoader)
     {
-        $this->config = $config;
-        $this->tempdir = $tempdir;
-        $this->mailer = $mailer;
-        $this->mailLoader = $mailLoader;
     }
 
 
@@ -58,7 +36,7 @@ class MailerManager
      * @throws EntityNotFound
      * @throws \Nette\Utils\JsonException
      */
-    public function getDynamicMessage($recipient, $mailTemplateId, array $parameters = [])
+    public function getDynamicMessage($recipient, $mailTemplateId, array $parameters = []): \App\Mails\UniversalDynamicMessage
     {
         $mail = $this->mailLoader->getMailById($mailTemplateId);
 
@@ -79,7 +57,7 @@ class MailerManager
      * @throws EntityNotFound
      * @throws \Nette\Utils\JsonException
      */
-    public function getRegistrationMessage($recipient)
+    public function getRegistrationMessage($recipient): \App\Mails\RegistrationMessage
     {
         $mail = $this->mailLoader->getMailById('registration');
 
@@ -96,7 +74,7 @@ class MailerManager
      * @throws EntityNotFound
      * @throws \Nette\Utils\JsonException
      */
-    public function getResetPasswordMessage($recipient, $tokenUrl)
+    public function getResetPasswordMessage($recipient, $tokenUrl): \App\Mails\ResetPasswordMessage
     {
         $mail = $this->mailLoader->getMailById('reset-password');
 
@@ -112,7 +90,7 @@ class MailerManager
      * @throws EntityNotFound
      * @throws \Nette\Utils\JsonException
      */
-    public function getVoteAnnounceMessage($recipient)
+    public function getVoteAnnounceMessage($recipient): \App\Mails\VoteAnnounceMessage
     {
         $mail = $this->mailLoader->getMailById('vote-announce');
 
@@ -127,7 +105,7 @@ class MailerManager
      * @throws \Nette\Utils\JsonException
      * @throws \Nette\Mail\SendException
      */
-    public function send(IMessage $message)
+    public function send(IMessage $message): void
     {
         $mail = new Message();
         $body = $this->compileBody($message);

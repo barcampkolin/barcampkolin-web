@@ -12,21 +12,15 @@ class DebugEnabler
      */
     private static $workDir = null;
 
-    /**
-     * @var string
-     */
-    private static $tokenFile = '/debug/token.bin';
+    private static string $tokenFile = '/debug/token.bin';
 
-    /**
-     * @var string
-     */
-    private static $debugCookieName = 'debug-token';
+    private static string $debugCookieName = 'debug-token';
 
 
     /**
      * @return bool
      */
-    public static function isDebug()
+    public static function isDebug(): bool
     {
         return self::isDebugByEnv() || self::isDebugByToken();
     }
@@ -35,7 +29,7 @@ class DebugEnabler
     /**
      * @return bool
      */
-    public static function isDebugByEnv()
+    public static function isDebugByEnv(): bool
     {
         return intval(getenv('NETTE_DEBUG')) === 1;
     }
@@ -44,7 +38,7 @@ class DebugEnabler
     /**
      * @return bool
      */
-    public static function isDebugByToken()
+    public static function isDebugByToken(): bool
     {
         return isset($_COOKIE[self::$debugCookieName])
             && ($_COOKIE[self::$debugCookieName] === self::getToken());
@@ -68,7 +62,7 @@ class DebugEnabler
     /**
      * @return string
      */
-    private static function getTokenFile()
+    private static function getTokenFile(): string
     {
         if (self::$workDir === null) {
             throw new InvalidStateException('WorkDir is not defined');
@@ -81,7 +75,7 @@ class DebugEnabler
     /**
      * @return string
      */
-    private static function generateToken()
+    private static function generateToken(): string
     {
         return Random::generate(30);
     }
@@ -90,7 +84,7 @@ class DebugEnabler
     /**
      * @param string $workDir
      */
-    public static function setWorkDir($workDir)
+    public static function setWorkDir($workDir): void
     {
         self::$workDir = $workDir;
     }
@@ -99,17 +93,13 @@ class DebugEnabler
     /**
      *
      */
-    public static function turnOn()
+    public static function turnOn(): void
     {
         $token = self::getToken();
         setcookie(
             self::$debugCookieName,
             $token,
-            (time() + 3600),
-            '/',
-            '',
-            true,
-            true
+            ['expires' => time() + 3600, 'path' => '/', 'domain' => '', 'secure' => true, 'httponly' => true]
         );
     }
 
@@ -117,16 +107,12 @@ class DebugEnabler
     /**
      *
      */
-    public static function turnOff()
+    public static function turnOff(): void
     {
         setcookie(
             self::$debugCookieName,
             '',
-            (time() - 3600),
-            '/',
-            '',
-            true,
-            true
+            ['expires' => time() - 3600, 'path' => '/', 'domain' => '', 'secure' => true, 'httponly' => true]
         );
     }
 
@@ -135,7 +121,7 @@ class DebugEnabler
      * @param string $tokenFile
      * @return string
      */
-    private static function createToken($tokenFile)
+    private static function createToken(string $tokenFile): string
     {
         $token = self::generateToken();
         $dirname = dirname($tokenFile);

@@ -32,18 +32,8 @@ use Nette\Http\Request;
  */
 class LocalArchivableStoragePrefixFactory implements IStoragePrefixFactory
 {
-    /**
-     * @var string
-     */
-    private $storageBase;
-    /**
-     * @var string
-     */
-    private $urlBase;
-    /**
-     * @var int
-     */
-    private $currentYear;
+    private readonly string $urlBase;
+    private readonly int $currentYear;
 
 
     /**
@@ -52,9 +42,8 @@ class LocalArchivableStoragePrefixFactory implements IStoragePrefixFactory
      * @param ArchiveManager $archiveManager
      * @param Request $httpRequest
      */
-    public function __construct($storageBase, $urlPrefix, ArchiveManager $archiveManager, Request $httpRequest)
+    public function __construct(private $storageBase, $urlPrefix, ArchiveManager $archiveManager, Request $httpRequest)
     {
-        $this->storageBase = $storageBase;
         $this->urlBase = rtrim($httpRequest->getUrl()->getBaseUrl(), '/') . '/' . ltrim($urlPrefix,'/');
 
         $this->currentYear = $archiveManager->getCurrentYear();
@@ -66,7 +55,7 @@ class LocalArchivableStoragePrefixFactory implements IStoragePrefixFactory
      * @param string|null $pathYearSuffix
      * @return StoragePrefix
      */
-    public function create($pathYearPrefix, $pathYearSuffix)
+    public function create($pathYearPrefix, $pathYearSuffix): \App\Model\StoragePrefix
     {
         $pathPrefix = $pathYearPrefix . $this->currentYear . $pathYearSuffix;
         return new StoragePrefix($this->storageBase, $this->urlBase, $pathPrefix);

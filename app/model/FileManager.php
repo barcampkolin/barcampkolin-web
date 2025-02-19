@@ -10,10 +10,6 @@ use Nette\Http\FileUpload;
 class FileManager
 {
     /**
-     * @var LocalFileStorage
-     */
-    private $fileStorage;
-    /**
      * @var FileRepository
      */
     private $fileRepository;
@@ -23,9 +19,8 @@ class FileManager
      * @param Orm $orm
      * @param LocalFileStorage $fileStorage
      */
-    public function __construct(Orm $orm, LocalFileStorage $fileStorage)
+    public function __construct(Orm $orm, private readonly LocalFileStorage $fileStorage)
     {
-        $this->fileStorage = $fileStorage;
         $this->fileRepository = $orm->file;
     }
 
@@ -33,7 +28,7 @@ class FileManager
     /**
      * @return \Nextras\Orm\Collection\ICollection
      */
-    public function findAll()
+    public function findAll(): \Nextras\Orm\Collection\ICollection
     {
         return $this->fileRepository->findAll();
     }
@@ -55,7 +50,7 @@ class FileManager
      * @return File|null
      * @throws \Nextras\Orm\InvalidArgumentException
      */
-    public function getById($id)
+    public function getById($id): ?\Nextras\Orm\Entity\IEntity
     {
         return $this->fileRepository->getById($id);
     }
@@ -69,10 +64,10 @@ class FileManager
      * @throws \Nette\IOException
      * @throws \Nette\InvalidArgumentException
      */
-    public function createByUpload(FileUpload $fileUpload, $name = null)
+    public function createByUpload(FileUpload $fileUpload, $name = null): string
     {
         // Set name from file if not defined
-        $name = $name !== null ? $name : $fileUpload->name;
+        $name ??= $fileUpload->name;
 
         $file = new File();
         $file->url = $url = $this->fileStorage->saveUploaded($fileUpload, $name);
@@ -89,7 +84,7 @@ class FileManager
      * @throws \InvalidArgumentException
      * @throws \Nette\IOException
      */
-    public function remove(File $file)
+    public function remove(File $file): void
     {
         $this->fileStorage->delete($file->url);
         $this->fileRepository->removeAndFlush($file);

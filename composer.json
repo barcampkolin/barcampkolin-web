@@ -22,8 +22,25 @@
 			"homepage": "https://nette.org/contributors"
 		}
 	],
+	"repositories": {
+		"facebook/graph-sdk": {
+			"package": {
+				"require": {
+					"php": "*"
+				},
+				"source": {
+					"url": "https://github.com/facebookarchive/php-graph-sdk.git",
+					"type": "git",
+					"reference": "5.7.0"
+				},
+				"name": "facebook/graph-sdk",
+				"version": "5.7.0"
+			},
+			"type": "package"
+		}
+	},
 	"require": {
-		"php": ">=7.3.0",
+		"php": ">=8.1",
 		"facebook/graph-sdk": "^5.7",
 		"nette/application": "^3.0.6",
 		"nette/bootstrap": "^3.0",
@@ -42,8 +59,9 @@
 		"tracy/tracy": "^2.6",
 		"kdyby/forms-replicator": "^2.0",
 		"ublaboo/datagrid": "^6.2",
-		"nextras/orm": "^3.1",
-		"nextras/secured-links": "^1.4"
+		"nextras/orm": "^4.0",
+		"nextras/secured-links": "^1.4",
+		"nextras/dbal": "^4.0"
 	},
 	"prefer-stable": true,
 	"minimum-stability": "dev"

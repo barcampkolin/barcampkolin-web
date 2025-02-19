@@ -5,19 +5,11 @@ namespace App\Mails;
 class MessageStringTemplate implements ITemplate
 {
     /**
-     * @var string
-     */
-    private $content;
-
-
-    /**
      * MessageStringTemplate constructor.
      * @param string $content
      */
-    public function __construct($content)
+    public function __construct(private $content)
     {
-
-        $this->content = $content;
     }
 
 
@@ -33,7 +25,7 @@ class MessageStringTemplate implements ITemplate
     /**
      * @param string $content
      */
-    public function setContent($content)
+    public function setContent($content): void
     {
         $this->content = $content;
     }

@@ -5,23 +5,11 @@ namespace App\Model;
 class TalkCategoryStyler
 {
     /**
-     * @var array
-     */
-    private $keys;
-    /**
-     * @var string
-     */
-    private $default;
-
-
-    /**
-     * @param array $categories
+     * @param array $keys
      * @param string $default
      */
-    public function __construct(array $categories, $default = 'style0')
+    public function __construct(private array $keys, private $default = 'style0')
     {
-        $this->keys = $categories;
-        $this->default = $default;
     }
 
 

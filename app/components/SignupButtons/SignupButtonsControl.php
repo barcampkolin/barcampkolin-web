@@ -7,19 +7,12 @@ use Nette\Application\UI\Control;
 
 class SignupButtonsControl extends Control
 {
-    /**
-     * @var EventInfoProvider
-     */
-    private $eventInfo;
-
-
-    public function __construct(EventInfoProvider $eventInfo)
+    public function __construct(private readonly EventInfoProvider $eventInfo)
     {
-        $this->eventInfo = $eventInfo;
     }
 
 
-    public function render()
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/SignupButtons.latte');
         $this->template->dates = $this->eventInfo->getDates();

@@ -18,7 +18,7 @@
                     n:if="!$input->getOption(rendered) && $input->getOption(type) !== hidden"
                     n:class="form-row, $input->getOption(itemClass), $input->required ? required, $input->error ? error">
 
-                {label $input}
+                {label $input/}
 
                 {if $input->getOption(type) in [text, textarea]}
                     {input $input class => form-control}
@@ -27,7 +27,7 @@
                 {elseif $input->getOption(type) === select}
                     <div class="select">{input $input class => form-control}</div>
                 {elseif $input->getOption(type) === checkbox}
-                    <div class="checkbox">{input $input:} {label $input:}</div>
+                    <div class="checkbox">{input $input:} {label $input:/}</div>
                 {elseif $input->getOption(type) === radio}
                     {foreach $input->items as $key => $label}
                         <div class="radiobutton">
@@ -46,4 +46,3 @@
         </div>
     </div>
 </section>
-

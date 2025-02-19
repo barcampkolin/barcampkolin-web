@@ -11,15 +11,8 @@ use Nette\Utils\Strings;
 
 class PartnerLogoStorage
 {
-    /**
-     * @var StoragePrefix
-     */
-    private $storagePrefix;
-
-
-    public function __construct(StoragePrefix $storagePrefix)
+    public function __construct(private readonly StoragePrefix $storagePrefix)
     {
-        $this->storagePrefix = $storagePrefix;
     }
 
 
@@ -28,7 +21,7 @@ class PartnerLogoStorage
      * @param string|null $name
      * @return string
      */
-    public function saveImage(Image $image, $name = null)
+    public function saveImage(Image $image, $name = null): string
     {
         $filename = $this->getFilename($name);
 
@@ -45,7 +38,7 @@ class PartnerLogoStorage
      * @param string|null $name
      * @return string
      */
-    public function saveUploaded(FileUpload $file, $name = null)
+    public function saveUploaded(FileUpload $file, $name = null): string
     {
         $filename = $this->getFilename($name, $this->getExtension($file->name));
 
@@ -61,9 +54,9 @@ class PartnerLogoStorage
      * @param $name
      * @return string
      */
-    private function getExtension($name)
+    private function getExtension($name): string
     {
-        return pathinfo($name, PATHINFO_EXTENSION);
+        return pathinfo((string) $name, PATHINFO_EXTENSION);
     }
 
     /**
@@ -71,7 +64,7 @@ class PartnerLogoStorage
      * @param string $ext
      * @return string
      */
-    private function getFilename($name = null, $ext = 'png')
+    private function getFilename($name = null, string $ext = 'png'): string
     {
         if ($name) {
             $name = Strings::webalize($name) . '-';
@@ -84,7 +77,7 @@ class PartnerLogoStorage
      * @param string $filename
      * @return string
      */
-    private function getStorageFilename($filename)
+    private function getStorageFilename(string $filename): string
     {
         $uploadDir = $this->storagePrefix->getStoragePath();
         FileSystem::createDir($uploadDir);
@@ -96,7 +89,7 @@ class PartnerLogoStorage
      * @param string $filename
      * @return string
      */
-    private function getUrl($filename)
+    private function getUrl(string $filename): string
     {
         return $this->storagePrefix->getUrlPath() . '/' . $filename;
     }

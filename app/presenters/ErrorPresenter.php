@@ -10,13 +10,9 @@ class ErrorPresenter implements Nette\Application\IPresenter
 {
     use Nette\SmartObject;
 
-    /** @var ILogger */
-    private $logger;
 
-
-    public function __construct(ILogger $logger)
+    public function __construct(private ILogger $logger)
     {
-        $this->logger = $logger;
     }
 
 
@@ -30,13 +26,13 @@ class ErrorPresenter implements Nette\Application\IPresenter
 
         if ($e instanceof Nette\Application\BadRequestException) {
             // $this->logger->log("HTTP code {$e->getCode()}: {$e->getMessage()} in {$e->getFile()}:{$e->getLine()}", 'access');
-            list($module, , $sep) = Nette\Application\Helpers::splitName($request->getPresenterName());
+            [$module, , $sep] = Nette\Application\Helpers::splitName($request->getPresenterName());
             $errorPresenter = $module . $sep . 'Error4xx';
             return new Responses\ForwardResponse($request->setPresenterName($errorPresenter));
         }
 
         $this->logger->log($e, ILogger::EXCEPTION);
-        return new Responses\CallbackResponse(function () {
+        return new Responses\CallbackResponse(function (): void {
             require __DIR__ . '/templates/Error/500.phtml';
         });
     }

@@ -10,24 +10,12 @@ use Nette\Utils\Json;
 class ScheduleControl extends Control
 {
     /**
-     * @var EventInfoProvider
-     */
-    private $infoProvider;
-    /**
-     * @var ScheduleManager
-     */
-    private $scheduleManager;
-
-
-    /**
      * ScheduleControl constructor.
      * @param EventInfoProvider $infoProvider
      * @param ScheduleManager $scheduleManager
      */
-    public function __construct(EventInfoProvider $infoProvider, ScheduleManager $scheduleManager)
+    public function __construct(private readonly EventInfoProvider $infoProvider, private readonly ScheduleManager $scheduleManager)
     {
-        $this->infoProvider = $infoProvider;
-        $this->scheduleManager = $scheduleManager;
     }
 
 
@@ -35,7 +23,7 @@ class ScheduleControl extends Control
      *
      * @throws \Nette\Utils\JsonException
      */
-    public function render()
+    public function render(): void
     {
         $dates = $this->infoProvider->getDates();
         $features = $this->infoProvider->getFeatures();

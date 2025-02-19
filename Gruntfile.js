@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
 
-    let currentYear = '2020';
+    let currentYear = '2025';
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),

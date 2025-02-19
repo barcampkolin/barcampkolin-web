@@ -12,7 +12,7 @@ class FormFactory
     /**
      * @return Form
      */
-    public function create()
+    public function create(): \Nette\Application\UI\Form
     {
         $form = new Form;
         return $form;

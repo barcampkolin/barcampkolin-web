@@ -7,5 +7,5 @@ interface ISpeakerListControlFactory
     /**
      * @return SpeakerListControl
      */
-    public function create();
+    public function create(): SpeakerListControl;
 }

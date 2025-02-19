@@ -7,26 +7,18 @@ use App\Model\NewsletterSignupManager;
 class NewsletterSignupFactory
 {
     /**
-     * @var NewsletterSignupManager
-     */
-    private $signupManager;
-
-
-    /**
      * NewsletterSignupFactory constructor.
      * @param NewsletterSignupManager $signupManager
      */
-    public function __construct(NewsletterSignupManager $signupManager)
+    public function __construct(private readonly NewsletterSignupManager $signupManager)
     {
-
-        $this->signupManager = $signupManager;
     }
 
 
     /**
      * @return NewsletterSignupControl
      */
-    public function create()
+    public function create(): \App\Components\Newsletter\NewsletterSignupControl
     {
         return new NewsletterSignupControl($this->signupManager);
     }

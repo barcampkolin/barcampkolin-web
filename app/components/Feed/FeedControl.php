@@ -7,19 +7,12 @@ use Nette\Application\UI\Control;
 
 class FeedControl extends Control
 {
-    /**
-     * @var WordpressPostReader
-     */
-    private $postReader;
-
-
-    public function __construct(WordpressPostReader $postReader)
+    public function __construct(private readonly WordpressPostReader $postReader)
     {
-        $this->postReader = $postReader;
     }
 
 
-    public function render()
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/Feed.latte');
         $this->template->feed = $this->postReader->get();

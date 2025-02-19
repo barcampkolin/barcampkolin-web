@@ -24,36 +24,6 @@ use Tracy\ILogger;
 class UserPresenter extends BasePresenter
 {
     /**
-     * @var UserManager
-     */
-    private $userManager;
-    /**
-     * @var ConfereeManager
-     */
-    private $confereeManager;
-    /**
-     * @var Forms\ConfereeForm
-     */
-    private $confereeForm;
-    /**
-     * @var Forms\TalkForm
-     */
-    private $talkForm;
-    /**
-     * @var TalkManager
-     */
-    private $talkManager;
-    /**
-     * @var EventInfoProvider
-     */
-    private $eventInfoProvider;
-    /**
-     * @var AvatarStorage
-     */
-    private $avatarStorage;
-
-
-    /**
      * ConferencePresenter constructor.
      * @param UserManager $userManager
      * @param ConfereeManager $confereeManager
@@ -63,22 +33,8 @@ class UserPresenter extends BasePresenter
      * @param EventInfoProvider $eventInfoProvider
      * @param AvatarStorage $avatarStorage
      */
-    public function __construct(
-        UserManager $userManager,
-        ConfereeManager $confereeManager,
-        TalkManager $talkManager,
-        Forms\ConfereeForm $confereeForm,
-        Forms\TalkForm $talkForm,
-        EventInfoProvider $eventInfoProvider,
-        AvatarStorage $avatarStorage
-    ) {
-        $this->userManager = $userManager;
-        $this->confereeManager = $confereeManager;
-        $this->confereeForm = $confereeForm;
-        $this->talkForm = $talkForm;
-        $this->talkManager = $talkManager;
-        $this->eventInfoProvider = $eventInfoProvider;
-        $this->avatarStorage = $avatarStorage;
+    public function __construct(private readonly UserManager $userManager, private readonly ConfereeManager $confereeManager, private readonly TalkManager $talkManager, private readonly Forms\ConfereeForm $confereeForm, private readonly Forms\TalkForm $talkForm, private readonly EventInfoProvider $eventInfoProvider, private readonly AvatarStorage $avatarStorage)
+    {
     }
 
 
@@ -90,10 +46,10 @@ class UserPresenter extends BasePresenter
         parent::startup();
         try {
             $this->userManager->getByLoginUser($this->user);
-        } catch (NoUserLoggedIn $e) {
+        } catch (NoUserLoggedIn) {
             $backlink = $this->storeRequest();
             $this->redirect(':Sign:conferee', ['backlink' => $backlink]);
-        } catch (UserNotFound $e) {
+        } catch (UserNotFound) {
             $this->user->logout();
             $backlink = $this->storeRequest();
             $this->redirect(':Sign:in', ['backlink' => $backlink]);
@@ -106,7 +62,7 @@ class UserPresenter extends BasePresenter
      * @throws UserNotFound
      * @throws \Nette\Utils\JsonException
      */
-    public function renderProfil()
+    public function renderProfil(): void
     {
         $user = $this->userManager->getByLoginUser($this->user);
         $conferee = $user->conferee;
@@ -126,7 +82,7 @@ class UserPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function renderTalk()
+    public function renderTalk(): void
     {
         if (!$this->eventInfoProvider->getFeatures()['talks_edit']) {
             $this->flashMessage('Upravování přednášek není v tuto chvíli povoleno, omlouváme se');
@@ -148,7 +104,7 @@ class UserPresenter extends BasePresenter
          * @param $values
          * @throws \Nette\Application\AbortException
          */
-        $onSubmitCallback = function (Conferee $conferee, $values) {
+        $onSubmitCallback = function (Conferee $conferee, $values): void {
 
             if ($conferee->id != $values->id) {
                 Debugger::log(
@@ -193,7 +149,7 @@ class UserPresenter extends BasePresenter
          * @param $values
          * @throws \Nette\Application\AbortException
          */
-        $onSubmitCallback = function (Talk $talk, $values) {
+        $onSubmitCallback = function (Talk $talk, $values): void {
 
             if ($talk->id != $values->id) {
                 Debugger::log(
@@ -239,7 +195,7 @@ class UserPresenter extends BasePresenter
      * @throws \Nette\Application\BadRequestException
      * @throws \Nette\Utils\ImageException
      */
-    public function handleUploadAvatar()
+    public function handleUploadAvatar(): void
     {
         $user = $this->userManager->getByLoginUser($this->user);
         $conferee = $user->conferee;

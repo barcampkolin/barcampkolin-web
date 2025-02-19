@@ -17,7 +17,7 @@ class RouterFactory
      * @return Nette\Application\IRouter
      * @throws Nette\InvalidArgumentException
      */
-    public static function createRouter(ArchiveManager $archiveManager)
+    public static function createRouter(ArchiveManager $archiveManager): \Nette\Application\Routers\RouteList
     {
         $router = new RouteList;
 
@@ -45,9 +45,9 @@ class RouterFactory
         $router[] = new Route('registrace', 'Sign:conferee');
         $router[] = new Route('vypsani-prednasky', 'Sign:talk');
         $router[] = new Route('[!' . $year . '/]prednasky', 'Conference:talks');
-        $router[] = new Route($year . '/prednaska', 'Conference:talks', Route::ONE_WAY);
+        $router->addRoute($year.'/prednaska', 'Conference:talks', RouteList::ONE_WAY);
         $router[] = new Route($year . '/prednaska/<id \d+>', 'Conference:talkDetail');
-        $router[] = new Route($year . '/prednasky/<id \d+>', 'Conference:talkDetail', Route::ONE_WAY);
+        $router->addRoute($year.'/prednasky/<id \d+>', 'Conference:program', RouteList::ONE_WAY);
         $router[] = new Route('[!' . $year . '/]program', 'Conference:program');
         $router[] = new Route('profil', 'User:profil');
         $router[] = new Route('upravit-profil', 'User:conferee');
@@ -85,7 +85,7 @@ class RouterFactory
      * @return RouteList
      * @throws Nette\InvalidArgumentException
      */
-    private static function createArchiveRoutes(array $archiverYears)
+    private static function createArchiveRoutes(array $archiverYears): \Nette\Application\Routers\RouteList
     {
         $archiveRouter = new RouteList();
 

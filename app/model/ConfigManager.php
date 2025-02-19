@@ -11,12 +11,6 @@ class ConfigManager
     const COLUMN_ID = 'id';
     const COLUMN_VALUE = 'value';
 
-
-    /**
-     * @var Database\Context
-     */
-    private $database;
-
     /**
      * @var array|null
      */
@@ -27,9 +21,8 @@ class ConfigManager
      * ConfigManager constructor.
      * @param Database\Context $database
      */
-    public function __construct(Database\Context $database)
+    public function __construct(private readonly Database\Context $database)
     {
-        $this->database = $database;
     }
 
 
@@ -81,7 +74,7 @@ class ConfigManager
      * @param mixed $value
      * @throws \Nette\Utils\JsonException
      */
-    public function set($key, $value)
+    public function set($key, $value): void
     {
         $configs = $this->load();
 
@@ -96,7 +89,7 @@ class ConfigManager
      * @param mixed $value
      * @throws \Nette\Utils\JsonException
      */
-    private function saveOne($key, $value)
+    private function saveOne($key, $value): void
     {
         $json = Json::encode($value);
 

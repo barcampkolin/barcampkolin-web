@@ -19,18 +19,6 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
     /**
      * @var string
      */
-    private $type;
-    /**
-     * @var \DateInterval
-     */
-    private $time;
-    /**
-     * @var int
-     */
-    private $duration;
-    /**
-     * @var string
-     */
     private $style;
 
 
@@ -39,12 +27,11 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
      * @param $type
      * @param \DateInterval $time
      * @param $duration
+     * @param string $type
+     * @param int $duration
      */
-    public function __construct($type, \DateInterval $time, $duration)
+    public function __construct(private $type, private \DateInterval $time, private $duration)
     {
-        $this->type = $type;
-        $this->time = $time;
-        $this->duration = $duration;
     }
 
 
@@ -60,7 +47,7 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
     /**
      * @return \DateInterval
      */
-    public function getTime()
+    public function getTime(): \DateInterval
     {
         return $this->time;
     }
@@ -69,7 +56,7 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
     /**
      * @param \DateInterval $time
      */
-    public function setTime($time)
+    public function setTime(\DateInterval $time): void
     {
         $this->time = $time;
     }
@@ -87,7 +74,7 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
     /**
      * @param int $duration
      */
-    public function setDuration($duration)
+    public function setDuration($duration): void
     {
         $this->duration = $duration;
     }
@@ -105,7 +92,7 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
     /**
      * @param string|null $style
      */
-    public function setStyle($style)
+    public function setStyle($style): void
     {
         $this->style = $style;
     }
@@ -123,7 +110,7 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
     /**
      * @param mixed $type
      */
-    public function setType($type)
+    public function setType($type): void
     {
         $this->type = $type;
     }
@@ -141,7 +128,7 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
     /**
      * @param mixed $title
      */
-    public function setTitle($title)
+    public function setTitle($title): void
     {
         $this->title = $title;
     }
@@ -150,7 +137,7 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
     /**
      * @return bool
      */
-    public function isTitleOverridden()
+    public function isTitleOverridden(): bool
     {
         return true;
     }
@@ -168,7 +155,7 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
     /**
      * @param mixed $speaker
      */
-    public function setSpeaker($speaker)
+    public function setSpeaker($speaker): void
     {
         $this->speaker = $speaker;
     }

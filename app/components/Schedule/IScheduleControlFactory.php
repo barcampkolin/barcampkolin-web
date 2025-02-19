@@ -8,6 +8,6 @@ interface IScheduleControlFactory
     /**
      * @return ScheduleControl
      */
-    public function create();
+    public function create(): ScheduleControl;
 
 }

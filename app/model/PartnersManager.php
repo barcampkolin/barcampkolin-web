@@ -17,19 +17,13 @@ class PartnersManager
     const TABLE_GROUPS = 'partner_groups';
     const TABLE_PARTNERS = 'partners';
 
-    /**
-     * @var Context
-     */
-    private $database;
-
 
     /**
      * PartnersManager constructor.
      * @param Context $database
      */
-    public function __construct(Context $database)
+    public function __construct(private readonly Context $database)
     {
-        $this->database = $database;
     }
 
 
@@ -37,7 +31,7 @@ class PartnersManager
      * @param bool $onlyEnabled
      * @return array
      */
-    public function getReport($onlyEnabled = true)
+    public function getReport($onlyEnabled = true): array
     {
         $groups = [];
         foreach ($this->getAll($onlyEnabled) as $item) {
@@ -63,7 +57,7 @@ class PartnersManager
      * @param bool $onlyEnabled
      * @return ResultSet
      */
-    public function getAll($onlyEnabled = true)
+    public function getAll($onlyEnabled = true): \Nette\Database\ResultSet
     {
         $enabledPart = '';
         if ($onlyEnabled) {
@@ -137,7 +131,7 @@ EOT;
      * @throws InvalidStateException
      * @throws PartnerNotFound
      */
-    public function insertUpdatePartner($values, $id = null)
+    public function insertUpdatePartner($values, $id = null): void
     {
         if ($id) {
             $this->getPartnerById($id)->update($values);
@@ -156,7 +150,7 @@ EOT;
      * @param ActiveRow|null $nextItem
      * @throws InvalidArgumentException
      */
-    public function changePartnersOrder(ActiveRow $item, ActiveRow $prevItem = null, ActiveRow $nextItem = null)
+    public function changePartnersOrder(ActiveRow $item, ActiveRow $prevItem = null, ActiveRow $nextItem = null): void
     {
         $this->sort(self::TABLE_PARTNERS, $item, $prevItem, $nextItem);
     }
@@ -183,7 +177,7 @@ EOT;
      * @throws PartnerNotFound
      * @throws InvalidStateException
      */
-    public function insertUpdateGroup($values, $id = null)
+    public function insertUpdateGroup($values, $id = null): void
     {
         if ($id) {
             $this->getGroupById($id)->update($values);
@@ -201,7 +195,7 @@ EOT;
      * @param int $default
      * @return int
      */
-    protected function getNextOrderValue($table, $default = 0)
+    protected function getNextOrderValue(string $table, $default = 0): int|float
     {
         $latestValue = $this->database->table($table)
             ->select('order')
@@ -223,7 +217,7 @@ EOT;
      * @param ActiveRow|null $nextItem
      * @throws InvalidArgumentException
      */
-    public function changeGroupsOrder(ActiveRow $item, ActiveRow $prevItem = null, ActiveRow $nextItem = null)
+    public function changeGroupsOrder(ActiveRow $item, ActiveRow $prevItem = null, ActiveRow $nextItem = null): void
     {
         $this->sort(self::TABLE_GROUPS, $item, $prevItem, $nextItem);
     }
@@ -233,7 +227,7 @@ EOT;
      * @param ActiveRow $group
      * @throws ForeignKeyConstraintViolationException
      */
-    public function delete(ActiveRow $group)
+    public function delete(ActiveRow $group): void
     {
         $group->delete();
     }
@@ -244,7 +238,7 @@ EOT;
      * @param bool $really
      * @throws InvalidArgumentException
      */
-    public function purgeAll($really = false)
+    public function purgeAll($really = false): void
     {
         if ($really !== true) {
             throw new InvalidArgumentException('Purging all items MUST be confirmed');
@@ -261,7 +255,7 @@ EOT;
      * @param ActiveRow|null $nextItem
      * @throws InvalidArgumentException
      */
-    private function sort($table, ActiveRow $item, ActiveRow $prevItem = null, ActiveRow $nextItem = null)
+    private function sort(string $table, ActiveRow $item, ActiveRow $prevItem = null, ActiveRow $nextItem = null): void
     {
         if (!in_array($table, [self::TABLE_GROUPS, self::TABLE_PARTNERS], true)) {
             throw new InvalidArgumentException("Table name $table is invalid");

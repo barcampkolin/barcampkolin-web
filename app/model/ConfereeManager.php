@@ -28,7 +28,7 @@ class ConfereeManager
     /**
      * @param Conferee $conferee
      */
-    public function save(Conferee $conferee)
+    public function save(Conferee $conferee): void
     {
         $this->confereeRepository->persistAndFlush($conferee);
     }
@@ -37,7 +37,7 @@ class ConfereeManager
     /**
      * @param Conferee $conferee
      */
-    public function remove(Conferee $conferee)
+    public function remove(Conferee $conferee): void
     {
         $this->confereeRepository->removeAndFlush($conferee);
     }
@@ -46,7 +46,7 @@ class ConfereeManager
     /**
      * @return \Nextras\Orm\Collection\ICollection
      */
-    public function findAll()
+    public function findAll(): \Nextras\Orm\Collection\ICollection
     {
         return $this->confereeRepository->findAll();
     }
@@ -56,7 +56,7 @@ class ConfereeManager
      * @param int $id
      * @return Conferee|null
      */
-    public function getById($id)
+    public function getById($id): ?\Nextras\Orm\Entity\IEntity
     {
         return $this->confereeRepository->getById($id);
     }
@@ -84,7 +84,7 @@ class ConfereeManager
      * @param bool $really
      * @throws InvalidArgumentException
      */
-    public function purgeAll($really = false)
+    public function purgeAll($really = false): void
     {
         if ($really !== true) {
             throw new InvalidArgumentException('Purging all items MUST be confirmed');

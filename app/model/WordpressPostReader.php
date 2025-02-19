@@ -8,15 +8,7 @@ use Nette\Utils\Json;
 
 class WordpressPostReader
 {
-    /**
-     * @var array
-     */
-    private $config;
-
-    /**
-     * @var Caching\Cache
-     */
-    private $cache;
+    private readonly \Nette\Caching\Cache $cache;
 
 
     /**
@@ -24,9 +16,8 @@ class WordpressPostReader
      * @param array $config
      * @param Caching\IStorage $cacheStorage
      */
-    public function __construct($config, Caching\IStorage $cacheStorage)
+    public function __construct(private $config, Caching\IStorage $cacheStorage)
     {
-        $this->config = $config;
         $this->cache = new Caching\Cache($cacheStorage, self::class);
     }
 
@@ -71,7 +62,7 @@ class WordpressPostReader
      * @return array
      * @throws \Nette\Utils\JsonException
      */
-    private function load()
+    private function load(): array
     {
         $feed = $this->processOriginFeed($this->loadFeed());
         return $feed;
@@ -86,7 +77,7 @@ class WordpressPostReader
     {
         $apiQueryUrl = sprintf(
             '%s/wp-json/wp/v2/posts?per_page=%d',
-            rtrim($this->getSourceUrl(), '/'),
+            rtrim((string) $this->getSourceUrl(), '/'),
             $this->getMaxItems()
         );
 
@@ -105,7 +96,7 @@ class WordpressPostReader
      * @return array
      * @throws \Nette\Utils\JsonException
      */
-    private function processOriginFeed($originFeed)
+    private function processOriginFeed($originFeed): array
     {
         $feed = [];
         foreach ($originFeed as $originItem) {
@@ -126,7 +117,7 @@ class WordpressPostReader
      * @return string
      * @throws \Nette\Utils\JsonException
      */
-    private function getThumbnailForItem($item)
+    private function getThumbnailForItem(array $item)
     {
         $thumbnailUrl = $this->config['defaultThumbnail'];
 

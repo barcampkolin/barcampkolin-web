@@ -8,22 +8,15 @@ use Nette\Application\UI\Control;
 class PartnersControl extends Control
 {
     /**
-     * @var PartnersManager
-     */
-    private $partnerManager;
-
-
-    /**
      * PartnersControl constructor.
-     * @param PartnersManager $partnersManager
+     * @param PartnersManager $partnerManager
      */
-    public function __construct(PartnersManager $partnersManager)
+    public function __construct(private readonly PartnersManager $partnerManager)
     {
-        $this->partnerManager = $partnersManager;
     }
 
 
-    public function render()
+    public function render(): void
     {
         $report = $this->partnerManager->getReport();
 

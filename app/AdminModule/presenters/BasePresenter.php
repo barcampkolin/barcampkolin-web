@@ -12,16 +12,13 @@ class BasePresenter extends Presenter
 {
     use SecuredLinksPresenterTrait;
 
-    /**
-     * @var EventInfoProvider
-     */
-    private $eventInfo;
+    private ?\App\Model\EventInfoProvider $eventInfo = null;
 
 
     /**
      * @param EventInfoProvider $eventInfo
      */
-    public function inject(EventInfoProvider $eventInfo)
+    public function inject(EventInfoProvider $eventInfo): void
     {
         $this->eventInfo = $eventInfo;
     }

@@ -5,31 +5,19 @@ namespace App\Model;
 class StoragePrefix
 {
     /**
-     * @var string
+     * @param string $storageBase
+     * @param string $urlBase
+     * @param string $pathPrefix
      */
-    private $storageBase;
-    /**
-     * @var string
-     */
-    private $urlBase;
-    /**
-     * @var string
-     */
-    private $pathPrefix;
-
-
-    public function __construct($storageBase, $urlBase, $pathPrefix)
+    public function __construct(private $storageBase, private $urlBase, private $pathPrefix)
     {
-        $this->storageBase = $storageBase;
-        $this->urlBase = $urlBase;
-        $this->pathPrefix = $pathPrefix;
     }
 
 
     /**
      * @return string
      */
-    public function getStoragePath()
+    public function getStoragePath(): string
     {
         return $this->getStorageBase() . $this->getPathPrefix();
     }
@@ -38,7 +26,7 @@ class StoragePrefix
     /**
      * @return string
      */
-    public function getUrlPath()
+    public function getUrlPath(): string
     {
         return $this->getUrlBase() . $this->getPathPrefix();
     }

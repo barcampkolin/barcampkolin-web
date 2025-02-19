@@ -14,16 +14,9 @@ use Nette\Utils\Strings;
 
 class ArchivePresenter extends BasePresenter
 {
-    /**
-     * @var ArchiveManager
-     */
-    private $archiveManager;
-
-
-    public function __construct(ArchiveManager $archiveManager)
+    public function __construct(private readonly ArchiveManager $archiveManager)
     {
         parent::__construct();
-        $this->archiveManager = $archiveManager;
     }
 
 
@@ -31,7 +24,7 @@ class ArchivePresenter extends BasePresenter
      * @throws InvalidStateException
      * @throws \Nette\InvalidArgumentException
      */
-    public function renderDefault()
+    public function renderDefault(): void
     {
         $this->template->year = $this->archiveManager->getCurrentYear();
         $this->template->pages = $this->archiveManager->getArchiveUrls($this->archiveManager->getCurrentYear());
@@ -44,7 +37,7 @@ class ArchivePresenter extends BasePresenter
      * @return Form
      * @throws \Nette\Utils\JsonException
      */
-    public function createComponentArchiveForm()
+    public function createComponentArchiveForm(): \Nette\Application\UI\Form
     {
         $form = new Form();
 
@@ -68,7 +61,7 @@ class ArchivePresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->onSuccess[] = [$this, 'onArchiveFormSuccess'];
+        $form->onSuccess[] = $this->onArchiveFormSuccess(...);
 
         return $form;
     }
@@ -84,7 +77,7 @@ class ArchivePresenter extends BasePresenter
      * @throws \Nette\Utils\JsonException
      * @throws \InvalidArgumentException
      */
-    public function onArchiveFormSuccess(Form $form, ArrayHash $values)
+    public function onArchiveFormSuccess(Form $form, ArrayHash $values): void
     {
         $fromYear = $values['fromYear'];
         $toYear = $values['toYear'];
@@ -109,7 +102,7 @@ class ArchivePresenter extends BasePresenter
      * @throws \Nette\InvalidArgumentException
      * @throws \Nette\InvalidStateException
      */
-    public function actionUploadArchive()
+    public function actionUploadArchive(): void
     {
         $httpRequest = $this->getHttpRequest();
         $url = $httpRequest->getPost('url');
@@ -128,7 +121,7 @@ class ArchivePresenter extends BasePresenter
      * @param $date
      * @return string
      */
-    private function dateToHtml5($date)
+    private function dateToHtml5($date): string
     {
         return (new DateTime($date))->format('Y-m-d\TH:i:s');
     }
@@ -141,7 +134,7 @@ class ArchivePresenter extends BasePresenter
      */
     private function getArchiveCsrfToken()
     {
-        $session = $this->getSession(__CLASS__);
+        $session = $this->getSession(self::class);
         if (!isset($session['csrfToken'])) {
             $session['csrfToken'] = Random::generate();
         }
@@ -156,7 +149,7 @@ class ArchivePresenter extends BasePresenter
      * @throws \Nette\InvalidArgumentException
      * @throws \Nette\InvalidStateException
      */
-    private function validateArchiveCsrfToken($token)
+    private function validateArchiveCsrfToken($token): void
     {
         if (Strings::compare($token, $this->getArchiveCsrfToken()) !== true) {
             throw new ForbiddenRequestException('Invalid archive CSRF token');

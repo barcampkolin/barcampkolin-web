@@ -11,23 +11,11 @@ use Nette\Utils\Strings;
 class LocalFileStorage
 {
     /**
-     * @var StoragePrefix
-     */
-    private $storagePrefix;
-    /**
-     * @var bool Add unpredicted unique name when save content?
-     */
-    private $isRandomizeName;
-
-
-    /**
      * @param StoragePrefix $storagePrefix
      * @param bool $isRandomizeName
      */
-    public function __construct(StoragePrefix $storagePrefix, $isRandomizeName = true)
+    public function __construct(private readonly StoragePrefix $storagePrefix, private $isRandomizeName = true)
     {
-        $this->storagePrefix = $storagePrefix;
-        $this->isRandomizeName = $isRandomizeName;
     }
 
 
@@ -39,7 +27,7 @@ class LocalFileStorage
      * @throws InvalidArgumentException
      * @throws \Nette\IOException
      */
-    public function saveContent($content, $name = null, $extextOverride = null)
+    public function saveContent(string $content, $name = null, $extextOverride = null): string
     {
         $filename = $this->getSafeFilename($name, $extextOverride);
         $storageFile = $this->getStorageFilename($filename);
@@ -58,7 +46,7 @@ class LocalFileStorage
      * @throws \Nette\IOException
      * @throws \Nette\InvalidArgumentException
      */
-    public function saveUploaded(FileUpload $file, $name = null)
+    public function saveUploaded(FileUpload $file, $name = null): string
     {
         $filename = $this->getSafeFilename($name, $this->getExtension($file->name));
 
@@ -77,7 +65,7 @@ class LocalFileStorage
      * @throws InvalidArgumentException
      * @throws \Nette\InvalidArgumentException
      */
-    public function getSafeFilename($name, $extOverride = null)
+    public function getSafeFilename($name, $extOverride = null): string
     {
         $filename = pathinfo((string)$name, PATHINFO_FILENAME);
 
@@ -111,10 +99,10 @@ class LocalFileStorage
      * @param string $url
      * @return bool
      */
-    public function match($url)
+    public function match($url): bool
     {
         $urlPrefix = $this->storagePrefix->getUrlPath();
-        return strpos($url, $urlPrefix) === 0;
+        return str_starts_with($url, $urlPrefix);
     }
 
 
@@ -123,7 +111,7 @@ class LocalFileStorage
      * @return bool
      * @throws InvalidArgumentException
      */
-    public function exists($url)
+    public function exists($url): bool
     {
         $filename = $this->urlToFilename($url);
         return file_exists($filename);
@@ -136,7 +124,7 @@ class LocalFileStorage
      * @throws InvalidArgumentException
      * @throws \Nette\IOException
      */
-    public function getFileContent($url)
+    public function getFileContent($url): string
     {
         $filename = $this->urlToFilename($url);
         return FileSystem::read($filename);
@@ -148,7 +136,7 @@ class LocalFileStorage
      * @throws InvalidArgumentException
      * @throws \Nette\IOException
      */
-    public function delete($url)
+    public function delete($url): void
     {
         $filename = $this->urlToFilename($url);
         FileSystem::delete($filename);
@@ -160,7 +148,7 @@ class LocalFileStorage
      * @return string
      * @throws InvalidArgumentException
      */
-    protected function urlToFilename($url)
+    protected function urlToFilename($url): string|array
     {
         $urlPrefix = $this->storagePrefix->getUrlPath();
         $storagePrefix = $this->storagePrefix->getStoragePath();
@@ -179,7 +167,7 @@ class LocalFileStorage
      * @param string $name
      * @return string
      */
-    protected function getExtension($name)
+    protected function getExtension($name): string
     {
         return pathinfo($name, PATHINFO_EXTENSION);
     }
@@ -190,7 +178,7 @@ class LocalFileStorage
      * @return string
      * @throws \Nette\IOException
      */
-    protected function getStorageFilename($filename)
+    protected function getStorageFilename(string $filename): string
     {
         $uploadDir = $this->storagePrefix->getStoragePath();
         FileSystem::createDir($uploadDir);
@@ -202,7 +190,7 @@ class LocalFileStorage
      * @param string $filename
      * @return string
      */
-    protected function getUrl($filename)
+    protected function getUrl(string $filename): string
     {
         return $this->storagePrefix->getUrlPath() . '/' . $filename;
     }

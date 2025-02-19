@@ -4,24 +4,13 @@ namespace App\Model;
 
 class MailDynamicLoader
 {
-    /**
-     * @var ConfigManager
-     */
-    private $configManager;
-
-    /**
-     * @var array
-     */
-    private $layouts = [
+    private array $layouts = [
         'layout' => [
             'title' => 'Layout',
         ],
     ];
 
-    /**
-     * @var array
-     */
-    private $structure = [
+    private array $structure = [
         'registration' => [
             'title' => 'Registrace',
             'params' => [],
@@ -90,16 +79,15 @@ class MailDynamicLoader
      * MailDynamicLoader constructor.
      * @param ConfigManager $configManager
      */
-    public function __construct(ConfigManager $configManager)
+    public function __construct(private readonly ConfigManager $configManager)
     {
-        $this->configManager = $configManager;
     }
 
 
     /**
      * @return array
      */
-    public function getMails()
+    public function getMails(): array
     {
         $mails = [];
         foreach ($this->structure as $key => $struct) {
@@ -112,7 +100,7 @@ class MailDynamicLoader
     /**
      * @return array
      */
-    public function getLayouts()
+    public function getLayouts(): array
     {
         $mails = [];
         foreach ($this->layouts as $key => $struct) {
@@ -128,7 +116,7 @@ class MailDynamicLoader
      * @throws EntityNotFound
      * @throws \Nette\Utils\JsonException
      */
-    public function getMailById($id)
+    public function getMailById($id): array
     {
         $this->validateId($id);
 
@@ -152,7 +140,7 @@ class MailDynamicLoader
      * @return array
      * @throws \Nette\Utils\JsonException
      */
-    public function getLayout()
+    public function getLayout(): array
     {
         $id = 'layout';
         $struct = $this->layouts[$id];
@@ -176,7 +164,7 @@ class MailDynamicLoader
      * @throws EntityNotFound
      * @throws \Nette\Utils\JsonException
      */
-    public function setMail($id, $subject, $body, $header, $preheader, $purpose)
+    public function setMail($id, $subject, $body, $header, $preheader, $purpose): void
     {
         $this->validateId($id);
 
@@ -188,7 +176,7 @@ class MailDynamicLoader
      * @param $body
      * @throws \Nette\Utils\JsonException
      */
-    public function setLayout($body)
+    public function setLayout($body): void
     {
         $id = 'layout';
 
@@ -200,7 +188,7 @@ class MailDynamicLoader
      * @param string $id
      * @throws EntityNotFound
      */
-    private function validateId($id)
+    private function validateId($id): void
     {
         if (!isset($this->structure[$id])) {
             throw new EntityNotFound("Mail with ID '$id' not found.");
@@ -213,7 +201,7 @@ class MailDynamicLoader
      * @return array
      * @throws \Nette\Utils\JsonException
      */
-    private function loadMail($id)
+    private function loadMail($id): array
     {
         $configKey = $this->getMailConfigKey($id);
 
@@ -226,7 +214,7 @@ class MailDynamicLoader
      * @return array
      * @throws \Nette\Utils\JsonException
      */
-    private function loadLayout($id)
+    private function loadLayout(string $id): array
     {
         $configKey = $this->getLayoutConfigKey($id);
 
@@ -243,7 +231,7 @@ class MailDynamicLoader
      * @param string $purpose
      * @throws \Nette\Utils\JsonException
      */
-    private function saveMail($id, $subject, $body, $header, $preheader, $purpose)
+    private function saveMail($id, $subject, $body, $header, $preheader, $purpose): void
     {
         $configKey = $this->getMailConfigKey($id);
 
@@ -262,7 +250,7 @@ class MailDynamicLoader
      * @param $body
      * @throws \Nette\Utils\JsonException
      */
-    private function saveLayout($id, $body)
+    private function saveLayout(string $id, $body): void
     {
         $configKey = $this->getLayoutConfigKey($id);
 
@@ -276,7 +264,7 @@ class MailDynamicLoader
      * @param string $mailId
      * @return string
      */
-    private function getMailConfigKey($mailId)
+    private function getMailConfigKey($mailId): string
     {
         return sprintf("mail.content.%s", $mailId);
     }
@@ -286,7 +274,7 @@ class MailDynamicLoader
      * @param string $mailId
      * @return string
      */
-    private function getLayoutConfigKey($mailId)
+    private function getLayoutConfigKey(string $mailId): string
     {
         return sprintf("mail.layout.%s", $mailId);
     }
@@ -297,7 +285,7 @@ class MailDynamicLoader
      * @return array
      * @throws \Nette\Utils\JsonException
      */
-    private function loadTemplate($configKey)
+    private function loadTemplate(string $configKey): array
     {
         $data = $this->configManager->get($configKey);
 
@@ -320,7 +308,7 @@ class MailDynamicLoader
      * @param array $mail
      * @throws \Nette\Utils\JsonException
      */
-    private function saveTemplate($configKey, array $mail)
+    private function saveTemplate(string $configKey, array $mail): void
     {
         $this->configManager->set($configKey, $mail);
     }

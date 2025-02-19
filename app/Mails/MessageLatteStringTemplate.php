@@ -5,18 +5,11 @@ namespace App\Mails;
 class MessageLatteStringTemplate implements ITemplate
 {
     /**
-     * @var array
-     */
-    private $templates;
-
-
-    /**
      * MessageLatteFileTemplate constructor.
      * @param array $templates
      */
-    public function __construct(array $templates = [])
+    public function __construct(private array $templates = [])
     {
-        $this->templates = $templates;
     }
 
 
@@ -24,7 +17,7 @@ class MessageLatteStringTemplate implements ITemplate
      * @param string $key
      * @param string $template
      */
-    public function addTemplate($key, $template)
+    public function addTemplate($key, $template): void
     {
         $this->templates[$key] = $template;
     }
@@ -33,7 +26,7 @@ class MessageLatteStringTemplate implements ITemplate
     /**
      * @param string $template
      */
-    public function setLayout($template)
+    public function setLayout($template): void
     {
         $this->templates['layout'] = $template;
     }
@@ -42,7 +35,7 @@ class MessageLatteStringTemplate implements ITemplate
     /**
      * @param string $template
      */
-    public function setMainTemplate($template)
+    public function setMainTemplate($template): void
     {
         $this->templates['main'] = $template;
     }
@@ -51,7 +44,7 @@ class MessageLatteStringTemplate implements ITemplate
     /**
      * @return array
      */
-    public function getTemplates()
+    public function getTemplates(): array
     {
         return $this->templates;
     }
@@ -60,7 +53,7 @@ class MessageLatteStringTemplate implements ITemplate
     /**
      * @param array $templates
      */
-    public function setTemplates($templates)
+    public function setTemplates(array $templates): void
     {
         $this->templates = $templates;
     }

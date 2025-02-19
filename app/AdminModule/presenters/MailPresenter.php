@@ -15,24 +15,12 @@ use Ublaboo\DataGrid\DataGrid;
 class MailPresenter extends BasePresenter
 {
     /**
-     * @var MailDynamicLoader
-     */
-    private $mailLoader;
-    /**
-     * @var MailerManager
-     */
-    private $mailer;
-
-
-    /**
      * MailPresenter constructor.
      * @param MailDynamicLoader $mailLoader
      * @param MailerManager $mailer
      */
-    public function __construct(MailDynamicLoader $mailLoader, MailerManager $mailer)
+    public function __construct(private readonly MailDynamicLoader $mailLoader, private readonly MailerManager $mailer)
     {
-        $this->mailLoader = $mailLoader;
-        $this->mailer = $mailer;
     }
 
 
@@ -40,7 +28,7 @@ class MailPresenter extends BasePresenter
      * @param string $name
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentMailsDatagrid($name)
+    public function createComponentMailsDatagrid($name): void
     {
         $grid = new DataGrid($this, $name);
 
@@ -66,7 +54,7 @@ class MailPresenter extends BasePresenter
      * @param $name
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentLayoutsDatagrid($name)
+    public function createComponentLayoutsDatagrid($name): void
     {
         $grid = new DataGrid($this, $name);
 
@@ -91,7 +79,7 @@ class MailPresenter extends BasePresenter
      * @throws BadRequestException
      * @throws \Nette\Utils\JsonException
      */
-    public function renderEdit($id)
+    public function renderEdit($id): void
     {
 
         $this->template->id = $id;
@@ -117,7 +105,7 @@ class MailPresenter extends BasePresenter
      * @param $id
      * @throws \Nette\Application\AbortException
      */
-    public function renderView($id)
+    public function renderView($id): void
     {
         $this->forward('preview', ['id' => $id]); //temporary
     }
@@ -130,7 +118,7 @@ class MailPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function renderPreview($id, $parametersJson = '{}')
+    public function renderPreview($id, string $parametersJson = '{}'): void
     {
         $parameters = Json::decode($parametersJson, Json::FORCE_ARRAY);
 
@@ -149,7 +137,7 @@ class MailPresenter extends BasePresenter
      * @throws \Nette\Utils\JsonException
      * @throws BadRequestException
      */
-    public function renderBulkSender($id)
+    public function renderBulkSender($id): void
     {
         try {
             $mail = $this->mailLoader->getMailById($id);
@@ -175,7 +163,7 @@ class MailPresenter extends BasePresenter
      * @throws \Nette\Utils\JsonException
      * @throws EntityNotFound
      */
-    public function actionSend($templateId, $recipient, $parametersJson = '{}')
+    public function actionSend($templateId, $recipient, string $parametersJson = '{}'): void
     {
         $parameters = Json::decode($parametersJson, Json::FORCE_ARRAY);
 
@@ -198,7 +186,7 @@ class MailPresenter extends BasePresenter
      * @throws BadRequestException
      * @throws \Nette\Utils\JsonException
      */
-    private function getMailById($id)
+    private function getMailById($id): array
     {
         try {
             return $this->mailLoader->getMailById($id);
@@ -211,7 +199,7 @@ class MailPresenter extends BasePresenter
     /**
      * @return Form
      */
-    public function createComponentEditForm()
+    public function createComponentEditForm(): \Nette\Application\UI\Form
     {
         $form = new Form();
 
@@ -237,7 +225,7 @@ class MailPresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->onSuccess[] = [$this, 'save'];
+        $form->onSuccess[] = $this->save(...);
 
         return $form;
     }
@@ -250,7 +238,7 @@ class MailPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function save(Form $form, $values)
+    public function save(Form $form, array $values): void
     {
         $id = $values->id;
         if ($id === 'layout') {

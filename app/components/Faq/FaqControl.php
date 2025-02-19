@@ -8,18 +8,11 @@ use Nette\Application\UI\Control;
 class FaqControl extends Control
 {
     /**
-     * @var EnumeratorManager
-     */
-    private $enumeratorManager;
-
-
-    /**
      * FaqControl constructor.
      * @param EnumeratorManager $enumeratorManager
      */
-    public function __construct(EnumeratorManager $enumeratorManager)
+    public function __construct(private readonly EnumeratorManager $enumeratorManager)
     {
-        $this->enumeratorManager = $enumeratorManager;
     }
 
 
@@ -27,7 +20,7 @@ class FaqControl extends Control
      * @throws \App\Model\InvalidEnumeratorSetException
      * @throws \Nette\Utils\JsonException
      */
-    public function render()
+    public function render(): void
     {
         $faqs = $this->enumeratorManager->get(EnumeratorManager::SET_FAQS);
 
@@ -39,7 +32,7 @@ class FaqControl extends Control
     }
 
 
-    private function renderFaqs(array $faqs)
+    private function renderFaqs(array $faqs): void
     {
         $this->template->faqs = $faqs;
         $this->template->setFile(__DIR__ . '/Faq.latte');

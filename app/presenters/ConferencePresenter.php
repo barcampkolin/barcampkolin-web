@@ -17,18 +17,6 @@ class ConferencePresenter extends BasePresenter
 {
     /** @var TalkRepository $talkRepository */
     private $talkRepository;
-    /**
-     * @var TalkManager
-     */
-    private $talkManager;
-    /**
-     * @var EventInfoProvider
-     */
-    private $eventInfoProvider;
-    /**
-     * @var IProgramControlFactory
-     */
-    private $programFactory;
 
 
     /**
@@ -40,14 +28,11 @@ class ConferencePresenter extends BasePresenter
      */
     public function __construct(
         Orm $orm,
-        TalkManager $talkManager,
-        EventInfoProvider $eventInfoProvider,
-        IProgramControlFactory $programFactory
+        private readonly TalkManager $talkManager,
+        private readonly EventInfoProvider $eventInfoProvider,
+        private readonly IProgramControlFactory $programFactory
     ) {
         $this->talkRepository = $orm->talk;
-        $this->talkManager = $talkManager;
-        $this->eventInfoProvider = $eventInfoProvider;
-        $this->programFactory = $programFactory;
     }
 
 
@@ -55,7 +40,7 @@ class ConferencePresenter extends BasePresenter
      * @throws \App\Model\InvalidEnumeratorSetException
      * @throws \Nette\Utils\JsonException
      */
-    public function renderTalks()
+    public function renderTalks(): void
     {
         /** @var ICollection|Talk[] $talks */
         $talks = $this->talkRepository->findBy(
@@ -86,7 +71,7 @@ class ConferencePresenter extends BasePresenter
             $filtered[] = [
                 'talk' => $talk,
                 'extended' => $extended,
-                'category' => isset($categories[$talk->category]) ? $categories[$talk->category] : null,
+                'category' => $categories[$talk->category] ?? null,
             ];
         }
         $this->template->talksInfo = $filtered;
@@ -115,7 +100,7 @@ class ConferencePresenter extends BasePresenter
      * @param int $talkId
      * @throws \Nette\Application\AbortException
      */
-    public function handleVote($talkId)
+    public function handleVote($talkId): void
     {
         $userId = $this->user->id;
         $this->talkManager->addVote($userId, $talkId);
@@ -135,7 +120,7 @@ class ConferencePresenter extends BasePresenter
      * @param int $talkId
      * @throws \Nette\Application\AbortException
      */
-    public function handleUnvote($talkId)
+    public function handleUnvote($talkId): void
     {
         $userId = $this->user->id;
         $this->talkManager->removeVote($userId, $talkId);
@@ -154,7 +139,7 @@ class ConferencePresenter extends BasePresenter
     /**
      * @throws \Nette\Application\AbortException
      */
-    public function handleSignToVote()
+    public function handleSignToVote(): void
     {
         if ($this->user->isLoggedIn()) {
             $this->redirect('this');
@@ -171,7 +156,7 @@ class ConferencePresenter extends BasePresenter
      * @throws \Nette\Application\BadRequestException
      * @throws \Nette\Utils\JsonException
      */
-    public function renderTalkDetail($id)
+    public function renderTalkDetail($id): void
     {
         if (!intval($id)) {
             $this->error('Není vyplněno ID přednášky');
@@ -187,7 +172,7 @@ class ConferencePresenter extends BasePresenter
 
         $this->template->talk = $talk;
         $this->template->extended = $extended;
-        $this->template->ogImageUrl = isset($extended['ogImageUrl']) ? $extended['ogImageUrl'] : null;
+        $this->template->ogImageUrl = $extended['ogImageUrl'] ?? null;
 
         $features = $this->eventInfoProvider->getFeatures();
         $this->template->allowVote = $features['vote'];
@@ -212,15 +197,15 @@ class ConferencePresenter extends BasePresenter
 
         $this->template->votes = $votes;
 
-        $this->template->addFilter('embedizeYouTube', [$this, 'embedizeYouTube']);
-        $this->template->addFilter('campainizeYouTube', [$this, 'campainizeYouTube']);
+        $this->template->addFilter('embedizeYouTube', $this->embedizeYouTube(...));
+        $this->template->addFilter('campainizeYouTube', $this->campainizeYouTube(...));
     }
 
 
     public function embedizeYouTube($url, $campainId = null)
     {
         $matches = null;
-        if (preg_match('~youtu\\.?be(?:\\.com)?/(?:watch\\?v=)?([-_a-z0-9]{8,15})~i', $url, $matches)) {
+        if (preg_match('~youtu\\.?be(?:\\.com)?/(?:watch\\?v=)?([-_a-z0-9]{8,15})~i', (string) $url, $matches)) {
             return $this->buildCampainUrl(
                 "https://www.youtube.com/embed/$matches[1]",
                 'yt-video-embed',
@@ -230,7 +215,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    public function campainizeYouTube($url, $campainId = null)
+    public function campainizeYouTube(string $url, $campainId = null): string
     {
         return $this->buildCampainUrl(
             $url,
@@ -240,10 +225,10 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    private function buildCampainUrl($url, $medium, $campainId)
+    private function buildCampainUrl(string $url, string $medium, $campainId): string
     {
         $postfix = "utm_source=pbc-web&utm_medium=$medium&utm_content=$campainId&utm_campaign=talk-detail";
-        return $url . (strpos($url, '?') !== false ? '&' : '?') . $postfix;
+        return $url . (str_contains((string) $url, '?') ? '&' : '?') . $postfix;
     }
 
 

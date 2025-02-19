@@ -14,28 +14,16 @@ use Nette\Utils\ArrayHash;
 class EnumeratorFormControl extends Control
 {
     /**
-     * @var EnumeratorManager
-     */
-    private $enumeratorManager;
-    /**
-     * @var string
-     */
-    private $setName;
-
-
-    /**
      * EnumeratorFormControl constructor.
      * @param string $setName Name set name (in database)
      * @param EnumeratorManager $enumeratorManager
      */
-    public function __construct($setName, EnumeratorManager $enumeratorManager)
+    public function __construct(private $setName, private readonly EnumeratorManager $enumeratorManager)
     {
-        $this->setName = $setName;
-        $this->enumeratorManager = $enumeratorManager;
     }
 
 
-    protected function attached($presenter): void
+    protected function attached(\Nette\ComponentModel\IComponent $presenter): void
     {
         parent::attached($presenter);
 
@@ -58,7 +46,7 @@ class EnumeratorFormControl extends Control
      * @throws \App\Model\InvalidEnumeratorSetException
      * @throws \Nette\Utils\JsonException
      */
-    public function render()
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/EnumeratorForm.latte');
         $this->template->enum = $this->enumeratorManager->get($this->setName);
@@ -69,14 +57,14 @@ class EnumeratorFormControl extends Control
     /**
      * @return Form
      */
-    public function createComponentForm()
+    public function createComponentForm(): \Nette\Application\UI\Form
     {
         $form = new Form();
 
-        $removeEvent = [$this, 'removeClicked'];
+        $removeEvent = $this->removeClicked(...);
 
         /** @var Replicator\Container $enums */
-        $enums = $form->addDynamic('enums', function (Container $enums) use ($removeEvent) {
+        $enums = $form->addDynamic('enums', function (Container $enums) use ($removeEvent): void {
             $enums->addText('key', 'Klíč', 30);
             $enums->addText('value', 'Hodnota', 50);
 
@@ -87,11 +75,11 @@ class EnumeratorFormControl extends Control
 
         $enums->addSubmit('add', 'Přidat další otázku')
             ->setValidationScope(null)
-            ->onClick[] = [$this, 'addClicked'];
+            ->onClick[] = $this->addClicked(...);
 
         $form->addSubmit('submit', 'Uložit');
         $form->addProtection('Prosím, odešlete tento formulář ještě jednou (bezpečnostní kontrola)');
-        $form->onSuccess[] = [$this, 'onFormSuccess'];
+        $form->onSuccess[] = $this->onFormSuccess(...);
         return $form;
     }
 
@@ -103,7 +91,7 @@ class EnumeratorFormControl extends Control
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function onFormSuccess(Form $form, $values)
+    public function onFormSuccess(Form $form, $values): void
     {
         if ($form['submit']->isSubmittedBy() === false) {
             return;
@@ -126,7 +114,7 @@ class EnumeratorFormControl extends Control
     /**
      * @param SubmitButton $button
      */
-    public function addClicked(SubmitButton $button)
+    public function addClicked(SubmitButton $button): void
     {
         /** @var Replicator\Container $enums */
         $enums = $button->parent;
@@ -137,7 +125,7 @@ class EnumeratorFormControl extends Control
     /**
      * @param SubmitButton $button
      */
-    public function removeClicked(SubmitButton $button)
+    public function removeClicked(SubmitButton $button): void
     {
         /** @var Container $container */
         $container = $button->parent;

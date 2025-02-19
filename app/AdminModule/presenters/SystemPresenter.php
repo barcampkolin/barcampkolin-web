@@ -10,19 +10,12 @@ use Ublaboo\DataGrid\DataGrid;
 
 class SystemPresenter extends BasePresenter
 {
-    /**
-     * @var ApiTokenManager
-     */
-    private $apiTokenManager;
-
-
-    public function __construct(ApiTokenManager $apiTokenManager)
+    public function __construct(private readonly ApiTokenManager $apiTokenManager)
     {
-        $this->apiTokenManager = $apiTokenManager;
     }
 
 
-    public function renderDefault()
+    public function renderDefault(): void
     {
         $this->template->isDebug = DebugEnabler::isDebug();
         $this->template->isDebugByEnv = DebugEnabler::isDebugByEnv();
@@ -34,7 +27,7 @@ class SystemPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @secured
      */
-    public function handleTurnDebugOff()
+    public function handleTurnDebugOff(): void
     {
         DebugEnabler::turnOff();
         $this->flashMessage('Ladící režim vypnut', 'success');
@@ -46,7 +39,7 @@ class SystemPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @secured
      */
-    public function handleTurnDebugOn()
+    public function handleTurnDebugOn(): void
     {
         DebugEnabler::turnOn();
         $this->flashMessage('Ladící režim zapnut', 'success');
@@ -60,7 +53,7 @@ class SystemPresenter extends BasePresenter
      * @throws \Nette\Utils\JsonException
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentApiTokensDatagrid($name)
+    public function createComponentApiTokensDatagrid($name): \Ublaboo\DataGrid\DataGrid
     {
         $hashes = $this->apiTokenManager->getTokenHashes();
 
@@ -92,7 +85,7 @@ class SystemPresenter extends BasePresenter
      * @param $id
      * @throws \Nette\Application\AbortException
      */
-    public function handleDeleteApiToken($id)
+    public function handleDeleteApiToken($id): void
     {
         $this->flashMessage('Token smazán', 'success');
         $this->redirect('this');

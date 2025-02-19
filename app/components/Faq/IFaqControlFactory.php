@@ -8,6 +8,6 @@ interface IFaqControlFactory
     /**
      * @return FaqControl
      */
-    public function create();
+    public function create():FaqControl;
 
 }

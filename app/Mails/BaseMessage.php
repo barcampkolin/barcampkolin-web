@@ -29,7 +29,7 @@ abstract class BaseMessage
     /**
      * @param string $recipient
      */
-    public function addRecipient($recipient)
+    public function addRecipient($recipient): void
     {
         $this->recipients[] = $recipient;
     }
@@ -47,7 +47,7 @@ abstract class BaseMessage
     /**
      * @param array $parameters
      */
-    public function setTemplateParameters($parameters)
+    public function setTemplateParameters($parameters): void
     {
         $this->parameters = $parameters;
     }
@@ -57,7 +57,7 @@ abstract class BaseMessage
      * @param string $name
      * @param string $value
      */
-    public function addTemplateParameter($name, $value)
+    public function addTemplateParameter($name, $value): void
     {
         $this->parameters[$name] = $value;
     }
@@ -66,7 +66,7 @@ abstract class BaseMessage
     /**
      * @param MailerManager|null $manager
      */
-    public function setManager(MailerManager $manager = null)
+    public function setManager(MailerManager $manager = null): void
     {
         $this->manager = $manager;
     }
@@ -76,7 +76,7 @@ abstract class BaseMessage
      * Short way to send mail
      * @throws SendException
      */
-    public function send()
+    public function send(): void
     {
         if (!$this->manager) {
             throw new InvalidStateException('Mailer manager is not set, use any Mailer to send Message');
@@ -107,7 +107,7 @@ abstract class BaseMessage
     /**
      * @param string $subject
      */
-    public function setSubject($subject)
+    public function setSubject($subject): void
     {
         $this->subject = $subject;
     }

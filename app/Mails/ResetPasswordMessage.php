@@ -10,7 +10,7 @@ class ResetPasswordMessage extends UniversalDynamicMessage implements IMessage
      * @param array $mail
      * @param string $tokenUrl
      */
-    public function __construct($recipient, $mail, $tokenUrl)
+    public function __construct($recipient, array $mail, $tokenUrl)
     {
         $this->addRecipient($recipient);
         $this->setSubject($mail['subject']);

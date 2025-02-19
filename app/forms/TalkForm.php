@@ -12,17 +12,13 @@ class TalkForm
 {
     use Nette\SmartObject;
 
-    /** @var FormFactory */
-    private $factory;
-
 
     /**
      * RegisterConfereeForm constructor.
      * @param FormFactory $factory
      */
-    public function __construct(FormFactory $factory)
+    public function __construct(private FormFactory $factory)
     {
-        $this->factory = $factory;
     }
 
 
@@ -96,7 +92,7 @@ class TalkForm
 
         $form->addProtection('Prosím, odešlete formulář ještě jednou');
 
-        $form->onSuccess[] = function (Form $form, $values) use ($talk, $onSuccess) {
+        $form->onSuccess[] = function (Form $form, $values) use ($talk, $onSuccess): void {
             if ($talk === null) {
                 $talk = new Talk();
             }
@@ -119,7 +115,7 @@ class TalkForm
             try {
                 $extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
                 $values += $this->mapFields($extended, $this->extendedFieldsMap());
-            } catch (JsonException $e) {
+            } catch (JsonException) {
                 // void
             }
             $form->setDefaults($values);
@@ -136,7 +132,7 @@ class TalkForm
      * @param $map
      * @return array
      */
-    private function mapFields($inputValues, $map)
+    private function mapFields($inputValues, array $map): array
     {
         $outputValues = [];
 
@@ -165,7 +161,7 @@ class TalkForm
      * @param $map
      * @return array
      */
-    private function reverseMapFields($inputValues, $map)
+    private function reverseMapFields($inputValues, array $map): array
     {
         $outputValues = [];
 
@@ -186,7 +182,7 @@ class TalkForm
     /**
      * @return array
      */
-    private function extendedFieldsMap()
+    private function extendedFieldsMap(): array
     {
         return [
             'requested_duration' => 'duration',

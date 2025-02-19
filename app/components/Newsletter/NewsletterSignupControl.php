@@ -11,25 +11,18 @@ use Nette\Utils\ArrayHash;
 class NewsletterSignupControl extends Control
 {
     /**
-     * @var NewsletterSignupManager
-     */
-    private $manager;
-
-
-    /**
      * NewsletterSignupControl constructor.
-     * @param NewsletterSignupManager $signupManager
+     * @param NewsletterSignupManager $manager
      */
-    public function __construct(NewsletterSignupManager $signupManager)
+    public function __construct(private readonly NewsletterSignupManager $manager)
     {
-        $this->manager = $signupManager;
     }
 
 
     /**
      *
      */
-    public function render()
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/NewsletterSignup.latte');
         $this->template->render();
@@ -39,7 +32,7 @@ class NewsletterSignupControl extends Control
     /**
      * @return Form
      */
-    protected function createComponentForm()
+    protected function createComponentForm(): \Nette\Application\UI\Form
     {
         $form = new Form();
         $form->addEmail('email', 'E-mail')
@@ -47,7 +40,7 @@ class NewsletterSignupControl extends Control
             ->addRule(Form::EMAIL, 'Toto není platná e-mailová adresa');
         $form->addSubmit('submit', 'Přihlásit odběr');
 
-        $form->onSuccess[] = [$this, 'formSucceeded'];
+        $form->onSuccess[] = $this->formSucceeded(...);
 
         return $form;
     }
@@ -58,13 +51,13 @@ class NewsletterSignupControl extends Control
      * @param ArrayHash $values
      * @throws \Nette\Application\AbortException
      */
-    public function formSucceeded(Form $form, $values)
+    public function formSucceeded(Form $form, $values): void
     {
         try {
             $this->manager->add($values->email, 'Subscribed by newsletter form');
             $this->presenter->flashMessage('Váš e-mail jsme přidali k příjemcům zpráv o Barcampu');
             $this->presenter->redirect(':Homepage:');
-        } catch (DuplicateNameException $e) {
+        } catch (DuplicateNameException) {
             $form['email']->addError('Tento e-mail je již přihlášen.');
         }
     }

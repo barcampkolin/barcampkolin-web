@@ -11,15 +11,8 @@ use Nette\Utils\Strings;
 class AvatarStorage
 {
 
-    /**
-     * @var StoragePrefix
-     */
-    private $storagePrefix;
-
-
-    public function __construct(StoragePrefix $storagePrefix)
+    public function __construct(private readonly StoragePrefix $storagePrefix)
     {
-        $this->storagePrefix = $storagePrefix;
     }
 
 
@@ -34,7 +27,7 @@ class AvatarStorage
         $name = Strings::truncate(Strings::webalize($name ?? $this->getRandom()), 20, '');
         $url = [$this->saveImage($file, $name)];
 
-        $extension = explode('/', $file->getContentType())[1];
+        $extension = explode('/', (string) $file->getContentType())[1];
         $filename = $this->getAttributedFilename($name, 'original', $extension);
         $file->move($this->getStorageFilename($filename));
 
@@ -69,7 +62,7 @@ class AvatarStorage
     }
 
 
-    private function getStorageFilename($filename): string
+    private function getStorageFilename(string $filename): string
     {
         $uploadDir = $this->storagePrefix->getStoragePath();
         FileSystem::createDir($uploadDir);
@@ -77,7 +70,7 @@ class AvatarStorage
     }
 
 
-    private function getUrl($filename)
+    private function getUrl(string $filename): string
     {
         return $this->storagePrefix->getUrlPath() . '/' . $filename;
     }

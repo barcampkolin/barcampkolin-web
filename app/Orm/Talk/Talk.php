@@ -38,7 +38,7 @@ class Talk extends Entity
         if (is_null($item)) {
             return $extended;
         } else {
-            return isset($extended[$item]) ? $extended[$item] : $default;
+            return $extended[$item] ?? $default;
         }
     }
 
@@ -48,7 +48,7 @@ class Talk extends Entity
      * @param string|null $item
      * @throws JsonException
      */
-    public function setExpandedExtenstios($value, $item = null)
+    public function setExpandedExtenstios($value, $item = null): void
     {
         if (is_null($item)) {
             $extended = $value;
@@ -75,7 +75,7 @@ class Talk extends Entity
      * @param array $links
      * @throws JsonException
      */
-    private function setLinks(array $links)
+    private function setLinks(array $links): void
     {
         $this->setExpandedExtenstios($links, 'links');
     }
@@ -84,11 +84,11 @@ class Talk extends Entity
     public function getLinksByType($type)
     {
         $links = $this->getLinks();
-        return isset($links[$type]) ? $links[$type] : [];
+        return $links[$type] ?? [];
     }
 
 
-    public function setLinksByType($type, array $items)
+    public function setLinksByType($type, array $items): void
     {
         $links = $this->getLinks();
         $links[$type] = $items;

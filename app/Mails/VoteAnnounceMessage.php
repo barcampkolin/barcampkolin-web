@@ -9,7 +9,7 @@ class VoteAnnounceMessage extends UniversalDynamicMessage implements IMessage
      * @param string $recipient
      * @param array $mail
      */
-    public function __construct($recipient, $mail)
+    public function __construct($recipient, array $mail)
     {
         $this->addRecipient($recipient);
         $this->setSubject($mail['subject']);

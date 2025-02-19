@@ -12,17 +12,13 @@ class ConfereeForm
 {
     use SmartObject;
 
-    /** @var FormFactory */
-    private $factory;
-
 
     /**
      * RegisterConfereeForm constructor.
      * @param FormFactory $factory
      */
-    public function __construct(FormFactory $factory)
+    public function __construct(private FormFactory $factory)
     {
-        $this->factory = $factory;
     }
 
 
@@ -75,7 +71,7 @@ class ConfereeForm
 
         $form->addProtection('Prosím, odešlete formulář ještě jednou');
 
-        $form->onSuccess[] = function (Form $form, $values) use ($conferee, $onSuccess) {
+        $form->onSuccess[] = function (Form $form, $values) use ($conferee, $onSuccess): void {
             if ($conferee === null) {
                 $conferee = new Conferee();
             }
@@ -102,7 +98,7 @@ class ConfereeForm
                 $extended = Json::decode($conferee->extended, Json::FORCE_ARRAY);
                 $values['extendedCompany'] = $extended['company'] ?? null;
                 $values['extendedCompanyPosition'] = $extended['position'] ?? null;
-            } catch (JsonException $e) {
+            } catch (JsonException) {
                 // void
             }
             $form->setDefaults($values);

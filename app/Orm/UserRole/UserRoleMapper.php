@@ -2,15 +2,10 @@
 
 namespace App\Orm;
 
-use Nextras\Orm\Mapper\Mapper;
+use Nextras\Dbal\Platforms\Data\Fqn;
+use Nextras\Orm\Mapper\Dbal\DbalMapper;
 
-class UserRoleMapper extends Mapper
+class UserRoleMapper extends DbalMapper
 {
     protected $tableName = 'user_role';
-
-    protected function createStorageReflection()
-    {
-        $reflection = parent::createStorageReflection();
-        return $reflection;
-    }
 }

@@ -11,18 +11,11 @@ use Nette\Http\IResponse;
 class ArchivedPresenter extends BasePresenter
 {
     /**
-     * @var ArchiveManager
-     */
-    private $archiveManager;
-
-
-    /**
      * @param ArchiveManager $archiveManager
      */
-    public function __construct(ArchiveManager $archiveManager)
+    public function __construct(private readonly ArchiveManager $archiveManager)
     {
         parent::__construct();
-        $this->archiveManager = $archiveManager;
     }
 
 
@@ -32,7 +25,7 @@ class ArchivedPresenter extends BasePresenter
      * @throws BadRequestException
      * @throws \Nette\Application\AbortException
      */
-    public function actionRender($year, $page)
+    public function actionRender($year, $page): void
     {
         try {
             $url = "/$year/$page";
@@ -49,7 +42,7 @@ class ArchivedPresenter extends BasePresenter
     }
 
 
-    public function renderList()
+    public function renderList(): void
     {
         $this->template->archivedYears = $this->archiveManager->getArchivedYears();
     }

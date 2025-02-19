@@ -17,19 +17,13 @@ class Email
 {
     const PLATFORM_KEY = 'email';
 
-    /**
-     * @var IdentityManager
-     */
-    private $identityManager;
-
 
     /**
      * Email constructor.
      * @param IdentityManager $identityManager
      */
-    public function __construct(IdentityManager $identityManager)
+    public function __construct(private readonly IdentityManager $identityManager)
     {
-        $this->identityManager = $identityManager;
     }
 
 
@@ -45,7 +39,7 @@ class Email
         try {
             /** @var Identity $identity */
             $identity = $this->getIdentityByEmail($email);
-        } catch (IdentityNotFoundException $e) {
+        } catch (IdentityNotFoundException) {
             throw new UserNotFoundException();
         }
 
@@ -68,7 +62,7 @@ class Email
         try {
             /** @var Identity $identity */
             $identity = $this->getIdentityByEmail($email);
-        } catch (IdentityNotFoundException $e) {
+        } catch (IdentityNotFoundException) {
             throw new UserNotFoundException();
         }
 
@@ -85,7 +79,7 @@ class Email
      */
     protected function verifyIdentityPassword(Identity $identity, $password)
     {
-        if (password_verify($password, $identity->token) === false) {
+        if (password_verify($password, (string) $identity->token) === false) {
             throw new PasswordMismatchException();
         }
     }
@@ -126,14 +120,14 @@ class Email
      * @return Identity
      * @throws DuplicateNameException
      */
-    public function createNewIdentity($email, $password)
+    public function createNewIdentity($email, $password): \App\Orm\Identity
     {
         $identity = null;
 
         try {
             /** @var Identity $identity */
             $identity = $this->getIdentityByEmail($email);
-        } catch (IdentityNotFoundException $e) {
+        } catch (IdentityNotFoundException) {
             // required
         }
 
@@ -157,7 +151,7 @@ class Email
      * @throws IdentityNotFoundException
      * @throws \Nette\Utils\JsonException
      */
-    public function createResetPasswordToken($email)
+    public function createResetPasswordToken($email): string
     {
         $identity = $this->getIdentityByEmail($email);
 
@@ -184,7 +178,7 @@ class Email
      * @param Identity $identity
      * @throws \Nette\Utils\JsonException
      */
-    public function invalidateResetPasswordToken(Identity $identity)
+    public function invalidateResetPasswordToken(Identity $identity): void
     {
         $details = [];
         if ($identity->identity) {
@@ -202,7 +196,7 @@ class Email
      * @param Identity $identity
      * @param string $password
      */
-    public function setPassword(Identity $identity, $password)
+    public function setPassword(Identity $identity, $password): void
     {
         $identity->token = password_hash($password, PASSWORD_DEFAULT);
         $this->identityManager->save($identity);

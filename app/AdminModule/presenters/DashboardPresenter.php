@@ -20,10 +20,7 @@ class DashboardPresenter extends BasePresenter
     const NOFLAG = 0;
     const REQUIRED = 1;
 
-    /**
-     * @var array
-     */
-    private $simpleConfigs = [
+    private array $simpleConfigs = [
         Event::COUNTS_CONFEREE => [
             'int',
             'Počet účastníků',
@@ -76,10 +73,7 @@ class DashboardPresenter extends BasePresenter
         Event::URL_PARTNER_PROPOSAL => ['url', 'URL na Informace pro partnery (PDF)'],
     ];
 
-    /**
-     * @var array
-     */
-    private $featureConfigs = [
+    private array $featureConfigs = [
         Event::FEATURE_CONFEREE => ['bool', 'Povolit registraci účastníků'],
         Event::FEATURE_TALK => ['bool', 'Povolit zapisování přednášek'],
         Event::FEATURE_TALK_EDIT => ['bool', 'Povolit editace zapsaných přednášek'],
@@ -100,23 +94,10 @@ class DashboardPresenter extends BasePresenter
         Event::FEATURE_REPORT => ['bool', 'Zobrazit výstupy (YouTube/Reporty)'],
     ];
 
-    private $visualDates = [
+    private array $visualDates = [
         Event::SCHEDULE_VISUAL_DATE_BEGIN => 'Začátek',
         Event::SCHEDULE_VISUAL_DATE_END => 'Konec'
     ];
-
-    /**
-     * @var ConfigManager
-     */
-    private $configManager;
-    /**
-     * @var ScheduleManager
-     */
-    private $scheduleManager;
-    /**
-     * @var IEnumeratorFormControlFactory
-     */
-    private $enumeratorFormControlFactory;
 
 
     /**
@@ -126,21 +107,18 @@ class DashboardPresenter extends BasePresenter
      * @param IEnumeratorFormControlFactory $enumeratorFormControlFactory
      */
     public function __construct(
-        ConfigManager $configManager,
-        ScheduleManager $scheduleManager,
-        IEnumeratorFormControlFactory $enumeratorFormControlFactory
+        private readonly ConfigManager $configManager,
+        private readonly ScheduleManager $scheduleManager,
+        private readonly IEnumeratorFormControlFactory $enumeratorFormControlFactory
     ) {
         parent::__construct();
-        $this->configManager = $configManager;
-        $this->scheduleManager = $scheduleManager;
-        $this->enumeratorFormControlFactory = $enumeratorFormControlFactory;
     }
 
 
     /**
      *
      */
-    public function actionEnums()
+    public function actionEnums(): void
     {
         $this['faq'] = $this->enumeratorFormControlFactory->create(EnumeratorManager::SET_FAQS);
         $this['categories'] = $this->enumeratorFormControlFactory->create(EnumeratorManager::SET_TALK_CATEGORIES);
@@ -152,7 +130,7 @@ class DashboardPresenter extends BasePresenter
     /**
      * @throws \Nette\Utils\JsonException
      */
-    public function renderSchedule()
+    public function renderSchedule(): void
     {
         $steps = $this->scheduleManager->getSteps();
         $currentStepIndex = $this->scheduleManager->getCurrentStepIndex();
@@ -168,7 +146,7 @@ class DashboardPresenter extends BasePresenter
      * @throws \Nette\Utils\JsonException
      * @throws \Nette\Application\AbortException
      */
-    public function handleScheduleStepActivate($step)
+    public function handleScheduleStepActivate($step): void
     {
         $this->scheduleManager->changeCurrentStep($step);
 
@@ -182,7 +160,7 @@ class DashboardPresenter extends BasePresenter
      * @return Form
      * @throws \Nette\Utils\JsonException
      */
-    public function createComponentConfigForm()
+    public function createComponentConfigForm(): \Nette\Application\UI\Form
     {
         $form = new Form();
         foreach ($this->simpleConfigs as $key => $data) {
@@ -228,7 +206,7 @@ class DashboardPresenter extends BasePresenter
         }
         $form->addSubmit('submit', 'Uložit');
         $form->addProtection('Prosím, odešlete tento formulář ještě jednou (bezpečnostní kontrola)');
-        $form->onSuccess[] = [$this, 'onConfigFormSuccess'];
+        $form->onSuccess[] = $this->onConfigFormSuccess(...);
         return $form;
     }
 
@@ -239,7 +217,7 @@ class DashboardPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function onConfigFormSuccess(Form $form, $values)
+    public function onConfigFormSuccess(Form $form, $values): void
     {
         foreach ($this->simpleConfigs as $key => $data) {
             $id = $this->ideable($key);
@@ -253,7 +231,7 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    public function createComponentScheduleConfigForm()
+    public function createComponentScheduleConfigForm(): \Nette\Application\UI\Form
     {
         $form = new Form();
 
@@ -262,18 +240,13 @@ class DashboardPresenter extends BasePresenter
             $formId = $this->ideable($key);
             $item = null;
             $isRequired = isset($data[2]) && ($data[2] & self::REQUIRED);
-            switch ($data[0]) {
-                case 'bool':
-                    $item = $form->addCheckbox($formId, $data[1])
-                        ->setDefaultValue($this->configManager->get($key, ''));
-                    break;
-                case 'select':
-                    $item = $form->addSelect($formId, $data[1], $data[4])
-                        ->setDefaultValue($this->configManager->get($key, ''));
-                    break;
-                default:
-                    throw new \LogicException('Unknown form item type reqested');
-            }
+            $item = match ($data[0]) {
+                'bool' => $form->addCheckbox($formId, $data[1])
+                    ->setDefaultValue($this->configManager->get($key, '')),
+                'select' => $form->addSelect($formId, $data[1], $data[4])
+                    ->setDefaultValue($this->configManager->get($key, '')),
+                default => throw new \LogicException('Unknown form item type reqested'),
+            };
             if ($isRequired) {
                 $item->setRequired("Pole '$data[1]' musí být vyplněno.'");
             }
@@ -296,7 +269,7 @@ class DashboardPresenter extends BasePresenter
         $form->addSubmit('submit', 'Uložit');
         $form->addProtection('Prosím, odešlete tento formulář ještě jednou (bezpečnostní kontrola)');
 
-        $form->onSuccess[] = [$this, 'onScheduleConfigFormSuccess'];
+        $form->onSuccess[] = $this->onScheduleConfigFormSuccess(...);
 
         return $form;
     }
@@ -308,7 +281,7 @@ class DashboardPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function onScheduleConfigFormSuccess(Form $form, $values)
+    public function onScheduleConfigFormSuccess(Form $form, $values): void
     {
         $bothConfigs = array_merge($this->featureConfigs, $this->visualDates);
 
@@ -328,7 +301,7 @@ class DashboardPresenter extends BasePresenter
      * @return Form
      * @throws \Nette\Utils\JsonException
      */
-    public function createComponentScheduleForm()
+    public function createComponentScheduleForm(): \Nette\Application\UI\Form
     {
         $steps = $this->scheduleManager->getSteps(true);
 
@@ -338,24 +311,17 @@ class DashboardPresenter extends BasePresenter
             $form->addGroup(sprintf('Krok č. %d: %s', $stepNum + 1, $step['name']));
             foreach ($step['config'] as $config) {
                 $fomId = $this->ideable($config['id']);
-                switch ($config['type']) {
-                    case 'bool':
-                        $item = $form->addCheckbox($fomId, $config['name'])
-                            ->setDefaultValue($config['value']);
-                        break;
-                    case 'select':
-                        $item = $form->addSelect($fomId, $config['name'], $config['enum'])
-                            ->setDefaultValue($config['value']);
-                        break;
-                    case 'datetime-local':
-                        $item = $form->addText($fomId, $config['name'])
-                            ->setType($config['type'])
-                            ->setDefaultValue($config['value'] ? $this->dateToHtml5($config['value']) : null)
-                            ->getControlPrototype()->addAttributes(['step'=>1]);
-                        break;
-                    default:
-                        throw new \LogicException("Invalid form field type: $config[type]");
-                }
+                $item = match ($config['type']) {
+                    'bool' => $form->addCheckbox($fomId, $config['name'])
+                        ->setDefaultValue($config['value']),
+                    'select' => $form->addSelect($fomId, $config['name'], $config['enum'])
+                        ->setDefaultValue($config['value']),
+                    'datetime-local' => $form->addText($fomId, $config['name'])
+                        ->setType($config['type'])
+                        ->setDefaultValue($config['value'] ? $this->dateToHtml5($config['value']) : null)
+                        ->getControlPrototype()->addAttributes(['step'=>1]),
+                    default => throw new \LogicException("Invalid form field type: $config[type]"),
+                };
                 if ($config['isRequired']) {
                     $item->setRequired("Pole '$config[name]' v sekci '$step[name]' je povinné, ale není vyplněno.'");
                 }
@@ -365,7 +331,7 @@ class DashboardPresenter extends BasePresenter
         $form->addGroup();
         $form->addSubmit('submit', 'Uložit');
         $form->addProtection('Prosím, odešlete tento formulář ještě jednou (bezpečnostní kontrola)');
-        $form->onSuccess[] = [$this, 'onScheduleFormSuccess'];
+        $form->onSuccess[] = $this->onScheduleFormSuccess(...);
         return $form;
     }
 
@@ -376,7 +342,7 @@ class DashboardPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function onScheduleFormSuccess(Form $form, $values)
+    public function onScheduleFormSuccess(Form $form, array $values): void
     {
         $steps = $this->scheduleManager->getSteps(false);
 
@@ -396,7 +362,7 @@ class DashboardPresenter extends BasePresenter
      * @param string $key
      * @return string
      */
-    private function ideable($key)
+    private function ideable($key): string
     {
         return str_replace('.', '', $key);
     }
@@ -406,7 +372,7 @@ class DashboardPresenter extends BasePresenter
      * @param string $date
      * @return string
      */
-    private function dateToHtml5($date)
+    private function dateToHtml5($date): string
     {
         return (new DateTime($date))->format('Y-m-d\TH:i:s');
     }

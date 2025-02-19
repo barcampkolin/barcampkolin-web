@@ -7,25 +7,18 @@ use App\Model\EventInfoProvider;
 class SignupButtonsFactory
 {
     /**
-     * @var EventInfoProvider
-     */
-    private $eventInfoProvider;
-
-
-    /**
      * SignupButtonsFactory constructor.
      * @param EventInfoProvider $eventInfoProvider
      */
-    public function __construct(EventInfoProvider $eventInfoProvider)
+    public function __construct(private readonly EventInfoProvider $eventInfoProvider)
     {
-        $this->eventInfoProvider = $eventInfoProvider;
     }
 
 
     /**
      * @return SignupButtonsControl
      */
-    public function create()
+    public function create(): \App\Components\SignupButtons\SignupButtonsControl
     {
         return new SignupButtonsControl($this->eventInfoProvider);
     }

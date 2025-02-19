@@ -14,20 +14,12 @@ class SignInFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var FormFactory */
-    private $factory;
-
     /** @var User */
     private $user;
 
-    /** @var EmailAuthenticator */
-    private $authenticator;
 
-
-    public function __construct(FormFactory $factory, EmailAuthenticator $authenticator)
+    public function __construct(private FormFactory $factory, private EmailAuthenticator $authenticator)
     {
-        $this->factory = $factory;
-        $this->authenticator = $authenticator;
     }
 
 
@@ -48,7 +40,7 @@ class SignInFormFactory
             ->setOption('itemClass', 'text-center')
             ->getControlPrototype()->setName('button')->setText('Přihlásit');
 
-        $form->onSuccess[] = function (Form $form, $values) use ($onSuccess) {
+        $form->onSuccess[] = function (Form $form, $values) use ($onSuccess): void {
             try {
                 $identity = $this->authenticator->getIdentityByAuth($values->email, $values->password);
                 $onSuccess($identity);

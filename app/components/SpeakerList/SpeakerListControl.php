@@ -11,31 +11,19 @@ class SpeakerListControl extends Control
 {
 
     /**
-     * @var TalkManager
-     */
-    private $talkManager;
-    /**
-     * @var EventInfoProvider
-     */
-    private $eventInfoProvider;
-
-
-    /**
      * SpeakerListControl constructor.
      * @param TalkManager $talkManager
      * @param EventInfoProvider $eventInfoProvider
      */
-    public function __construct(TalkManager $talkManager, EventInfoProvider $eventInfoProvider)
+    public function __construct(private readonly TalkManager $talkManager, private readonly EventInfoProvider $eventInfoProvider)
     {
-        $this->talkManager = $talkManager;
-        $this->eventInfoProvider = $eventInfoProvider;
     }
 
 
     /**
      * @throws \Nette\Utils\JsonException
      */
-    public function render()
+    public function render(): void
     {
         $talks = $this->talkManager->findActive();
 

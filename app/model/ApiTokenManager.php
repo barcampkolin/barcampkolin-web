@@ -5,24 +5,12 @@ namespace App\Model;
 class ApiTokenManager
 {
     /**
-     * @var ConfigManager
-     */
-    private $configManager;
-    /**
-     * @var string
-     */
-    private $secretKey;
-
-
-    /**
      * ApiTokenManager constructor.
      * @param string $secretKey
      * @param ConfigManager $configManager
      */
-    public function __construct($secretKey, ConfigManager $configManager)
+    public function __construct(private $secretKey, private readonly ConfigManager $configManager)
     {
-        $this->configManager = $configManager;
-        $this->secretKey = $secretKey;
     }
 
 
@@ -31,7 +19,7 @@ class ApiTokenManager
      * @throws TokenInvalidException
      * @throws \Nette\Utils\JsonException
      */
-    public function validateToken($token)
+    public function validateToken($token): void
     {
         if (empty($token) || !$this->isTokenValid($token)) {
             throw new TokenInvalidException('Token invalid');
@@ -44,9 +32,9 @@ class ApiTokenManager
      * @return bool
      * @throws \Nette\Utils\JsonException
      */
-    private function isTokenValid($token)
+    private function isTokenValid($token): bool
     {
-        $hash = hash_hmac('sha256', $token, $this->secretKey);
+        $hash = hash_hmac('sha256', (string) $token, $this->secretKey);
 
         $hashes = $this->getTokenHashes();
 

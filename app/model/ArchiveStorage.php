@@ -9,14 +9,10 @@ use Nette\Utils\Strings;
 class ArchiveStorage
 {
     /**
-     * @var string
+     * @param string $storagePrefix
      */
-    private $storagePrefix;
-
-
-    public function __construct($storagePrefix)
+    public function __construct(private $storagePrefix)
     {
-        $this->storagePrefix = $storagePrefix;
     }
 
 
@@ -26,7 +22,7 @@ class ArchiveStorage
      * @return string
      * @throws \Nette\IOException
      */
-    public function savePage($fileName, $content)
+    public function savePage($fileName, string $content): void
     {
         $filename = $this->getFilename($fileName);
 
@@ -36,7 +32,7 @@ class ArchiveStorage
     }
 
 
-    public function loadPage($fileName)
+    public function loadPage($fileName): string
     {
         $filename = $this->getFilename($fileName);
 
@@ -55,7 +51,7 @@ class ArchiveStorage
      * @param string $ext
      * @return string
      */
-    private function getFilename($name, $ext = 'html')
+    private function getFilename(string $name, string $ext = 'html'): string
     {
         return Strings::webalize($name) . '.' . $ext;
     }
@@ -66,7 +62,7 @@ class ArchiveStorage
      * @return string
      * @throws \Nette\IOException
      */
-    private function getStorageFilename($filename)
+    private function getStorageFilename(string $filename): string
     {
         $uploadDir = $this->storagePrefix;
         FileSystem::createDir($uploadDir);

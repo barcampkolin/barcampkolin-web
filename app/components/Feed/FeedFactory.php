@@ -7,25 +7,18 @@ use App\Model\WordpressPostReader;
 class FeedFactory
 {
     /**
-     * @var WordpressPostReader
-     */
-    private $postReader;
-
-
-    /**
      * FeedFactory constructor.
      * @param WordpressPostReader $postReader
      */
-    public function __construct(WordpressPostReader $postReader)
+    public function __construct(private readonly WordpressPostReader $postReader)
     {
-        $this->postReader = $postReader;
     }
 
 
     /**
      * @return FeedControl
      */
-    public function create()
+    public function create(): \App\Components\Feed\FeedControl
     {
         return new FeedControl($this->postReader);
     }

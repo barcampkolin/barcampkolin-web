@@ -13,15 +13,8 @@ use Ublaboo\DataGrid\DataGrid;
 
 class FilePresenter extends BasePresenter
 {
-    /**
-     * @var FileManager
-     */
-    private $fileManager;
-
-
-    public function __construct(FileManager $fileManager)
+    public function __construct(private readonly FileManager $fileManager)
     {
-        $this->fileManager = $fileManager;
     }
 
 
@@ -31,7 +24,7 @@ class FilePresenter extends BasePresenter
     }
 
 
-    public function createComponentFileDatagrid($name)
+    public function createComponentFileDatagrid($name): \Ublaboo\DataGrid\DataGrid
     {
         $grid = new DataGrid($this, $name);
         DataGrid::$iconPrefix = 'glyphicon glyphicon-';
@@ -43,23 +36,21 @@ class FilePresenter extends BasePresenter
             ->setIcon('cloud-upload');
 
 
-        $grid->addColumnText('name', 'Název')->setRenderer(function ($item) {
+        $grid->addColumnText('name', 'Název')->setRenderer(fn($item) =>
             /** @var File $item */
-            return Html::el('a')->href($item->url)->addAttributes([
-                'target' => '_blank',
-                'rel' => 'noopener'
-            ])->setText($item->name);
-        });
+            Html::el('a')->href($item->url)->addAttributes([
+            'target' => '_blank',
+            'rel' => 'noopener'
+        ])->setText($item->name));
 
         $grid->addColumnText('url', 'Veřejná URL');
 
         $grid->addAction('delete', 'Smazat', 'deleteFile!')->setIcon('trash')
             ->setClass('btn btn-xs btn-danger ajax')
             ->setConfirmation(new StringConfirmation('Opravdu chcete smazat soubor %s?', 'name'))
-            ->setRenderCondition(function ($item) {
+            ->setRenderCondition(fn($item) =>
                 /** @var File $item */
-                return $this->fileManager->isManagable($item->url);
-            });
+                $this->fileManager->isManagable($item->url));
 
         return $grid;
     }
@@ -70,7 +61,7 @@ class FilePresenter extends BasePresenter
      * @secured
      * @throws \Nette\Application\AbortException
      */
-    public function handleDeleteFile($id)
+    public function handleDeleteFile($id): void
     {
         $file = $this->fileManager->getById($id);
 
@@ -84,7 +75,7 @@ class FilePresenter extends BasePresenter
     }
 
 
-    public function createComponentUploadForm()
+    public function createComponentUploadForm(): \Nette\Application\UI\Form
     {
         $form = new Form();
 
@@ -101,13 +92,13 @@ class FilePresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->onSuccess[] = [$this, 'onUploadFormSuccess'];
+        $form->onSuccess[] = $this->onUploadFormSuccess(...);
 
         return $form;
     }
 
 
-    public function onUploadFormSuccess(Form $form, ArrayHash $values)
+    public function onUploadFormSuccess(Form $form, ArrayHash $values): void
     {
         $name = empty((string)$values->name) ? null : $values->name;
         $file = $values->file;

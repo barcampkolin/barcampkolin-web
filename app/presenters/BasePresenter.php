@@ -21,17 +21,19 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     /**
      * @var bool $isArchivationProcess True when archivation process is currently running & in progress
      */
-    private $isArchivationProcess;
+    private ?bool $isArchivationProcess = null;
+    private Nette\DI\Container $container;
 
 
     /**
      * @param EventInfoProvider $eventInfo
      * @param ArchiveManager $archiveManager
      */
-    public function inject(EventInfoProvider $eventInfo, ArchiveManager $archiveManager)
+    public function inject(EventInfoProvider $eventInfo, ArchiveManager $archiveManager, Nette\DI\Container $container): void
     {
         $this->eventInfo = $eventInfo;
         $this->isArchivationProcess = $archiveManager->isArchivationProcess();
+        $this->container = $container;
     }
 
 
@@ -42,7 +44,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     protected function beforeRender()
     {
         parent::beforeRender();
-        $parameters = $this->context->getParameters();
+        $parameters = $this->container->getParameters();
 
         $dates = $this->eventInfo->getDates();
 

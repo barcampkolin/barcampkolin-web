@@ -12,13 +12,10 @@ class BasePresenter extends Presenter
 {
     use SecuredLinksPresenterTrait;
 
-    /**
-     * @var ApiTokenManager
-     */
-    private $apiTokenManager;
+    private ?\App\Model\ApiTokenManager $apiTokenManager = null;
 
 
-    public function injectApiTokenManager(ApiTokenManager $apiTokenManager)
+    public function injectApiTokenManager(ApiTokenManager $apiTokenManager): void
     {
         $this->apiTokenManager = $apiTokenManager;
     }
@@ -35,7 +32,7 @@ class BasePresenter extends Presenter
 
         try {
             $this->apiTokenManager->validateToken($token);
-        } catch (TokenInvalidException $e) {
+        } catch (TokenInvalidException) {
             $this->sendErrorResponse('Authentication failed', Response::S403_FORBIDDEN);
         }
     }

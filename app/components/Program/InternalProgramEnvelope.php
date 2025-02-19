@@ -12,11 +12,6 @@ use App\Orm\Program;
 class InternalProgramEnvelope extends InternalProgram
 {
     /**
-     * @var Program
-     */
-    private $program;
-
-    /**
      * @var string
      */
     private $defaultTitle;
@@ -26,9 +21,8 @@ class InternalProgramEnvelope extends InternalProgram
      * InternalProgramEnvelope constructor.
      * @param Program $program
      */
-    public function __construct(Program $program)
+    public function __construct(private readonly Program $program)
     {
-        $this->program = $program;
     }
 
 
@@ -95,7 +89,7 @@ class InternalProgramEnvelope extends InternalProgram
     /**
      * @return bool
      */
-    public function isTitleOverridden()
+    public function isTitleOverridden(): bool
     {
         return !empty($this->program->title);
     }
@@ -126,7 +120,7 @@ class InternalProgramEnvelope extends InternalProgram
     /**
      * @param string $defaultTitle
      */
-    public function setDefaultTitle($defaultTitle)
+    public function setDefaultTitle($defaultTitle): void
     {
         $this->defaultTitle = $defaultTitle;
     }

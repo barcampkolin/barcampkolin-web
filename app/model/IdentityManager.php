@@ -30,7 +30,7 @@ class IdentityManager
      * @param $id
      * @return mixed|\Nextras\Orm\Entity\IEntity|null
      */
-    public function getById($id)
+    public function getById($id): ?\Nextras\Orm\Entity\IEntity
     {
         return $this->identityRepository->getById($id);
     }
@@ -75,7 +75,7 @@ class IdentityManager
      * @param Identity $identity
      * @param bool $withCascade
      */
-    public function save(Identity $identity, $withCascade = true)
+    public function save(Identity $identity, bool $withCascade = true): void
     {
         $this->identityRepository->persistAndFlush($identity, $withCascade);
     }
@@ -84,7 +84,7 @@ class IdentityManager
     /**
      * @param Identity $identity
      */
-    public function remove(Identity $identity)
+    public function remove(Identity $identity): void
     {
         $this->identityRepository->removeAndFlush($identity);
     }

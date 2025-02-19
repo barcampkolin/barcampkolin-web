@@ -8,6 +8,6 @@ interface IPartnersControlFactory
     /**
      * @return PartnersControl
      */
-    public function create();
+    public function create(): PartnersControl;
 
 }

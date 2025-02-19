@@ -4,17 +4,14 @@ namespace App\Mails;
 
 class UniversalDynamicMessage extends BaseMessage implements IMessage
 {
-    /**
-     * @var MessageLatteStringTemplate
-     */
-    private $template;
+    private ?\App\Mails\MessageLatteStringTemplate $template = null;
 
 
     /**
      * @param array $mail
      * @return string
      */
-    private function injectLatteConnectors($mail)
+    private function injectLatteConnectors(array $mail): string
     {
 
         $format = <<<EOT
@@ -39,7 +36,7 @@ EOT;
     /**
      * @return ITemplate
      */
-    public function getTemplate()
+    public function getTemplate(): ?\App\Mails\MessageLatteStringTemplate
     {
         return $this->template;
     }
@@ -48,7 +45,7 @@ EOT;
     /**
      * @param MessageLatteStringTemplate $template
      */
-    public function setTemplate(MessageLatteStringTemplate $template)
+    public function setTemplate(MessageLatteStringTemplate $template): void
     {
         $this->template = $template;
     }
@@ -58,7 +55,7 @@ EOT;
      * @param array $mail
      * @param array $layout
      */
-    public function setTemlateFromString($mail, $layout = null)
+    public function setTemlateFromString(array $mail, $layout = null): void
     {
         $template = new MessageLatteStringTemplate();
 
@@ -75,7 +72,7 @@ EOT;
     /**
      * @param array $layout
      */
-    public function setLayout($layout)
+    public function setLayout(array $layout): void
     {
         $this->template->setLayout($layout['body']);
     }

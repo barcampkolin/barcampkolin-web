@@ -15,24 +15,12 @@ class ProgramControl extends Control
 {
 
     /**
-     * @var EventInfoProvider
-     */
-    private $infoProvider;
-    /**
-     * @var TalkManager
-     */
-    private $talkManager;
-
-
-    /**
      * ProgramControl constructor.
      * @param EventInfoProvider $infoProvider
      * @param TalkManager $talkManager
      */
-    public function __construct(EventInfoProvider $infoProvider, TalkManager $talkManager)
+    public function __construct(private readonly EventInfoProvider $infoProvider, private readonly TalkManager $talkManager)
     {
-        $this->infoProvider = $infoProvider;
-        $this->talkManager = $talkManager;
     }
 
 
@@ -41,7 +29,7 @@ class ProgramControl extends Control
      * @throws \App\Model\InvalidEnumeratorSetException
      * @throws \Exception
      */
-    public function render()
+    public function render(): void
     {
         $this->template->setFile(__DIR__ . '/Program.latte');
 
@@ -69,7 +57,7 @@ class ProgramControl extends Control
     /**
      * @return array
      */
-    private function getSortedItems()
+    private function getSortedItems(): array
     {
         $program = $this->talkManager->findAllProgram();
 
@@ -120,7 +108,7 @@ class ProgramControl extends Control
         }
 
         if ($roundWholeHour) {
-            $min = $min - ($min % 60);
+            $min -= $min % 60;
             $max = $max + 60 - (($max % 60) ?: 60);
         }
 
@@ -137,7 +125,7 @@ class ProgramControl extends Control
      * @return array
      * @throws \Exception
      */
-    private function getRenderableItems(array $sortedItems, ArrayHash $minMaxBorder)
+    private function getRenderableItems(array $sortedItems, ArrayHash $minMaxBorder): array
     {
         $renderableItems = [];
         foreach ($sortedItems as $roomKey => $roomItems) {
@@ -179,7 +167,10 @@ class ProgramControl extends Control
     }
 
 
-    private function getTimeRows(ArrayHash $minMaxBorder)
+    /**
+     * @return mixed[]
+     */
+    private function getTimeRows(ArrayHash $minMaxBorder): array
     {
         $rows = [];
 
@@ -201,7 +192,7 @@ class ProgramControl extends Control
      * @param int $minutes
      * @return InternalProgramVirtual
      */
-    private function getSpacer(\DateInterval $start, $minutes)
+    private function getSpacer(\DateInterval $start, float|int $minutes): \App\Components\Program\InternalProgramVirtual
     {
         return new InternalProgramVirtual('space', $start, $minutes);
     }
@@ -211,7 +202,7 @@ class ProgramControl extends Control
      * @param \DateInterval $dateInterval
      * @return int
      */
-    private function dateIntervalToMinutes(\DateInterval $dateInterval)
+    private function dateIntervalToMinutes(\DateInterval $dateInterval): int|float
     {
         $hours = intval($dateInterval->h);
 
@@ -228,7 +219,7 @@ class ProgramControl extends Control
      * @return \DateInterval
      * @throws \Exception
      */
-    private function minutesToDateInterval($minutes)
+    private function minutesToDateInterval($minutes): \DateInterval
     {
         $dateInterval = new \DateInterval('PT0H');
         $h = 0;
@@ -245,7 +236,7 @@ class ProgramControl extends Control
     }
 
 
-    private function formatClock(\DateInterval $dateInterval)
+    private function formatClock(\DateInterval $dateInterval): string
     {
         return $dateInterval->format('%H:%I');
     }

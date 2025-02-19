@@ -39,7 +39,7 @@ class UserManager
      * @param $id
      * @return User|null
      */
-    public function getById($id)
+    public function getById($id): ?\Nextras\Orm\Entity\IEntity
     {
         return $this->userRepository->getById($id);
     }
@@ -48,7 +48,7 @@ class UserManager
     /**
      * @param User $user
      */
-    public function save(User $user)
+    public function save(User $user): void
     {
         $this->userRepository->persistAndFlush($user);
     }
@@ -57,12 +57,12 @@ class UserManager
     /**
      * @param User $user
      */
-    public function remove(User $user)
+    public function remove(User $user): void
     {
         $this->userRepository->removeAndFlush($user);
     }
 
-    public function removeRole(UserRole $role)
+    public function removeRole(UserRole $role): void
     {
         $this->userRoleRepository->removeAndFlush($role);
     }

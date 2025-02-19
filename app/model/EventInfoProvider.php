@@ -45,24 +45,12 @@ class EventInfoProvider
 
 
     /**
-     * @var ConfigManager
-     */
-    private $config;
-    /**
-     * @var ConfereeManager
-     */
-    private $confereeManager;
-
-
-    /**
      * EventInfoProvider constructor.
      * @param ConfigManager $config
      * @param ConfereeManager $confereeManager
      */
-    public function __construct(ConfigManager $config, ConfereeManager $confereeManager)
+    public function __construct(private ConfigManager $config, private ConfereeManager $confereeManager)
     {
-        $this->config = $config;
-        $this->confereeManager = $confereeManager;
     }
 
 

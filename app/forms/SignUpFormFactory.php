@@ -13,22 +13,14 @@ class SignUpFormFactory
 
     const PASSWORD_MIN_LENGTH = 5;
 
-    /** @var FormFactory */
-    private $factory;
-
-    /** @var EmailAuthenticator */
-    private $authenticator;
-
 
     /**
      * SignUpFormFactory constructor.
      * @param FormFactory $factory
      * @param EmailAuthenticator $authenticator
      */
-    public function __construct(FormFactory $factory, EmailAuthenticator $authenticator)
+    public function __construct(private FormFactory $factory, private EmailAuthenticator $authenticator)
     {
-        $this->factory = $factory;
-        $this->authenticator = $authenticator;
     }
 
 
@@ -51,11 +43,11 @@ class SignUpFormFactory
             ->setOption('itemClass', 'text-center')
             ->getControlPrototype()->setName('button')->setText('Registrovat');
 
-        $form->onSuccess[] = function (Form $form, $values) use ($onSuccess) {
+        $form->onSuccess[] = function (Form $form, $values) use ($onSuccess): void {
             try {
                 $identity = $this->authenticator->createNewIdentity($values->email, $values->password);
                 $onSuccess($identity);
-            } catch (DuplicateNameException $e) {
+            } catch (DuplicateNameException) {
                 $form['email']->addError('Tento e-mail už u nás máte, zkuste se příhlásit');
                 return;
             }

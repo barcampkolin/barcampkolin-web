@@ -19,15 +19,7 @@ class EnumeratorManager
     const SET_TALK_CATEGORIES = 'talk_categories';
     const SET_TALK_ROOMS = 'talk_rooms';
 
-    /**
-     * @var ConfigManager
-     */
-    private $config;
-
-    /**
-     * @var array $sets
-     */
-    private static $sets = [
+    private static array $sets = [
         self::SET_FAQS,
         self::SET_TALK_DURATIONS,
         self::SET_TALK_CATEGORIES,
@@ -39,9 +31,8 @@ class EnumeratorManager
      * EnumeratorManager constructor.
      * @param ConfigManager $config
      */
-    public function __construct(ConfigManager $config)
+    public function __construct(private ConfigManager $config)
     {
-        $this->config = $config;
     }
 
 
@@ -49,7 +40,7 @@ class EnumeratorManager
      * @param string $set
      * @throws InvalidEnumeratorSetException
      */
-    public static function validateSet($set)
+    public static function validateSet($set): void
     {
         if (!in_array($set, self::$sets, true)) {
             throw new InvalidEnumeratorSetException("Set \"$set\" is invalid");
@@ -63,7 +54,7 @@ class EnumeratorManager
      * @throws InvalidEnumeratorSetException
      * @throws \Nette\Utils\JsonException
      */
-    public function get($set)
+    public function get($set): array
     {
         self::validateSet($set);
         return (array)$this->config->get($set, []);
@@ -76,7 +67,7 @@ class EnumeratorManager
      * @throws InvalidEnumeratorSetException
      * @throws \Nette\Utils\JsonException
      */
-    public function getPairs($set)
+    public function getPairs($set): array
     {
         self::validateSet($set);
         $arr = (array)$this->config->get($set, []);
@@ -94,7 +85,7 @@ class EnumeratorManager
      * @throws InvalidEnumeratorSetException
      * @throws \Nette\Utils\JsonException
      */
-    public function set($set, $faqs)
+    public function set($set, $faqs): void
     {
         self::validateSet($set);
         $this->config->set($set, $faqs);

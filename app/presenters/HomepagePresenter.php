@@ -22,62 +22,25 @@ use App\Components\SpeakerList\SpeakerListControl;
 class HomepagePresenter extends BasePresenter
 {
     /**
-     * @var IScheduleControlFactory
-     */
-    private $scheduleFactory;
-    /**
-     * @var SignupButtonsFactory
-     */
-    private $buttonsFactory;
-    /**
-     * @var NewsletterSignupFactory
-     */
-    private $newsletterFactory;
-    /**
-     * @var IFaqControlFactory
-     */
-    private $faqFactory;
-    /**
-     * @var ISpeakerListControlFactory
-     */
-    private $speakerListFactory;
-    /**
-     * @var IProgramControlFactory
-     */
-    private $programFactory;
-    /**
-     * @var IPartnersControlFactory
-     */
-    private $partnersControlFactory;
-
-
-    /**
      * HomepagePresenter constructor.
      * @param IScheduleControlFactory $scheduleFactory
      * @param SignupButtonsFactory $buttonsFactory
-     * @param NewsletterSignupFactory $newsletterFormFactory
+     * @param NewsletterSignupFactory $newsletterFactory
      * @param IFaqControlFactory $faqFactory
      * @param ISpeakerListControlFactory $speakerListFactory
      * @param IProgramControlFactory $programFactory
      * @param IPartnersControlFactory $partnersControlFactory
      */
     public function __construct(
-        IScheduleControlFactory $scheduleFactory,
-        SignupButtonsFactory $buttonsFactory,
-        NewsletterSignupFactory $newsletterFormFactory,
-        IFaqControlFactory $faqFactory,
-        ISpeakerListControlFactory $speakerListFactory,
-        IProgramControlFactory $programFactory,
-        IPartnersControlFactory $partnersControlFactory
+        private readonly IScheduleControlFactory $scheduleFactory,
+        private readonly SignupButtonsFactory $buttonsFactory,
+        private readonly NewsletterSignupFactory $newsletterFactory,
+        private readonly IFaqControlFactory $faqFactory,
+        private readonly ISpeakerListControlFactory $speakerListFactory,
+        private readonly IProgramControlFactory $programFactory,
+        private readonly IPartnersControlFactory $partnersControlFactory
     ) {
         parent::__construct();
-        $this->scheduleFactory = $scheduleFactory;
-        $this->buttonsFactory = $buttonsFactory;
-        $this->newsletterFactory = $newsletterFormFactory;
-        $this->faqFactory = $faqFactory;
-        $this->speakerListFactory = $speakerListFactory;
-        $this->programFactory = $programFactory;
-        $this->partnersControlFactory = $partnersControlFactory;
     }
 
 
@@ -85,7 +48,7 @@ class HomepagePresenter extends BasePresenter
      *
      * @throws \Nette\Utils\JsonException
      */
-    public function renderDefault()
+    public function renderDefault(): void
     {
         $this->template->isHp = true;
         $this->template->counts = $this->eventInfo->getCounts();
@@ -104,7 +67,7 @@ class HomepagePresenter extends BasePresenter
     /**
      * @return SignupButtonsControl
      */
-    protected function createComponentSignupButtons()
+    protected function createComponentSignupButtons(): \App\Components\SignupButtons\SignupButtonsControl
     {
         return $this->buttonsFactory->create();
     }
@@ -113,7 +76,7 @@ class HomepagePresenter extends BasePresenter
     /**
      * @return NewsletterSignupControl
      */
-    protected function createComponentNewsletterForm()
+    protected function createComponentNewsletterForm(): \App\Components\Newsletter\NewsletterSignupControl
     {
         return $this->newsletterFactory->create();
     }
@@ -122,7 +85,7 @@ class HomepagePresenter extends BasePresenter
     /**
      * @return FaqControl
      */
-    protected function createComponentFaq()
+    protected function createComponentFaq(): \App\Components\Faq\FaqControl
     {
         return $this->faqFactory->create();
     }

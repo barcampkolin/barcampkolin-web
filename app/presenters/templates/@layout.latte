@@ -56,9 +56,9 @@
                     <li {ifCurrent Homepage:contact}class="active"{/ifCurrent}><a href="{link :Homepage:contact}"><span class="nav-link">Kontakt</span></a></li>
                     {if $isArchivationProcess === false}
                         {if $user->isLoggedIn()}
-                            <li {ifCurrent User:*}class="active"{/ifCurrent}><a href="{link User:profil}"><span class="nav-link">{$user->identity->name}</span></a></li>
+                            <li {ifCurrent "User:*"}class="active"{/ifCurrent}><a href="{link User:profil}"><span class="nav-link">{$user->identity->name}</span></a></li>
                         {else}
-                            <li {ifCurrent Sign:*}class="active"{/ifCurrent}><a href="{link Sign:in}"><span class="nav-link">Přihlásit</span></a></li>
+                            <li {ifCurrent "Sign:*"}class="active"{/ifCurrent}><a href="{link Sign:in}"><span class="nav-link">Přihlásit</span></a></li>
                         {/if}
                     {/if}
 
@@ -75,9 +75,6 @@
 
 <main>
     <div class="flash-wrapper" n:if="$flashes || true">
-        <div class="flash flash-corona">Barcamp Kolín 2020 se na základě
-            <a href="https://www.mzcr.cz/dokumenty/mimoradna-opatreni-ministerstva-zdravotnictvi-zakazuji-konani-hromadnych-akci-na_18698_1.html" target="_blank" rel="noopener">mimořádného opatření Ministerstva zdravotnictví</a> ruší.
-        </div>
         <div n:foreach="$flashes as $flash" n:class="flash, $flash->type">{$flash->message}</div>
     </div>
 

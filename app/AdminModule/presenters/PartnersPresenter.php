@@ -18,24 +18,12 @@ use Ublaboo\DataGrid\DataGrid;
 class PartnersPresenter extends BasePresenter
 {
     /**
-     * @var PartnersManager
-     */
-    private $partners;
-    /**
-     * @var PartnerLogoStorage
-     */
-    private $storage;
-
-
-    /**
      * PartnersPresenter constructor.
      * @param PartnersManager $partners
      * @param PartnerLogoStorage $storage
      */
-    public function __construct(PartnersManager $partners, PartnerLogoStorage $storage)
+    public function __construct(private readonly PartnersManager $partners, private readonly PartnerLogoStorage $storage)
     {
-        $this->partners = $partners;
-        $this->storage = $storage;
     }
 
 
@@ -43,7 +31,7 @@ class PartnersPresenter extends BasePresenter
      * @param null $id
      * @throws \Nette\Application\BadRequestException
      */
-    public function renderPartner($id = null)
+    public function renderPartner($id = null): void
     {
         $partner = $id !== null ? $this->partners->getPartnerById($id) : null;
 
@@ -60,7 +48,7 @@ class PartnersPresenter extends BasePresenter
      * @param null $id
      * @throws \Nette\Application\BadRequestException
      */
-    public function renderGroup($id = null)
+    public function renderGroup($id = null): void
     {
         $group = $id !== null ? $this->partners->getGroupById($id) : null;
 
@@ -84,7 +72,7 @@ class PartnersPresenter extends BasePresenter
     /**
      * @return Form
      */
-    public function createComponentPartnerForm()
+    public function createComponentPartnerForm(): \Nette\Application\UI\Form
     {
         $form = new Form();
         $form->addHidden('id');
@@ -107,7 +95,7 @@ class PartnersPresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->onSuccess[] = [$this, 'onPartnerFormSuccess'];
+        $form->onSuccess[] = $this->onPartnerFormSuccess(...);
 
         return $form;
     }
@@ -118,7 +106,7 @@ class PartnersPresenter extends BasePresenter
      * @param ArrayHash $values
      * @throws \Nette\Application\AbortException
      */
-    public function onPartnerFormSuccess(Form $form, ArrayHash $values)
+    public function onPartnerFormSuccess(Form $form, ArrayHash $values): void
     {
         $id = $values->id ?: null;
 
@@ -143,7 +131,7 @@ class PartnersPresenter extends BasePresenter
      * @return DataGrid
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentPartnersDatagrid()
+    public function createComponentPartnersDatagrid(): \Ublaboo\DataGrid\DataGrid
     {
         DataGrid::$iconPrefix = 'glyphicon glyphicon-';
 
@@ -162,24 +150,16 @@ class PartnersPresenter extends BasePresenter
 
         $groups = $this->partners->getGroups(false)->fetchPairs('id', 'name');
         $grid->addColumnText('group', 'Skupina')
-            ->setRenderer(function ($item) use ($groups) {
-                return $groups[$item->group_id];
-            });
+            ->setRenderer(fn($item) => $groups[$item->group_id]);
 
         $grid->addColumnText('url', 'Odkaz')
-            ->setRenderer(function ($item) {
-                return $item->url ? 'Ano' : 'Ne';
-            });
+            ->setRenderer(fn($item): string => $item->url ? 'Ano' : 'Ne');
 
         $grid->addColumnText('picture', 'Obrázek')
-            ->setRenderer(function ($item) {
-                return $item->picture_url ? 'Ano' : 'Ne';
-            });
+            ->setRenderer(fn($item): string => $item->picture_url ? 'Ano' : 'Ne');
 
         $grid->addColumnText('visible', 'Zobrazen')
-            ->setRenderer(function ($item) {
-                return $item->enabled ? 'Ano' : 'Ne';
-            });
+            ->setRenderer(fn($item): string => $item->enabled ? 'Ano' : 'Ne');
 
         $grid->addAction('partner', '')
             ->setIcon('pencil')
@@ -202,7 +182,7 @@ class PartnersPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @secured
      */
-    public function handleSortPartner($item_id = null, $prev_id = null, $next_id = null)
+    public function handleSortPartner($item_id = null, $prev_id = null, $next_id = null): void
     {
         $item = $this->partners->getPartnerById($item_id);
         $prevItem = $prev_id ? $this->partners->getPartnerById($prev_id) : null;
@@ -226,7 +206,7 @@ class PartnersPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @secured
      */
-    public function handleDeletePartner($id)
+    public function handleDeletePartner($id): void
     {
         $partner = $this->partners->getPartnerById($id);
 
@@ -247,7 +227,7 @@ class PartnersPresenter extends BasePresenter
     /**
      * @return Form
      */
-    public function createComponentGroupForm()
+    public function createComponentGroupForm(): \Nette\Application\UI\Form
     {
         $form = new Form();
         $form->addHidden('id');
@@ -260,7 +240,7 @@ class PartnersPresenter extends BasePresenter
 
         $form->addProtection();
 
-        $form->onSuccess[] = [$this, 'onGroupFormSuccess'];
+        $form->onSuccess[] = $this->onGroupFormSuccess(...);
 
         return $form;
     }
@@ -273,7 +253,7 @@ class PartnersPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\InvalidStateException
      */
-    public function onGroupFormSuccess(Form $form, ArrayHash $values)
+    public function onGroupFormSuccess(Form $form, ArrayHash $values): void
     {
         $id = $values->id ?: null;
 
@@ -290,7 +270,7 @@ class PartnersPresenter extends BasePresenter
     /**
      * @throws \Ublaboo\DataGrid\Exception\DataGridException
      */
-    public function createComponentGroupsDatagrid()
+    public function createComponentGroupsDatagrid(): \Ublaboo\DataGrid\DataGrid
     {
         DataGrid::$iconPrefix = 'glyphicon glyphicon-';
 
@@ -308,9 +288,7 @@ class PartnersPresenter extends BasePresenter
         $grid->addColumnLink('name', 'Jméno', 'group');
 
         $grid->addColumnText('visible', 'Zobrazen')
-            ->setRenderer(function ($item) {
-                return $item->enabled ? 'Ano' : 'Ne';
-            });
+            ->setRenderer(fn($item): string => $item->enabled ? 'Ano' : 'Ne');
 
         $grid->addAction('group', '')
             ->setIcon('pencil')
@@ -334,7 +312,7 @@ class PartnersPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @secured
      */
-    public function handleSortGroup($item_id = null, $prev_id = null, $next_id = null)
+    public function handleSortGroup($item_id = null, $prev_id = null, $next_id = null): void
     {
         $item = $this->partners->getGroupById($item_id);
         $prevItem = $prev_id ? $this->partners->getGroupById($prev_id) : null;
@@ -358,7 +336,7 @@ class PartnersPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @secured
      */
-    public function handleDeleteGroup($id)
+    public function handleDeleteGroup($id): void
     {
         $group = $this->partners->getGroupById($id);
 
@@ -367,7 +345,7 @@ class PartnersPresenter extends BasePresenter
         try {
             $this->partners->delete($group);
             $this->flashMessage("Skupina \"$name\" smazána", 'success');
-        } catch (ForeignKeyConstraintViolationException $e) {
+        } catch (ForeignKeyConstraintViolationException) {
             $this->flashMessage("Nelze smazat skupinu, ve které je nějaký partner", 'danger');
         }
 

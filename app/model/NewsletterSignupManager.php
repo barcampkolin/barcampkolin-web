@@ -14,19 +14,13 @@ class NewsletterSignupManager
         COLUMN_CONSENT_DATE = 'consent_date',
         COLUMN_CONSENT_DESC = 'consent_desc';
 
-    /**
-     * @var Context
-     */
-    private $database;
-
 
     /**
      * NewsletterSignupManager constructor.
      * @param Context $database
      */
-    public function __construct(Context $database)
+    public function __construct(private readonly Context $database)
     {
-        $this->database = $database;
     }
 
 
@@ -35,7 +29,7 @@ class NewsletterSignupManager
      * @param string $consentDesc
      * @throws DuplicateNameException
      */
-    public function add($email, $consentDesc)
+    public function add($email, $consentDesc): void
     {
         try {
                 $this->database->table(self::TABLE_NAME)->insert([
@@ -43,7 +37,7 @@ class NewsletterSignupManager
                     self::COLUMN_CONSENT_DATE => new DateTime(),
                     self::COLUMN_CONSENT_DESC => $consentDesc,
                 ]);
-        } catch (UniqueConstraintViolationException $e) {
+        } catch (UniqueConstraintViolationException) {
             throw new DuplicateNameException();
         }
     }
