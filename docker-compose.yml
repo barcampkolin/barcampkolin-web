@@ -1,8 +1,8 @@
-version: '3'
 services:
     web:
-        image: jakubboucek/lamp-devstack-php:7.4-legacy-debug
+        image: jakubboucek/lamp-devstack-php:8.3-debug
         environment:
+            # APACHE_DOCUMENT_ROOT: "/var/www/html"
             APP_DEBUG: 1
             TZ: Europe/Prague
             PHP_IDE_CONFIG: "serverName=docker-cli"
@@ -23,4 +23,4 @@ services:
             - "127.0.0.1:33060:3306"
         restart: always
         volumes:
-            - "./docker/mysql/data:/var/lib/mysql"
+            - "./.docker/mysql/data:/var/lib/mysql"
