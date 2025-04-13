@@ -1,9 +1,13 @@
 {
 	"name": "redbit/barcampkolin.cz",
 	"description": "Web Kolínského barcampu",
-	"homepage": "https://www.barcampkolin.cz/",
+	"license": [
+		"MIT",
+		"BSD-3-Clause",
+		"GPL-2.0",
+		"GPL-3.0"
+	],
 	"type": "project",
-	"license": ["MIT", "BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"authors": [
 		{
 			"name": "Redbit s.r.o.",
@@ -22,26 +26,12 @@
 			"homepage": "https://nette.org/contributors"
 		}
 	],
-	"repositories": {
-		"facebook/graph-sdk": {
-			"package": {
-				"require": {
-					"php": "*"
-				},
-				"source": {
-					"url": "https://github.com/facebookarchive/php-graph-sdk.git",
-					"type": "git",
-					"reference": "5.7.0"
-				},
-				"name": "facebook/graph-sdk",
-				"version": "5.7.0"
-			},
-			"type": "package"
-		}
-	},
+	"homepage": "https://www.barcampkolin.cz/",
 	"require": {
 		"php": ">=8.1",
 		"facebook/graph-sdk": "^5.7",
+		"kdyby/forms-replicator": "^2.0",
+		"latte/latte": "^2.5",
 		"nette/application": "^3.0.6",
 		"nette/bootstrap": "^3.0",
 		"nette/caching": "^3.0",
@@ -55,15 +45,34 @@
 		"nette/safe-stream": "^2.4",
 		"nette/security": "^3.0",
 		"nette/utils": "^3.0",
-		"latte/latte": "^2.5",
-		"tracy/tracy": "^2.6",
-		"kdyby/forms-replicator": "^2.0",
-		"ublaboo/datagrid": "^6.2",
+		"nextras/dbal": "^4.0",
 		"nextras/orm": "^4.0",
 		"nextras/secured-links": "^1.4",
-		"nextras/dbal": "^4.0",
-		"redbitcz/debug-mode-enabler": "^5.0"
+		"redbitcz/debug-mode-enabler": "^5.0",
+		"tracy/tracy": "^2.6",
+		"ublaboo/datagrid": "^6.2"
 	},
+	"repositories": {
+		"facebook/graph-sdk": {
+			"type": "package",
+			"package": {
+				"name": "facebook/graph-sdk",
+				"version": "5.7.0",
+				"require": {
+					"php": "*"
+				},
+				"source": {
+					"type": "git",
+					"url": "https://github.com/facebookarchive/php-graph-sdk.git",
+					"reference": "5.7.0"
+				}
+			}
+		}
+	},
+	"minimum-stability": "dev",
 	"prefer-stable": true,
-	"minimum-stability": "dev"
+	"config": {
+		"optimize-autoloader": true,
+		"sort-packages": true
+	}
 }
