@@ -7,8 +7,9 @@ use Nette\Application\UI\Control;
 
 class FeedControl extends Control
 {
-    public function __construct(private readonly WordpressPostReader $postReader)
-    {
+    public function __construct(
+        private readonly WordpressPostReader $postReader
+    ) {
     }
 
 

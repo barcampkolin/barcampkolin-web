@@ -22,8 +22,9 @@ class Email
      * Email constructor.
      * @param IdentityManager $identityManager
      */
-    public function __construct(private readonly IdentityManager $identityManager)
-    {
+    public function __construct(
+        private readonly IdentityManager $identityManager
+    ) {
     }
 
 
@@ -79,7 +80,7 @@ class Email
      */
     protected function verifyIdentityPassword(Identity $identity, $password)
     {
-        if (password_verify($password, (string) $identity->token) === false) {
+        if (password_verify($password, (string)$identity->token) === false) {
             throw new PasswordMismatchException();
         }
     }

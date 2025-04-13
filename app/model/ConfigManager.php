@@ -21,8 +21,9 @@ class ConfigManager
      * ConfigManager constructor.
      * @param Database\Context $database
      */
-    public function __construct(private readonly Database\Context $database)
-    {
+    public function __construct(
+        private readonly Database\Context $database
+    ) {
     }
 
 

@@ -47,18 +47,18 @@
 
             <div class="header-nav">
                 <ul class="nav">
-                    <li {ifCurrent :Homepage:}class="active"{/ifCurrent}><a href="{link :Homepage:}"><span class="nav-link">Úvod</span></a></li>
-                    <li {ifCurrent :Homepage:history}class="active"{/ifCurrent}><a href="{link :Homepage:history}"><span class="nav-link">O akci</span></a></li>
+                    <li n:class="isLinkCurrent(':Homepage:') ? active"><a href="{link :Homepage:}"><span class="nav-link">Úvod</span></a></li>
+                    <li n:class="isLinkCurrent(':Homepage:history') ? active"><a href="{link :Homepage:history}"><span class="nav-link">O akci</span></a></li>
                     {*<li><a href="#program" class="scrollto"><span class="nav-link">Program</span></a></li>*}
-                    <li n:if="$features->program" {ifCurrent :Conference:program}class="active"{/ifCurrent}><a href="{link :Conference:program}"><span class="nav-link">Program</span></a></li>
-                    <li n:if="$features->talks_show" {ifCurrent :Conference:talks}class="active"{/ifCurrent}><a href="{link :Conference:talks}"><span class="nav-link">Přednášky</span></a></li>
-                    <li {ifCurrent :Homepage:partners}class="active"{/ifCurrent}><a href="{link :Homepage:partners}"><span class="nav-link">Partneři</span></a></li>
-                    <li {ifCurrent Homepage:contact}class="active"{/ifCurrent}><a href="{link :Homepage:contact}"><span class="nav-link">Kontakt</span></a></li>
+                    <li n:if="$features->program" n:class="isLinkCurrent(':Conference:program') ? active"><a href="{link :Conference:program}"><span class="nav-link">Program</span></a></li>
+                    <li n:if="$features->talks_show" n:class="isLinkCurrent(':Conference:talks') ? active"><a href="{link :Conference:talks}"><span class="nav-link">Přednášky</span></a></li>
+                    <li n:class="isLinkCurrent(':Homepage:partners') ? active"><a href="{link :Homepage:partners}"><span class="nav-link">Partneři</span></a></li>
+                    <li n:class="isLinkCurrent('Homepage:contact') ? active"><a href="{link :Homepage:contact}"><span class="nav-link">Kontakt</span></a></li>
                     {if $isArchivationProcess === false}
                         {if $user->isLoggedIn()}
-                            <li {ifCurrent "User:*"}class="active"{/ifCurrent}><a href="{link User:profil}"><span class="nav-link">{$user->identity->name}</span></a></li>
+                            <li n:class="isLinkCurrent('User:*') ? active"><a href="{link User:profil}"><span class="nav-link">{$user->identity->name}</span></a></li>
                         {else}
-                            <li {ifCurrent "Sign:*"}class="active"{/ifCurrent}><a href="{link Sign:in}"><span class="nav-link">Přihlásit</span></a></li>
+                            <li n:class="isLinkCurrent('Sign:*') ? active"><a href="{link Sign:in}"><span class="nav-link">Přihlásit</span></a></li>
                         {/if}
                     {/if}
 

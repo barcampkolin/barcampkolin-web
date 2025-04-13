@@ -8,10 +8,10 @@
             <ul class="row people-list flexible mt-xs">
                 <li>
                     <div class="item">
-                        <div id="avatar" class="item-image" style="background-image: url('{$user->identity->pictureUrl|noescape}')"></div>
+                        <div id="avatar" class="item-image" style="background-image: url('{$profileImage}')"></div>
                         <div class="item-content">
                             <h2 class="item-title">{$user->identity->name}</h2>
-                            <span n:if="$conferee" class="item-meta" title="{$conferee->bio|stripHtml}">{$conferee->bio|stripHtml|truncate:50}</span>
+                            <span n:if="$conferee" class="item-meta" title="{$conferee->bio|stripHtml}">{$conferee->bio|stripHtml|truncate:50|breakLines}</span>
                             <div class="item-text">
                                 {if $conferee}
                                     <a href="{link uploadAvatar!}" id="avatar-upload-button" class="btn btn-brand btn-tiny btn-block mt-xs js-only">Nahrát avatar (fotku)</a>

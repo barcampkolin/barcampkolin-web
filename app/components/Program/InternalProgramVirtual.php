@@ -30,8 +30,11 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
      * @param string $type
      * @param int $duration
      */
-    public function __construct(private $type, private \DateInterval $time, private $duration)
-    {
+    public function __construct(
+        private $type,
+        private \DateInterval $time,
+        private $duration
+    ) {
     }
 
 

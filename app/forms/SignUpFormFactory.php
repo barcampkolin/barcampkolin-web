@@ -19,8 +19,10 @@ class SignUpFormFactory
      * @param FormFactory $factory
      * @param EmailAuthenticator $authenticator
      */
-    public function __construct(private FormFactory $factory, private EmailAuthenticator $authenticator)
-    {
+    public function __construct(
+        private FormFactory $factory,
+        private EmailAuthenticator $authenticator
+    ) {
     }
 
 

@@ -19,8 +19,10 @@ class ProgramControl extends Control
      * @param EventInfoProvider $infoProvider
      * @param TalkManager $talkManager
      */
-    public function __construct(private readonly EventInfoProvider $infoProvider, private readonly TalkManager $talkManager)
-    {
+    public function __construct(
+        private readonly EventInfoProvider $infoProvider,
+        private readonly TalkManager $talkManager
+    ) {
     }
 
 
@@ -158,7 +160,6 @@ class ProgramControl extends Control
 
                 $items[] = $program;
                 $prevEnd = $program->getEndTime();
-
             }
             $renderableItems[$roomKey] = $items;
         }

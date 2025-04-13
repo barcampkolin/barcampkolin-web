@@ -42,9 +42,13 @@ class LocalArchivableStoragePrefixFactory implements IStoragePrefixFactory
      * @param ArchiveManager $archiveManager
      * @param Request $httpRequest
      */
-    public function __construct(private $storageBase, $urlPrefix, ArchiveManager $archiveManager, Request $httpRequest)
-    {
-        $this->urlBase = rtrim($httpRequest->getUrl()->getBaseUrl(), '/') . '/' . ltrim($urlPrefix,'/');
+    public function __construct(
+        private $storageBase,
+        $urlPrefix,
+        ArchiveManager $archiveManager,
+        Request $httpRequest
+    ) {
+        $this->urlBase = rtrim($httpRequest->getUrl()->getBaseUrl(), '/') . '/' . ltrim($urlPrefix, '/');
 
         $this->currentYear = $archiveManager->getCurrentYear();
     }

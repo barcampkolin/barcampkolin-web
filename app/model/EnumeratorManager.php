@@ -31,8 +31,9 @@ class EnumeratorManager
      * EnumeratorManager constructor.
      * @param ConfigManager $config
      */
-    public function __construct(private ConfigManager $config)
-    {
+    public function __construct(
+        private ConfigManager $config
+    ) {
     }
 
 

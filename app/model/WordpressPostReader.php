@@ -16,8 +16,10 @@ class WordpressPostReader
      * @param array $config
      * @param Caching\IStorage $cacheStorage
      */
-    public function __construct(private $config, Caching\IStorage $cacheStorage)
-    {
+    public function __construct(
+        private $config,
+        Caching\IStorage $cacheStorage
+    ) {
         $this->cache = new Caching\Cache($cacheStorage, self::class);
     }
 
@@ -77,7 +79,7 @@ class WordpressPostReader
     {
         $apiQueryUrl = sprintf(
             '%s/wp-json/wp/v2/posts?per_page=%d',
-            rtrim((string) $this->getSourceUrl(), '/'),
+            rtrim((string)$this->getSourceUrl(), '/'),
             $this->getMaxItems()
         );
 

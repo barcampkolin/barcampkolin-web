@@ -17,18 +17,21 @@ parameters:
     mail:
         from: "Barcamp Kolín <info@barcampkolin.cz>"
     api_token_secretkey: {secret-token}
+    avatar:
+        size: 400
+        fallbackUrl: "https://www.barcampkolin.cz/static/{year}/img/avatar.png"
     archive:
-    	archivedFolders:
-    		- '%wwwDir%/static'
-    	pages:
-    		simple:
-    			- '/'
-    			- '/kontakt'
-    			- '/program'
-    			- '/prednasky'
-    			- '/o-akci'
-    			- '/partneri'
-    		talks: '/prednaska/%d'
+        archivedFolders:
+            - '%wwwDir%/static'
+        pages:
+            simple:
+                - '/'
+                - '/kontakt'
+                - '/program'
+                - '/prednasky'
+                - '/o-akci'
+                - '/partneri'
+            talks: '/prednaska/%d'
 
 application:
     errorPresenter: Error
@@ -95,6 +98,7 @@ services:
     - App\Model\EventInfoProvider
     - App\Model\EnumeratorManager
     - App\Model\FileManager
+    - App\Model\GravatarImageProvider(%avatar.size%, %avatar.fallbackUrl%)
     - App\Model\IdentityManager
     - App\Model\MailerManager(%mail%, '%tempDir%/cache')
     - App\Model\MailDynamicLoader
@@ -125,8 +129,13 @@ services:
     publicStoragePrefixer: App\Model\LocalArchivableStoragePrefixFactory('%wwwDir%/upload', '/upload')
     - App\Model\ArchiveStorage('%wwwDir%/archive')
     - App\Model\LocalFileStorage(@publicStoragePrefixer::create('/', '/file'))
-    - App\Model\AvatarStorage(@publicStoragePrefixer::create('/', '/user-avatar'))
+    - App\Model\AvatarStorage(@publicStoragePrefixer::create('/', '/user-avatar'), %avatar.size%)
     - App\Model\PartnerLogoStorage(@publicStoragePrefixer::create('/', '/partner-logo'))
 
     # Router
     router: App\RouterFactory::createRouter
+
+    # System
+    debugModeDetector:
+        type: Redbitcz\DebugMode\Detector
+        imported: true

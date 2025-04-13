@@ -79,8 +79,9 @@ class MailDynamicLoader
      * MailDynamicLoader constructor.
      * @param ConfigManager $configManager
      */
-    public function __construct(private readonly ConfigManager $configManager)
-    {
+    public function __construct(
+        private readonly ConfigManager $configManager
+    ) {
     }
 
 

@@ -15,8 +15,10 @@ class SpeakerListControl extends Control
      * @param TalkManager $talkManager
      * @param EventInfoProvider $eventInfoProvider
      */
-    public function __construct(private readonly TalkManager $talkManager, private readonly EventInfoProvider $eventInfoProvider)
-    {
+    public function __construct(
+        private readonly TalkManager $talkManager,
+        private readonly EventInfoProvider $eventInfoProvider
+    ) {
     }
 
 

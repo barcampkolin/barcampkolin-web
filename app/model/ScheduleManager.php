@@ -27,13 +27,20 @@ class ScheduleManager
     private array $featureConfigs = [
         [Event::FEATURE_CONFEREE, 'bool', 'Povolit registraci účastníků'],
         [Event::FEATURE_TALK, 'bool', 'Povolit zapisování přednášek'],
+        [Event::FEATURE_TALK_EDIT, 'bool', 'Povolit editace zapsaných přednášek'],
         [Event::FEATURE_VOTE, 'bool', 'Povolit hlasování přednášek'],
         [Event::FEATURE_SHOW_VOTE, 'bool', 'Povolit zobrazení hlasů'],
-        [Event::FEATURE_TALK_ORDER, 'select', 'Přednášky', self::NOFLAG, [
-            '' => 'řazené podle přihlášení',
-            'random' => 'řazené náhodně',
-            'vote' => 'řazené podle hlasů',
-        ]],
+        [
+            Event::FEATURE_TALK_ORDER,
+            'select',
+            'Přednášky',
+            self::NOFLAG,
+            [
+                '' => 'řazené podle přihlášení',
+                'random' => 'řazené náhodně',
+                'vote' => 'řazené podle hlasů',
+            ]
+        ],
         [Event::FEATURE_PROGRAM, 'bool', 'Zobrazit program přednášek'],
         [Event::FEATURE_REPORT, 'bool', 'Zobrazit výstupy (YouTube/Reporty)'],
     ];
@@ -57,8 +64,9 @@ class ScheduleManager
      * ScheduleManager constructor.
      * @param ConfigManager $configManager
      */
-    public function __construct(private readonly ConfigManager $configManager)
-    {
+    public function __construct(
+        private readonly ConfigManager $configManager
+    ) {
         //Merge config subsets
         $this->stepConfigs = array_merge($this->stepConfigs, $this->featureConfigs);
     }

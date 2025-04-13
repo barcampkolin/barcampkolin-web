@@ -30,8 +30,11 @@ class TalkManager
      * @param Context $database
      * @param EnumeratorManager $enumerator
      */
-    public function __construct(Orm $orm, private readonly Context $database, private readonly EnumeratorManager $enumerator)
-    {
+    public function __construct(
+        Orm $orm,
+        private readonly Context $database,
+        private readonly EnumeratorManager $enumerator
+    ) {
         $this->talkRepository = $orm->talk;
         $this->programRepository = $orm->program;
     }

@@ -22,8 +22,9 @@ class PartnersManager
      * PartnersManager constructor.
      * @param Context $database
      */
-    public function __construct(private readonly Context $database)
-    {
+    public function __construct(
+        private readonly Context $database
+    ) {
     }
 
 

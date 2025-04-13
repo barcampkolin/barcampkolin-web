@@ -1,23 +1,25 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
+use Nette\Bootstrap\Configurator;
+use Redbitcz\DebugMode;
+use Tracy\Debugger;
+
 require __DIR__ . '/../vendor/autoload.php';
 
-$configurator = new Nette\Configurator;
+$tempDir = __DIR__ . '/../temp';
 
-require_once __DIR__ . '/model/DebugEnabler.php';
-App\Model\DebugEnabler::setWorkDir(__DIR__ . '/../temp');
+$configurator = new Configurator;
 
-if (App\Model\DebugEnabler::isDebug()) {
-    $configurator->setDebugMode(true);
-} else {
-    $configurator->setDebugMode([]); // Automatic detect by Nette
-}
+$debugModeEnabler = (new DebugMode\Enabler($tempDir));
+$debugModeDetector = new DebugMode\Detector(DebugMode\Detector::MODE_FULL, $debugModeEnabler);
+$configurator->setDebugMode($debugModeDetector->isDebugMode());
 
 $configurator->enableTracy(__DIR__ . '/../log', 'pan@jakubboucek.cz');
-\Tracy\Debugger::getLogger()->emailSnooze = '1 hour';
+Debugger::getLogger()->emailSnooze = '1 hour';
 
 $configurator->setTimeZone('Europe/Prague');
-$configurator->setTempDirectory(__DIR__ . '/../temp');
+$configurator->setTempDirectory($tempDir);
+$configurator->addServices(['debugModeDetector' => $debugModeDetector]);
 
 $configurator->createRobotLoader()
     ->addDirectory(__DIR__)

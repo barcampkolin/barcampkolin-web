@@ -7,8 +7,9 @@ use Nette\Application\UI\Control;
 
 class SignupButtonsControl extends Control
 {
-    public function __construct(private readonly EventInfoProvider $eventInfo)
-    {
+    public function __construct(
+        private readonly EventInfoProvider $eventInfo
+    ) {
     }
 
 

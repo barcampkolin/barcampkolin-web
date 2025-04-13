@@ -19,8 +19,10 @@ class FileManager
      * @param Orm $orm
      * @param LocalFileStorage $fileStorage
      */
-    public function __construct(Orm $orm, private readonly LocalFileStorage $fileStorage)
-    {
+    public function __construct(
+        Orm $orm,
+        private readonly LocalFileStorage $fileStorage
+    ) {
         $this->fileRepository = $orm->file;
     }
 

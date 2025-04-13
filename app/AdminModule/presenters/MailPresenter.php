@@ -19,8 +19,11 @@ class MailPresenter extends BasePresenter
      * @param MailDynamicLoader $mailLoader
      * @param MailerManager $mailer
      */
-    public function __construct(private readonly MailDynamicLoader $mailLoader, private readonly MailerManager $mailer)
-    {
+    public function __construct(
+        private readonly MailDynamicLoader $mailLoader,
+        private readonly MailerManager $mailer
+    ) {
+        parent::__construct();
     }
 
 
@@ -81,9 +84,7 @@ class MailPresenter extends BasePresenter
      */
     public function renderEdit($id): void
     {
-
         $this->template->id = $id;
-
 
         /** @var Form $form */
         $form = $this['editForm'];
@@ -94,9 +95,11 @@ class MailPresenter extends BasePresenter
             $form->removeComponent($form['header']);
             $form->removeComponent($form['preheader']);
             $form->removeComponent($form['purpose']);
+            $form->removeComponent($form['submitAndShow']);
         } else {
             $mail = $this->getMailById($id);
         }
+
         $form->setDefaults($mail);
     }
 
@@ -238,7 +241,7 @@ class MailPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function save(Form $form, array $values): void
+    public function save(Form $form, ArrayHash $values): void
     {
         $id = $values->id;
         if ($id === 'layout') {

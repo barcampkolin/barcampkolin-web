@@ -7,6 +7,7 @@ use App\Model\AvatarStorage;
 use App\Model\ConfereeManager;
 use App\Model\ConfereeNotFound;
 use App\Model\EventInfoProvider;
+use App\Model\GravatarImageProvider;
 use App\Model\NoUserLoggedIn;
 use App\Model\TalkManager;
 use App\Model\TalkNotFound;
@@ -17,7 +18,6 @@ use App\Orm\Talk;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\Http\IResponse;
-use Nette\Http\Response;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -33,8 +33,17 @@ class UserPresenter extends BasePresenter
      * @param EventInfoProvider $eventInfoProvider
      * @param AvatarStorage $avatarStorage
      */
-    public function __construct(private readonly UserManager $userManager, private readonly ConfereeManager $confereeManager, private readonly TalkManager $talkManager, private readonly Forms\ConfereeForm $confereeForm, private readonly Forms\TalkForm $talkForm, private readonly EventInfoProvider $eventInfoProvider, private readonly AvatarStorage $avatarStorage)
-    {
+    public function __construct(
+        private readonly UserManager $userManager,
+        private readonly ConfereeManager $confereeManager,
+        private readonly TalkManager $talkManager,
+        private readonly Forms\ConfereeForm $confereeForm,
+        private readonly Forms\TalkForm $talkForm,
+        private readonly EventInfoProvider $eventInfoProvider,
+        private readonly AvatarStorage $avatarStorage,
+        private readonly GravatarImageProvider $gravatar,
+    ) {
+        parent::__construct();
     }
 
 
@@ -71,6 +80,8 @@ class UserPresenter extends BasePresenter
         $this->template->conferee = $conferee;
         $this->template->talks = $talks;
 
+        $this->template->profileImage = $user->pictureUrl ?? $this->gravatar->getGravatarUrl($user->email);
+
         $features = $this->eventInfoProvider->getFeatures();
         $this->template->allowRegisterConferee = $features['conferee'];
         $this->template->allowRegisterTalk = $features['talks'];
@@ -105,7 +116,6 @@ class UserPresenter extends BasePresenter
          * @throws \Nette\Application\AbortException
          */
         $onSubmitCallback = function (Conferee $conferee, $values): void {
-
             if ($conferee->id != $values->id) {
                 Debugger::log(
                     'Security alert: ' . self::class . ':' . __METHOD__ . ' form send invalid $coferee->id',
@@ -150,7 +160,6 @@ class UserPresenter extends BasePresenter
          * @throws \Nette\Application\AbortException
          */
         $onSubmitCallback = function (Talk $talk, $values): void {
-
             if ($talk->id != $values->id) {
                 Debugger::log(
                     'Security alert: ' . self::class . ':' . __METHOD__ . ' form send invalid $coferee->id',

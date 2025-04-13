@@ -32,6 +32,7 @@ class ConferencePresenter extends BasePresenter
         private readonly EventInfoProvider $eventInfoProvider,
         private readonly IProgramControlFactory $programFactory
     ) {
+        parent::__construct();
         $this->talkRepository = $orm->talk;
     }
 

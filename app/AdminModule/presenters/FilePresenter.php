@@ -5,7 +5,6 @@ namespace App\AdminModule\Presenters;
 use App\Model\FileManager;
 use App\Orm\File;
 use Nette\Application\UI\Form;
-use Nette\Application\UI\Presenter;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
 use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
@@ -13,14 +12,15 @@ use Ublaboo\DataGrid\DataGrid;
 
 class FilePresenter extends BasePresenter
 {
-    public function __construct(private readonly FileManager $fileManager)
-    {
+    public function __construct(
+        private readonly FileManager $fileManager
+    ) {
+        parent::__construct();
     }
 
 
     public function renderDefault()
     {
-
     }
 
 
@@ -36,9 +36,8 @@ class FilePresenter extends BasePresenter
             ->setIcon('cloud-upload');
 
 
-        $grid->addColumnText('name', 'Název')->setRenderer(fn($item) =>
-            /** @var File $item */
-            Html::el('a')->href($item->url)->addAttributes([
+        $grid->addColumnText('name', 'Název')->setRenderer(fn($item) => /** @var File $item */
+        Html::el('a')->href($item->url)->addAttributes([
             'target' => '_blank',
             'rel' => 'noopener'
         ])->setText($item->name));
@@ -48,9 +47,8 @@ class FilePresenter extends BasePresenter
         $grid->addAction('delete', 'Smazat', 'deleteFile!')->setIcon('trash')
             ->setClass('btn btn-xs btn-danger ajax')
             ->setConfirmation(new StringConfirmation('Opravdu chcete smazat soubor %s?', 'name'))
-            ->setRenderCondition(fn($item) =>
-                /** @var File $item */
-                $this->fileManager->isManagable($item->url));
+            ->setRenderCondition(fn($item) => /** @var File $item */
+            $this->fileManager->isManagable($item->url));
 
         return $grid;
     }
@@ -110,7 +108,8 @@ class FilePresenter extends BasePresenter
                 ->addHtml(
                     Html::el('code')->addText($url)
                 ),
-            'success');
+            'success'
+        );
 
         $this->redirect('default');
     }

@@ -22,8 +22,11 @@ class PartnersPresenter extends BasePresenter
      * @param PartnersManager $partners
      * @param PartnerLogoStorage $storage
      */
-    public function __construct(private readonly PartnersManager $partners, private readonly PartnerLogoStorage $storage)
-    {
+    public function __construct(
+        private readonly PartnersManager $partners,
+        private readonly PartnerLogoStorage $storage
+    ) {
+        parent::__construct();
     }
 
 

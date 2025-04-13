@@ -3,7 +3,6 @@
 namespace App\Model;
 
 use Nette\Http\FileUpload;
-use Nette\Http\Request;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Image;
 use Nette\Utils\Random;
@@ -11,8 +10,9 @@ use Nette\Utils\Strings;
 
 class PartnerLogoStorage
 {
-    public function __construct(private readonly StoragePrefix $storagePrefix)
-    {
+    public function __construct(
+        private readonly StoragePrefix $storagePrefix
+    ) {
     }
 
 
@@ -56,7 +56,7 @@ class PartnerLogoStorage
      */
     private function getExtension($name): string
     {
-        return pathinfo((string) $name, PATHINFO_EXTENSION);
+        return pathinfo((string)$name, PATHINFO_EXTENSION);
     }
 
     /**

@@ -8,8 +8,9 @@ class MessageLatteFileTemplate implements ITemplate
      * MessageLatteFileTemplate constructor.
      * @param string $filename
      */
-    public function __construct(private $filename)
-    {
+    public function __construct(
+        private $filename
+    ) {
     }
 
 

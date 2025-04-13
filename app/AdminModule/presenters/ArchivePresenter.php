@@ -14,8 +14,9 @@ use Nette\Utils\Strings;
 
 class ArchivePresenter extends BasePresenter
 {
-    public function __construct(private readonly ArchiveManager $archiveManager)
-    {
+    public function __construct(
+        private readonly ArchiveManager $archiveManager
+    ) {
         parent::__construct();
     }
 
@@ -53,7 +54,9 @@ class ArchivePresenter extends BasePresenter
 
         $form->addText('eventDate', 'Datum konání události')
             ->setType('datetime-local')
-            ->setDefaultValue($this->dateToHtml5($this->archiveManager->getCurrentEventDate()->add(new DateInterval('P1Y'))));
+            ->setDefaultValue(
+                $this->dateToHtml5($this->archiveManager->getCurrentEventDate()->add(new DateInterval('P1Y')))
+            );
 
         $form->addSubmit('submit', 'Archivovat')
             ->setOption('primary', true)
@@ -84,7 +87,9 @@ class ArchivePresenter extends BasePresenter
         $eventDate = DateTime::from($values['eventDate']);
 
         if ($values['expectedPages'] !== $values['archivedPages']) {
-            throw new InvalidStateException("Archived pages ($values[archivedPages]) is not same as expected ($values[expectedPages])");
+            throw new InvalidStateException(
+                "Archived pages ($values[archivedPages]) is not same as expected ($values[expectedPages])"
+            );
         }
 
         //DANGER

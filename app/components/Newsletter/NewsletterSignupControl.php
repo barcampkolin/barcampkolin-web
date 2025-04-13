@@ -14,8 +14,9 @@ class NewsletterSignupControl extends Control
      * NewsletterSignupControl constructor.
      * @param NewsletterSignupManager $manager
      */
-    public function __construct(private readonly NewsletterSignupManager $manager)
-    {
+    public function __construct(
+        private readonly NewsletterSignupManager $manager
+    ) {
     }
 
 

@@ -13,8 +13,9 @@ class ArchivedPresenter extends BasePresenter
     /**
      * @param ArchiveManager $archiveManager
      */
-    public function __construct(private readonly ArchiveManager $archiveManager)
-    {
+    public function __construct(
+        private readonly ArchiveManager $archiveManager
+    ) {
         parent::__construct();
     }
 

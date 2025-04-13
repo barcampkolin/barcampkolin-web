@@ -9,8 +9,10 @@ class ApiTokenManager
      * @param string $secretKey
      * @param ConfigManager $configManager
      */
-    public function __construct(private $secretKey, private readonly ConfigManager $configManager)
-    {
+    public function __construct(
+        private $secretKey,
+        private readonly ConfigManager $configManager
+    ) {
     }
 
 
@@ -34,7 +36,7 @@ class ApiTokenManager
      */
     private function isTokenValid($token): bool
     {
-        $hash = hash_hmac('sha256', (string) $token, $this->secretKey);
+        $hash = hash_hmac('sha256', (string)$token, $this->secretKey);
 
         $hashes = $this->getTokenHashes();
 

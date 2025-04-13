@@ -3,22 +3,25 @@
 namespace App\AdminModule\Presenters;
 
 use App\Model\ApiTokenManager;
-use App\Model\DebugEnabler;
 use Nette\Application\Request;
+use Redbitcz\DebugMode;
 use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
 
 class SystemPresenter extends BasePresenter
 {
-    public function __construct(private readonly ApiTokenManager $apiTokenManager)
-    {
+    public function __construct(
+        private readonly ApiTokenManager $apiTokenManager,
+        private readonly DebugMode\Detector $debugMode
+    ) {
+        parent::__construct();
     }
 
 
     public function renderDefault(): void
     {
-        $this->template->isDebug = DebugEnabler::isDebug();
-        $this->template->isDebugByEnv = DebugEnabler::isDebugByEnv();
+        $this->template->isDebug = $this->debugMode->isDebugMode();
+        $this->template->isDebugByEnabler = $this->debugMode->isDebugModeByEnabler() !== null;
         $this->template->secured = $this->getRequest()->hasFlag(Request::SECURED);
     }
 
@@ -29,8 +32,8 @@ class SystemPresenter extends BasePresenter
      */
     public function handleTurnDebugOff(): void
     {
-        DebugEnabler::turnOff();
-        $this->flashMessage('Ladící režim vypnut', 'success');
+        $this->debugMode->getEnabler()->activate(false);
+        $this->flashMessage('Ladící režim vypnut.', 'success');
         $this->redirect('this');
     }
 
@@ -41,8 +44,16 @@ class SystemPresenter extends BasePresenter
      */
     public function handleTurnDebugOn(): void
     {
-        DebugEnabler::turnOn();
-        $this->flashMessage('Ladící režim zapnut', 'success');
+        $this->debugMode->getEnabler()->activate(true);
+        $this->flashMessage('Ladící režim zapnut.', 'success');
+        $this->redirect('this');
+    }
+
+
+    public function handleResetDebug(): void
+    {
+        $this->debugMode->getEnabler()->deactivate();
+        $this->flashMessage('Ladící režim vrácen do výchozí hodnoty – nyní jej určuje nastavení prostředí.', 'success');
         $this->redirect('this');
     }
 
@@ -74,7 +85,9 @@ class SystemPresenter extends BasePresenter
             ->setTitle('Smazat')
             ->setClass('btn btn-xs btn-danger ajax')
             ->setConfirmation(
-                new StringConfirmation('Smazáním tokenu může dojít k poškození funkčnosti. Opravdu chcete smazat token %s?', 'key')
+                new StringConfirmation(
+                    'Smazáním tokenu může dojít k poškození funkčnosti. Opravdu chcete smazat token %s?', 'key'
+                )
             );
 
         return $grid;
