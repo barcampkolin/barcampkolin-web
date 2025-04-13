@@ -29,18 +29,18 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li {ifCurrent Dashboard:default}class="active"{/ifCurrent}><a href="{link Dashboard:}">Nastavení</a></li>
-                <li {ifCurrent Dashboard:enums}class="active"{/ifCurrent}><a href="{link Dashboard:enums}">Seznamy</a></li>
-                <li {ifCurrent Dashboard:schedule}class="active"{/ifCurrent}><a href="{link Dashboard:schedule}">Harmonogram</a></li>
-                <li {ifCurrent Conference:conferee}class="active"{/ifCurrent}><a href="{link Conference:conferee}">Účastníci</a></li>
-                <li {ifCurrent Conference:talks}class="active"{/ifCurrent}><a href="{link Conference:talks}">Přednášky</a></li>
-                <li {ifCurrent Conference:program}class="active"{/ifCurrent}><a href="{link Conference:program}">Program</a></li>
-                <li {ifCurrent Mail:*}class="active"{/ifCurrent}><a href="{link Mail:default}">E-maily</a></li>
-                <li {ifCurrent File:*}class="active"{/ifCurrent}><a href="{link File:default}">Soubory</a></li>
-                <li {ifCurrent Partners:*}class="active"{/ifCurrent}><a href="{link Partners:default}">Partneři</a></li>
+                <li n:class="isLinkCurrent('Dashboard:default') ? active"><a href="{link Dashboard:}">Nastavení</a></li>
+                <li n:class="isLinkCurrent('Dashboard:enums') ? active"><a href="{link Dashboard:enums}">Seznamy</a></li>
+                <li n:class="isLinkCurrent('Dashboard:schedule') ? active"><a href="{link Dashboard:schedule}">Harmonogram</a></li>
+                <li n:class="isLinkCurrent('Conference:conferee') ? active"><a href="{link Conference:conferee}">Účastníci</a></li>
+                <li n:class="isLinkCurrent('Conference:talks') ? active"><a href="{link Conference:talks}">Přednášky</a></li>
+                <li n:class="isLinkCurrent('Conference:program') ? active"><a href="{link Conference:program}">Program</a></li>
+                <li n:class="isLinkCurrent('Mail:*') ? active"><a href="{link Mail:default}">E-maily</a></li>
+                <li n:class="isLinkCurrent('File:*') ? active"><a href="{link File:default}">Soubory</a></li>
+                <li n:class="isLinkCurrent('Partners:*') ? active"><a href="{link Partners:default}">Partneři</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li {ifCurrent System:*}class="active"{/ifCurrent}><a href="{link System:}"><span class="glyphicon glyphicon-cog"></span></a></li>
+                <li n:class="isLinkCurrent('System:*') ? active"><a href="{link System:}"><span class="glyphicon glyphicon-cog"></span></a></li>
             </ul>
         </div>
     </div>
