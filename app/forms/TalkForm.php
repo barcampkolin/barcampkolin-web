@@ -73,10 +73,6 @@ class TalkForm
             ->addCondition(Form::FILLED)
             ->addRule(Form::URL);
 
-        $form->addText('url_google', 'URL Google+ profilu:')
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::URL);
-
         $form->addText('url_linkedin', 'URL LinkedIn profilu:')
             ->addCondition(Form::FILLED)
             ->addRule(Form::URL);
@@ -190,7 +186,6 @@ class TalkForm
                 'www' => 'url_www',
                 'facebook' => 'url_facebook',
                 'twitter' => 'url_twitter',
-                'google' => 'url_google',
                 'linkedin' => 'url_linkedin',
             ]
         ];
