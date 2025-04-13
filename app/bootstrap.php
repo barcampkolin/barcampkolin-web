@@ -1,20 +1,18 @@
 <?php /** @noinspection PhpUnhandledExceptionInspection */
 
+use Nette\Bootstrap\Configurator;
+use Redbitcz\DebugMode\Detector;
+use Tracy\Debugger;
+
 require __DIR__ . '/../vendor/autoload.php';
 
-$configurator = new Nette\Configurator;
+$configurator = new Configurator;
 
-require_once __DIR__ . '/model/DebugEnabler.php';
-App\Model\DebugEnabler::setWorkDir(__DIR__ . '/../temp');
-
-if (App\Model\DebugEnabler::isDebug()) {
-    $configurator->setDebugMode(true);
-} else {
-    $configurator->setDebugMode([]); // Automatic detect by Nette
-}
+$debugMode = Detector::detect();
+$configurator->setDebugMode($debugMode);
 
 $configurator->enableTracy(__DIR__ . '/../log', 'pan@jakubboucek.cz');
-\Tracy\Debugger::getLogger()->emailSnooze = '1 hour';
+Debugger::getLogger()->emailSnooze = '1 hour';
 
 $configurator->setTimeZone('Europe/Prague');
 $configurator->setTempDirectory(__DIR__ . '/../temp');

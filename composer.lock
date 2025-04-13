@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3e3b0cfa93c9d34a2e9b601a5ed0983d",
+    "content-hash": "b7bb1426c9d118325c5f17aefeb9da62",
     "packages": [
         {
             "name": "contributte/application",
@@ -1883,6 +1883,64 @@
                 "source": "https://github.com/php-fig/container/tree/2.0.2"
             },
             "time": "2021-11-05T16:47:00+00:00"
+        },
+        {
+            "name": "redbitcz/debug-mode-enabler",
+            "version": "v5.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/redbitcz/php-debug-mode-enabler.git",
+                "reference": "acc2b62e4e31c451af8722d4030491108d50720a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/redbitcz/php-debug-mode-enabler/zipball/acc2b62e4e31c451af8722d4030491108d50720a",
+                "reference": "acc2b62e4e31c451af8722d4030491108d50720a",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "nette/utils": "^3.0 || ^4.0",
+                "php": "~8.0"
+            },
+            "require-dev": {
+                "firebase/php-jwt": "^5.0 || ^6.0 || dev-main",
+                "nette/tester": "^2.5 || dev-master",
+                "phpstan/phpstan": "1.12.6"
+            },
+            "suggest": {
+                "firebase/php-jwt": "Optional, required for SignedUrl plugin, compatible with version 5.x and 6.x"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Redbitcz\\DebugMode\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Redbit s.r.o.",
+                    "homepage": "https://www.redbit.cz/"
+                },
+                {
+                    "name": "Jakub Bouček",
+                    "homepage": "https://www.jakub-boucek.cz/"
+                }
+            ],
+            "description": "Debug mode enabler - safe and clean way to manage Debug Mode in your App",
+            "homepage": "https://github.com/redbitcz/php-debug-mode-enabler",
+            "keywords": [
+                "debug"
+            ],
+            "support": {
+                "issues": "https://github.com/redbitcz/php-debug-mode-enabler/issues",
+                "source": "https://github.com/redbitcz/php-debug-mode-enabler/tree/v5.0.1"
+            },
+            "time": "2024-10-23T23:09:26+00:00"
         },
         {
             "name": "symfony/polyfill-ctype",

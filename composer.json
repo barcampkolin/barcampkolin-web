@@ -61,7 +61,8 @@
 		"ublaboo/datagrid": "^6.2",
 		"nextras/orm": "^4.0",
 		"nextras/secured-links": "^1.4",
-		"nextras/dbal": "^4.0"
+		"nextras/dbal": "^4.0",
+		"redbitcz/debug-mode-enabler": "^5.0"
 	},
 	"prefer-stable": true,
 	"minimum-stability": "dev"
