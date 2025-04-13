@@ -238,7 +238,7 @@ class MailPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function save(Form $form, array $values): void
+    public function save(Form $form, ArrayHash $values): void
     {
         $id = $values->id;
         if ($id === 'layout') {
