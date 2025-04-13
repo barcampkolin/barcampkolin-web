@@ -9,8 +9,11 @@ class StoragePrefix
      * @param string $urlBase
      * @param string $pathPrefix
      */
-    public function __construct(private $storageBase, private $urlBase, private $pathPrefix)
-    {
+    public function __construct(
+        private $storageBase,
+        private $urlBase,
+        private $pathPrefix
+    ) {
     }
 
 

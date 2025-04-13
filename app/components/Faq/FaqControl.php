@@ -11,8 +11,9 @@ class FaqControl extends Control
      * FaqControl constructor.
      * @param EnumeratorManager $enumeratorManager
      */
-    public function __construct(private readonly EnumeratorManager $enumeratorManager)
-    {
+    public function __construct(
+        private readonly EnumeratorManager $enumeratorManager
+    ) {
     }
 
 

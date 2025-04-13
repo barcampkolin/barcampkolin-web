@@ -18,8 +18,10 @@ class SignInFormFactory
     private $user;
 
 
-    public function __construct(private FormFactory $factory, private EmailAuthenticator $authenticator)
-    {
+    public function __construct(
+        private FormFactory $factory,
+        private EmailAuthenticator $authenticator
+    ) {
     }
 
 

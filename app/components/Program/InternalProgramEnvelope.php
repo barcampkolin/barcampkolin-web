@@ -21,8 +21,9 @@ class InternalProgramEnvelope extends InternalProgram
      * InternalProgramEnvelope constructor.
      * @param Program $program
      */
-    public function __construct(private readonly Program $program)
-    {
+    public function __construct(
+        private readonly Program $program
+    ) {
     }
 
 

@@ -10,8 +10,9 @@ class NewsletterSignupFactory
      * NewsletterSignupFactory constructor.
      * @param NewsletterSignupManager $signupManager
      */
-    public function __construct(private readonly NewsletterSignupManager $signupManager)
-    {
+    public function __construct(
+        private readonly NewsletterSignupManager $signupManager
+    ) {
     }
 
 

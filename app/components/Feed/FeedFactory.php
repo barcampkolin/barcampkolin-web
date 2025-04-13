@@ -10,8 +10,9 @@ class FeedFactory
      * FeedFactory constructor.
      * @param WordpressPostReader $postReader
      */
-    public function __construct(private readonly WordpressPostReader $postReader)
-    {
+    public function __construct(
+        private readonly WordpressPostReader $postReader
+    ) {
     }
 
 

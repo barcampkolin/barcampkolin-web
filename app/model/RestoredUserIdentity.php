@@ -7,8 +7,10 @@ use App\Orm\User;
 
 class RestoredUserIdentity
 {
-    public function __construct(private readonly User $user, private readonly Identity $identity)
-    {
+    public function __construct(
+        private readonly User $user,
+        private readonly Identity $identity
+    ) {
     }
 
 

@@ -17,8 +17,9 @@ class ConfereeForm
      * RegisterConfereeForm constructor.
      * @param FormFactory $factory
      */
-    public function __construct(private FormFactory $factory)
-    {
+    public function __construct(
+        private FormFactory $factory
+    ) {
     }
 
 
@@ -51,7 +52,10 @@ class ConfereeForm
             ->setOption('description', 'Odkud k nám přicházíte? (nepovinné, může se zobrazit na profilu a na visačce)');
 
         $form->addText('extendedCompanyPosition', 'Pozice ve firmě:')
-            ->setOption('description', 'Jakou pozici máte ve firmě (nepovinné, může se zobrazit na profilu a na visačce)');
+            ->setOption(
+                'description',
+                'Jakou pozici máte ve firmě (nepovinné, může se zobrazit na profilu a na visačce)'
+            );
 
         $form->addGroup();
 
@@ -63,7 +67,10 @@ class ConfereeForm
                 false => 'Ne'
             ]
         )->setDefaultValue(true)
-            ->setOption('description', 'E-mail samozřejmě nebudeme zobrazovat, pouze tvoje jméno, avatar, firmu a pokud vyplníš pár slov o sobě, tak i ty.');
+            ->setOption(
+                'description',
+                'E-mail samozřejmě nebudeme zobrazovat, pouze tvoje jméno, avatar, firmu a pokud vyplníš pár slov o sobě, tak i ty.'
+            );
 
         $form->addSubmit('send')
             ->setOption('itemClass', 'text-center')

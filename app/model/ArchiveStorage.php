@@ -11,8 +11,9 @@ class ArchiveStorage
     /**
      * @param string $storagePrefix
      */
-    public function __construct(private $storagePrefix)
-    {
+    public function __construct(
+        private $storagePrefix
+    ) {
     }
 
 

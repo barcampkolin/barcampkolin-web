@@ -17,7 +17,6 @@ use App\Orm\Talk;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\Http\IResponse;
-use Nette\Http\Response;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -33,8 +32,16 @@ class UserPresenter extends BasePresenter
      * @param EventInfoProvider $eventInfoProvider
      * @param AvatarStorage $avatarStorage
      */
-    public function __construct(private readonly UserManager $userManager, private readonly ConfereeManager $confereeManager, private readonly TalkManager $talkManager, private readonly Forms\ConfereeForm $confereeForm, private readonly Forms\TalkForm $talkForm, private readonly EventInfoProvider $eventInfoProvider, private readonly AvatarStorage $avatarStorage)
-    {
+    public function __construct(
+        private readonly UserManager $userManager,
+        private readonly ConfereeManager $confereeManager,
+        private readonly TalkManager $talkManager,
+        private readonly Forms\ConfereeForm $confereeForm,
+        private readonly Forms\TalkForm $talkForm,
+        private readonly EventInfoProvider $eventInfoProvider,
+        private readonly AvatarStorage $avatarStorage
+    ) {
+        parent::__construct();
     }
 
 
@@ -105,7 +112,6 @@ class UserPresenter extends BasePresenter
          * @throws \Nette\Application\AbortException
          */
         $onSubmitCallback = function (Conferee $conferee, $values): void {
-
             if ($conferee->id != $values->id) {
                 Debugger::log(
                     'Security alert: ' . self::class . ':' . __METHOD__ . ' form send invalid $coferee->id',
@@ -150,7 +156,6 @@ class UserPresenter extends BasePresenter
          * @throws \Nette\Application\AbortException
          */
         $onSubmitCallback = function (Talk $talk, $values): void {
-
             if ($talk->id != $values->id) {
                 Debugger::log(
                     'Security alert: ' . self::class . ':' . __METHOD__ . ' form send invalid $coferee->id',

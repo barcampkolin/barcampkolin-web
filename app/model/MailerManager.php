@@ -23,8 +23,12 @@ class MailerManager
      * @param IMailer $mailer
      * @param MailDynamicLoader $mailLoader
      */
-    public function __construct(private $config, private $tempdir, private readonly IMailer $mailer, private readonly MailDynamicLoader $mailLoader)
-    {
+    public function __construct(
+        private $config,
+        private $tempdir,
+        private readonly IMailer $mailer,
+        private readonly MailDynamicLoader $mailLoader
+    ) {
     }
 
 
@@ -36,8 +40,11 @@ class MailerManager
      * @throws EntityNotFound
      * @throws \Nette\Utils\JsonException
      */
-    public function getDynamicMessage($recipient, $mailTemplateId, array $parameters = []): \App\Mails\UniversalDynamicMessage
-    {
+    public function getDynamicMessage(
+        $recipient,
+        $mailTemplateId,
+        array $parameters = []
+    ): \App\Mails\UniversalDynamicMessage {
         $mail = $this->mailLoader->getMailById($mailTemplateId);
 
         $message = new UniversalDynamicMessage();

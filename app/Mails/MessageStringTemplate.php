@@ -8,8 +8,9 @@ class MessageStringTemplate implements ITemplate
      * MessageStringTemplate constructor.
      * @param string $content
      */
-    public function __construct(private $content)
-    {
+    public function __construct(
+        private $content
+    ) {
     }
 
 

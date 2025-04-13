@@ -14,8 +14,10 @@ class LocalFileStorage
      * @param StoragePrefix $storagePrefix
      * @param bool $isRandomizeName
      */
-    public function __construct(private readonly StoragePrefix $storagePrefix, private $isRandomizeName = true)
-    {
+    public function __construct(
+        private readonly StoragePrefix $storagePrefix,
+        private $isRandomizeName = true
+    ) {
     }
 
 
@@ -76,8 +78,10 @@ class LocalFileStorage
         $filename = Strings::webalize($filename);
 
         if ($filename === '') {
-            throw new InvalidArgumentException('Filename is empty or contain only invalid chars.'
-                . 'Add filename or allow LocalStorage to add random filename.');
+            throw new InvalidArgumentException(
+                'Filename is empty or contain only invalid chars.'
+                . 'Add filename or allow LocalStorage to add random filename.'
+            );
         }
 
         if ($extOverride !== null) {
@@ -154,8 +158,9 @@ class LocalFileStorage
         $storagePrefix = $this->storagePrefix->getStoragePath();
 
         // Check jurisdiction
-        if($this->match($url) === false)
-        throw new InvalidArgumentException("URL \"$url\" is not matching to prefix \"$urlPrefix\"");
+        if ($this->match($url) === false) {
+            throw new InvalidArgumentException("URL \"$url\" is not matching to prefix \"$urlPrefix\"");
+        }
 
         $filename = str_replace($urlPrefix, $storagePrefix, $url);
 

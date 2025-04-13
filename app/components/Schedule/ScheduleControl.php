@@ -5,7 +5,6 @@ namespace App\Components\Schedule;
 use App\Model\EventInfoProvider;
 use App\Model\ScheduleManager;
 use Nette\Application\UI\Control;
-use Nette\Utils\Json;
 
 class ScheduleControl extends Control
 {
@@ -14,8 +13,10 @@ class ScheduleControl extends Control
      * @param EventInfoProvider $infoProvider
      * @param ScheduleManager $scheduleManager
      */
-    public function __construct(private readonly EventInfoProvider $infoProvider, private readonly ScheduleManager $scheduleManager)
-    {
+    public function __construct(
+        private readonly EventInfoProvider $infoProvider,
+        private readonly ScheduleManager $scheduleManager
+    ) {
     }
 
 
@@ -36,7 +37,7 @@ class ScheduleControl extends Control
 
         $this->template->config = [
             'dates' => $dates,
-            'steps'=> $steps,
+            'steps' => $steps,
             'features' => $features
         ];
 

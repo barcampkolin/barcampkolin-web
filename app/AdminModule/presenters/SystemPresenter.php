@@ -10,8 +10,10 @@ use Ublaboo\DataGrid\DataGrid;
 
 class SystemPresenter extends BasePresenter
 {
-    public function __construct(private readonly ApiTokenManager $apiTokenManager)
-    {
+    public function __construct(
+        private readonly ApiTokenManager $apiTokenManager
+    ) {
+        parent::__construct();
     }
 
 
@@ -74,7 +76,9 @@ class SystemPresenter extends BasePresenter
             ->setTitle('Smazat')
             ->setClass('btn btn-xs btn-danger ajax')
             ->setConfirmation(
-                new StringConfirmation('Smazáním tokenu může dojít k poškození funkčnosti. Opravdu chcete smazat token %s?', 'key')
+                new StringConfirmation(
+                    'Smazáním tokenu může dojít k poškození funkčnosti. Opravdu chcete smazat token %s?', 'key'
+                )
             );
 
         return $grid;

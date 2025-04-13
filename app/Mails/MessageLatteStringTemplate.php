@@ -8,8 +8,9 @@ class MessageLatteStringTemplate implements ITemplate
      * MessageLatteFileTemplate constructor.
      * @param array $templates
      */
-    public function __construct(private array $templates = [])
-    {
+    public function __construct(
+        private array $templates = []
+    ) {
     }
 
 

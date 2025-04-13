@@ -26,8 +26,17 @@ class ArchiveManager
      * @param ConfereeManager $confereeManager
      * @param ScheduleManager $scheduleManager
      */
-    public function __construct(private readonly array $archivedStaticFolders, private array $pages, private readonly ConfigManager $config, private readonly Request $httpRequest, private readonly TalkManager $talkManager, private readonly ArchiveStorage $archiveStorage, private readonly PartnersManager $partnersManager, private readonly ConfereeManager $confereeManager, private readonly ScheduleManager $scheduleManager)
-    {
+    public function __construct(
+        private readonly array $archivedStaticFolders,
+        private array $pages,
+        private readonly ConfigManager $config,
+        private readonly Request $httpRequest,
+        private readonly TalkManager $talkManager,
+        private readonly ArchiveStorage $archiveStorage,
+        private readonly PartnersManager $partnersManager,
+        private readonly ConfereeManager $confereeManager,
+        private readonly ScheduleManager $scheduleManager
+    ) {
     }
 
 
@@ -103,7 +112,9 @@ class ArchiveManager
     {
         $realCurrentYear = (int)$this->getCurrentYear();
         if (((int)$currentYear) !== $realCurrentYear) {
-            throw new DuplicateNameException("Unable to archive year $currentYear because it is not real current year ($realCurrentYear)");
+            throw new DuplicateNameException(
+                "Unable to archive year $currentYear because it is not real current year ($realCurrentYear)"
+            );
         }
 
         $this->archiveStaticFiles($currentYear, $toYear);

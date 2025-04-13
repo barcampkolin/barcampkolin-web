@@ -11,8 +11,9 @@ use Nette\Utils\Strings;
 class AvatarStorage
 {
 
-    public function __construct(private readonly StoragePrefix $storagePrefix)
-    {
+    public function __construct(
+        private readonly StoragePrefix $storagePrefix
+    ) {
     }
 
 
@@ -27,7 +28,7 @@ class AvatarStorage
         $name = Strings::truncate(Strings::webalize($name ?? $this->getRandom()), 20, '');
         $url = [$this->saveImage($file, $name)];
 
-        $extension = explode('/', (string) $file->getContentType())[1];
+        $extension = explode('/', (string)$file->getContentType())[1];
         $filename = $this->getAttributedFilename($name, 'original', $extension);
         $file->move($this->getStorageFilename($filename));
 

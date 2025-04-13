@@ -18,8 +18,10 @@ class EnumeratorFormControl extends Control
      * @param string $setName Name set name (in database)
      * @param EnumeratorManager $enumeratorManager
      */
-    public function __construct(private $setName, private readonly EnumeratorManager $enumeratorManager)
-    {
+    public function __construct(
+        private $setName,
+        private readonly EnumeratorManager $enumeratorManager
+    ) {
     }
 
 
@@ -37,7 +39,6 @@ class EnumeratorFormControl extends Control
                     $form['enums'][$i]->setDefaults($enum);
                 }
             }
-
         }
     }
 

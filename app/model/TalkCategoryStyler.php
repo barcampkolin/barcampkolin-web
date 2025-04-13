@@ -8,8 +8,10 @@ class TalkCategoryStyler
      * @param array $keys
      * @param string $default
      */
-    public function __construct(private array $keys, private $default = 'style0')
-    {
+    public function __construct(
+        private array $keys,
+        private $default = 'style0'
+    ) {
     }
 
 
@@ -29,7 +31,7 @@ class TalkCategoryStyler
             return 'style-' . $categoryKey;
         }
 
-        if($default !== null) {
+        if ($default !== null) {
             return $default;
         }
 

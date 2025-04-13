@@ -32,8 +32,13 @@ class ConferencePresenter extends BasePresenter
      * @param IdentityManager $identityManager
      * @param UserManager $userManager
      */
-    public function __construct(private readonly ConfereeManager $confereeManager, private readonly TalkManager $talkManager, private readonly IdentityManager $identityManager, private readonly UserManager $userManager)
-    {
+    public function __construct(
+        private readonly ConfereeManager $confereeManager,
+        private readonly TalkManager $talkManager,
+        private readonly IdentityManager $identityManager,
+        private readonly UserManager $userManager
+    ) {
+        parent::__construct();
     }
 
 
@@ -341,7 +346,6 @@ class ConferencePresenter extends BasePresenter
                     return $talk->votes . " (koef: $talk->voteCoefficient)";
                 } else {
                     return $talk->votes;
-
                 }
             });
         });
@@ -660,8 +664,8 @@ class ConferencePresenter extends BasePresenter
 
     /**
      *
-     * @throws JsonException
      * @return mixed[]
+     * @throws JsonException
      */
     public function getMergedTalks(): array
     {
@@ -843,7 +847,7 @@ class ConferencePresenter extends BasePresenter
             }
 
             if ($key === 'time') {
-                if (preg_match('#^(-?)(\d+):(\d+)#', (string) $value, $m)) {
+                if (preg_match('#^(-?)(\d+):(\d+)#', (string)$value, $m)) {
                     $value = new DateInterval("PT{$m[2]}H{$m[3]}M");
                 } else {
                     $values = null;
@@ -851,7 +855,7 @@ class ConferencePresenter extends BasePresenter
             }
 
             if ($key === 'type') {
-                [$type, $talkId] = array_pad(explode('|', (string) $value, 2), 2, null);
+                [$type, $talkId] = array_pad(explode('|', (string)$value, 2), 2, null);
                 $program->type = $type;
                 if ($talkId) {
                     $program->talk = $this->talkManager->getById($talkId);

@@ -49,8 +49,10 @@ class EventInfoProvider
      * @param ConfigManager $config
      * @param ConfereeManager $confereeManager
      */
-    public function __construct(private ConfigManager $config, private ConfereeManager $confereeManager)
-    {
+    public function __construct(
+        private ConfigManager $config,
+        private ConfereeManager $confereeManager
+    ) {
     }
 
 

@@ -17,8 +17,9 @@ class TalkForm
      * RegisterConfereeForm constructor.
      * @param FormFactory $factory
      */
-    public function __construct(private FormFactory $factory)
-    {
+    public function __construct(
+        private FormFactory $factory
+    ) {
     }
 
 
@@ -37,8 +38,11 @@ class TalkForm
             ->setRequired('Prosíme, vyplňte název přednášky');
 
         $form->addTextArea('description', 'Popis tvé přednášky:')
-            ->setOption('description', 'V několika větách shrňte záměr přednášky. Nepodporujeme formátování, '
-                . 'pouze odřádkování')
+            ->setOption(
+                'description',
+                'V několika větách shrňte záměr přednášky. Nepodporujeme formátování, '
+                . 'pouze odřádkování'
+            )
             ->setRequired('Popis přednášky je důležitý, prosíme vyplňte jej.');
 
         $form->addTextArea('purpose', 'Pro koho je přednáška určena:')
@@ -57,8 +61,11 @@ class TalkForm
         $form->addGroup('Něco o vás');
 
         $form->addText('company', 'Firma:')
-            ->setOption('description', 'Volitelné: firma, kterou reprezentujete; napište tak, jak se běžne užívá. '
-                . 'Bude zobrazeno v popisu přednášky.');
+            ->setOption(
+                'description',
+                'Volitelné: firma, kterou reprezentujete; napište tak, jak se běžne užívá. '
+                . 'Bude zobrazeno v popisu přednášky.'
+            );
 
         $form->addText('url_www', 'WWW stránka:')
             ->setOption('description', 'Volitelné. Odkaz na vaše stránky, (příp. stránky firmy)')

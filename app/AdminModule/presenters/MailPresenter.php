@@ -19,8 +19,11 @@ class MailPresenter extends BasePresenter
      * @param MailDynamicLoader $mailLoader
      * @param MailerManager $mailer
      */
-    public function __construct(private readonly MailDynamicLoader $mailLoader, private readonly MailerManager $mailer)
-    {
+    public function __construct(
+        private readonly MailDynamicLoader $mailLoader,
+        private readonly MailerManager $mailer
+    ) {
+        parent::__construct();
     }
 
 
@@ -81,9 +84,7 @@ class MailPresenter extends BasePresenter
      */
     public function renderEdit($id): void
     {
-
         $this->template->id = $id;
-
 
         /** @var Form $form */
         $form = $this['editForm'];
@@ -98,6 +99,7 @@ class MailPresenter extends BasePresenter
         } else {
             $mail = $this->getMailById($id);
         }
+
         $form->setDefaults($mail);
     }
 

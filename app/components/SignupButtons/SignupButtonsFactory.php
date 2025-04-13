@@ -10,8 +10,9 @@ class SignupButtonsFactory
      * SignupButtonsFactory constructor.
      * @param EventInfoProvider $eventInfoProvider
      */
-    public function __construct(private readonly EventInfoProvider $eventInfoProvider)
-    {
+    public function __construct(
+        private readonly EventInfoProvider $eventInfoProvider
+    ) {
     }
 
 

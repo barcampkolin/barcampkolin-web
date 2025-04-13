@@ -11,8 +11,10 @@ class SchedulePresenter extends BasePresenter
      * SchedulePresenter constructor.
      * @param ScheduleManager $scheduleManager
      */
-    public function __construct(private readonly ScheduleManager $scheduleManager)
-    {
+    public function __construct(
+        private readonly ScheduleManager $scheduleManager
+    ) {
+        parent::__construct();
     }
 
 
