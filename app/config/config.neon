@@ -134,3 +134,8 @@ services:
 
     # Router
     router: App\RouterFactory::createRouter
+
+    # System
+    debugModeDetector:
+        type: Redbitcz\DebugMode\Detector
+        imported: true

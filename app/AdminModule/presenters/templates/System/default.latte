@@ -2,7 +2,8 @@
 {block content}
 
 <h2>Ladění webu</h2>
-<p>Ladění webu je nyní <strong>
+<p>Ladění webu je nyní {if $isDebugByEnabler}manuálně{/if}
+    <strong>
         {if $isDebug}
             <span class="glyphicon glyphicon-ok"></span> zapnuto
         {else}
@@ -10,15 +11,20 @@
         {/if}
     </strong>.</p>
 
-{if $isDebugByEnv}
-    <p><span class="label label-info">Info</span> Ladění je zapnuto přes Environment (lokální prostředí), takže nastavení nelze změnit.</p>
-{elseif !$secured}
-    <p><span class="label label-info">Info</span> Aplikace není provozována na HTTPS, takže nastavení nelze změnit.</p>
-{elseif $isDebug}
-    <p><a n:href="turnDebugOff!" class="btn btn-primary"><span class="glyphicon glyphicon-remove"></span> Vypnout</a></p>
+<p>
+{if $secured}
+    {if $isDebug}
+        <a n:href="turnDebugOff!" class="btn btn-primary"><span class="glyphicon glyphicon-remove"></span> Vypnout</a>
+    {else}
+        <a n:href="turnDebugOn!" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span> Zapnout</a>
+    {/if}
+    {if $isDebugByEnabler}
+        <a n:href="resetDebug!" class="btn btn-secondary"><span class="glyphicon glyphicon-refresh"></span> Vrátit do původního stavu</a>
+    {/if}
 {else}
-    <p><a n:href="turnDebugOn!" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span> Zapnout</a></p>
+    <p><span class="label label-info">Info</span> Aplikace není provozována na HTTPS, takže nastavení nelze změnit.</p>
 {/if}
+</p>
 
 <hr>
 
