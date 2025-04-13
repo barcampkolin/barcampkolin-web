@@ -42,7 +42,7 @@ Spusťte Docker
 
     docker-composer up -d
 
-Na stránce `http://localhost:8001` by se měl objevit aktuální web.
+Na stránce `http://localhost:8080` by se měl objevit aktuální web.
 
 Nastavení cronu
 --------------
@@ -69,9 +69,9 @@ Seznam cronů:
 Požadavky pro běh
 -----------------
 
-PHP 5.6 nebo vyšší, Mysql 5 nebo vyšší, Git, Unzip. 
+PHP 8.3 nebo vyšší, Mysql, Git, Unzip. 
 
-V PHP jsou potřeba rozšření: mysqli, pdo_mysql.
+V PHP jsou potřeba rozšření: `mysqli`, `pdo_mysql`.
 
 
 Požadavky pro vývoj
