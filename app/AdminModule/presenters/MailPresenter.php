@@ -94,6 +94,7 @@ class MailPresenter extends BasePresenter
             $form->removeComponent($form['header']);
             $form->removeComponent($form['preheader']);
             $form->removeComponent($form['purpose']);
+            $form->removeComponent($form['submitAndShow']);
         } else {
             $mail = $this->getMailById($id);
         }
