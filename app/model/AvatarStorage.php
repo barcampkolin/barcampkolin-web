@@ -12,7 +12,8 @@ class AvatarStorage
 {
 
     public function __construct(
-        private readonly StoragePrefix $storagePrefix
+        private readonly StoragePrefix $storagePrefix,
+        private readonly int $size
     ) {
     }
 
@@ -41,7 +42,7 @@ class AvatarStorage
     {
         $image = $file->toImage();
 
-        $image->resize(200, 200, Image::EXACT);
+        $image->resize($this->size, $this->size, Image::EXACT);
 
         $filename = $this->getAttributedFilename($name, 'thumb', 'jpeg');
         $storageFile = $this->getStorageFilename($filename);

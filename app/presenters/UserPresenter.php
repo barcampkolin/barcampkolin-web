@@ -7,6 +7,7 @@ use App\Model\AvatarStorage;
 use App\Model\ConfereeManager;
 use App\Model\ConfereeNotFound;
 use App\Model\EventInfoProvider;
+use App\Model\GravatarImageProvider;
 use App\Model\NoUserLoggedIn;
 use App\Model\TalkManager;
 use App\Model\TalkNotFound;
@@ -39,7 +40,8 @@ class UserPresenter extends BasePresenter
         private readonly Forms\ConfereeForm $confereeForm,
         private readonly Forms\TalkForm $talkForm,
         private readonly EventInfoProvider $eventInfoProvider,
-        private readonly AvatarStorage $avatarStorage
+        private readonly AvatarStorage $avatarStorage,
+        private readonly GravatarImageProvider $gravatar,
     ) {
         parent::__construct();
     }
@@ -77,6 +79,8 @@ class UserPresenter extends BasePresenter
 
         $this->template->conferee = $conferee;
         $this->template->talks = $talks;
+
+        $this->template->profileImage = $user->pictureUrl ?? $this->gravatar->getGravatarUrl($user->email);
 
         $features = $this->eventInfoProvider->getFeatures();
         $this->template->allowRegisterConferee = $features['conferee'];
