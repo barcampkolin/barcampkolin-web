@@ -1,2 +1,2 @@
 services:
-	publicStoragePrefixer: App\Model\TestStoragePrefixFactory
+    publicStoragePrefixer: App\Model\TestStoragePrefixFactory

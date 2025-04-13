@@ -18,17 +18,17 @@ parameters:
         from: "Barcamp Kolín <info@barcampkolin.cz>"
     api_token_secretkey: {secret-token}
     archive:
-    	archivedFolders:
-    		- '%wwwDir%/static'
-    	pages:
-    		simple:
-    			- '/'
-    			- '/kontakt'
-    			- '/program'
-    			- '/prednasky'
-    			- '/o-akci'
-    			- '/partneri'
-    		talks: '/prednaska/%d'
+        archivedFolders:
+            - '%wwwDir%/static'
+        pages:
+            simple:
+                - '/'
+                - '/kontakt'
+                - '/program'
+                - '/prednasky'
+                - '/o-akci'
+                - '/partneri'
+            talks: '/prednaska/%d'
 
 application:
     errorPresenter: Error
