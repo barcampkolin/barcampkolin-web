@@ -514,7 +514,7 @@ class ConferencePresenter extends BasePresenter
             ->setHtmlType('number');
         $form->addText('ogImageUrl', 'OG obrázek')
             ->setRequired(false)
-            ->addRule(Form::URL, 'OG obrázek musí být ve tvaru URL');
+        ;
 
         $form->addSubmit('submit', 'Odeslat')->setOption('primary', true);
 
