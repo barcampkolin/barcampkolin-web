@@ -53,6 +53,7 @@ class RouterFactory
         $router[] = new Route('upravit-profil', 'User:conferee');
         $router[] = new Route('upravit-prednasku', 'User:talk');
         $router[] = new Route('archiv', 'Archived:list');
+        $router[] = new Route('privacy-policy', 'PrivacyPolicy:default');
 
         $router[] = self::createArchiveRoutes($archiveManager->getArchivedYears());
 
