@@ -12,3 +12,4 @@ nbproject/*
 .idea/*
 /www/upload
 /www/archive
+/.deployment-credentials.php

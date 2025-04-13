@@ -80,6 +80,37 @@ Požadavky pro vývoj
 Composer, NPM 
 
 
+Deploy na server
+----------------
+
+Pro automatický deploy změn na produkční server je potřeba mít nainstalovaný composer a v něm **globálně** nainstalovaný
+balíček [`ftp-deployment`](https://github.com/dg/ftp-deployment):
+
+```shell
+composer global require dg/ftp-deployment
+```
+
+Údaje pro připojení k FTP serveru nejsou verzovány a je potřeba je lokálně nakonfigurovat v souboru
+`.deployment-credentials.php` v kořenovém adresáři repozitáře a to ve tvaru: 
+
+```php
+<?php
+
+return [
+     'remote' => <fill in your FTP url - e.g. ftps://example.com/path/to/your/dir>,
+     'user' => <fill in your FTP username>,
+     'password' => <fill in your FTP password>
+];
+```
+
+### Spuštění deploye
+
+Deploy lze spustit připravenými scripty:
+
+- `bin/deploy.sh` - pro nasazení na produkční server
+- `bin/deploy-dry.sh` - pro výpis souborů, které by se nasadily na produkční server
+
+
 License
 -------
 - Web: The MIT License (MIT)
