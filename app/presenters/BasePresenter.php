@@ -64,5 +64,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->dataLayer = $dataLayer;
 
         $this->template->isArchivationProcess = $this->isArchivationProcess;
+
+        $this->template->addFunction('isPassed', $this->isDatePassed(...));
+    }
+
+    private function isDatePassed(\DateTimeInterface $date): bool
+    {
+        return $date < new \DateTimeImmutable();
     }
 }
