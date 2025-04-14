@@ -62,18 +62,6 @@ class RouterFactory
         // Simple page unger Homepage presenter
         $router[] = new Route('<action>', 'Homepage:default');
 
-        //Facebook API endpoints (important for strict FB API policy)
-        $router[] = new Route('sign/facebook', [
-            'presenter' => 'Sign',
-            'action' => 'federatedLogin',
-            'platform' => 'facebook',
-        ]);
-        $router[] = new Route('sign/facebook/callback', [
-            'presenter' => 'Sign',
-            'action' => 'federatedCallback',
-            'platform' => 'facebook',
-        ]);
-
         // Universal router to process another requests
         $router[] = new Route('<presenter>/<action>[/<id \d+>]');
 

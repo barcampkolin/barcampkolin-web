@@ -10,10 +10,6 @@ parameters:
         user: root
         password: redbitmasters
         port: 3306
-    facebook:
-        app_id: '166646454130570'
-        app_secret: {app-secret}
-        default_graph_version: v2.2
     mail:
         from: "Barcamp Kolín <info@barcampkolin.cz>"
     api_token_secretkey: {secret-token}
@@ -91,7 +87,6 @@ services:
     # Managers
     - App\Model\ArchiveManager(%archive.archivedFolders%, %archive.pages%)
     - App\Model\ApiTokenManager(%api_token_secretkey%)
-    - App\Model\Authenticator\AuthenticatorProvider
     - App\Model\Authenticator\Email
     - App\Model\ConfigManager
     - App\Model\ConfereeManager
