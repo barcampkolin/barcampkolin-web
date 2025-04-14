@@ -41,12 +41,12 @@ class UserPresenter extends BasePresenter
     {
         parent::startup();
         try {
-            $this->userManager->getByLoginUser($this->user);
+            $this->userManager->getByLoginUser($this->getUser());
         } catch (NoUserLoggedIn) {
             $backlink = $this->storeRequest();
             $this->redirect(':Sign:conferee', ['backlink' => $backlink]);
         } catch (UserNotFound) {
-            $this->user->logout();
+            $this->getUser()->logout();
             $backlink = $this->storeRequest();
             $this->redirect(':Sign:in', ['backlink' => $backlink]);
         }
@@ -55,7 +55,7 @@ class UserPresenter extends BasePresenter
 
     public function renderProfil(): void
     {
-        $user = $this->userManager->getByLoginUser($this->user);
+        $user = $this->userManager->getByLoginUser($this->getUser());
         $conferee = $user->conferee;
         $talks = $conferee ? $conferee->talk : [];
 
@@ -115,7 +115,7 @@ class UserPresenter extends BasePresenter
             $this->redirect('User:profil');
         };
 
-        $conferee = $this->userManager->getByLoginUser($this->user)->getObligatoryConferee();
+        $conferee = $this->userManager->getByLoginUser($this->getUser())->getObligatoryConferee();
 
         $form = $this->confereeForm->create($onSubmitCallback, $conferee);
 
@@ -155,13 +155,10 @@ class UserPresenter extends BasePresenter
             $this->redirect('User:profil');
         };
 
-        $conferee = $this->userManager->getByLoginUser($this->user)->getObligatoryConferee();
+        $conferee = $this->userManager->getByLoginUser($this->getUser())->getObligatoryConferee();
 
-        $talk = null;
-        foreach ($conferee->talk as $loopTalk) {
-            $talk = $loopTalk;
-            break;
-        }
+        /** @var ?Talk $talk */
+        $talk = $conferee->talk->getIterator()->fetch();
 
         if ($talk === null) {
             throw new TalkNotFound();
@@ -187,13 +184,13 @@ class UserPresenter extends BasePresenter
      */
     public function handleUploadAvatar(): void
     {
-        $user = $this->userManager->getByLoginUser($this->user);
+        $user = $this->userManager->getByLoginUser($this->getUser());
         $conferee = $user->conferee;
 
         $files = $this->getRequest()->getFiles();
         if (!isset($files['file'])) {
             Debugger::log('Uploaded empty file', ILogger::WARNING);
-            $this->error('Wrong reguest', IResponse::S400_BAD_REQUEST);
+            $this->error('Wrong reguest', IResponse::S400_BadRequest);
         }
 
         /** @var FileUpload $file */
@@ -201,12 +198,12 @@ class UserPresenter extends BasePresenter
 
         if (!$file->isOk()) {
             Debugger::log('Uploaded corrupted file', ILogger::WARNING);
-            $this->error('Wrong reguest', IResponse::S400_BAD_REQUEST);
+            $this->error('Wrong reguest', IResponse::S400_BadRequest);
         }
 
         if (!$file->isImage()) {
             Debugger::log('Uploaded non-image file', ILogger::WARNING);
-            $this->error('Nelze nahrát jiný soubor než obrázek', IResponse::S403_FORBIDDEN);
+            $this->error('Nelze nahrát jiný soubor než obrázek', IResponse::S403_Forbidden);
         }
 
         [$url, $originalUrl] = $this->avatarStorage->saveUploaded($file, $user->name);
@@ -214,7 +211,7 @@ class UserPresenter extends BasePresenter
         $user->pictureUrl = $url;
         $conferee->pictureUrl = $url;
         $conferee->pictureOriginalUrl = $originalUrl;
-        $this->user->getIdentity()->pictureUrl = $url;
+        $this->getUser()->getIdentity()->pictureUrl = $url;
 
         $this->userManager->save($user);
 

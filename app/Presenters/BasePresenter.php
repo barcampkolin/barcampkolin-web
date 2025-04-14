@@ -4,6 +4,7 @@ namespace App\Presenters;
 
 use App\Model\ArchiveManager;
 use App\Model\EventInfoProvider;
+use App\Model\GravatarImageProvider;
 use Nette;
 use Nextras\Application\UI\SecuredLinksPresenterTrait;
 
@@ -14,26 +15,23 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
 {
     use SecuredLinksPresenterTrait;
 
-    /**
-     * @var EventInfoProvider $eventInfo
-     */
-    protected $eventInfo;
-    /**
-     * @var bool $isArchivationProcess True when archivation process is currently running & in progress
-     */
+    protected EventInfoProvider $eventInfo;
+    /** True when archivation process is currently running & in progress*/
     private ?bool $isArchivationProcess = null;
     private Nette\DI\Container $container;
+    private GravatarImageProvider $gravatarImageProvider;
 
 
-    /**
-     * @param EventInfoProvider $eventInfo
-     * @param ArchiveManager $archiveManager
-     */
-    public function inject(EventInfoProvider $eventInfo, ArchiveManager $archiveManager, Nette\DI\Container $container): void
-    {
+    public function inject(
+        EventInfoProvider $eventInfo,
+        ArchiveManager $archiveManager,
+        Nette\DI\Container $container,
+        GravatarImageProvider $gravatarImageProvider
+    ): void {
         $this->eventInfo = $eventInfo;
         $this->isArchivationProcess = $archiveManager->isArchivationProcess();
         $this->container = $container;
+        $this->gravatarImageProvider = $gravatarImageProvider;
     }
 
 
@@ -66,8 +64,12 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->isArchivationProcess = $this->isArchivationProcess;
 
         $this->template->addFunction('isPassed', $this->isDatePassed(...));
+        $this->template->addFunction('gravatarize', $this->gravatarImageProvider->gravatarize(...));
     }
 
+    /**
+     * @deprecated Stav webu by měl být řízen spíš stavem, než porovnánávním s aktuálním datem
+     */
     private function isDatePassed(\DateTimeInterface $date): bool
     {
         return $date < new \DateTimeImmutable();

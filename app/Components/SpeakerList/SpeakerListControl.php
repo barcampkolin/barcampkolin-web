@@ -3,6 +3,7 @@
 namespace App\Components\SpeakerList;
 
 use App\Model\EventInfoProvider;
+use App\Model\GravatarImageProvider;
 use App\Model\TalkManager;
 use App\Orm\Talk\Talk;
 use Nette\Application\UI\Control;
@@ -17,7 +18,8 @@ class SpeakerListControl extends Control
      */
     public function __construct(
         private readonly TalkManager $talkManager,
-        private readonly EventInfoProvider $eventInfoProvider
+        private readonly EventInfoProvider $eventInfoProvider,
+        private readonly GravatarImageProvider $gravatarImageProvider,
     ) {
     }
 
@@ -39,6 +41,7 @@ class SpeakerListControl extends Control
         $this->template->setFile(__DIR__ . '/SpeakerList.latte');
         $this->template->talks = $talks;
         $this->template->isProgram = $this->eventInfoProvider->getFeatures()['program'];
+        $this->template->addFunction('gravatarize', $this->gravatarImageProvider->gravatarize(...));
         $this->template->render();
     }
 }
