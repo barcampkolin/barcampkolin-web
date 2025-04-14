@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Orm;
+namespace App\Orm\Conferee;
 
 use Nextras\Dbal\Platforms\Data\Fqn;
 use Nextras\Orm\Mapper\Dbal\Conventions\IConventions;

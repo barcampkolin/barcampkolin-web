@@ -1,8 +1,11 @@
 <?php
 
-namespace App\Orm;
+namespace App\Orm\User;
 
 use App\Model\ConfereeNotFound;
+use App\Orm\Conferee\Conferee;
+use App\Orm\Identity\Identity;
+use App\Orm\UserRole\UserRole;
 use Nextras\Orm\Entity\Entity;
 use Nextras\Orm\Relationships\OneHasMany;
 

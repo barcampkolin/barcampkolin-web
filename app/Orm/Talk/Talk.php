@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Orm;
+namespace App\Orm\Talk;
 
+use App\Orm\Conferee\Conferee;
+use App\Orm\Program\Program;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use Nextras\Orm\Entity\Entity;

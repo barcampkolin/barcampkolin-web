@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Orm;
+namespace App\Orm\File;
 
 use Nextras\Orm\Entity\Entity;
 

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Orm\User;
+namespace App\Orm\Identity;
 
 use Nextras\Orm\Repository\Repository;
 
-class UserRepository extends Repository
+class IdentityRepository extends Repository
 {
     public static function getEntityClassNames(): array
     {
-        return [User::class];
+        return [Identity::class];
     }
 }
