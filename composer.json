@@ -29,7 +29,6 @@
 	"homepage": "https://www.barcampkolin.cz/",
 	"require": {
 		"php": ">=8.1",
-		"facebook/graph-sdk": "^5.7",
 		"kdyby/forms-replicator": "^2.0",
 		"latte/latte": "^2.5",
 		"nette/application": "^3.0.6",
@@ -51,23 +50,6 @@
 		"redbitcz/debug-mode-enabler": "^5.0",
 		"tracy/tracy": "^2.6",
 		"ublaboo/datagrid": "^6.2"
-	},
-	"repositories": {
-		"facebook/graph-sdk": {
-			"type": "package",
-			"package": {
-				"name": "facebook/graph-sdk",
-				"version": "5.7.0",
-				"require": {
-					"php": "*"
-				},
-				"source": {
-					"type": "git",
-					"url": "https://github.com/facebookarchive/php-graph-sdk.git",
-					"reference": "5.7.0"
-				}
-			}
-		}
 	},
 	"autoload": {
 		"classmap": ["app/Model/exceptions.php"],

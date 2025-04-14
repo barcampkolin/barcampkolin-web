@@ -4,7 +4,6 @@ namespace App\AdminModule\Presenters;
 
 use App\Components\Enumerator\IEnumeratorFormControlFactory;
 use App\Model\ConfigManager;
-use App\Model\DebugEnabler;
 use App\Model\EnumeratorManager;
 use App\Model\EventInfoProvider as Event;
 use App\Model\ScheduleManager;

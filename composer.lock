@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fd10bef03571b8d16d5cb6e76cb59f04",
+    "content-hash": "87528dd2bdbbe191d9bc53142ba31fb7",
     "packages": [
         {
             "name": "contributte/application",
@@ -80,19 +80,6 @@
                 }
             ],
             "time": "2023-09-27T20:32:37+00:00"
-        },
-        {
-            "name": "facebook/graph-sdk",
-            "version": "5.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/facebookarchive/php-graph-sdk.git",
-                "reference": "5.7.0"
-            },
-            "require": {
-                "php": "*"
-            },
-            "type": "library"
         },
         {
             "name": "kdyby/forms-replicator",

@@ -4,7 +4,6 @@ namespace App\Presenters;
 
 use App\Forms;
 use App\Model\AuthenticationException as AppAuthenticationException;
-use App\Model\Authenticator\AuthenticatorProvider;
 use App\Model\Authenticator\Email as EmailAuthenticator;
 use App\Model\ConfereeManager;
 use App\Model\ConfereeNotFound;
@@ -45,7 +44,6 @@ class SignPresenter extends BasePresenter
 
     /**
      * SignPresenter constructor.
-     * @param AuthenticatorProvider $authenticatorProvider
      * @param Forms\SignInFormFactory $signInFormFactory
      * @param Forms\SignUpFormFactory $signUpFormFactory
      * @param Forms\ConfereeForm $confereeForm
@@ -59,7 +57,6 @@ class SignPresenter extends BasePresenter
      * @param EmailAuthenticator $authenticator
      */
     public function __construct(
-        private readonly AuthenticatorProvider $authenticatorProvider,
         private readonly Forms\SignInFormFactory $signInFormFactory,
         private readonly Forms\SignUpFormFactory $signUpFormFactory,
         private readonly Forms\ConfereeForm $confereeForm,
@@ -74,61 +71,6 @@ class SignPresenter extends BasePresenter
     ) {
         parent::__construct();
     }
-
-
-    /**
-     * @param string $platform
-     * @throws \Nette\Application\AbortException
-     */
-    public function actionFederatedLogin($platform): void
-    {
-        $this->getSession()->start();
-        $callbackUrl = $this->link('//federatedCallback', ['platform' => $platform, 'backlink' => null]);
-        $loginUrl = $this->getAuthenticator($platform)->getLoginUrl($callbackUrl, $this->backlink);
-        $this->redirectUrl($loginUrl, Response::S303_POST_GET);
-    }
-
-
-    /**
-     * @param string $platform
-     * @throws AuthenticationException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function actionFederatedCallback($platform): void
-    {
-        try {
-            $authenticator = $this->getAuthenticator($platform);
-            $this->backlink = $authenticator->getBacklink($this->getHttpRequest(), $this->backlink);
-            $identity = $authenticator->authenticate($this->getHttpRequest());
-        } catch (AuthenticationException) {
-            $this->flashMessage('Omlouváme, přihlášení se nepovedlo. Zkuste to prosím znovu.');
-            $this->redirect('in');
-            return;
-        }
-
-        try {
-            $identity = $this->identityManager->getIdentityByIdentity($identity);
-        } catch (IdentityNotFoundException) {
-            $this->identityManager->save($identity);
-        }
-
-        $user = $identity->user;
-
-        if ($user) {
-            $this->login($user);
-            $this->restoreRequest($this->backlink);
-            $this->redirect('User:profil');
-        } else {
-            $user = new User();
-            $authenticator->fillUserWithIdentity($user, $identity);
-
-            $this->storeEntity($identity, Identity::class);
-            $this->storeEntity($user, User::class);
-            $this->redirect('conferee');
-        }
-    }
-
 
     /**
      * @throws UserNotFound
@@ -588,16 +530,6 @@ class SignPresenter extends BasePresenter
         );
 
         $this->user->login($appIdentity);
-    }
-
-
-    /**
-     * @param string $platform
-     * @return \App\Model\Authenticator\IAuthenticator
-     */
-    private function getAuthenticator($platform)
-    {
-        return $this->authenticatorProvider->provide($platform);
     }
 
 

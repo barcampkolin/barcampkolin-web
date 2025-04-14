@@ -19,7 +19,7 @@ class FilePresenter extends BasePresenter
     }
 
 
-    public function renderDefault()
+    public function renderDefault(): void
     {
     }
 
