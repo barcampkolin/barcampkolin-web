@@ -73,8 +73,7 @@
 		"classmap": ["app/Model/exceptions.php"],
 		"psr-4": {
 			"App\\": "app/"
-		},
-		"exclude-from-classmap": ["/app/Orm/"]
+		}
 	},
 	"minimum-stability": "dev",
 	"prefer-stable": true,

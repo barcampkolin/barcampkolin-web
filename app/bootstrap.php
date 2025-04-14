@@ -22,7 +22,6 @@ $configurator->setTempDirectory($tempDir);
 $configurator->addServices(['debugModeDetector' => $debugModeDetector]);
 
 $configurator->createRobotLoader()
-    ->addDirectory(__DIR__ . '/Orm')
     ->addDirectory(__DIR__ . '/Presenters')
     ->addDirectory(__DIR__ . '/AdminModule/Presenters')
     ->addDirectory(__DIR__ . '/ApiModule/Presenters')
