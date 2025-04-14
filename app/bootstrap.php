@@ -22,7 +22,10 @@ $configurator->setTempDirectory($tempDir);
 $configurator->addServices(['debugModeDetector' => $debugModeDetector]);
 
 $configurator->createRobotLoader()
-    ->addDirectory(__DIR__)
+    ->addDirectory(__DIR__ . '/Orm')
+    ->addDirectory(__DIR__ . '/Presenters')
+    ->addDirectory(__DIR__ . '/AdminModule/Presenters')
+    ->addDirectory(__DIR__ . '/ApiModule/Presenters')
     ->register();
 
 $configurator->addConfig(__DIR__ . '/config/config.neon');
