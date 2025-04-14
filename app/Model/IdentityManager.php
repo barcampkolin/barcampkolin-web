@@ -3,34 +3,23 @@
 namespace App\Model;
 
 use App\Orm\Identity\Identity;
+use App\Orm\Identity\IdentityRepository;
 use App\Orm\Orm;
+use Nextras\Orm\Entity\IEntity;
 
 
 class IdentityManager
 {
-
-    /**
-     * @var \App\Orm\IdentityRepository
-     */
-    private $identityRepository;
+    private IdentityRepository $identityRepository;
 
 
-    /**
-     * IdentityManager constructor
-     *
-     * @param Orm $orm
-     */
     public function __construct(Orm $orm)
     {
         $this->identityRepository = $orm->identity;
     }
 
 
-    /**
-     * @param $id
-     * @return mixed|\Nextras\Orm\Entity\IEntity|null
-     */
-    public function getById($id): ?\Nextras\Orm\Entity\IEntity
+    public function getById(int $id): ?IEntity
     {
         return $this->identityRepository->getById($id);
     }
@@ -38,12 +27,8 @@ class IdentityManager
 
     /**
      * Get Identity entity from Repository based on anotner Identity entity.
-     *
-     * @param Identity $identityTemplate
-     * @return Identity
-     * @throws IdentityNotFoundException
      */
-    public function getIdentityByIdentity(Identity $identityTemplate)
+    public function getIdentityByIdentity(Identity $identityTemplate): Identity
     {
         /** @var Identity $identity */
         return $this->getIdentity($identityTemplate->platform, $identityTemplate->key);
@@ -53,10 +38,8 @@ class IdentityManager
     /**
      * @param string $platform Platform name for search
      * @param string $key Identity key for search
-     * @return Identity
-     * @throws IdentityNotFoundException
      */
-    public function getIdentity($platform, $key)
+    public function getIdentity(string $platform, string $key): Identity
     {
         $identity = $this->identityRepository->getBy([
             'key' => $key,
@@ -71,19 +54,12 @@ class IdentityManager
     }
 
 
-    /**
-     * @param Identity $identity
-     * @param bool $withCascade
-     */
     public function save(Identity $identity, bool $withCascade = true): void
     {
         $this->identityRepository->persistAndFlush($identity, $withCascade);
     }
 
 
-    /**
-     * @param Identity $identity
-     */
     public function remove(Identity $identity): void
     {
         $this->identityRepository->removeAndFlush($identity);

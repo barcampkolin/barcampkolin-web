@@ -146,13 +146,7 @@ class Email
     }
 
 
-    /**
-     * @param $email
-     * @return string
-     * @throws IdentityNotFoundException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function createResetPasswordToken($email): string
+    public function createResetPasswordToken(string $email): string
     {
         $identity = $this->getIdentityByEmail($email);
 
@@ -204,12 +198,7 @@ class Email
     }
 
 
-    /**
-     * @param string $email
-     * @return Identity
-     * @throws IdentityNotFoundException
-     */
-    protected function getIdentityByEmail($email)
+    protected function getIdentityByEmail(string $email): Identity
     {
         return $this->identityManager->getIdentity(self::PLATFORM_KEY, $email);
     }

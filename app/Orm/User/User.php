@@ -21,10 +21,9 @@ use Nextras\Orm\Relationships\OneHasMany;
 class User extends Entity
 {
     /**
-     * @return Conferee
      * @throws ConfereeNotFound
      */
-    public function getObligatoryConferee()
+    public function getObligatoryConferee(): Conferee
     {
         $conferee = $this->conferee;
 
@@ -36,10 +35,7 @@ class User extends Entity
     }
 
 
-    /**
-     * @param $roleName
-     */
-    public function addRole($roleName): void
+    public function addRole(string $roleName): void
     {
         $role = new UserRole();
         $role->role = $roleName;

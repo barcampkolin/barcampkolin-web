@@ -21,25 +21,27 @@ use App\Orm\Identity\Identity;
 use App\Orm\Talk\Talk;
 use App\Orm\User\User;
 use App\Orm\UserRole\UserRole;
+use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\UI\Form;
 use Nette\Http\IResponse;
-use Nette\Http\Response;
+use Nette\Http\SessionSection;
 use Nette\Mail\SendException;
 use Nette\Security\AuthenticationException;
+use Nette\Security\SimpleIdentity;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Random;
 use Nextras\Orm\Entity\Entity;
 use Nextras\Orm\Entity\ToArrayConverter;
 use Tracy\Debugger;
 use Tracy\ILogger;
-use Tracy\Logger;
 
 class SignPresenter extends BasePresenter
 {
     /** @persistent */
-    public $backlink = '';
+    public string $backlink = '';
 
     /** @persistent */
-    public $token = '';
+    public string $token = '';
 
 
     /**
@@ -72,37 +74,18 @@ class SignPresenter extends BasePresenter
         parent::__construct();
     }
 
-    /**
-     * @throws UserNotFound
-     * @throws \Nette\Application\AbortException
-     */
     public function renderIn(): void
     {
-        try {
-            $this->userManager->getByLoginUser($this->user);
-
-            //When user loaded - already loggedIn
+        if ($this->getUser()->isLoggedIn()) {
             $this->redirect('User:profil');
-        } catch (NoUserLoggedIn) {
-            //Expected state - user must not be logged
         }
     }
 
 
-    /**
-     * @throws UserNotFound
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
     public function renderUp(): void
     {
-        try {
-            $this->userManager->getByLoginUser($this->user);
-
-            //When user loaded - already loggedIn
+        if ($this->getUser()->isLoggedIn()) {
             $this->redirect('User:profil');
-        } catch (NoUserLoggedIn) {
-            //Expected state - user must not be logged
         }
 
         if (!$this->eventInfoProvider->getFeatures()['conferee']) {
@@ -112,12 +95,6 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     * @throws UserNotFound
-     * @throws \Nette\Utils\JsonException
-     */
     public function renderConferee(): void
     {
         if (!$this->eventInfoProvider->getFeatures()['conferee']) {
@@ -140,25 +117,18 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws UserNotFound
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
     public function renderTalk(): void
     {
         try {
-            $conferee = $this->userManager->getByLoginUser($this->user)->getObligatoryConferee();
+            $conferee = $this->userManager->getByLoginUser($this->getUser())->getObligatoryConferee();
         } catch (NoUserLoggedIn) {
             $this->flashMessage('Pro vypsání přednášky na Barcampu se prosím přihlaste nebo registrujte');
             $this->backlink = $this->storeRequest();
             $this->redirect('up');
-            return;
         } catch (ConfereeNotFound) {
             $this->flashMessage('Pro vypsání přednášky se nejdříve registrujte jako účastník');
             $this->backlink = $this->storeRequest();
             $this->redirect('conferee');
-            return;
         }
 
         if ($conferee->talk->count() > 0) {
@@ -173,12 +143,9 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     *
-     */
     public function renderResetPasswordSent($email): void
     {
-        $domain = substr(strrchr((string) $email, "@"), 1);
+        $domain = substr(strrchr((string)$email, "@"), 1);
 
         $this->template->mailUrl = $this->getMailboxByDomain($domain);
     }
@@ -205,11 +172,11 @@ class SignPresenter extends BasePresenter
         getmxrr($domain, $mxhosts);
 
         if (isset($mxhosts[0])) {
-            if (preg_match('/google\.com$/', (string) $mxhosts[0])) {
+            if (preg_match('/google\.com$/', (string)$mxhosts[0])) {
                 return 'https://mail.google.com/';
-            } elseif (preg_match('/seznam\.cz$/', (string) $mxhosts[0])) {
+            } elseif (preg_match('/seznam\.cz$/', (string)$mxhosts[0])) {
                 return 'https://email.seznam.cz/';
-            } elseif (preg_match('/outlook\.com$/', (string) $mxhosts[0])) {
+            } elseif (preg_match('/outlook\.com$/', (string)$mxhosts[0])) {
                 return 'https://outlook.live.com/';
             }
         }
@@ -218,10 +185,7 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     */
-    protected function createComponentResetPasswordForm(): \Nette\Application\UI\Form
+    protected function createComponentResetPasswordForm(): Form
     {
         $form = new Form();
 
@@ -233,7 +197,7 @@ class SignPresenter extends BasePresenter
             ->getControlPrototype()->setName('button')
             ->setText('Odeslat žádost o nové heslo');
 
-        $form->onSuccess[] = function (Form $form, $values): void {
+        $form->onSuccess[] = function (Form $form, ArrayHash $values): void {
             try {
                 $this->submitResetPasswordToken($values->email);
             } catch (IdentityNotFoundException) {
@@ -250,15 +214,7 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param string $email
-     * @throws IdentityNotFoundException
-     * @throws SendException
-     * @throws \App\Model\EntityNotFound
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function submitResetPasswordToken($email): void
+    public function submitResetPasswordToken(string $email): never
     {
         $token = $this->authenticator->createResetPasswordToken($email);
 
@@ -270,13 +226,7 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param string $email
-     * @param string $resetToken
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function renderResetPasswordConfirm($email, $resetToken): void
+    public function renderResetPasswordConfirm(string $email, string $resetToken): void
     {
         try {
             $identity = $this->authenticator->getIdentityByResetPasswordToken($email, $resetToken);
@@ -302,7 +252,7 @@ class SignPresenter extends BasePresenter
     /**
      * @return Form
      */
-    protected function createComponentUpdatePasswordForm(): \Nette\Application\UI\Form
+    protected function createComponentUpdatePasswordForm(): Form
     {
         $form = new Form();
 
@@ -468,23 +418,10 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     * @throws \App\Model\InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
-     */
-    protected function createComponentTalkForm()
+    protected function createComponentTalkForm(): Form
     {
-        /**
-         * @param Talk $talk
-         * @throws ConfereeNotFound
-         * @throws NoUserLoggedIn
-         * @throws UserNotFound
-         * @throws \Nette\Application\AbortException
-         * @throws \Nette\Security\AuthenticationException
-         */
         $onSubmitCallback = function (Talk $talk): void {
-            $conferee = $this->userManager->getByLoginUser($this->user)->getObligatoryConferee();
+            $conferee = $this->userManager->getByLoginUser($this->getUser())->getObligatoryConferee();
 
             $talk->conferee = $conferee;
             $conferee->user->addRole('speaker');
@@ -505,10 +442,6 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param User $user
-     * @throws \Nette\Security\AuthenticationException
-     */
     private function login(User $user): void
     {
         $roles = [];
@@ -518,7 +451,7 @@ class SignPresenter extends BasePresenter
         }
 
 
-        $appIdentity = new \Nette\Security\Identity(
+        $appIdentity = new SimpleIdentity(
             $user->id,
             $roles,
             [
@@ -529,28 +462,19 @@ class SignPresenter extends BasePresenter
             ]
         );
 
-        $this->user->login($appIdentity);
+        $this->getUser()->login($appIdentity);
     }
 
 
     /**
      * Get User & Identity from restored object (created by partial login) or load it from logged user
-     * @return RestoredUserIdentity
-     * @throws UserNotFound
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
      */
-    protected function getRestorableUserIdentity(): \App\Model\RestoredUserIdentity
+    protected function getRestorableUserIdentity(): RestoredUserIdentity
     {
         $user = null;
 
-        try {
-            $user = $this->userManager->getByLoginUser($this->user);
-            if ($user->conferee) {
-                $this->redirect('User:profil');
-            }
-        } catch (NoUserLoggedIn) {
-            // Reuired exception, no action
+        if ($this->getUser()->isLoggedIn() && $this->userManager->getByLoginUser($this->getUser())->conferee) {
+            $this->redirect('User:profil');
         }
 
         /** @var Identity|null $identity */
@@ -560,10 +484,7 @@ class SignPresenter extends BasePresenter
             $identities = $user->identity;
 
             if ($identities->count() > 0) {
-                foreach ($identities as $oneIdentity) {
-                    $identity = $oneIdentity;
-                    break;
-                }
+                $identity = $identities->getIterator()->fetch();
             }
         }
 
@@ -582,18 +503,14 @@ class SignPresenter extends BasePresenter
         }
 
         if ($user instanceof User === false) {
-            Debugger::log('Při obnovení profilu pro dokončení registraci se nezachoval User', Logger::ERROR);
-            $this->error('Chyba konzistence dat', IResponse::S500_INTERNAL_SERVER_ERROR);
+            Debugger::log('Při obnovení profilu pro dokončení registraci se nezachoval User', ILogger::ERROR);
+            $this->error('Chyba konzistence dat', IResponse::S500_InternalServerError);
         }
 
         return new RestoredUserIdentity($user, $identity);
     }
 
 
-    /**
-     * @param Entity $entity
-     * @param string $key
-     */
     private function storeEntity(Entity $entity, string $key): void
     {
         $session = $this->getPartialLoginSession(true);
@@ -605,11 +522,7 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param string $key
-     * @return Entity|null
-     */
-    private function restoreEntity(string $key)
+    private function restoreEntity(string $key): ?Entity
     {
         $session = $this->getPartialLoginSession();
         if ($session === null || isset($session->{$key}) === false) {
@@ -632,11 +545,7 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param bool $create
-     * @return \Nette\Http\Session|\Nette\Http\SessionSection|null
-     */
-    private function getPartialLoginSession(bool $create = false)
+    private function getPartialLoginSession(bool $create = false): ?SessionSection
     {
         if (!$this->token) {
             if ($create) {
@@ -652,9 +561,6 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     *
-     */
     private function removePartialLoginSession(): void
     {
         if ($session = $this->getPartialLoginSession()) {

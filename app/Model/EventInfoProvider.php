@@ -10,56 +10,46 @@ class EventInfoProvider
 {
     use SmartObject;
 
-    const CURRENT_YEAR = 'dates.currentYear';
+    public const CURRENT_YEAR = 'dates.currentYear';
 
-    const COUNTS_CONFEREE = 'counts.conferee';
-    const COUNTS_TALKS = 'counts.talks';
-    const COUNTS_TALKS_LIMIT = 'counts.talks.limit';
-    const COUNTS_WORKSHOPS = 'counts.workshops';
-    const COUNTS_HALLS = 'counts.halls';
-    const COUNTS_WARMUPPARTY = 'counts.warmupparty';
-    const COUNTS_AFTERPARTY = 'counts.afterparty';
-    const DATE_TALKS = 'schedule.talks.date';
-    const DATE_VOTE = 'schedule.vote.date';
-    const DATE_EVENT = 'schedule.event.date';
-    const DATE_PROGRAM = 'schedule.program.date';
-    const DATE_REPORT = 'schedule.report.date';
-    const FEATURE_CONFEREE = 'features.registerConferee.enabled';
-    const FEATURE_TALK = 'features.registerTalk.enabled';
-    const FEATURE_TALK_EDIT = 'features.editTalk.enabled';
-    const FEATURE_TALK_ORDER = 'features.talk.order';
-    const FEATURE_VOTE = 'features.voteTalk.enabled';
-    const FEATURE_SHOW_VOTE = 'features.showVoteTalk.enabled';
-    const FEATURE_PROGRAM = 'features.showProgram.enabled';
-    const FEATURE_REPORT = 'features.showReport.enabled';
-    const URL_FACEBOOK = 'url.social.facebook';
-    const URL_TWITTER = 'url.social.twitter';
-    const URL_YOUTUBE = 'url.social.youtube';
-    const URL_INSTAGRAM = 'url.social.instagram';
-    const URL_WAY_TO_EVENT = 'url.post.howToWay';
-    const URL_OG_IMAGE = 'url.igImage';
-    const URL_PARTNER_PROPOSAL = 'url.partnersProposal';
+    public const COUNTS_CONFEREE = 'counts.conferee';
+    public const COUNTS_TALKS = 'counts.talks';
+    public const COUNTS_TALKS_LIMIT = 'counts.talks.limit';
+    public const COUNTS_WORKSHOPS = 'counts.workshops';
+    public const COUNTS_HALLS = 'counts.halls';
+    public const COUNTS_WARMUPPARTY = 'counts.warmupparty';
+    public const COUNTS_AFTERPARTY = 'counts.afterparty';
+    public const DATE_TALKS = 'schedule.talks.date';
+    public const DATE_VOTE = 'schedule.vote.date';
+    public const DATE_EVENT = 'schedule.event.date';
+    public const DATE_PROGRAM = 'schedule.program.date';
+    public const DATE_REPORT = 'schedule.report.date';
+    public const FEATURE_CONFEREE = 'features.registerConferee.enabled';
+    public const FEATURE_TALK = 'features.registerTalk.enabled';
+    public const FEATURE_TALK_EDIT = 'features.editTalk.enabled';
+    public const FEATURE_TALK_ORDER = 'features.talk.order';
+    public const FEATURE_VOTE = 'features.voteTalk.enabled';
+    public const FEATURE_SHOW_VOTE = 'features.showVoteTalk.enabled';
+    public const FEATURE_PROGRAM = 'features.showProgram.enabled';
+    public const FEATURE_REPORT = 'features.showReport.enabled';
+    public const URL_FACEBOOK = 'url.social.facebook';
+    public const URL_TWITTER = 'url.social.twitter';
+    public const URL_YOUTUBE = 'url.social.youtube';
+    public const URL_INSTAGRAM = 'url.social.instagram';
+    public const URL_WAY_TO_EVENT = 'url.post.howToWay';
+    public const URL_OG_IMAGE = 'url.igImage';
+    public const URL_PARTNER_PROPOSAL = 'url.partnersProposal';
+    public const SCHEDULE_VISUAL_DATE_BEGIN = 'schedule.visualDate.begin';
+    public const SCHEDULE_VISUAL_DATE_END = 'schedule.visualDate.end';
 
-    const SCHEDULE_VISUAL_DATE_BEGIN = 'schedule.visualDate.begin';
-    const SCHEDULE_VISUAL_DATE_END = 'schedule.visualDate.end';
 
-
-    /**
-     * EventInfoProvider constructor.
-     * @param ConfigManager $config
-     * @param ConfereeManager $confereeManager
-     */
     public function __construct(
-        private ConfigManager $config,
-        private ConfereeManager $confereeManager
+        private readonly ConfigManager $config,
+        private readonly ConfereeManager $confereeManager
     ) {
     }
 
 
-    /**
-     * @return ArrayHash
-     * @throws \Nette\Utils\JsonException
-     */
     public function getDates(): ArrayHash
     {
         return ArrayHash::from([
@@ -76,10 +66,6 @@ class EventInfoProvider
     }
 
 
-    /**
-     * @return ArrayHash
-     * @throws \Nette\Utils\JsonException
-     */
     public function getUrls(): ArrayHash
     {
         return ArrayHash::from([
@@ -94,10 +80,6 @@ class EventInfoProvider
     }
 
 
-    /**
-     * @return ArrayHash
-     * @throws \Nette\Utils\JsonException
-     */
     public function getCounts(): ArrayHash
     {
         return ArrayHash::from([
@@ -114,10 +96,6 @@ class EventInfoProvider
     }
 
 
-    /**
-     * @return ArrayHash
-     * @throws \Nette\Utils\JsonException
-     */
     public function getFeatures(): ArrayHash
     {
         $features = ArrayHash::from([
@@ -149,7 +127,6 @@ class EventInfoProvider
 
     /**
      * @return int Count of left available conferee tickets
-     * @throws \Nette\Utils\JsonException
      */
     public function getConfereeAvailableCount(): int
     {
@@ -162,7 +139,6 @@ class EventInfoProvider
 
     /**
      * @return bool True if conferee registration available (enabled & free tickets)
-     * @throws \Nette\Utils\JsonException
      */
     public function isConfereeRegistrationAvailable(): bool
     {

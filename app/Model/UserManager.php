@@ -7,26 +7,16 @@ use App\Orm\Orm;
 use App\Orm\User\User;
 use App\Orm\User\UserRepository;
 use App\Orm\UserRole\UserRole;
+use App\Orm\UserRole\UserRoleRepository;
+use Nextras\Orm\Entity\IEntity;
 
-/**
- * Users management.
- */
 class UserManager
 {
-    /** @var UserRepository */
-    private $userRepository;
-
-    /** @var IdentityRepository */
-    private $identityRepository;
-
-    /** @var \App\Orm\UserRoleRepository */
-    private $userRoleRepository;
+    private UserRepository $userRepository;
+    private IdentityRepository $identityRepository;
+    private UserRoleRepository $userRoleRepository;
 
 
-    /**
-     * UserManager constructor.
-     * @param Orm $orm
-     */
     public function __construct(Orm $orm)
     {
         $this->userRepository = $orm->user;
@@ -39,7 +29,7 @@ class UserManager
      * @param $id
      * @return User|null
      */
-    public function getById($id): ?\Nextras\Orm\Entity\IEntity
+    public function getById($id): ?IEntity
     {
         return $this->userRepository->getById($id);
     }
@@ -69,12 +59,10 @@ class UserManager
 
 
     /**
-     * @param \Nette\Security\User $currentUser
-     * @return User
      * @throws NoUserLoggedIn
      * @throws UserNotFound
      */
-    public function getByLoginUser(\Nette\Security\User $currentUser)
+    public function getByLoginUser(\Nette\Security\User $currentUser): User
     {
         if ($currentUser->isLoggedIn() === false) {
             throw new NoUserLoggedIn();
@@ -88,6 +76,4 @@ class UserManager
 
         return $user;
     }
-
-
 }

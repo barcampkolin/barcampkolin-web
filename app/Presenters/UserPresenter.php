@@ -23,16 +23,6 @@ use Tracy\ILogger;
 
 class UserPresenter extends BasePresenter
 {
-    /**
-     * ConferencePresenter constructor.
-     * @param UserManager $userManager
-     * @param ConfereeManager $confereeManager
-     * @param TalkManager $talkManager
-     * @param Forms\ConfereeForm $confereeForm
-     * @param Forms\TalkForm $talkForm
-     * @param EventInfoProvider $eventInfoProvider
-     * @param AvatarStorage $avatarStorage
-     */
     public function __construct(
         private readonly UserManager $userManager,
         private readonly ConfereeManager $confereeManager,
@@ -47,10 +37,7 @@ class UserPresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws \Nette\Application\AbortException
-     */
-    protected function startup()
+    protected function startup(): void
     {
         parent::startup();
         try {
@@ -66,11 +53,6 @@ class UserPresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws NoUserLoggedIn
-     * @throws UserNotFound
-     * @throws \Nette\Utils\JsonException
-     */
     public function renderProfil(): void
     {
         $user = $this->userManager->getByLoginUser($this->user);
@@ -157,7 +139,6 @@ class UserPresenter extends BasePresenter
         /**
          * @param Talk $talk
          * @param $values
-         * @throws \Nette\Application\AbortException
          */
         $onSubmitCallback = function (Talk $talk, $values): void {
             if ($talk->id != $values->id) {

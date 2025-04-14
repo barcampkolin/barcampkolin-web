@@ -7,50 +7,28 @@ use Nette\Utils\Json;
 
 class ConfigManager
 {
-    const TABLE_NAME = 'config';
-    const COLUMN_ID = 'id';
-    const COLUMN_VALUE = 'value';
+    private const TABLE_NAME = 'config';
+    private const COLUMN_ID = 'id';
+    private const COLUMN_VALUE = 'value';
 
-    /**
-     * @var array|null
-     */
-    private $configs;
+    private ?array $configs = null;
 
 
-    /**
-     * ConfigManager constructor.
-     * @param Database\Context $database
-     */
     public function __construct(
-        private readonly Database\Context $database
+        private readonly Database\Explorer $database
     ) {
     }
 
 
-    /**
-     * @param string $key
-     * @param mixed $default
-     * @return mixed
-     * @throws \Nette\Utils\JsonException
-     */
-    public function get($key, $default = null)
+    public function get(string $key, $default = null)
     {
         $configs = $this->load();
 
-        if (isset($configs[$key])) {
-            return $configs[$key];
-        } else {
-            return $default;
-        }
+        return $configs[$key] ?? $default;
     }
 
 
-    /**
-     * @param bool $force
-     * @return array
-     * @throws \Nette\Utils\JsonException
-     */
-    private function load($force = false)
+    private function load(bool $force = false): array
     {
         if ($this->configs !== null || $force) {
             return $this->configs;
@@ -70,14 +48,9 @@ class ConfigManager
     }
 
 
-    /**
-     * @param string $key
-     * @param mixed $value
-     * @throws \Nette\Utils\JsonException
-     */
-    public function set($key, $value): void
+    public function set(string $key, $value): void
     {
-        $configs = $this->load();
+        $this->load();
 
         $this->configs[$key] = $value;
 
@@ -85,16 +58,9 @@ class ConfigManager
     }
 
 
-    /**
-     * @param string $key
-     * @param mixed $value
-     * @throws \Nette\Utils\JsonException
-     */
-    private function saveOne($key, $value): void
+    private function saveOne(string $key, $value): void
     {
         $json = Json::encode($value);
-
-        $tableName = self::TABLE_NAME;
 
         $values = [
             [
@@ -109,7 +75,7 @@ class ConfigManager
 
         $this->database->query(
             'INSERT INTO ?name ?values ON DUPLICATE KEY UPDATE ?;',
-            $tableName,
+            self::TABLE_NAME,
             $values,
             $updateStatement
         );
