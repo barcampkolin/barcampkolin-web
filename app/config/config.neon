@@ -133,7 +133,7 @@ services:
     - App\Model\PartnerLogoStorage(@publicStoragePrefixer::create('/', '/partner-logo'))
 
     # Router
-    router: App\RouterFactory::createRouter
+    router: App\Router\RouterFactory::createRouter
 
     # System
     debugModeDetector:
