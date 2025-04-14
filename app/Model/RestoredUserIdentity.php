@@ -15,18 +15,18 @@ class RestoredUserIdentity
 
 
     /**
-     * @return \App\Orm\User\User
+     * @return User
      */
-    public function getUser(): User\User
+    public function getUser(): User
     {
         return $this->user;
     }
 
 
     /**
-     * @return \App\Orm\Identity\Identity
+     * @return Identity
      */
-    public function getIdentity(): Identity\Identity
+    public function getIdentity(): Identity
     {
         return $this->identity;
     }

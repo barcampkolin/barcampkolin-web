@@ -25,7 +25,7 @@ class ConfereeForm
 
     /**
      * @param callable $onSuccess
-     * @param \App\Orm\Conferee\Conferee|null $conferee
+     * @param Conferee|null $conferee
      * @return Form
      */
     public function create(callable $onSuccess, Conferee $conferee = null)

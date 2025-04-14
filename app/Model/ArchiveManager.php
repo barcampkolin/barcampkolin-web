@@ -143,7 +143,7 @@ class ArchiveManager
 
         $talkUrlMask = $this->pages['talks'];
 
-        /** @var \App\Orm\Talk\Talk $talk */
+        /** @var Talk $talk */
         foreach ($this->talkManager->findAll() as $talk) {
             $urls[] = $yearPrefix . sprintf($talkUrlMask, $talk->id);
         }

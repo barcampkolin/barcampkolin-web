@@ -18,7 +18,7 @@ class TalkManager
     const COLUMN_USER_ID = 'user_id';
     const COLUMN_TALK_ID = 'talk_id';
 
-    /** @var \App\Orm\Talk\TalkRepository $talkRepository */
+    /** @var TalkRepository $talkRepository */
     private $talkRepository;
     /** @var ProgramRepository $talkRepository */
     private $programRepository;
@@ -50,7 +50,7 @@ class TalkManager
 
 
     /**
-     * @param \App\Orm\Talk\Talk $talk
+     * @param Talk $talk
      */
     public function remove(Talk $talk): void
     {
@@ -59,7 +59,7 @@ class TalkManager
 
 
     /**
-     * @param \App\Orm\Program\Program $program
+     * @param Program $program
      */
     public function saveProgram(Program $program): void
     {
@@ -169,7 +169,7 @@ class TalkManager
             ->fetch();
         $sum = intval($result['value']);
 
-        /** @var \App\Orm\Talk\Talk $talk */
+        /** @var Talk $talk */
         $talk = $this->talkRepository->getById($talkId);
         $talk->votes = max(0, $sum + $talk->voteCoefficient);
         $this->talkRepository->persistAndFlush($talk);

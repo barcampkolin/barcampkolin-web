@@ -10,7 +10,7 @@ use Nette\Http\FileUpload;
 class FileManager
 {
     /**
-     * @var \App\Orm\File\FileRepository
+     * @var FileRepository
      */
     private $fileRepository;
 
@@ -49,7 +49,7 @@ class FileManager
 
     /**
      * @param int $id
-     * @return \App\Orm\File\File|null
+     * @return File|null
      * @throws \Nextras\Orm\InvalidArgumentException
      */
     public function getById($id): ?\Nextras\Orm\Entity\IEntity
@@ -82,7 +82,7 @@ class FileManager
 
 
     /**
-     * @param \App\Orm\File\File $file
+     * @param File $file
      * @throws \InvalidArgumentException
      * @throws \Nette\IOException
      */

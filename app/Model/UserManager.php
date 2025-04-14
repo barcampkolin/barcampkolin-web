@@ -13,13 +13,13 @@ use App\Orm\UserRole\UserRole;
  */
 class UserManager
 {
-    /** @var \App\Orm\User\UserRepository */
+    /** @var UserRepository */
     private $userRepository;
 
-    /** @var \App\Orm\Identity\IdentityRepository */
+    /** @var IdentityRepository */
     private $identityRepository;
 
-    /** @var \App\Orm\UserRole\UserRoleRepository */
+    /** @var \App\Orm\UserRoleRepository */
     private $userRoleRepository;
 
 
@@ -37,7 +37,7 @@ class UserManager
 
     /**
      * @param $id
-     * @return \App\Orm\User\User|null
+     * @return User|null
      */
     public function getById($id): ?\Nextras\Orm\Entity\IEntity
     {
@@ -46,7 +46,7 @@ class UserManager
 
 
     /**
-     * @param \App\Orm\User\User $user
+     * @param User $user
      */
     public function save(User $user): void
     {
@@ -55,7 +55,7 @@ class UserManager
 
 
     /**
-     * @param \App\Orm\User\User $user
+     * @param User $user
      */
     public function remove(User $user): void
     {
@@ -70,7 +70,7 @@ class UserManager
 
     /**
      * @param \Nette\Security\User $currentUser
-     * @return \App\Orm\User\User
+     * @return User
      * @throws NoUserLoggedIn
      * @throws UserNotFound
      */

@@ -214,7 +214,7 @@ class ConferencePresenter extends BasePresenter
      */
     private function deleteConferee(Conferee $conferee): void
     {
-        /** @var \App\Orm\Talk\Talk $talk */
+        /** @var Talk $talk */
         foreach ($conferee->talk as $talk) {
             $this->talkManager->remove($talk);
         }
@@ -224,7 +224,7 @@ class ConferencePresenter extends BasePresenter
             $this->identityManager->remove($identity);
         }
 
-        /** @var \App\Orm\UserRole\UserRole $role */
+        /** @var UserRole $role */
         foreach ($conferee->user->role as $role) {
             $this->userManager->removeRole($role);
         }
@@ -386,7 +386,7 @@ class ConferencePresenter extends BasePresenter
      */
     public function renderTalkEdit($id): void
     {
-        /** @var \App\Orm\Talk\Talk $talk */
+        /** @var Talk $talk */
         $talk = $this->talkManager->getById($id);
 
         if (!$talk) {
@@ -541,7 +541,7 @@ class ConferencePresenter extends BasePresenter
     {
         $id = $values->id;
 
-        /** @var \App\Orm\Talk\Talk $talk */
+        /** @var Talk $talk */
         $talk = $this->talkManager->getById($id);
 
         if (!$talk) {
@@ -600,7 +600,7 @@ class ConferencePresenter extends BasePresenter
             ->setReplacement($this->talkManager->getProgramTypes());
 
         $grid->addColumnText('title', 'Název')->setRenderer(function ($row) {
-            /** @var \App\Orm\Program\Program $row */
+            /** @var Program $row */
             if (empty($row->title) && isset($row->talk)) {
                 return $row->talk->title;
             } else {
@@ -609,7 +609,7 @@ class ConferencePresenter extends BasePresenter
         });
 
         $grid->addColumnText('speaker', 'Přednášející')->setRenderer(function ($row) {
-            /** @var \App\Orm\Program\Program $row */
+            /** @var Program $row */
             if (empty($row->speaker) && isset($row->talk)) {
                 return $row->talk->conferee->name;
             } else {
@@ -676,7 +676,7 @@ class ConferencePresenter extends BasePresenter
         $merged = $this->talkManager->getProgramTypes();
         unset($merged['talk']);
 
-        /** @var \App\Orm\Talk\Talk $talk */
+        /** @var Talk $talk */
         foreach ($talks as $talk) {
             $id = $talk->id;
 
@@ -746,7 +746,7 @@ class ConferencePresenter extends BasePresenter
         if ($id === null) {
             return;
         }
-        /** @var \App\Orm\Program\Program $program */
+        /** @var Program $program */
         $program = $this->talkManager->getProgramById($id);
 
         if (!$program) {
@@ -834,7 +834,7 @@ class ConferencePresenter extends BasePresenter
     {
         $id = $values->id;
 
-        /** @var \App\Orm\Program\Program $program */
+        /** @var Program $program */
         $program = $this->talkManager->getProgramById($id);
 
         if (!$program) {

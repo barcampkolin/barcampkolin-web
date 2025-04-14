@@ -26,7 +26,7 @@ class ConfereeManager
 
 
     /**
-     * @param \App\Orm\Conferee\Conferee $conferee
+     * @param Conferee $conferee
      */
     public function save(Conferee $conferee): void
     {
@@ -35,7 +35,7 @@ class ConfereeManager
 
 
     /**
-     * @param \App\Orm\Conferee\Conferee $conferee
+     * @param Conferee $conferee
      */
     public function remove(Conferee $conferee): void
     {
@@ -54,7 +54,7 @@ class ConfereeManager
 
     /**
      * @param int $id
-     * @return \App\Orm\Conferee\Conferee|null
+     * @return Conferee|null
      */
     public function getById($id): ?\Nextras\Orm\Entity\IEntity
     {

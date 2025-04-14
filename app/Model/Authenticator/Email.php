@@ -121,7 +121,7 @@ class Email
      * @return Identity
      * @throws DuplicateNameException
      */
-    public function createNewIdentity($email, $password): \App\Orm\Identity\Identity
+    public function createNewIdentity($email, $password): Identity
     {
         $identity = null;
 

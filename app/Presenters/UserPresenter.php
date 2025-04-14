@@ -111,7 +111,7 @@ class UserPresenter extends BasePresenter
     protected function createComponentConfereeForm()
     {
         /**
-         * @param \App\Orm\Conferee\Conferee $conferee
+         * @param Conferee $conferee
          * @param $values
          * @throws \Nette\Application\AbortException
          */

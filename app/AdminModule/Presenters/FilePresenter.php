@@ -36,7 +36,7 @@ class FilePresenter extends BasePresenter
             ->setIcon('cloud-upload');
 
 
-        $grid->addColumnText('name', 'Název')->setRenderer(fn($item) => /** @var \App\Orm\File\File $item */
+        $grid->addColumnText('name', 'Název')->setRenderer(fn($item) => /** @var File $item */
         Html::el('a')->href($item->url)->addAttributes([
             'target' => '_blank',
             'rel' => 'noopener'

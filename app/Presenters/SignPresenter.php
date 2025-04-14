@@ -468,7 +468,7 @@ class SignPresenter extends BasePresenter
     protected function createComponentConfereeForm()
     {
         /**
-         * @param \App\Orm\Conferee\Conferee $conferee
+         * @param Conferee $conferee
          * @throws AuthenticationException
          * @throws UserNotFound
          * @throws \App\Model\EntityNotFound
@@ -534,7 +534,7 @@ class SignPresenter extends BasePresenter
     protected function createComponentTalkForm()
     {
         /**
-         * @param \App\Orm\Talk\Talk $talk
+         * @param Talk $talk
          * @throws ConfereeNotFound
          * @throws NoUserLoggedIn
          * @throws UserNotFound
@@ -621,7 +621,7 @@ class SignPresenter extends BasePresenter
             // Reuired exception, no action
         }
 
-        /** @var \App\Orm\Identity\Identity|null $identity */
+        /** @var Identity|null $identity */
         $identity = $this->restoreEntity(Identity::class);
 
         if ($identity instanceof Identity === false && $user instanceof User) {
