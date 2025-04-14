@@ -2,15 +2,15 @@
 
 namespace App\Model;
 
-use App\Orm\File;
-use App\Orm\FileRepository;
+use App\Orm\File\File;
+use App\Orm\File\FileRepository;
 use App\Orm\Orm;
 use Nette\Http\FileUpload;
 
 class FileManager
 {
     /**
-     * @var FileRepository
+     * @var \App\Orm\File\FileRepository
      */
     private $fileRepository;
 
@@ -49,7 +49,7 @@ class FileManager
 
     /**
      * @param int $id
-     * @return File|null
+     * @return \App\Orm\File\File|null
      * @throws \Nextras\Orm\InvalidArgumentException
      */
     public function getById($id): ?\Nextras\Orm\Entity\IEntity
@@ -82,7 +82,7 @@ class FileManager
 
 
     /**
-     * @param File $file
+     * @param \App\Orm\File\File $file
      * @throws \InvalidArgumentException
      * @throws \Nette\IOException
      */

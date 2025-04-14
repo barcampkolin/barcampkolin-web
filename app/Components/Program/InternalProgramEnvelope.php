@@ -2,7 +2,7 @@
 
 namespace App\Components\Program;
 
-use App\Orm\Program;
+use App\Orm\Program\Program;
 
 /**
  * Class InternalProgramEnvelope

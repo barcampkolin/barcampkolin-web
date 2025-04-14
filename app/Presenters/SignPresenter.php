@@ -17,11 +17,11 @@ use App\Model\RestoredUserIdentity;
 use App\Model\TalkManager;
 use App\Model\UserManager;
 use App\Model\UserNotFound;
-use App\Orm\Conferee;
-use App\Orm\Identity;
-use App\Orm\Talk;
-use App\Orm\User;
-use App\Orm\UserRole;
+use App\Orm\Conferee\Conferee;
+use App\Orm\Identity\Identity;
+use App\Orm\Talk\Talk;
+use App\Orm\User\User;
+use App\Orm\UserRole\UserRole;
 use Nette\Application\UI\Form;
 use Nette\Http\IResponse;
 use Nette\Http\Response;
@@ -468,7 +468,7 @@ class SignPresenter extends BasePresenter
     protected function createComponentConfereeForm()
     {
         /**
-         * @param Conferee $conferee
+         * @param \App\Orm\Conferee\Conferee $conferee
          * @throws AuthenticationException
          * @throws UserNotFound
          * @throws \App\Model\EntityNotFound
@@ -534,7 +534,7 @@ class SignPresenter extends BasePresenter
     protected function createComponentTalkForm()
     {
         /**
-         * @param Talk $talk
+         * @param \App\Orm\Talk\Talk $talk
          * @throws ConfereeNotFound
          * @throws NoUserLoggedIn
          * @throws UserNotFound
@@ -621,7 +621,7 @@ class SignPresenter extends BasePresenter
             // Reuired exception, no action
         }
 
-        /** @var Identity|null $identity */
+        /** @var \App\Orm\Identity\Identity|null $identity */
         $identity = $this->restoreEntity(Identity::class);
 
         if ($identity instanceof Identity === false && $user instanceof User) {

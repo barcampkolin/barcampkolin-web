@@ -4,7 +4,7 @@ namespace App\Components\SpeakerList;
 
 use App\Model\EventInfoProvider;
 use App\Model\TalkManager;
-use App\Orm\Talk;
+use App\Orm\Talk\Talk;
 use Nette\Application\UI\Control;
 
 class SpeakerListControl extends Control

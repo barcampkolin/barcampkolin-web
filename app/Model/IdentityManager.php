@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\Orm\Identity;
+use App\Orm\Identity\Identity;
 use App\Orm\Orm;
 
 
@@ -10,7 +10,7 @@ class IdentityManager
 {
 
     /**
-     * @var \App\Orm\IdentityRepository
+     * @var \App\Orm\Identity\IdentityRepository
      */
     private $identityRepository;
 
@@ -39,13 +39,13 @@ class IdentityManager
     /**
      * Get Identity entity from Repository based on anotner Identity entity.
      *
-     * @param Identity $identityTemplate
+     * @param \App\Orm\Identity\Identity $identityTemplate
      * @return Identity
      * @throws IdentityNotFoundException
      */
     public function getIdentityByIdentity(Identity $identityTemplate)
     {
-        /** @var Identity $identity */
+        /** @var \App\Orm\Identity\Identity $identity */
         return $this->getIdentity($identityTemplate->platform, $identityTemplate->key);
     }
 
@@ -53,7 +53,7 @@ class IdentityManager
     /**
      * @param string $platform Platform name for search
      * @param string $key Identity key for search
-     * @return Identity
+     * @return \App\Orm\Identity\Identity
      * @throws IdentityNotFoundException
      */
     public function getIdentity($platform, $key)
@@ -82,7 +82,7 @@ class IdentityManager
 
 
     /**
-     * @param Identity $identity
+     * @param \App\Orm\Identity\Identity $identity
      */
     public function remove(Identity $identity): void
     {

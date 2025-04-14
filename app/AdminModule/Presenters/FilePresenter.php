@@ -3,7 +3,7 @@
 namespace App\AdminModule\Presenters;
 
 use App\Model\FileManager;
-use App\Orm\File;
+use App\Orm\File\File;
 use Nette\Application\UI\Form;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Html;
@@ -36,7 +36,7 @@ class FilePresenter extends BasePresenter
             ->setIcon('cloud-upload');
 
 
-        $grid->addColumnText('name', 'Název')->setRenderer(fn($item) => /** @var File $item */
+        $grid->addColumnText('name', 'Název')->setRenderer(fn($item) => /** @var \App\Orm\File\File $item */
         Html::el('a')->href($item->url)->addAttributes([
             'target' => '_blank',
             'rel' => 'noopener'

@@ -5,7 +5,7 @@ namespace App\Components\Program;
 use App\Model\EventInfoProvider;
 use App\Model\TalkCategoryStyler;
 use App\Model\TalkManager;
-use App\Orm\Program;
+use App\Orm\Program\Program;
 use Nette\Application\UI\Control;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;

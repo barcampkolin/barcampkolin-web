@@ -6,10 +6,9 @@ use App\Components\Program\IProgramControlFactory;
 use App\Model\EventInfoProvider;
 use App\Model\TalkManager;
 use App\Orm\Orm;
-use App\Orm\Program;
-use App\Orm\Talk;
-use App\Orm\TalkRepository;
-use Nette\Http\IResponse;
+use App\Orm\Program\Program;
+use App\Orm\Talk\Talk;
+use App\Orm\Talk\TalkRepository;
 use Nette\Utils\Json;
 use Nextras\Orm\Collection\ICollection;
 

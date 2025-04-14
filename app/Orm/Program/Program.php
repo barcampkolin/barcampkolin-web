@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Orm;
+namespace App\Orm\Program;
 
+use App\Orm\Talk\Talk;
 use Nextras\Orm\Entity\Entity;
 
 /**

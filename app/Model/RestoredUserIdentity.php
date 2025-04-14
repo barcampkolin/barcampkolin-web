@@ -2,8 +2,8 @@
 
 namespace App\Model;
 
-use App\Orm\Identity;
-use App\Orm\User;
+use App\Orm\Identity\Identity;
+use App\Orm\User\User;
 
 class RestoredUserIdentity
 {
@@ -15,18 +15,18 @@ class RestoredUserIdentity
 
 
     /**
-     * @return User
+     * @return \App\Orm\User\User
      */
-    public function getUser(): \App\Orm\User
+    public function getUser(): User\User
     {
         return $this->user;
     }
 
 
     /**
-     * @return Identity
+     * @return \App\Orm\Identity\Identity
      */
-    public function getIdentity(): \App\Orm\Identity
+    public function getIdentity(): Identity\Identity
     {
         return $this->identity;
     }

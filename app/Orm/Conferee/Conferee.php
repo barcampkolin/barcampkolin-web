@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Orm;
+namespace App\Orm\Conferee;
 
+use App\Orm\Talk\Talk;
+use App\Orm\User\User;
 use Nextras\Orm\Entity\Entity;
 use Nextras\Orm\Relationships\OneHasMany;
 

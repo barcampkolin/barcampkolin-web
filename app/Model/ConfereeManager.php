@@ -2,8 +2,8 @@
 
 namespace App\Model;
 
-use App\Orm\Conferee;
-use App\Orm\ConfereeRepository;
+use App\Orm\Conferee\Conferee;
+use App\Orm\Conferee\ConfereeRepository;
 use App\Orm\Orm;
 use InvalidArgumentException;
 
@@ -26,7 +26,7 @@ class ConfereeManager
 
 
     /**
-     * @param Conferee $conferee
+     * @param \App\Orm\Conferee\Conferee $conferee
      */
     public function save(Conferee $conferee): void
     {
@@ -35,7 +35,7 @@ class ConfereeManager
 
 
     /**
-     * @param Conferee $conferee
+     * @param \App\Orm\Conferee\Conferee $conferee
      */
     public function remove(Conferee $conferee): void
     {
@@ -54,7 +54,7 @@ class ConfereeManager
 
     /**
      * @param int $id
-     * @return Conferee|null
+     * @return \App\Orm\Conferee\Conferee|null
      */
     public function getById($id): ?\Nextras\Orm\Entity\IEntity
     {

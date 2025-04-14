@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Orm;
+namespace App\Orm\Identity;
 
+use App\Orm\User\User;
 use Nextras\Orm\Entity\Entity;
 
 

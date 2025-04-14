@@ -3,10 +3,10 @@
 namespace App\Model;
 
 use App\Orm\Orm;
-use App\Orm\Program;
-use App\Orm\ProgramRepository;
-use App\Orm\Talk;
-use App\Orm\TalkRepository;
+use App\Orm\Program\Program;
+use App\Orm\Program\ProgramRepository;
+use App\Orm\Talk\Talk;
+use App\Orm\Talk\TalkRepository;
 use InvalidArgumentException;
 use Nette\Database\Context;
 use Nette\Database\ForeignKeyConstraintViolationException;
@@ -18,7 +18,7 @@ class TalkManager
     const COLUMN_USER_ID = 'user_id';
     const COLUMN_TALK_ID = 'talk_id';
 
-    /** @var TalkRepository $talkRepository */
+    /** @var \App\Orm\Talk\TalkRepository $talkRepository */
     private $talkRepository;
     /** @var ProgramRepository $talkRepository */
     private $programRepository;
@@ -50,7 +50,7 @@ class TalkManager
 
 
     /**
-     * @param Talk $talk
+     * @param \App\Orm\Talk\Talk $talk
      */
     public function remove(Talk $talk): void
     {
@@ -59,7 +59,7 @@ class TalkManager
 
 
     /**
-     * @param Program $program
+     * @param \App\Orm\Program\Program $program
      */
     public function saveProgram(Program $program): void
     {
@@ -169,7 +169,7 @@ class TalkManager
             ->fetch();
         $sum = intval($result['value']);
 
-        /** @var Talk $talk */
+        /** @var \App\Orm\Talk\Talk $talk */
         $talk = $this->talkRepository->getById($talkId);
         $talk->votes = max(0, $sum + $talk->voteCoefficient);
         $this->talkRepository->persistAndFlush($talk);

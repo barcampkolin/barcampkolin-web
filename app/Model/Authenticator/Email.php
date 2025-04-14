@@ -8,7 +8,7 @@ use App\Model\IdentityNotFoundException;
 use App\Model\PasswordMismatchException;
 use App\Model\TokenInvalidException;
 use App\Model\UserNotFoundException;
-use App\Orm\Identity;
+use App\Orm\Identity\Identity;
 use Nette\Utils\DateTime;
 use Nette\Utils\Json;
 use Nette\Utils\Random;
@@ -121,7 +121,7 @@ class Email
      * @return Identity
      * @throws DuplicateNameException
      */
-    public function createNewIdentity($email, $password): \App\Orm\Identity
+    public function createNewIdentity($email, $password): \App\Orm\Identity\Identity
     {
         $identity = null;
 

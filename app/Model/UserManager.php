@@ -2,24 +2,24 @@
 
 namespace App\Model;
 
-use App\Orm\IdentityRepository;
+use App\Orm\Identity\IdentityRepository;
 use App\Orm\Orm;
-use App\Orm\User;
-use App\Orm\UserRepository;
-use App\Orm\UserRole;
+use App\Orm\User\User;
+use App\Orm\User\UserRepository;
+use App\Orm\UserRole\UserRole;
 
 /**
  * Users management.
  */
 class UserManager
 {
-    /** @var UserRepository */
+    /** @var \App\Orm\User\UserRepository */
     private $userRepository;
 
-    /** @var IdentityRepository */
+    /** @var \App\Orm\Identity\IdentityRepository */
     private $identityRepository;
 
-    /** @var \App\Orm\UserRoleRepository */
+    /** @var \App\Orm\UserRole\UserRoleRepository */
     private $userRoleRepository;
 
 
@@ -37,7 +37,7 @@ class UserManager
 
     /**
      * @param $id
-     * @return User|null
+     * @return \App\Orm\User\User|null
      */
     public function getById($id): ?\Nextras\Orm\Entity\IEntity
     {
@@ -46,7 +46,7 @@ class UserManager
 
 
     /**
-     * @param User $user
+     * @param \App\Orm\User\User $user
      */
     public function save(User $user): void
     {
@@ -55,7 +55,7 @@ class UserManager
 
 
     /**
-     * @param User $user
+     * @param \App\Orm\User\User $user
      */
     public function remove(User $user): void
     {
@@ -70,7 +70,7 @@ class UserManager
 
     /**
      * @param \Nette\Security\User $currentUser
-     * @return User
+     * @return \App\Orm\User\User
      * @throws NoUserLoggedIn
      * @throws UserNotFound
      */

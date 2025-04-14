@@ -13,8 +13,8 @@ use App\Model\TalkManager;
 use App\Model\TalkNotFound;
 use App\Model\UserManager;
 use App\Model\UserNotFound;
-use App\Orm\Conferee;
-use App\Orm\Talk;
+use App\Orm\Conferee\Conferee;
+use App\Orm\Talk\Talk;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\Http\IResponse;
@@ -111,7 +111,7 @@ class UserPresenter extends BasePresenter
     protected function createComponentConfereeForm()
     {
         /**
-         * @param Conferee $conferee
+         * @param \App\Orm\Conferee\Conferee $conferee
          * @param $values
          * @throws \Nette\Application\AbortException
          */

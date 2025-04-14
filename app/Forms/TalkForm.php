@@ -2,7 +2,7 @@
 
 namespace App\Forms;
 
-use App\Orm\Talk;
+use App\Orm\Talk\Talk;
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\Html;

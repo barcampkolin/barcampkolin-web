@@ -2,8 +2,8 @@
 
 namespace App\Model\Authenticator;
 
-use App\Orm\Identity;
-use App\Orm\User;
+use App\Orm\Identity\Identity;
+use App\Orm\User\User;
 use Nette\Http\IRequest;
 use Nette\Security\AuthenticationException;
 

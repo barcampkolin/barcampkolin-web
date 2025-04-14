@@ -2,7 +2,7 @@
 
 namespace App\Forms;
 
-use App\Orm\Conferee;
+use App\Orm\Conferee\Conferee;
 use Nette\Application\UI\Form;
 use Nette\SmartObject;
 use Nette\Utils\Json;
@@ -25,7 +25,7 @@ class ConfereeForm
 
     /**
      * @param callable $onSuccess
-     * @param Conferee|null $conferee
+     * @param \App\Orm\Conferee\Conferee|null $conferee
      * @return Form
      */
     public function create(callable $onSuccess, Conferee $conferee = null)

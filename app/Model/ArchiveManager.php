@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-use App\Orm\Talk;
+use App\Orm\Talk\Talk;
 use DateInterval;
 use DateTime;
 use Nette\Http\Request;
@@ -143,7 +143,7 @@ class ArchiveManager
 
         $talkUrlMask = $this->pages['talks'];
 
-        /** @var Talk $talk */
+        /** @var \App\Orm\Talk\Talk $talk */
         foreach ($this->talkManager->findAll() as $talk) {
             $urls[] = $yearPrefix . sprintf($talkUrlMask, $talk->id);
         }
