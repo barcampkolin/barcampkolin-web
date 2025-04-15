@@ -8,7 +8,7 @@
             <ul class="row people-list flexible mt-xs">
                 <li>
                     <div class="item">
-                        <div id="avatar" class="item-image" style="background-image: url('{$profileImage}')"></div>
+                        <div id="avatar" class="item-image" style="background-image: url('{gravatarize($user->identity->pictureUrl, $user->identity->email)}')"></div>
                         <div class="item-content">
                             <h2 class="item-title">{$user->identity->name}</h2>
                             <span n:if="$conferee" class="item-meta" title="{$conferee->bio|stripHtml}">{$conferee->bio|stripHtml|truncate:50|breakLines}</span>
@@ -22,6 +22,9 @@
                                 {/if}
 
                                 {if count($talks)}
+                                    {foreach $talks as $talk}
+                                        <a href="{link Conference:talkDetail $talk->id}" class="btn btn-brand btn-tiny btn-block mt-xs">Zobrazit tvoji přednášku</a>
+                                    {/foreach}
                                     <a n:if="$allowEditTalk" href="{link talk}" class="btn btn-brand btn-tiny btn-block mt-xs">Upravit přednášku</a>
                                 {else}
                                     <a n:if="$allowRegisterTalk" href="{link Sign:talk}" class="btn btn-secondary btn-tiny btn-block mt-xs">Vypsat přednášku</a>

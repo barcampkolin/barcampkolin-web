@@ -1,5 +1,5 @@
 {block title}Přednáška {$talk->title}{/block}
-{block ogImage}{ifset $ogImageUrl}{$ogImageUrl}{else}{$talk->conferee->pictureUrl}{/ifset}{/block}
+{block ogImage}{ifset $ogImageUrl}{$ogImageUrl}{else}{gravatarize($talk->conferee->pictureUrl, $talk->conferee->email)}{/ifset}{/block}
 {block content}
 
 <section>
@@ -61,7 +61,7 @@
                     </div>
                 </div>
                 <div class="pure-u-1 pure-u-md-1-3 item-author">
-                    <img class="item-image failover" src="{$talk->conferee->pictureUrl}">
+                    <img class="item-image failover" src="{gravatarize($talk->conferee->pictureUrl, $talk->conferee->email)}">
                     <div class="item-author-name">{$talk->conferee->name}</div>
                     <div n:ifcontent class="item-meta">{$talk->company}</div>
 
@@ -70,6 +70,10 @@
                             <span class="item-count">{$talk->votes}</span> hlasů
                         {/if}
                         <div n:ifcontent class="item-buttons">
+                            {if allowTalkEdit && $user->isLoggedIn() && $talk->conferee->user->id == $user->id}
+                            <a href="{link User:talk}" class="btn btn-sm btn-secondary">Upravit přednášku</a>
+                            <a href="{link User:conferee}" class="btn btn-sm btn-secondary">Upravit profil</a>
+                            {/if}
                             {if $allowVote}
                                 {if !$user->isLoggedIn()}
                                     <a href="{link signToVote!}" class="btn btn-sm btn-secondary">Přihlas se a hlasuj</a>
