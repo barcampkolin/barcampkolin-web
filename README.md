@@ -90,7 +90,7 @@ Composer, NPM
 Požadavky na webhosting
 -----------------------
 
-- všechny pozadavky uvedené v kapitole [Požadavky pro běh](#pozadavky-pro-beh).
+- všechny pozadavky uvedené v kapitole [Požadavky pro běh](#požadavky-pro-běh).
 - webserver musí mít povolený `mod_rewrite`.
 - webserver musí mít `DOCUMENT_ROOT` směrovaný do adresáře `www/`, nikoliv do rootu repozitáře.
 
