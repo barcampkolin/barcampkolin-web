@@ -70,13 +70,15 @@
 	"scripts": {
 		"lint": [
 			"@lint-php",
-			"@lint-latte"
+			"@lint-latte",
+			"@lint-neon"
 		],
 		"lint-latte": [
 			"latte-lint ./app/Presenters/templates",
 			"latte-lint ./app/AdminModule/Presenters/templates",
 			"latte-lint ./app/Components"
 		],
+		"lint-neon": "neon-lint ./app/config",
 		"lint-php": "parallel-lint -e php ./app ./www"
 	}
 }
