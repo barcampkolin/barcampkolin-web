@@ -29,6 +29,54 @@ jobs:
             -   name: Run PHP lint
                 run: composer run lint-php
 
+    latte-lint:
+        name: Latte lint
+        runs-on: 'ubuntu-latest'
+        strategy:
+            fail-fast: false
+            matrix:
+                php:
+                    - "8.4"
+        steps:
+            -   name: Checkout repo
+                uses: actions/checkout@v4
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
+                    coverage: none
+
+            -   name: Install Composer dependencies
+                uses: ramsey/composer-install@v3
+
+            -   name: Run Latte lint
+                run: composer run lint-latte
+
+    neon-lint:
+        name: NEON lint
+        runs-on: 'ubuntu-latest'
+        strategy:
+            fail-fast: false
+            matrix:
+                php:
+                    - "8.4"
+        steps:
+            -   name: Checkout repo
+                uses: actions/checkout@v4
+
+            -   name: Setup PHP
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: ${{ matrix.php }}
+                    coverage: none
+
+            -   name: Install Composer dependencies
+                uses: ramsey/composer-install@v3
+
+            -   name: Run NEON lint
+                run: composer run lint-neon
+
     phpstan:
         name: PHPStan
         runs-on: 'ubuntu-latest'
