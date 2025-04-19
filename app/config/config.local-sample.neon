@@ -1,0 +1,14 @@
+# This is a sample configuration file.
+# Copy this file to config.local.neon and fill in the required values.
+# The file config.local.neon is not tracked by git, so you can safely put your passwords here.
+
+parameters:
+#     mail:
+#         password: put-password-here
+
+#     api_token_secretkey: put-token-here
+
+#database:
+#    dsn: "mysql:host=____________;dbname=____________;charset=utf8mb4"
+#    user: put-username-here
+#    password: put-password-here

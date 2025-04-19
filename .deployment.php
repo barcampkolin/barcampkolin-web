@@ -30,6 +30,7 @@ return [
             /.install
             /.rsync-exclude
             /app/config/config.local.neon
+            /app/config/config.local-sample.neon
             /assets
             /bin
             /bower.json

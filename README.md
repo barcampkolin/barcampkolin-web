@@ -9,7 +9,9 @@ Instalace na localhost
 
 Po stažení repozitáře naisntalujte závislosti:
 
-    composer install
+```shell
+composer install
+```
 
 Vytvořte soubor `app/config/config.local.neon` (není verzován v Gitu). Může být i prázdný.
 
@@ -18,13 +20,17 @@ Vytvořte soubor `app/config/config.local.neon` (není verzován v Gitu). Může
 
 Pro úpravy JavaScriptových souborů a nebo stylů je potřeba nainstalovat závislosti pro generátor:
 
-    npm install -g bower
-    npm install
-    bower install
-    
+```shell
+npm install -g bower grunt-cli
+npm install
+bower install
+```
+
 Po úpravě souborů v `assets/` zavolejte:
 
-    grunt
+```shell
+grunt
+```
 
 a vygenerují se soubory:
 - `www/js/main.js`
@@ -34,20 +40,22 @@ a vygenerují se soubory:
 
 které obsahují veškeré scripty a styly stránek. Tyto soubory jsou součástí repozitáře, takže je lze
 rovnou použít. 
- 
+
 
 Spuštění webového serveru
 -------------------------
 Spusťte Docker 
 
-    docker-composer up -d
+```shell
+docker compose up -d
+```
 
 Na stránce `http://localhost:8080` by se měl objevit aktuální web.
 
 Nastavení cronu
 --------------
 
-Vy systému není univerzální cron, který by obsluhoval všechny služby, ale pro každý cronem obsluhovaný
+V systému není univerzální cron, který by obsluhoval všechny služby, ale pro každý cronem obsluhovaný
 job je samostatné volání cronu. 
 
 Volání cronu je přes HTTPS REST API a je chráněno API tokenem, který si lze vygenerovat v administraci.
@@ -77,11 +85,40 @@ V PHP jsou potřeba rozšření: `pdo_mysql`.
 Požadavky pro vývoj
 -----------------
 
-Composer, NPM 
+Composer, NPM
 
+Požadavky na webhosting
+-----------------------
 
-Deploy na server
-----------------
+- všechny pozadavky uvedené v kapitole [Požadavky pro běh](#pozadavky-pro-beh).
+- webserver musí mít povolený `mod_rewrite`.
+- webserver musí mít `DOCUMENT_ROOT` směrovaný do adresáře `www/`, nikoliv do rootu repozitáře.
+
+> [!WARNING]
+> Pokud váš webhosting nemá možnost nastavit `DOCUMENT_ROOT` do adresáře `www/`, zvolte si jiný webhosting
+> a nepokoušejte se tento neodstatek vyřešit přes `.htaccess` soubor. Jedná se o zásadní bezpečnostní aspekt.\
+> Více informací: https://nette.org/cs/security-warning
+
+- v rootu aplikace musí být vytvořeny adresáře `temp/` a `log/` a musí mít nastaveny práva pro zápis (tyto adresáře
+    nejsou součástí deploye, je proto potřeba je vytvořit ručně).
+- na serveru musí existovat soubor [`app/config/config.local.neon`] (klidně prázdný pro začátek).
+
+Aplikace potřebuje pro běh připojení k MySQL (nebo MariaDB) databázi a v ní připravené tabulky, jejich struktura je
+v souboru [`.install/structure.sql`](.install/structure.sql). Konfigurační tabulka musí obsahovat základní data, která
+jsou vypsána v souboru [`.install/base-data.sql`](.install/base-data.sql).
+
+Budete potřebovat do aplikace zadat přístupové údaje k databázi. Nezadávejte je do hlavního konfiguračního souboru,
+protože byste si tím rozbili lokální vývoj. K tomu slouží soubor `config.local.neon`, který není verzován a ani
+není součástí deploye, takže se vaše lokální verze nebude propisovat na server – což ale znamená, že jej na server
+musíte nahrát ručně. Doporučená struktura tohoto souboru je připravena v souboru
+[`config.local-sample.neon`](app/config/config.local-sample.neon).
+
+Deploy na server přes FTP
+-------------------------
+
+Tento návod přepokládá, že k serveru přistupujete přes FTP. Pokud používáte jinou metodu (SCP, SFTP, rsync apod.),
+můžete tento návod přeskočit a jako podklad pro vlastní deploy script použijte soubor [`.deployment.php`](.deployment.php),
+zejména seznam ignorovaných cest, které se nemají nasazovat na server.
 
 Pro automatický deploy změn na produkční server je potřeba mít nainstalovaný composer a v něm **globálně** nainstalovaný
 balíček [`ftp-deployment`](https://github.com/dg/ftp-deployment):
@@ -97,9 +134,9 @@ composer global require dg/ftp-deployment
 <?php
 
 return [
-     'remote' => <fill in your FTP url - e.g. ftps://example.com/path/to/your/dir>,
-     'user' => <fill in your FTP username>,
-     'password' => <fill in your FTP password>
+ 'remote' => <fill in your FTP url - e.g. ftps://example.com/path/to/your/dir>,
+ 'user' => <fill in your FTP username>,
+ 'password' => <fill in your FTP password>
 ];
 ```
 
@@ -113,6 +150,5 @@ Deploy lze spustit připravenými scripty:
 
 License
 -------
-- Web: The MIT License (MIT)
-- Nette: New BSD License or GPL 2.0 or 3.0
+- The MIT License (MIT)
 - Další závislosti podle zveřejněných licení
