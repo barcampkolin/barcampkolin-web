@@ -3,13 +3,6 @@
 # https://nette.org/security-warning
 #
 parameters:
-    database:
-        driver: mysqli
-        host: barcampkolinweb_mysqldb_1
-        dbname: barcampkolin
-        user: root
-        password: redbitmasters
-        port: 3306
     mail:
         from: "Barcamp Kolín <info@barcampkolin.cz>"
     api_token_secretkey: {secret-token}
@@ -40,13 +33,8 @@ extensions:
     nextras.orm: Nextras\Orm\Bridges\NetteDI\OrmExtension
 
 nextras.dbal:
-    driver: %database.driver%
-    host: %database.host%
-    database: %database.dbname%
-    username: %database.user%
-    password: %database.password%
-    connectionTz: '+2:00'
-    port: %database.port%
+    driver: App\Dbal\RawPdoMysqlDriver()
+    pdo: @database.default.connection::getPdo()
 
 nextras.orm:
     model: App\Orm\Orm
@@ -77,9 +65,9 @@ http:
         ]
 
 database:
-    dsn: 'mysql:host=%database.host%;dbname=%database.dbname%'
-    user: %database.user%
-    password: %database.password%
+    dsn: "mysql:host=mysqldb;dbname=default;charset=utf8mb4"
+    user: root
+    password: devstack
     options:
         lazy: yes
 

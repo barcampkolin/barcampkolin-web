@@ -71,7 +71,7 @@ Požadavky pro běh
 
 PHP 8.3 nebo vyšší, Mysql, Git, Unzip. 
 
-V PHP jsou potřeba rozšření: `mysqli`, `pdo_mysql`.
+V PHP jsou potřeba rozšření: `pdo_mysql`.
 
 
 Požadavky pro vývoj
