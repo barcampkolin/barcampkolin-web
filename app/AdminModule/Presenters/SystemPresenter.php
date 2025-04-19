@@ -22,7 +22,7 @@ class SystemPresenter extends BasePresenter
     {
         $this->template->isDebug = $this->debugMode->isDebugMode();
         $this->template->isDebugByEnabler = $this->debugMode->isDebugModeByEnabler() !== null;
-        $this->template->secured = $this->getRequest()->hasFlag(Request::SECURED);
+        $this->template->secured = $this->getHttpRequest()->isSecured();
     }
 
 

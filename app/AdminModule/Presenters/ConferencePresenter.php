@@ -419,6 +419,7 @@ class ConferencePresenter extends BasePresenter
 
         $this->template->talk = $talk;
 
+        $link = null;
         if (isset($links[$key])) {
             $link = $links[$key];
         } elseif ($key == 'new') {

@@ -8,7 +8,10 @@ use Nextras\Orm\Mapper\Dbal\DbalMapper;
 
 class UserMapper extends DbalMapper
 {
-    protected $tableName = 'user';
+    public function getTableName(): Fqn|string
+    {
+        return 'user';
+    }
 
     protected function createConventions(): IConventions
     {

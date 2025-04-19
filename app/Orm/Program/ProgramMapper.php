@@ -7,5 +7,8 @@ use Nextras\Orm\Mapper\Dbal\DbalMapper;
 
 class ProgramMapper extends DbalMapper
 {
-    protected $tableName = 'program';
+    public function getTableName(): Fqn|string
+    {
+        return 'program';
+    }
 }

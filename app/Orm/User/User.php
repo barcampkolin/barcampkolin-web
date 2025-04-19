@@ -10,7 +10,7 @@ use Nextras\Orm\Entity\Entity;
 use Nextras\Orm\Relationships\OneHasMany;
 
 /**
- * @property string                 $id            {primary}
+ * @property int                    $id            {primary}
  * @property string|null            $email
  * @property string|null            $name
  * @property string|null            $pictureUrl

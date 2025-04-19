@@ -10,7 +10,7 @@
         </div>
 
         <a n:if="$features->conferee" href="{plink Sign:conferee}">
-            <span class="btn btn-sm btn-action{if $features->conferee}"{/if} {if !$features->conferee}disabled" title="Přihlášení je možné od {$dates->talks|date:'j. n. Y'}"{/if}>
+            <span class="btn btn-sm btn-action">
                 ZÍSKAT VSTUPENKU
             </span>
         </a>
@@ -28,7 +28,7 @@
         </div>
 
         <a n:if="$features->talks" href="{plink Sign:talk}">
-            <span class="btn btn-sm btn-action{if $features->conferee}"{/if} {if !$features->talks}disabled" title="Vypsání přednášky je možné od {$dates->talks|date:'j. n. Y'}"{/if}>
+            <span class="btn btn-sm btn-action">
                 VYPSAT PŘEDNÁŠKU
             </span>
         </a>
