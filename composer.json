@@ -28,7 +28,7 @@
 	],
 	"homepage": "https://www.barcampkolin.cz/",
 	"require": {
-		"php": ">=8.1",
+		"php": "^8.3",
 		"kdyby/forms-replicator": "3.0.0-rc1",
 		"latte/latte": "^3.0",
 		"nette/application": "^3.2",
