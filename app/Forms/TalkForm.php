@@ -7,6 +7,7 @@ use Nette;
 use Nette\Application\UI\Form;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 
 class TalkForm
 {

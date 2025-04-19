@@ -7,5 +7,8 @@ use Nextras\Orm\Mapper\Dbal\DbalMapper;
 
 class FileMapper extends DbalMapper
 {
-    protected $tableName = 'file';
+    public function getTableName(): Fqn|string
+    {
+        return 'file';
+    }
 }

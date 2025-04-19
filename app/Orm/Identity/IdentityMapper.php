@@ -8,5 +8,8 @@ use Nextras\Orm\Mapper\Dbal\DbalMapper;
 
 class IdentityMapper extends DbalMapper
 {
-    protected $tableName = 'user_identity';
+    public function getTableName(): Fqn|string
+    {
+        return 'user_identity';
+    }
 }

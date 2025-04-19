@@ -7,5 +7,8 @@ use Nextras\Orm\Mapper\Dbal\DbalMapper;
 
 class UserRoleMapper extends DbalMapper
 {
-    protected $tableName = 'user_role';
+    public function getTableName(): Fqn|string
+    {
+        return 'user_role';
+    }
 }

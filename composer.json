@@ -28,39 +28,59 @@
 	],
 	"homepage": "https://www.barcampkolin.cz/",
 	"require": {
-		"php": ">=8.1",
-		"kdyby/forms-replicator": "^2.0",
-		"latte/latte": "^2.5",
-		"nette/application": "^3.0.6",
-		"nette/bootstrap": "^3.0",
-		"nette/caching": "^3.0",
-		"nette/database": "^3.0",
-		"nette/di": "^3.0",
-		"nette/finder": "^2.5",
-		"nette/forms": "^3.0",
-		"nette/http": "^3.0",
-		"nette/mail": "^3.1",
-		"nette/robot-loader": "^3.2",
-		"nette/safe-stream": "^2.4",
-		"nette/security": "^3.0",
-		"nette/utils": "^3.0",
-		"nextras/dbal": "^4.0",
-		"nextras/orm": "^4.0",
-		"nextras/secured-links": "^1.4",
+		"php": "^8.3",
+		"kdyby/forms-replicator": "3.0.0-rc1",
+		"latte/latte": "^3.0",
+		"nette/application": "^3.2",
+		"nette/bootstrap": "^3.2",
+		"nette/caching": "^3.3",
+		"nette/database": "^3.2",
+		"nette/di": "^3.2",
+		"nette/finder": "^3.0",
+		"nette/forms": "^3.2",
+		"nette/http": "^3.3",
+		"nette/mail": "^4.0",
+		"nette/robot-loader": "^4.0",
+		"nette/safe-stream": "^3.0",
+		"nette/security": "^3.2",
+		"nette/utils": "^4.0",
+		"nextras/dbal": "^5.0",
+		"nextras/orm": "^5.0",
+		"nextras/secured-links": "^1.10",
 		"redbitcz/debug-mode-enabler": "^5.0",
-		"tracy/tracy": "^2.6",
-		"ublaboo/datagrid": "^6.2"
+		"tracy/tracy": "^2.10",
+		"ublaboo/datagrid": "^6.10"
+	},
+	"require-dev": {
+		"php-parallel-lint/php-console-highlighter": "^1.0",
+		"php-parallel-lint/php-parallel-lint": "^1.4",
+		"phpstan/phpstan": "^2.1"
 	},
 	"autoload": {
-		"classmap": ["app/Model/exceptions.php"],
 		"psr-4": {
 			"App\\": "app/"
-		}
+		},
+		"classmap": [
+			"app/Model/exceptions.php"
+		]
 	},
-	"minimum-stability": "dev",
-	"prefer-stable": true,
 	"config": {
 		"optimize-autoloader": true,
 		"sort-packages": true
+	},
+	"scripts": {
+		"lint": [
+			"@lint-php",
+			"@lint-latte",
+			"@lint-neon"
+		],
+		"lint-latte": [
+			"latte-lint ./app/Presenters/templates",
+			"latte-lint ./app/AdminModule/Presenters/templates",
+			"latte-lint ./app/Components"
+		],
+		"lint-neon": "neon-lint ./app/config",
+		"lint-php": "parallel-lint -e php ./app ./www",
+		"phpstan": "phpstan analyze -l 1 ./app ./www"
 	}
 }
