@@ -69,7 +69,13 @@
 	},
 	"scripts": {
 		"lint": [
-			"@lint-php"
+			"@lint-php",
+			"@lint-latte"
+		],
+		"lint-latte": [
+			"latte-lint ./app/Presenters/templates",
+			"latte-lint ./app/AdminModule/Presenters/templates",
+			"latte-lint ./app/Components"
 		],
 		"lint-php": "parallel-lint -e php ./app ./www"
 	}
