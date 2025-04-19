@@ -5,10 +5,13 @@
 parameters:
     mail:
         from: "Barcamp Kolín <info@barcampkolin.cz>"
+
     api_token_secretkey: {secret-token}
+
     avatar:
         size: 400
         fallbackUrl: "https://www.barcampkolin.cz/static/{year}/img/avatar.png"
+
     archive:
         archivedFolders:
             - '%wwwDir%/static'
@@ -27,35 +30,17 @@ application:
     mapping:
         *: App\*Module\Presenters\*Presenter
 
+database:
+    dsn: "mysql:host=mysqldb;dbname=default;charset=utf8mb4"
+    user: root
+    password: devstack
+    options:
+        lazy: yes
+
 extensions:
     replicator: Kdyby\Replicator\DI\ReplicatorExtension
     nextras.dbal: Nextras\Dbal\Bridges\NetteDI\DbalExtension
     nextras.orm: Nextras\Orm\Bridges\NetteDI\OrmExtension
-
-nextras.dbal:
-    driver: App\Dbal\RawPdoMysqlDriver()
-    pdo: @database.default.connection::getPdo()
-
-nextras.orm:
-    model: App\Orm\Orm
-
-mail:
-    smtp: false
-    host: vip-mail.superhosting.cz
-    username: info@barcampkolin.cz
-    password: app-password
-    secure: ssl
-
-tracy:
-    maxDepth: 4
-
-session:
-    expiration: 14 days
-    cookie_secure: %productionMode%
-    debugger: false
-
-security:
-    debugger: false
 
 http:
     csp:
@@ -64,27 +49,45 @@ http:
             self, unsafe-inline
         ]
 
-database:
-    dsn: "mysql:host=mysqldb;dbname=default;charset=utf8mb4"
-    user: root
-    password: devstack
-    options:
-        lazy: yes
+mail:
+    smtp: false
+    host: vip-mail.superhosting.cz
+    username: info@barcampkolin.cz
+    password: app-password
+    secure: ssl
+
+nextras.dbal:
+    driver: App\Dbal\RawPdoMysqlDriver()
+    pdo: @database.default.connection::getPdo()
+
+nextras.orm:
+    model: App\Orm\Orm
+
+security:
+    debugger: false
+
+session:
+    expiration: 14 days
+    cookie_secure: %productionMode%
+    debugger: false
+
+tracy:
+    maxDepth: 4
 
 services:
     # Managers
-    - App\Model\ArchiveManager(%archive.archivedFolders%, %archive.pages%)
     - App\Model\ApiTokenManager(%api_token_secretkey%)
+    - App\Model\ArchiveManager(%archive.archivedFolders%, %archive.pages%)
     - App\Model\Authenticator\Email
-    - App\Model\ConfigManager
     - App\Model\ConfereeManager
-    - App\Model\EventInfoProvider
+    - App\Model\ConfigManager
     - App\Model\EnumeratorManager
+    - App\Model\EventInfoProvider
     - App\Model\FileManager
     - App\Model\GravatarImageProvider(%avatar.size%, %avatar.fallbackUrl%)
     - App\Model\IdentityManager
-    - App\Model\MailerManager(%mail%, '%tempDir%/cache')
     - App\Model\MailDynamicLoader
+    - App\Model\MailerManager(%mail%, '%tempDir%/cache')
     - App\Model\NewsletterSignupManager
     - App\Model\PartnersManager
     - App\Model\ScheduleManager
@@ -92,11 +95,11 @@ services:
     - App\Model\UserManager
 
     # Form
-    - App\Forms\FormFactory
     - App\Forms\ConfereeForm
-    - App\Forms\TalkForm
+    - App\Forms\FormFactory
     - App\Forms\SignInFormFactory
     - App\Forms\SignUpFormFactory
+    - App\Forms\TalkForm
 
     # Components
     - App\Components\Enumerator\IEnumeratorFormControlFactory
@@ -109,10 +112,10 @@ services:
     - App\Components\SpeakerList\ISpeakerListControlFactory
 
     # Storages
-    publicStoragePrefixer: App\Model\LocalArchivableStoragePrefixFactory('%wwwDir%/upload', '/upload')
     - App\Model\ArchiveStorage('%wwwDir%/archive')
-    - App\Model\LocalFileStorage(@publicStoragePrefixer::create('/', '/file'))
     - App\Model\AvatarStorage(@publicStoragePrefixer::create('/', '/user-avatar'), %avatar.size%)
+    publicStoragePrefixer: App\Model\LocalArchivableStoragePrefixFactory('%wwwDir%/upload', '/upload')
+    - App\Model\LocalFileStorage(@publicStoragePrefixer::create('/', '/file'))
     - App\Model\PartnerLogoStorage(@publicStoragePrefixer::create('/', '/partner-logo'))
 
     # Router
