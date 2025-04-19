@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89b359f4ea1b2b8eb82eaf034b022021",
+    "content-hash": "6e59439d750b24678b7f668a2d84a9e9",
     "packages": [
         {
             "name": "contributte/application",
@@ -2882,9 +2882,11 @@
         }
     ],
     "aliases": [],
-    "minimum-stability": "dev",
-    "stability-flags": {},
-    "prefer-stable": true,
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "kdyby/forms-replicator": 5
+    },
+    "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=8.1"
