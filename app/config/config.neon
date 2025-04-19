@@ -64,12 +64,12 @@ nextras.orm:
     model: App\Orm\Orm
 
 security:
-    debugger: false
+    debugger: true
 
 session:
     expiration: 14 days
     cookie_secure: %productionMode%
-    debugger: false
+    debugger: true
 
 tracy:
     maxDepth: 4
