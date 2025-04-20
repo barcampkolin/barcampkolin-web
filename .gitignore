@@ -1,7 +1,6 @@
 /.deployment-credentials.php
 /.docker/
 /app/config/config.local.neon
-/assets/bower_components/
 /log/
 /node_modules/
 /temp/

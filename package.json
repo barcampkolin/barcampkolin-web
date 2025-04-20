@@ -12,11 +12,30 @@
     "url": "https://github.com/barcampkolin/barcampkolin-web/issues"
   },
   "homepage": "https://github.com/barcampkolin/barcampkolin-web#readme",
+  "dependencies": {
+    "bootstrap": "^3.4.1",
+    "bootstrap-datepicker": "^1.10.0",
+    "happy-inputs": "^2.1.0",
+    "jquery": "^3.7.1",
+    "nette.ajax.js": "^2.3.0",
+    "semantic-ui-dropdown": "^2.5.0",
+    "semantic-ui-transition": "^2.5.0",
+    "slick-carousel": "^1.8.1",
+    "ublaboo-datagrid": "^6.9.1"
+  },
   "devDependencies": {
-    "grunt": "^1.6.1",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-less": "^3.0.0",
-    "grunt-contrib-uglify": "^5.2.2",
-    "grunt-contrib-watch": "^1.1.0"
+    "copy-webpack-plugin": "^13.0.0",
+    "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.2",
+    "less": "^4.3.0",
+    "less-loader": "^12.2.0",
+    "mini-css-extract-plugin": "^2.9.2",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.99.6",
+    "webpack-cli": "^6.0.1"
+  },
+  "scripts": {
+    "build:dev": "webpack --mode development",
+    "build:prod": "webpack --mode production"
   }
 }

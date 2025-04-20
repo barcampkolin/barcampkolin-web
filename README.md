@@ -15,32 +15,41 @@ composer install
 
 Vytvořte soubor `app/config/config.local.neon` (není verzován v Gitu). Může být i prázdný.
 
-Úpravy JS a CSS
----------------
+Úpravy JS a CSS (assety)
+------------------------
 
-Pro úpravy JavaScriptových souborů a nebo stylů je potřeba nainstalovat závislosti pro generátor:
+Při práci s assety (tj. JS + CSS) počítejte prosím s tím, že každý ročník by měl být co nejvíce nezávislý a mít vlastní
+assety pro daný ročník. Umožní to pak věrně archivovat stránky z původních let jako statické soubory, aniž by to omezovalo
+rozvoj a úpravy v dalších letech. Proto jsou všechny assets uloženy v adresáři `assets/####`, kde `####` je rok konání.
+Odkazy v CSS a JS souborech pak tvořte pokud možno relativně a pokud to nebude možné, využijte připravenou proměnnou
+`currentYear` (v JS, obsahuje pouze rok) a nebo `@staticBase` (v Less, obsahuje cestu k assetům pro daný ročník).
+
+Pro každý ročník je potřeba vygenerovat assety znovu, protože v sobě mají zkompilovaný ročník. Aktuální ročník změníte
+upravou proměnné `currentYear` v souboru `webpack.config.js`.
+
+Pro úpravy assetů je potřeba nainstalovat závislosti pro generátor:
 
 ```shell
-npm install -g bower grunt-cli
 npm install
-bower install
 ```
 
 Po úpravě souborů v `assets/` zavolejte:
 
 ```shell
-grunt
+npm run build:prod
 ```
 
-a vygenerují se soubory:
-- `www/js/main.js`
-- `www/js/admin.js`
-- `www/css/main.css`
-- `www/css/admin.css`
+a vygenerují se soubory (místo `2025` se použije aktuální rok):
+
+```shell
+- `www/static/2025/js/main.js`
+- `www/static/2025/js/admin.js`
+- `www/static/2025/css/main.css`
+- `www/static/2025/css/admin.css`
+```
 
 které obsahují veškeré scripty a styly stránek. Tyto soubory jsou součástí repozitáře, takže je lze
 rovnou použít. 
-
 
 Spuštění webového serveru
 -------------------------
@@ -146,7 +155,6 @@ Deploy lze spustit připravenými scripty:
 
 - `bin/deploy.sh` - pro nasazení na produkční server
 - `bin/deploy-dry.sh` - pro výpis souborů, které by se nasadily na produkční server
-
 
 License
 -------

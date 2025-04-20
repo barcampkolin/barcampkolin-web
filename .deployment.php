@@ -22,7 +22,6 @@ return [
             .git
             .gitignore
             .DS_Store
-            /.bowerrc
             /.deployment.php
             /.deployment-credentials.php
             /.docker
@@ -33,17 +32,14 @@ return [
             /app/config/config.local-sample.neon
             /assets
             /bin
-            /bower.json
             /composer.json
             /composer.lock
             /docker-compose.yml
-            /Gruntfile.js
             /log
             /LICENSE
             /node_modules
             /package.json
             /package-lock.json
-            /rclone.exclude
             /README.md
             /rector.php
             /temp

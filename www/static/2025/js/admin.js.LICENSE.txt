@@ -1,0 +1,38 @@
+/*!
+ * Datepicker for Bootstrap v1.10.0 (https://github.com/uxsolutions/bootstrap-datepicker)
+ *
+ * Licensed under the Apache License v2.0 (https://www.apache.org/licenses/LICENSE-2.0)
+ */
+
+/*!
+ * NetteForms - simple form validation.
+ *
+ * This file is part of the Nette Framework (https://nette.org)
+ * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
+ */
+
+/*!
+ * jQuery JavaScript Library v3.7.1
+ * https://jquery.com/
+ *
+ * Copyright OpenJS Foundation and other contributors
+ * Released under the MIT license
+ * https://jquery.org/license
+ *
+ * Date: 2023-08-28T13:37Z
+ */
+
+/*! http://jqueryui.com
+* Includes: jquery.ui.core.js, jquery.ui.widget.js, jquery.ui.mouse.js, jquery.ui.sortable.js
+* Copyright 2013 jQuery Foundation and other contributors; Licensed MIT */
+
+/**
+ * AJAX Nette Framework plugin for jQuery
+ *
+ * @copyright Copyright (c) 2009, 2010 Jan Marek
+ * @copyright Copyright (c) 2009, 2010 David Grudl
+ * @copyright Copyright (c) 2012-2014 Vojtěch Dobeš
+ * @license MIT
+ *
+ * @version 2.3.0
+ */

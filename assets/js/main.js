@@ -1,3 +1,17 @@
+import $ from 'jquery';
+import 'slick-carousel/slick/slick.js';
+import 'nette.ajax.js';
+import '@vendor/nette/forms/src/assets/netteForms.js';
+import domready from './domready.js';
+
+// Call LESS processor
+import '../less/main.less';
+
+/**
+ * @global
+ * @const {string} currentYear
+ */
+
 var barcamp = barcamp || {};
 var viewportWidth;
 
@@ -6,20 +20,14 @@ barcamp.viewportWidth = function () { // šířka viewportu
 };
 
 barcamp.imageFailover = function () {
-    $('img.failover').each(function(){
-        var fixator = function(element){
-            element.src = '/img/logo-icon-96.png';
-        };
-
-        if(this.complete) {
-            if(this.naturalHeight === 0) {
-                fixator(this);
+    document.querySelectorAll('img.failover').forEach((img) => {
+        const fix = () => img.src = `/static/${currentYear}/img/logo-icon-96.png`;
+        if (img.complete) {
+            if (img.naturalHeight === 0) {
+                fix();
             }
-        }
-        else {
-            $(this).on('error', function(){
-                fixator(this);
-            });
+        } else {
+            img.addEventListener('error', fix, {once: true, passive: true});
         }
     });
 };
@@ -322,8 +330,7 @@ barcamp.program = function () {
                         header.addClass('fixed');
                     }
                     header.css("top", scroll + "px");
-                }
-                else {
+                } else {
                     if (header.hasClass('fixed')) {
                         header.removeClass('fixed');
                     }
@@ -383,34 +390,34 @@ barcamp.avatarUploader = function () {
             processData: false,
             dataType: 'json'
         })
-        .done(function (json) {
-            $image.removeClass('pulse');
-            var value = 'url(\'' + json.avatarUrl + '\')';
-            $image.css('background-image', value);
-        })
-        .fail(function(error) {
-            $image.removeClass('pulse');
-            alert('Tento obrázek není možné načíst, zkuste jej prosím zmenšit.');
-            console.log(error);
-        });
+            .done(function (json) {
+                $image.removeClass('pulse');
+                var value = 'url(\'' + json.avatarUrl + '\')';
+                $image.css('background-image', value);
+            })
+            .fail(function (error) {
+                $image.removeClass('pulse');
+                alert('Tento obrázek není možné načíst, zkuste jej prosím zmenšit.');
+                console.log(error);
+            });
     };
 };
 
 barcamp.talkVote = function () {
     var $list = $('.lectures-list,.talk-detail');
 
-    if($list.length === 0) {
+    if ($list.length === 0) {
         return;
     }
 
-    $list.on('click', '.vote-ajax', function(e) {
+    $list.on('click', '.vote-ajax', function (e) {
         e.preventDefault();
         var $button = $(this);
         $button.addClass('disabled');
         var $item = $button.closest('.item-vote-box');
         var url = $button.attr('href');
 
-        var isDetail = !! $item.closest('.talk-detail').length;
+        var isDetail = !!$item.closest('.talk-detail').length;
 
         dataLayer.push({
             'event': 'bck-talk-vote',
@@ -422,11 +429,11 @@ barcamp.talkVote = function () {
         $.ajax({
             url: url,
             dataType: 'json'
-        }).done(function(json) {
+        }).done(function (json) {
             $button.removeClass('disabled');
             $('.item-count', $item).text(json.votes);
             $('.is-voted,.is-not-voted', $item).toggle();
-        }).fail(function(error) {
+        }).fail(function (error) {
             alert('Váš hlas se nepovedlo uložit. Omlouváme se. Zkuste to prosím znovu.');
             console.log(error);
         });
@@ -468,7 +475,7 @@ barcamp.init = function () {
     barcamp.disabledLinks();
 };
 
-$(document).ready(function () {
+domready(function () {
     barcamp.init();
     $("body").removeClass("preload").removeClass("no-js");
 });
@@ -480,3 +487,4 @@ $(window).on("orientationchange", function () {
 $(window).on("resize", function () {
     barcamp.viewportWidth();
 });
+
