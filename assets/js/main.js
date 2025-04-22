@@ -3,6 +3,10 @@ import 'slick-carousel/slick/slick.js';
 import 'nette.ajax.js';
 import '@vendor/nette/forms/src/assets/netteForms.js';
 import domready from './domready.js';
+import  { toggle as slideToggle } from 'slide-element';
+
+// Modules
+import schedule from './modules/schedule.mjs';
 
 // Call LESS processor
 import '../less/main.less';
@@ -12,14 +16,10 @@ import '../less/main.less';
  * @const {string} currentYear
  */
 
-var barcamp = barcamp || {};
-var viewportWidth;
+window.barcamp = window.barcamp || {};
+const barcamp = window.barcamp;
 
-barcamp.viewportWidth = function () { // šířka viewportu
-    viewportWidth = Math.max($(window).width(), window.innerWidth);
-};
-
-barcamp.imageFailover = function () {
+barcamp.imageFailover = async function () {
     document.querySelectorAll('img.failover').forEach((img) => {
         const fix = () => img.src = `/static/${currentYear}/img/logo-icon-96.png`;
         if (img.complete) {
@@ -32,18 +32,19 @@ barcamp.imageFailover = function () {
     });
 };
 
-barcamp.openNav = function () {
+barcamp.openNav = async function () {
+    const header = document.querySelector('header');
+    header.querySelector('.btn-mobile-menu-open-container').addEventListener('click', function (e) {
+        const container = e.currentTarget;
+        const mobileMenu = container.querySelector('.btn-mobile-menu-open');
 
-    $('.btn-mobile-menu-open-container').click(function () {
-        $('.header-nav').slideToggle(200);
-        $(this).find('.btn-mobile-menu-open').toggleClass('active');
-        $(this).find('.item-text').text(function (i, text) {
-            return text === "Menu" ? "Zavřít" : "Menu";
-        })
+        slideToggle(header.querySelector('.header-nav'), {duration: 200});
+        mobileMenu.classList.toggle('active');
+        container.querySelector('.item-text').innerText = mobileMenu.classList.contains('active') ? 'Zavřít' : 'Menu';
     });
 };
 
-barcamp.slider = function () {
+barcamp.slider = async function () {
     $('.hero-slider').slick({
         dots: false,
         arrows: false,
@@ -58,7 +59,7 @@ barcamp.slider = function () {
     });
 };
 
-barcamp.accordion = function () {
+barcamp.accordion = async function () {
 
     $('.accordion-list .accordion-content').hide();
 
@@ -68,7 +69,7 @@ barcamp.accordion = function () {
     });
 };
 
-barcamp.smoothScroll = function () {
+barcamp.smoothScroll = async function () {
 
     $('.scrollto').click(function (e) {
 
@@ -87,144 +88,9 @@ barcamp.smoothScroll = function () {
     });
 };
 
-barcamp.schedule = function () {
-    var $schedule = $('#schedule');
-    var $scheduleScrollPoint = $('#schedule-scroll-point');
+barcamp.schedule = schedule;
 
-    if (!$schedule.length) {
-        return;
-    }
-
-    var config = barcamp.scheduleConfig;
-    if (!config) {
-        console.warn && console.warn("Unable to config Schedule, no config available");
-        return;
-    }
-
-    var renderWhenScrollpoint = function () {
-        var hT = $scheduleScrollPoint.offset().top,
-            hH = $scheduleScrollPoint.outerHeight(),
-            wH = $(window).height(),
-            wS = $(this).scrollTop();
-        if (wS > (hT + hH - wH) && !$schedule.hasClass('animate')) {
-            $schedule.addClass('animate');
-            $('.schedule', $schedule).addClass('animate');
-            return true;
-        }
-        return false;
-    };
-
-    var onScrollHandler = function () {
-        if (renderWhenScrollpoint()) {
-            $(window).off('scroll', '', onScrollHandler);
-        }
-    };
-
-    var resetConfig = function () {
-        $('li', $schedule).removeClass('item-active item-done');
-        $('div.progress', $schedule).each(function () {
-            var $slider = $(this);
-            setSliderEmpty($slider);
-            $slider.removeClass('active');
-        });
-    };
-
-    var setConfig = function () {
-        config.steps.forEach(function (item) {
-            var key = item.key;
-            var $step = $('li[data-step-name="' + key + '"]', $schedule);
-            var $sliderBefore = $('div.progress-before', $step);
-            var $sliderAfter = $('div.progress-after', $step);
-            if (item.isCurrent) {
-                $step.addClass('item-active');
-                setSliderFull($sliderBefore);
-
-                $sliderAfter.addClass('active');
-                setSliderPercentagle($sliderAfter);
-            }
-            if (item.isDone) {
-                $step.addClass('item-done');
-                setSliderFull($sliderBefore);
-                setSliderFull($sliderAfter);
-            }
-            if (item.isNext) {
-                $sliderBefore.addClass('active');
-                setSliderPercentagle($sliderBefore);
-            }
-        });
-    };
-
-    var getIntervalRatio = function () {
-        var start = new Date(config.dates.scheduleBegin).getTime();
-        var end = new Date(config.dates.scheduleEnd).getTime();
-        var current = new Date().getTime();
-
-        var isInvalid = false;
-        [start, end, current].forEach(function (val) {
-            if (isNaN(val)) {
-                isInvalid = true;
-            }
-        });
-        if (isInvalid || start >= end || start > current) {
-            return 0;
-        }
-        if (current > end) {
-            return 1;
-        }
-
-        return (current - start) / (end - start);
-    };
-    var setSliderSizes = function ($slider, size) {
-        $slider.css({
-            'width': size[0] + '%',
-            'height': size[1] + '%',
-        });
-    };
-    var setSliderPercentagle = function ($slider) {
-        if ($slider.length === 0) return;
-
-        var percent = getIntervalRatio();
-        var limits = parseSliderLimits($slider);
-
-        var sizes = [
-            limits.min[0] + (limits.max[0] - limits.min[0]) * percent,
-            limits.min[1] + (limits.max[1] - limits.min[1]) * percent,
-        ];
-        setSliderSizes($slider, sizes);
-    };
-    var setSliderEmpty = function ($slider) {
-        if ($slider.length === 0) return;
-        var limits = parseSliderLimits($slider);
-        setSliderSizes($slider, limits.empty);
-    };
-    var setSliderFull = function ($slider) {
-        if ($slider.length === 0) return;
-        var limits = parseSliderLimits($slider);
-        setSliderSizes($slider, limits.full);
-    };
-    var parseSliderLimits = function ($slider) {
-        var seg = $slider.data('visualLimits').split(';').map(parseFloat);
-        return {
-            'empty': [seg[0], seg[1]],
-            'min': [seg[2], seg[3]],
-            'max': [seg[4], seg[5]],
-            'full': [seg[6], seg[7]],
-        };
-    };
-
-    //try to render on load
-    if (!renderWhenScrollpoint()) {
-        //else render it on scroll
-        $(window).on('scroll', '', onScrollHandler);
-    }
-
-
-    resetConfig();
-    setConfig();
-
-};
-
-barcamp.lectures = function () {
+barcamp.lectures = async function () {
     var height = 0;
     var element;
     var scroll_over = 0;
@@ -255,7 +121,7 @@ barcamp.lectures = function () {
 
             element = $(this).parent().parent();
 
-            if (viewportWidth > 568) {
+            if (document.documentElement.clientWidth > 568) {
                 scroll_over = 200;
             } else {
                 scroll_over = 0;
@@ -275,11 +141,7 @@ barcamp.lectures = function () {
 
 };
 
-barcamp.tabs = function () {
-    $('#program').tabs();
-};
-
-barcamp.program = function () {
+barcamp.program = async function () {
     var val, vals = "";
 
     $('.js-program-filter input').change(function () {
@@ -309,7 +171,7 @@ barcamp.program = function () {
     });
 
     function fixedHeader() {
-        if (viewportWidth <= 768) {
+        if (document.documentElement.clientWidth <= 768) {
 
             var header = $('.program-header');
             var program = $('.program');
@@ -340,7 +202,7 @@ barcamp.program = function () {
     }
 
     function scrollLeftMobile() {
-        if (viewportWidth <= 768) {
+        if (document.documentElement.clientWidth <= 768) {
             $('.program-container').scrollLeft(100);
         }
     }
@@ -358,7 +220,7 @@ barcamp.program = function () {
 
 };
 
-barcamp.avatarUploader = function () {
+barcamp.avatarUploader = async function () {
     var $button = $('#avatar-upload-button');
     if ($button.length === 0) {
         return;
@@ -403,7 +265,7 @@ barcamp.avatarUploader = function () {
     };
 };
 
-barcamp.talkVote = function () {
+barcamp.talkVote = async function () {
     var $list = $('.lectures-list,.talk-detail');
 
     if ($list.length === 0) {
@@ -442,7 +304,7 @@ barcamp.talkVote = function () {
 };
 
 // TODO: Remove placeholders
-barcamp.disabledLinks = function () {
+barcamp.disabledLinks = async function () {
     $('a.disabled').click(function (e) {
         e.preventDefault();
         console.log('Clicked to disabled link');
@@ -454,21 +316,19 @@ barcamp.disabledLinks = function () {
     })
 };
 
-barcamp.netteInit = function () {
+barcamp.netteInit = async function () {
     $.nette.init();
 };
 
-barcamp.init = function () {
+barcamp.init = async function () {
     barcamp.netteInit();
     barcamp.imageFailover();
-    barcamp.viewportWidth();
     barcamp.openNav();
     barcamp.slider();
     barcamp.accordion();
     barcamp.smoothScroll();
     barcamp.schedule();
     barcamp.lectures();
-    //barcamp.tabs(); //require jQueryUI
     barcamp.program();
     barcamp.avatarUploader();
     barcamp.talkVote();
@@ -478,13 +338,5 @@ barcamp.init = function () {
 domready(function () {
     barcamp.init();
     $("body").removeClass("preload").removeClass("no-js");
-});
-
-$(window).on("orientationchange", function () {
-    barcamp.viewportWidth();
-});
-
-$(window).on("resize", function () {
-    barcamp.viewportWidth();
 });
 
