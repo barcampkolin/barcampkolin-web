@@ -45,6 +45,7 @@ return [
             /temp
             /tests
             /www/upload
+            /www/static/*/*/*.*.map
             /www/archive
         ',
         'allowDelete' => true,

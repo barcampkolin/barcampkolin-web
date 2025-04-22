@@ -6,4 +6,5 @@
 /temp/
 /vendor/
 /www/archive/
+/www/static/**/*.*.map
 /www/upload/
