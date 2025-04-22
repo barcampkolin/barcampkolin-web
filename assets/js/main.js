@@ -7,6 +7,7 @@ import  { toggle as slideToggle } from 'slide-element';
 
 // Modules
 import schedule from './modules/schedule.mjs';
+import heroslider from './modules/heroslider.mjs';
 
 // Call LESS processor
 import '../less/main.less';
@@ -44,20 +45,7 @@ barcamp.openNav = async function () {
     });
 };
 
-barcamp.slider = async function () {
-    $('.hero-slider').slick({
-        dots: false,
-        arrows: false,
-        infinite: true,
-        draggable: false,
-        fade: true,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        adaptiveHeight: true,
-        autoplay: true,
-        autoplaySpeed: 5000
-    });
-};
+barcamp.slider = heroslider;
 
 barcamp.accordion = async function () {
 

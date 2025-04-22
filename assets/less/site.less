@@ -179,36 +179,31 @@ body.no-js .js-only {
 .hero {
     background: #000;
     position: relative;
-    overflow: hidden;
-}
-
-.hero-slider-container {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 3;
 }
 
 .hero-slider {
-    position: relative;
-    height: 100%;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
 
-    .slick-list,
-    .slick-track {
-        height: 100%;
-    }
+    & > div {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        opacity: 0;
+        transition: opacity 3s ease;
 
-    .slick-slide > div {
-        width: 100%;
-        height: 100%;
+        &.active {
+            opacity: 0.8;
+        }
     }
 }
 
 .hero-content {
     position: relative;
-    z-index: 6;
+    z-index: 1;
     min-height: 70rem;
     color: @color-default;
     text-align: center;
@@ -222,24 +217,6 @@ body.no-js .js-only {
 
     a {
         color: white;
-    }
-}
-
-.hero-slide {
-    background-position: center;
-    background-size: cover;
-    position: relative;
-    height: 100%;
-
-    &:after {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.6);
-        z-index: 3;
     }
 }
 
