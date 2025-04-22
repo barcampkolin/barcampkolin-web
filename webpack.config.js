@@ -93,6 +93,11 @@ module.exports = (env, argv) => {
                 '@vendor': path.resolve(__dirname, 'vendor'),
             }
         },
-        devtool: isProd ? false : 'source-map'
+        devtool: isProd ? false : 'source-map',
+        watchOptions: {
+            ignored: /node_modules/,
+            aggregateTimeout: 200,
+        }
+
     };
 };
