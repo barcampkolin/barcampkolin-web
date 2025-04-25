@@ -8,7 +8,7 @@ import 'ublaboo-datagrid';
 import 'bootstrap';
 import 'semantic-ui-transition';
 import 'semantic-ui-dropdown';
-import domready from './domready.js';
+import domready from './utils/domready.mjs';
 
 // Call LESS processor
 import '../less/admin.less';

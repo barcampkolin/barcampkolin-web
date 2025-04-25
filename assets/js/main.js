@@ -2,12 +2,13 @@ import $ from 'jquery';
 import 'slick-carousel/slick/slick.js';
 import 'nette.ajax.js';
 import '@vendor/nette/forms/src/assets/netteForms.js';
-import domready from './domready.js';
-import  { toggle as slideToggle } from 'slide-element';
+import domready from './utils/domready.mjs';
+import {toggle as slideToggle} from 'slide-element';
 
 // Modules
 import schedule from './modules/schedule.mjs';
 import heroslider from './modules/heroslider.mjs';
+import lectures from './modules/lectures.mjs';
 
 // Call LESS processor
 import '../less/main.less';
@@ -48,86 +49,44 @@ barcamp.openNav = async function () {
 barcamp.slider = heroslider;
 
 barcamp.accordion = async function () {
+    const container = document.querySelector('.faq');
+    if (!container) {
+        return;
+    }
 
-    $('.accordion-list .accordion-content').hide();
-
-    $('.accordion-heading').click(function () {
-        //$(this).parent().parent().find('li').not($(this).parent()).removeClass('accordion-open').find('.accordion-content').slideUp(200);
-        $(this).parent().toggleClass('accordion-open').find('.accordion-content').slideToggle(200);
+    container.querySelectorAll('.accordion-list>li').forEach((li) => {
+        li.querySelector('.accordion-heading').addEventListener('click', function () {
+            li.classList.toggle('accordion-open');
+            slideToggle(li.querySelector('.accordion-content'), {duration: 200});
+        });
     });
+
 };
 
 barcamp.smoothScroll = async function () {
 
-    $('.scrollto').click(function (e) {
-
-        var id = $(this).attr('href');
-
-        var $id = $(id);
-        if ($id.length === 0) {
+    document.querySelectorAll('a.scrollto').forEach((link) => {
+        const href = link.getAttribute('href');
+        if (!href || href.length === 0 || href[0] !== '#') {
             return;
         }
 
-        e.preventDefault();
+        const target = document.querySelector(href);
 
-        var pos = $id.offset().top;
+        if (!target) {
+            return;
+        }
 
-        $('body, html').animate({scrollTop: pos}, 1000);
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            target.scrollIntoView({behavior: "smooth"});
+        });
     });
 };
 
 barcamp.schedule = schedule;
 
-barcamp.lectures = async function () {
-    var height = 0;
-    var element;
-    var scroll_over = 0;
-
-    $('.js-lecture-control').click(function () {
-
-        if ($(this).closest('li').hasClass('open')) {
-            $(this).parent().parent().parent().find('.show-full, .item-content-full').fadeOut(200, function () {
-                $(this).parent().parent().find('.item-content-perex').fadeIn(200);
-            });
-            $(this).parent().parent().parent().removeClass('open').animate({height: 110}, 200);
-        } else {
-
-            $(this).parent().parent().parent().find('.open').each(function () {
-                $(this).find('.item-content-full, .show-full').fadeOut(200, function () {
-                    $(this).parent().find('.item-content-perex').fadeIn(200);
-                });
-                $(this).removeClass('open').animate({height: 110}, 200);
-            });
-
-            $(this).fadeOut(200, function () {
-                $(this).parent().parent().find('.item-content-full, .show-full').fadeIn(200);
-            });
-
-            $(this).parent().parent().find('.item-content-full').show();
-            height = $(this).parent().parent().find('.item-content-full').height();
-            $(this).parent().parent().find('.item-content-full').hide();
-
-            element = $(this).parent().parent();
-
-            if (document.documentElement.clientWidth > 568) {
-                scroll_over = 200;
-            } else {
-                scroll_over = 0;
-            }
-
-            $(this).parent().parent().animate({height: height + 51}, 100, function () {
-                setTimeout(function () {
-                    element.addClass('open');
-                }, 200);
-            });
-            setTimeout(function () {
-                $('body, html').animate({scrollTop: element.offset().top - scroll_over}, 800);
-            }, 500);
-
-        }
-    });
-
-};
+barcamp.lectures = lectures;
 
 barcamp.program = async function () {
     var val, vals = "";

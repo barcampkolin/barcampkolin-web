@@ -1124,7 +1124,7 @@ body.no-js .js-only {
     .open {
         background-color: @color-gray;
         transition: max-height 0.15s ease-in;
-        height: auto !important;
+        height: auto;
         overflow: hidden;
 
         .item-header {
@@ -1992,7 +1992,13 @@ a.program-item {
 
 .accordion-content {
     padding: 0.1rem 1rem 0 5rem;
+    display: none;
 }
+
+.no-js .accordion-content {
+    display: block;
+}
+
 
 .accordion-open {
     .accordion-heading {
