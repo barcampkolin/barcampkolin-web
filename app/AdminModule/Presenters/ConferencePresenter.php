@@ -235,18 +235,18 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param bool $msExcel
-     * @throws \Nette\Application\AbortException
-     */
-    public function handleExportConfereeCsv($msExcel = false): void
+    public function handleExportConfereeCsv(): void
     {
-        $delimiter = $msExcel ? ';' : ',';
-
         $allConferee = $this->confereeManager->findAll();
 
-        ob_start();
-        $df = fopen("php://output", 'w');
+
+        $fileDatePostfix = gmdate("Ymd.his");
+        header("Cache-Control: max-age=0, no-cache, no-store, must-revalidate, proxy-revalidate");
+        header("Content-Type: application/octet-stream");
+        header("Content-Disposition: attachment;filename=users-{$fileDatePostfix}.csv");
+
+        $df = fopen("php://output", 'wb');
+
         fputcsv(
             $df,
             [
@@ -259,8 +259,9 @@ class ConferencePresenter extends BasePresenter
                 "Bio",
                 "Firma"
             ],
-            $delimiter,
-            '"'
+            ',',
+            '"',
+            '',
         );
 
         /** @var Conferee $conferee */
@@ -270,34 +271,25 @@ class ConferencePresenter extends BasePresenter
             } catch (JsonException) {
                 $extended = [];
             }
-            @fputcsv($df, [
-                $conferee->email,
-                $conferee->name,
-                'Ano',
-                $conferee->allowMail ? 'Ano' : 'Ne',
-                count($conferee->talk) ? 'Ano' : 'Ne',
-                $conferee->created->format(\DateTime::ATOM),
-                $conferee->bio,
-                $extended['company'] ?? null,
-            ], $delimiter, '"');
+            @fputcsv(
+                $df,
+                [
+                    $conferee->email,
+                    $conferee->name,
+                    'Ano',
+                    $conferee->allowMail ? 'Ano' : 'Ne',
+                    count($conferee->talk) ? 'Ano' : 'Ne',
+                    $conferee->created->format(\DateTime::ATOM),
+                    $conferee->bio,
+                    $extended['company'] ?? null,
+                ],
+                ',',
+                '"',
+                '',
+            );
         }
 
         fclose($df);
-        $csv = ob_get_clean();
-
-        if ($msExcel) {
-            $csv = iconv("UTF-8", "WINDOWS-1250//IGNORE", $csv);
-        }
-
-        $fileDatePostfix = gmdate("Ymd.his");
-        header("Cache-Control: max-age=0, no-cache, must-revalidate, proxy-revalidate");
-
-        header("Content-Type: application/octet-stream");
-        header("Content-Length: " . strlen($csv));
-
-        header("Content-Disposition: attachment;filename=users-$fileDatePostfix.csv");
-        echo $csv;
-
         $this->terminate();
     }
 
@@ -518,8 +510,7 @@ class ConferencePresenter extends BasePresenter
             ->addRule(Form::INTEGER, 'Hlasovací koeficient musí být číslo')
             ->setHtmlType('number');
         $form->addText('ogImageUrl', 'OG obrázek')
-            ->setRequired(false)
-        ;
+            ->setRequired(false);
 
         $form->addSubmit('submit', 'Odeslat')->setOption('primary', true);
 
