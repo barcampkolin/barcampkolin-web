@@ -1,10 +1,10 @@
 
-.preload * {
-    -webkit-transition: none !important;
-    -moz-transition: none !important;
-    -ms-transition: none !important;
-    -o-transition: none !important;
-}
+//.preload * {
+//    -webkit-transition: none !important;
+//    -moz-transition: none !important;
+//    -ms-transition: none !important;
+//    -o-transition: none !important;
+//}
 
 html {
     font-size: 10px;
@@ -20,7 +20,7 @@ html, button, input, select, textarea,
     font-family: @font;
 }
 
-a,span,div,input,select,textarea,button {
+a, span, div, input, select, textarea, button {
     &:focus {
         outline: none !important;
     }
@@ -40,7 +40,7 @@ body {
 a {
     color: @color-action;
     text-decoration: underline;
-    .tr;
+    .tr();
 
     &:hover {
         text-decoration: none;
@@ -97,7 +97,7 @@ h1,
     padding: 1.4rem 3rem;
     text-decoration: none;
     font-weight: 700;
-    .tr;
+    .tr();
 
     &.disabled {
         color: @color-default !important;
@@ -138,7 +138,7 @@ h1,
     font-weight: 400;
 }
 
-@media screen and (-webkit-min-device-pixel-ratio:0) {
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
     .btn-sm {
         padding: 1rem 2rem 0.8rem 2rem;
     }
@@ -149,13 +149,14 @@ h1,
     background-color: @color-brand;
 
     &:hover,
-        &:focus {
+    &:focus {
         color: @color-default;
-        background-color: darken(@color-brand,7%);
+        background-color: darken(@color-brand, 7%);
     }
+
     &:hover:active {
         color: @color-default;
-        background-color: darken(@color-brand,10%);
+        background-color: darken(@color-brand, 10%);
     }
 }
 
@@ -164,11 +165,12 @@ h1,
     background-color: @color-secondary;
 
     &:hover,
-        &:focus {
-        background-color: darken(@color-secondary,7%);
+    &:focus {
+        background-color: darken(@color-secondary, 7%);
     }
+
     &:hover:active {
-        background-color: darken(@color-secondary,10%);
+        background-color: darken(@color-secondary, 10%);
     }
 }
 
@@ -178,10 +180,11 @@ h1,
     color: @color-default;
 
     &:hover,
-        &:focus {
+    &:focus {
         background-color: @color-default;
         color: @color-base;
     }
+
     &:hover:active {
         background-color: @color-default;
         color: @color-base;
@@ -194,10 +197,11 @@ h1,
     color: @color-action;
 
     &:hover,
-        &:focus {
+    &:focus {
         background-color: @color-action;
         color: @color-default;
     }
+
     &:hover:active {
         background-color: @color-action;
         color: @color-default;
@@ -209,23 +213,24 @@ h1,
     background-color: @color-action;
 
     &:hover,
-        &:focus {
-        background-color: darken(@color-action,7%);
+    &:focus {
+        background-color: darken(@color-action, 7%);
     }
+
     &:hover:active {
-        background-color: darken(@color-action,10%);
+        background-color: darken(@color-action, 10%);
     }
 }
-
-
 
 
 .text-action {
     color: @color-action;
 }
+
 .text-brand {
     color: @color-brand;
 }
+
 .text-gray {
     color: @color-gray-darker;
 }
@@ -237,15 +242,19 @@ h1,
 .text-xl {
     font-size: 2rem;
 }
+
 .text-lg {
     font-size: 1.8rem;
 }
+
 .text-md {
     font-size: 1.7rem;
 }
+
 .text-sm {
     font-size: 1.4rem;
 }
+
 .text-xs {
     font-size: 1.3rem;
 }
@@ -253,6 +262,7 @@ h1,
 .text-normal {
     font-weight: 400;
 }
+
 .text-bold {
     font-weight: 700;
 }
@@ -260,9 +270,6 @@ h1,
 .bg-gray {
     background-color: @color-gray;
 }
-
-
-
 
 
 input,
@@ -275,15 +282,15 @@ select {
     color: @color-base;
     border-radius: 0.4rem;
     padding: 1.5rem;
-    background: rgb(245,245,245); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(255,255,255,1) 30%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(245,245,245,1) 0%,rgba(255,255,255,1) 30%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(245,245,245,1) 0%,rgba(255,255,255,1) 30%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+    background: rgb(245, 245, 245); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(245, 245, 245, 1) 0%, rgba(255, 255, 255, 1) 30%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(245, 245, 245, 1) 0%, rgba(255, 255, 255, 1) 30%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(245, 245, 245, 1) 0%, rgba(255, 255, 255, 1) 30%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#ffffff',GradientType=0); /* IE6-9 */
     font-weight: 400;
 
     &:focus {
-        border-color: darken(#dee0df,10%);
+        border-color: darken(#dee0df, 10%);
     }
 }
 
@@ -296,6 +303,7 @@ select {
         input {
             border-color: #d80027;
         }
+
         .error-text {
             font-size: 1.2rem;
             font-weight: 700;
@@ -346,11 +354,11 @@ textarea {
 }
 
 .select {
-    background: rgb(245,245,245); /* Old browsers */
-    background: -moz-linear-gradient(top, rgba(245,245,245,1) 0%, rgba(255,255,255,1) 30%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(top, rgba(245,245,245,1) 0%,rgba(255,255,255,1) 30%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to bottom, rgba(245,245,245,1) 0%,rgba(255,255,255,1) 30%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+    background: rgb(245, 245, 245); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(245, 245, 245, 1) 0%, rgba(255, 255, 255, 1) 30%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(245, 245, 245, 1) 0%, rgba(255, 255, 255, 1) 30%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(245, 245, 245, 1) 0%, rgba(255, 255, 255, 1) 30%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f5f5f5', endColorstr='#ffffff',GradientType=0); /* IE6-9 */
 }
 
 select {
@@ -359,7 +367,7 @@ select {
     text-indent: 1px;
     text-overflow: '';
     padding: 1.3rem 1.5rem;
-    background-image: url('../img/dropdown-arrow.svg');
+    background-image: url(' @{staticBase}/img/dropdown-arrow.svg');
     background-repeat: no-repeat;
     background-size: 1.5rem 1.5rem;
     background-position: center right 1.5rem;
@@ -371,7 +379,7 @@ label {
     font-weight: 700;
     display: block;
     margin-bottom: 0.5rem;
-    .clearfix;
+    .clearfix();
 }
 
 .letter-count {
@@ -431,6 +439,7 @@ label {
             .opacity(0);
             transform: rotate(-45deg);
         }
+
         &:before {
             content: '';
             width: 2.3rem;
@@ -442,12 +451,14 @@ label {
             background-color: @color-default;
             box-sizing: border-box;
             border-radius: 0.4rem;
-            .box-shadow(inset 2px 2px 1px -1px rgba(0,0,0,0.3));
+            .box-shadow(inset 2px 2px 1px -1px rgba(0, 0, 0, 0.3));
         }
+
         &:hover::after {
             opacity: 0.1;
         }
     }
+
     input[type=checkbox] {
         //visibility: hidden; //It breaks form validation
         position: absolute;
@@ -498,6 +509,7 @@ label {
             .opacity(0);
             transform: rotate(-45deg);
         }
+
         &:before {
             content: '';
             width: 2.3rem;
@@ -509,12 +521,14 @@ label {
             background-color: @color-default;
             box-sizing: border-box;
             border-radius: 0.4rem;
-            .box-shadow(inset 2px 2px 1px -1px rgba(0,0,0,0.3));
+            .box-shadow(inset 2px 2px 1px -1px rgba(0, 0, 0, 0.3));
         }
+
         &:hover::after {
             opacity: 0.1;
         }
     }
+
     input[type=radio] {
         //visibility: hidden; //It breaks form validation
         position: absolute;
@@ -537,14 +551,16 @@ label {
     margin: 0.3rem 1.5rem 0 0;
 
     input[type="radio"] {
-        display:none;
+        display: none;
     }
+
     input[type="radio"] + label {
         cursor: pointer;
         margin-right: 1rem;
         display: inline-block;
         font-weight: 300;
     }
+
     input[type="radio"] + label span {
         display: inline-block;
         width: 2.2rem;
@@ -570,6 +586,7 @@ label {
             .opacity(0);
         }
     }
+
     input[type="radio"]:checked + label span {
         background-color: @color-default;
         .box-shadow(none);
@@ -579,6 +596,7 @@ label {
             .opacity(1);
         }
     }
+
     input[type="radio"]:not(:checked) + label:hover {
         span {
             &:after {

@@ -30,17 +30,25 @@ class ScheduleControl extends Control
         $features = $this->infoProvider->getFeatures();
         $steps = $this->scheduleManager->getSteps(false, false);
 
-        $this->template->setFile(__DIR__ . '/Schedule.latte');
-        $this->template->features = $this->infoProvider->getFeatures();
-        $this->template->dates = $dates;
-        $this->template->urls = $this->infoProvider->getUrls();
+        $template = $this->template;
+        $template->setFile(__DIR__ . '/Schedule.latte');
+        $template->addFilter(
+            'json',
+            fn($value) => json_encode($value, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+        );
 
-        $this->template->config = [
+        $template->features = $features;
+        $template->dates = $dates;
+        $template->steps = $steps;
+
+        $template->urls = $this->infoProvider->getUrls();
+
+        $template->config = [
             'dates' => $dates,
             'steps' => $steps,
             'features' => $features
         ];
 
-        $this->template->render();
+        $template->render();
     }
 }

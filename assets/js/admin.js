@@ -1,4 +1,19 @@
-$(document).ready(function () {
+import $ from 'jquery';
+import 'nette.ajax.js';
+import '@vendor/nette/forms/src/assets/netteForms.js';
+import 'happy-inputs';
+import 'bootstrap-datepicker';
+import './jquery-ui-sortable.js';
+import 'ublaboo-datagrid';
+import 'bootstrap';
+import 'semantic-ui-transition';
+import 'semantic-ui-dropdown';
+import domready from './utils/domready.mjs';
+
+// Call LESS processor
+import '../less/admin.less';
+
+domready(function () {
     $('.ui.dropdown')
         .dropdown({
             'ignoreCase': true,

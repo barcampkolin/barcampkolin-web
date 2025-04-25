@@ -1,277 +1,94 @@
-var barcamp = barcamp || {};
-var viewportWidth;
+import $ from 'jquery';
+import 'slick-carousel/slick/slick.js';
+import 'nette.ajax.js';
+import '@vendor/nette/forms/src/assets/netteForms.js';
+import domready from './utils/domready.mjs';
+import {toggle as slideToggle} from 'slide-element';
 
-barcamp.viewportWidth = function () { // šířka viewportu
-    viewportWidth = Math.max($(window).width(), window.innerWidth);
-};
+// Modules
+import schedule from './modules/schedule.mjs';
+import heroslider from './modules/heroslider.mjs';
+import lectures from './modules/lectures.mjs';
 
-barcamp.imageFailover = function () {
-    $('img.failover').each(function(){
-        var fixator = function(element){
-            element.src = '/img/logo-icon-96.png';
-        };
+// Call LESS processor
+import '../less/main.less';
 
-        if(this.complete) {
-            if(this.naturalHeight === 0) {
-                fixator(this);
+/**
+ * @global
+ * @const {string} currentYear
+ */
+
+window.barcamp = window.barcamp || {};
+const barcamp = window.barcamp;
+
+barcamp.imageFailover = async function () {
+    document.querySelectorAll('img.failover').forEach((img) => {
+        const fix = () => img.src = `/static/${currentYear}/img/logo-icon-96.png`;
+        if (img.complete) {
+            if (img.naturalHeight === 0) {
+                fix();
             }
-        }
-        else {
-            $(this).on('error', function(){
-                fixator(this);
-            });
+        } else {
+            img.addEventListener('error', fix, {once: true, passive: true});
         }
     });
 };
 
-barcamp.openNav = function () {
+barcamp.openNav = async function () {
+    const header = document.querySelector('header');
+    header.querySelector('.btn-mobile-menu-open-container').addEventListener('click', function (e) {
+        const container = e.currentTarget;
+        const mobileMenu = container.querySelector('.btn-mobile-menu-open');
 
-    $('.btn-mobile-menu-open-container').click(function () {
-        $('.header-nav').slideToggle(200);
-        $(this).find('.btn-mobile-menu-open').toggleClass('active');
-        $(this).find('.item-text').text(function (i, text) {
-            return text === "Menu" ? "Zavřít" : "Menu";
-        })
+        slideToggle(header.querySelector('.header-nav'), {duration: 200});
+        mobileMenu.classList.toggle('active');
+        container.querySelector('.item-text').innerText = mobileMenu.classList.contains('active') ? 'Zavřít' : 'Menu';
     });
 };
 
-barcamp.slider = function () {
-    $('.hero-slider').slick({
-        dots: false,
-        arrows: false,
-        infinite: true,
-        draggable: false,
-        fade: true,
-        slidesToShow: 1,
-        slidesToScroll: 1,
-        adaptiveHeight: true,
-        autoplay: true,
-        autoplaySpeed: 5000
+barcamp.slider = heroslider;
+
+barcamp.accordion = async function () {
+    const container = document.querySelector('.faq');
+    if (!container) {
+        return;
+    }
+
+    container.querySelectorAll('.accordion-list>li').forEach((li) => {
+        li.querySelector('.accordion-heading').addEventListener('click', function () {
+            li.classList.toggle('accordion-open');
+            slideToggle(li.querySelector('.accordion-content'), {duration: 200});
+        });
     });
+
 };
 
-barcamp.accordion = function () {
+barcamp.smoothScroll = async function () {
 
-    $('.accordion-list .accordion-content').hide();
-
-    $('.accordion-heading').click(function () {
-        //$(this).parent().parent().find('li').not($(this).parent()).removeClass('accordion-open').find('.accordion-content').slideUp(200);
-        $(this).parent().toggleClass('accordion-open').find('.accordion-content').slideToggle(200);
-    });
-};
-
-barcamp.smoothScroll = function () {
-
-    $('.scrollto').click(function (e) {
-
-        var id = $(this).attr('href');
-
-        var $id = $(id);
-        if ($id.length === 0) {
+    document.querySelectorAll('a.scrollto').forEach((link) => {
+        const href = link.getAttribute('href');
+        if (!href || href.length === 0 || href[0] !== '#') {
             return;
         }
 
-        e.preventDefault();
+        const target = document.querySelector(href);
 
-        var pos = $id.offset().top;
+        if (!target) {
+            return;
+        }
 
-        $('body, html').animate({scrollTop: pos}, 1000);
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            target.scrollIntoView({behavior: "smooth"});
+        });
     });
 };
 
-barcamp.schedule = function () {
-    var $schedule = $('#schedule');
-    var $scheduleScrollPoint = $('#schedule-scroll-point');
+barcamp.schedule = schedule;
 
-    if (!$schedule.length) {
-        return;
-    }
+barcamp.lectures = lectures;
 
-    var config = barcamp.scheduleConfig;
-    if (!config) {
-        console.warn && console.warn("Unable to config Schedule, no config available");
-        return;
-    }
-
-    var renderWhenScrollpoint = function () {
-        var hT = $scheduleScrollPoint.offset().top,
-            hH = $scheduleScrollPoint.outerHeight(),
-            wH = $(window).height(),
-            wS = $(this).scrollTop();
-        if (wS > (hT + hH - wH) && !$schedule.hasClass('animate')) {
-            $schedule.addClass('animate');
-            $('.schedule', $schedule).addClass('animate');
-            return true;
-        }
-        return false;
-    };
-
-    var onScrollHandler = function () {
-        if (renderWhenScrollpoint()) {
-            $(window).off('scroll', '', onScrollHandler);
-        }
-    };
-
-    var resetConfig = function () {
-        $('li', $schedule).removeClass('item-active item-done');
-        $('div.progress', $schedule).each(function () {
-            var $slider = $(this);
-            setSliderEmpty($slider);
-            $slider.removeClass('active');
-        });
-    };
-
-    var setConfig = function () {
-        config.steps.forEach(function (item) {
-            var key = item.key;
-            var $step = $('li[data-step-name="' + key + '"]', $schedule);
-            var $sliderBefore = $('div.progress-before', $step);
-            var $sliderAfter = $('div.progress-after', $step);
-            if (item.isCurrent) {
-                $step.addClass('item-active');
-                setSliderFull($sliderBefore);
-
-                $sliderAfter.addClass('active');
-                setSliderPercentagle($sliderAfter);
-            }
-            if (item.isDone) {
-                $step.addClass('item-done');
-                setSliderFull($sliderBefore);
-                setSliderFull($sliderAfter);
-            }
-            if (item.isNext) {
-                $sliderBefore.addClass('active');
-                setSliderPercentagle($sliderBefore);
-            }
-        });
-    };
-
-    var getIntervalRatio = function () {
-        var start = new Date(config.dates.scheduleBegin).getTime();
-        var end = new Date(config.dates.scheduleEnd).getTime();
-        var current = new Date().getTime();
-
-        var isInvalid = false;
-        [start, end, current].forEach(function (val) {
-            if (isNaN(val)) {
-                isInvalid = true;
-            }
-        });
-        if (isInvalid || start >= end || start > current) {
-            return 0;
-        }
-        if (current > end) {
-            return 1;
-        }
-
-        return (current - start) / (end - start);
-    };
-    var setSliderSizes = function ($slider, size) {
-        $slider.css({
-            'width': size[0] + '%',
-            'height': size[1] + '%',
-        });
-    };
-    var setSliderPercentagle = function ($slider) {
-        if ($slider.length === 0) return;
-
-        var percent = getIntervalRatio();
-        var limits = parseSliderLimits($slider);
-
-        var sizes = [
-            limits.min[0] + (limits.max[0] - limits.min[0]) * percent,
-            limits.min[1] + (limits.max[1] - limits.min[1]) * percent,
-        ];
-        setSliderSizes($slider, sizes);
-    };
-    var setSliderEmpty = function ($slider) {
-        if ($slider.length === 0) return;
-        var limits = parseSliderLimits($slider);
-        setSliderSizes($slider, limits.empty);
-    };
-    var setSliderFull = function ($slider) {
-        if ($slider.length === 0) return;
-        var limits = parseSliderLimits($slider);
-        setSliderSizes($slider, limits.full);
-    };
-    var parseSliderLimits = function ($slider) {
-        var seg = $slider.data('visualLimits').split(';').map(parseFloat);
-        return {
-            'empty': [seg[0], seg[1]],
-            'min': [seg[2], seg[3]],
-            'max': [seg[4], seg[5]],
-            'full': [seg[6], seg[7]],
-        };
-    };
-
-    //try to render on load
-    if (!renderWhenScrollpoint()) {
-        //else render it on scroll
-        $(window).on('scroll', '', onScrollHandler);
-    }
-
-
-    resetConfig();
-    setConfig();
-
-};
-
-barcamp.lectures = function () {
-    var height = 0;
-    var element;
-    var scroll_over = 0;
-
-    $('.js-lecture-control').click(function () {
-
-        if ($(this).closest('li').hasClass('open')) {
-            $(this).parent().parent().parent().find('.show-full, .item-content-full').fadeOut(200, function () {
-                $(this).parent().parent().find('.item-content-perex').fadeIn(200);
-            });
-            $(this).parent().parent().parent().removeClass('open').animate({height: 110}, 200);
-        } else {
-
-            $(this).parent().parent().parent().find('.open').each(function () {
-                $(this).find('.item-content-full, .show-full').fadeOut(200, function () {
-                    $(this).parent().find('.item-content-perex').fadeIn(200);
-                });
-                $(this).removeClass('open').animate({height: 110}, 200);
-            });
-
-            $(this).fadeOut(200, function () {
-                $(this).parent().parent().find('.item-content-full, .show-full').fadeIn(200);
-            });
-
-            $(this).parent().parent().find('.item-content-full').show();
-            height = $(this).parent().parent().find('.item-content-full').height();
-            $(this).parent().parent().find('.item-content-full').hide();
-
-            element = $(this).parent().parent();
-
-            if (viewportWidth > 568) {
-                scroll_over = 200;
-            } else {
-                scroll_over = 0;
-            }
-
-            $(this).parent().parent().animate({height: height + 51}, 100, function () {
-                setTimeout(function () {
-                    element.addClass('open');
-                }, 200);
-            });
-            setTimeout(function () {
-                $('body, html').animate({scrollTop: element.offset().top - scroll_over}, 800);
-            }, 500);
-
-        }
-    });
-
-};
-
-barcamp.tabs = function () {
-    $('#program').tabs();
-};
-
-barcamp.program = function () {
+barcamp.program = async function () {
     var val, vals = "";
 
     $('.js-program-filter input').change(function () {
@@ -301,7 +118,7 @@ barcamp.program = function () {
     });
 
     function fixedHeader() {
-        if (viewportWidth <= 768) {
+        if (document.documentElement.clientWidth <= 768) {
 
             var header = $('.program-header');
             var program = $('.program');
@@ -322,8 +139,7 @@ barcamp.program = function () {
                         header.addClass('fixed');
                     }
                     header.css("top", scroll + "px");
-                }
-                else {
+                } else {
                     if (header.hasClass('fixed')) {
                         header.removeClass('fixed');
                     }
@@ -333,7 +149,7 @@ barcamp.program = function () {
     }
 
     function scrollLeftMobile() {
-        if (viewportWidth <= 768) {
+        if (document.documentElement.clientWidth <= 768) {
             $('.program-container').scrollLeft(100);
         }
     }
@@ -351,7 +167,7 @@ barcamp.program = function () {
 
 };
 
-barcamp.avatarUploader = function () {
+barcamp.avatarUploader = async function () {
     var $button = $('#avatar-upload-button');
     if ($button.length === 0) {
         return;
@@ -383,34 +199,34 @@ barcamp.avatarUploader = function () {
             processData: false,
             dataType: 'json'
         })
-        .done(function (json) {
-            $image.removeClass('pulse');
-            var value = 'url(\'' + json.avatarUrl + '\')';
-            $image.css('background-image', value);
-        })
-        .fail(function(error) {
-            $image.removeClass('pulse');
-            alert('Tento obrázek není možné načíst, zkuste jej prosím zmenšit.');
-            console.log(error);
-        });
+            .done(function (json) {
+                $image.removeClass('pulse');
+                var value = 'url(\'' + json.avatarUrl + '\')';
+                $image.css('background-image', value);
+            })
+            .fail(function (error) {
+                $image.removeClass('pulse');
+                alert('Tento obrázek není možné načíst, zkuste jej prosím zmenšit.');
+                console.log(error);
+            });
     };
 };
 
-barcamp.talkVote = function () {
+barcamp.talkVote = async function () {
     var $list = $('.lectures-list,.talk-detail');
 
-    if($list.length === 0) {
+    if ($list.length === 0) {
         return;
     }
 
-    $list.on('click', '.vote-ajax', function(e) {
+    $list.on('click', '.vote-ajax', function (e) {
         e.preventDefault();
         var $button = $(this);
         $button.addClass('disabled');
         var $item = $button.closest('.item-vote-box');
         var url = $button.attr('href');
 
-        var isDetail = !! $item.closest('.talk-detail').length;
+        var isDetail = !!$item.closest('.talk-detail').length;
 
         dataLayer.push({
             'event': 'bck-talk-vote',
@@ -422,11 +238,11 @@ barcamp.talkVote = function () {
         $.ajax({
             url: url,
             dataType: 'json'
-        }).done(function(json) {
+        }).done(function (json) {
             $button.removeClass('disabled');
             $('.item-count', $item).text(json.votes);
             $('.is-voted,.is-not-voted', $item).toggle();
-        }).fail(function(error) {
+        }).fail(function (error) {
             alert('Váš hlas se nepovedlo uložit. Omlouváme se. Zkuste to prosím znovu.');
             console.log(error);
         });
@@ -435,7 +251,7 @@ barcamp.talkVote = function () {
 };
 
 // TODO: Remove placeholders
-barcamp.disabledLinks = function () {
+barcamp.disabledLinks = async function () {
     $('a.disabled').click(function (e) {
         e.preventDefault();
         console.log('Clicked to disabled link');
@@ -447,36 +263,27 @@ barcamp.disabledLinks = function () {
     })
 };
 
-barcamp.netteInit = function () {
+barcamp.netteInit = async function () {
     $.nette.init();
 };
 
-barcamp.init = function () {
+barcamp.init = async function () {
     barcamp.netteInit();
     barcamp.imageFailover();
-    barcamp.viewportWidth();
     barcamp.openNav();
     barcamp.slider();
     barcamp.accordion();
     barcamp.smoothScroll();
     barcamp.schedule();
     barcamp.lectures();
-    //barcamp.tabs(); //require jQueryUI
     barcamp.program();
     barcamp.avatarUploader();
     barcamp.talkVote();
     barcamp.disabledLinks();
 };
 
-$(document).ready(function () {
+domready(function () {
     barcamp.init();
     $("body").removeClass("preload").removeClass("no-js");
 });
 
-$(window).on("orientationchange", function () {
-    barcamp.viewportWidth();
-});
-
-$(window).on("resize", function () {
-    barcamp.viewportWidth();
-});

@@ -4,53 +4,91 @@ Web Kolínského barcampu
 Web Kolínského barcampu (https://www.barcampkolin.cz/)
 
 
+Požadavky pro běh
+-----------------
+
+PHP 8.3 nebo vyšší, Mysql, Git.
+
+V PHP jsou potřeba rozšření: `pdo_mysql`.
+
+
+Požadavky pro vývoj
+-----------------
+
+[Composer](https://getcomposer.org/), [NPM](https://www.npmjs.com/)
+
+
 Instalace na localhost
 ----------------------
 
-Po stažení repozitáře naisntalujte závislosti:
+Po stažení repozitáře nainstalujte závislosti:
 
 ```shell
-composer install
+composer install --no-dev
 ```
-
-Vytvořte soubor `app/config/config.local.neon` (není verzován v Gitu). Může být i prázdný.
-
-Úpravy JS a CSS
----------------
-
-Pro úpravy JavaScriptových souborů a nebo stylů je potřeba nainstalovat závislosti pro generátor:
-
-```shell
-npm install -g bower grunt-cli
-npm install
-bower install
-```
-
-Po úpravě souborů v `assets/` zavolejte:
-
-```shell
-grunt
-```
-
-a vygenerují se soubory:
-- `www/js/main.js`
-- `www/js/admin.js`
-- `www/css/main.css`
-- `www/css/admin.css`
-
-které obsahují veškeré scripty a styly stránek. Tyto soubory jsou součástí repozitáře, takže je lze
-rovnou použít. 
-
 
 Spuštění webového serveru
 -------------------------
-Spusťte Docker 
+Spusťte Docker v něm spusťte připravenou konfiguraci pro lokální vývoj příkazem:
 
 ```shell
 docker compose up -d
 ```
 
-Na stránce `http://localhost:8080` by se měl objevit aktuální web.
+Tím se spustí jak webvý server, tak MySQL databáze. Dále je potřeba pro sprvní spuštění provést tyto kroky:
+
+- Vytvořte soubor `app/config/config.local.neon`, může být i prázdný. Tento není verzován, proto se nevytvořil.
+- Vytvořte adresáře `temp/` a `log/`, které aplikace potřebuje pro svůj běh.
+- Připojte se k MySQL databázi a importujte soubory
+  [`.install/structure.sql`](.install/structure.sql) a [`.install/base-data.sql`](.install/base-data.sql).
+
+Aplikace neobsahuje žádný editor databáze (PMA či Adminer), použijte vlastní nástroj. Pro připojení k lokální databázi
+jsou připravené tyto údaje:
+
+- Host: `127.0.0.1` (nelze použít `localhost`),
+- Port: `33060`,
+- User: `root`,
+- Heslo: `devstack`
+- Databáze: `default`
+- ([více ifnormací k použití lokální databáze](https://github.com/jakubboucek/docker-lamp-devstack/blob/master/README.md#connecting-to-mysql))
+
+Pokud jste dodrželi postup, na stránce `http://localhost:8080` by se měl objevit aktuální web.
+
+Úpravy JS a CSS (assety)
+------------------------
+
+Při práci s assety (tj. JS + CSS) počítejte prosím s tím, že každý ročník by měl být co nejvíce nezávislý a mít vlastní
+assety pro daný ročník. Umožní to pak věrně archivovat stránky z původních let jako statické soubory, aniž by to omezovalo
+rozvoj a úpravy v dalších letech. Proto jsou všechny assets uloženy v adresáři `assets/####`, kde `####` je rok konání.
+Odkazy v CSS a JS souborech pak tvořte pokud možno relativně a pokud to nebude možné, využijte připravenou proměnnou
+`currentYear` (v JS, obsahuje pouze rok) a nebo `@staticBase` (v Less, obsahuje cestu k assetům pro daný ročník).
+
+Pro každý ročník je potřeba vygenerovat assety znovu, protože v sobě mají zkompilovaný ročník. Aktuální ročník změníte
+upravou proměnné `currentYear` v souboru `webpack.config.js`.
+
+Pro úpravy assetů je potřeba nainstalovat závislosti pro generátor:
+
+```shell
+npm install
+```
+
+Po úpravě souborů v `assets/` zavolejte:
+
+```shell
+npm run build:prod
+```
+
+a vygenerují se soubory (místo `2025` se použije aktuální rok):
+
+```shell
+- `www/static/2025/js/main.js`
+- `www/static/2025/js/admin.js`
+- `www/static/2025/css/main.css`
+- `www/static/2025/css/admin.css`
+```
+
+které obsahují veškeré scripty a styly stránek. Tyto soubory jsou součástí repozitáře, takže je lze
+rovnou použít.
 
 Nastavení cronu
 --------------
@@ -74,34 +112,20 @@ Seznam cronů:
 - Parametry: (bez parametrů)
 
 
-Požadavky pro běh
------------------
-
-PHP 8.3 nebo vyšší, Mysql, Git, Unzip. 
-
-V PHP jsou potřeba rozšření: `pdo_mysql`.
-
-
-Požadavky pro vývoj
------------------
-
-Composer, NPM
-
 Požadavky na webhosting
 -----------------------
 
 - všechny pozadavky uvedené v kapitole [Požadavky pro běh](#požadavky-pro-běh).
 - webserver musí mít povolený `mod_rewrite`.
 - webserver musí mít `DOCUMENT_ROOT` směrovaný do adresáře `www/`, nikoliv do rootu repozitáře.
+- v rootu aplikace musí být vytvořeny adresáře `temp/` a `log/` a musí mít nastaveny práva pro zápis (tyto adresáře
+    nejsou součástí deploye, je proto potřeba je vytvořit ručně).
+- na serveru musí existovat soubor `app/config/config.local.neon` (klidně prázdný pro začátek).
 
 > [!WARNING]
 > Pokud váš webhosting nemá možnost nastavit `DOCUMENT_ROOT` do adresáře `www/`, zvolte si jiný webhosting
 > a nepokoušejte se tento neodstatek vyřešit přes `.htaccess` soubor. Jedná se o zásadní bezpečnostní aspekt.\
 > Více informací: https://nette.org/cs/security-warning
-
-- v rootu aplikace musí být vytvořeny adresáře `temp/` a `log/` a musí mít nastaveny práva pro zápis (tyto adresáře
-    nejsou součástí deploye, je proto potřeba je vytvořit ručně).
-- na serveru musí existovat soubor [`app/config/config.local.neon`] (klidně prázdný pro začátek).
 
 Aplikace potřebuje pro běh připojení k MySQL (nebo MariaDB) databázi a v ní připravené tabulky, jejich struktura je
 v souboru [`.install/structure.sql`](.install/structure.sql). Konfigurační tabulka musí obsahovat základní data, která
@@ -142,11 +166,15 @@ return [
 
 ### Spuštění deploye
 
+>[!TIP]
+> Než uděláte deploy na server, ujistěte se, že na Vaší lokální verzi obsahuje Composer balíčky určené pouze pro produkci
+> (`--no-dev`) a assety jsou vygenerované v produkčnm módu (`build:prod`). V opačném případě si na server nahrajete velmi
+> neoptimalizovanou verzi. Pokud jste od předchozího deploye nespouštěni `Composer` ani `NPM`, tak je vše v pořádku.
+
 Deploy lze spustit připravenými scripty:
 
 - `bin/deploy.sh` - pro nasazení na produkční server
 - `bin/deploy-dry.sh` - pro výpis souborů, které by se nasadily na produkční server
-
 
 License
 -------
