@@ -25,7 +25,8 @@
             {if $input->getOption(type) in [text, select, textarea]}
                 {input $input class => form-control}
             {elseif $input->getOption(type) === button}
-                {input $input class => "btn btn-default"}
+                {var $class = $input->getControlPrototype()->getAttribute('class') ?? "btn-default"}
+                {input $input class => "btn $class"}
             {elseif $input->getOption(type) === checkbox}
                 <div class="checkbox">{input $input}</div>
             {elseif $input->getOption(type) === radio}
