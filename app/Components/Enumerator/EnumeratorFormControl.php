@@ -10,6 +10,7 @@ use Nette\Application\UI\Presenter;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
+use Nette\Application\UI;
 
 class EnumeratorFormControl extends Control
 {
@@ -22,13 +23,13 @@ class EnumeratorFormControl extends Control
         private $setName,
         private readonly EnumeratorManager $enumeratorManager
     ) {
+
+        $this->monitor(UI\Presenter::class, $this->init(...));
     }
 
 
-    protected function attached(\Nette\ComponentModel\IComponent $presenter): void
+    protected function init(\Nette\ComponentModel\IComponent $presenter): void
     {
-        parent::attached($presenter);
-
         if ($presenter instanceof Presenter) {
             /** @var Form $form */
             $form = $this['form'];
@@ -69,16 +70,16 @@ class EnumeratorFormControl extends Control
             $enums->addText('key', 'Klíč', 30);
             $enums->addText('value', 'Hodnota', 50);
 
-            $enums->addSubmit('remove', 'Odstranit')
+            $enums->addSubmit('remove', '╳ Odstranit')
                 ->setValidationScope(null)
                 ->onClick[] = $removeEvent;
         }, 1);
 
-        $enums->addSubmit('add', 'Přidat další otázku')
+        $enums->addSubmit('add', '➕ Přidat další otázku')
             ->setValidationScope(null)
             ->onClick[] = $this->addClicked(...);
 
-        $form->addSubmit('submit', 'Uložit');
+        $form->addSubmit('submit', 'Uložit')->setHtmlAttribute('class', 'btn-primary');
         $form->addProtection('Prosím, odešlete tento formulář ještě jednou (bezpečnostní kontrola)');
         $form->onSuccess[] = $this->onFormSuccess(...);
         return $form;
