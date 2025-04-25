@@ -267,6 +267,26 @@ barcamp.netteInit = async function () {
     $.nette.init();
 };
 
+/**
+ * Remove _ugly_ URL parameters (`fbclid`, `gclid`, `utm_*`, `_fid`) which is only used for tracking.
+ * This not affects the functionality of the analytics, only removes params from the URL.
+ */
+barcamp.cleanUrlParams = function () {
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+    let changed = false;
+    Array.from(params.keys()).forEach((key) => {
+        if (key.startsWith('utm_') || key.endsWith('clid') || key === '_fid') {
+            params.delete(key);
+            changed = true;
+        }
+    });
+
+    if (changed) {
+        setTimeout(() => window.history.replaceState({}, document.title, url.toString()), 1000);
+    }
+}
+
 barcamp.init = async function () {
     barcamp.netteInit();
     barcamp.imageFailover();
@@ -280,6 +300,7 @@ barcamp.init = async function () {
     barcamp.avatarUploader();
     barcamp.talkVote();
     barcamp.disabledLinks();
+    barcamp.cleanUrlParams();
 };
 
 domready(function () {

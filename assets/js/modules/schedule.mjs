@@ -12,7 +12,6 @@ export default async function () {
         return;
     }
 
-    console.debug("schedule", config);
     registerViewportObserver(render, 0.25).observe(schedule);
 
     resetConfig();
