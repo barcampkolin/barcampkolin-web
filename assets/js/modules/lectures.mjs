@@ -118,7 +118,7 @@ async function openLecture(lecture, full) {
     );
 }
 
-export default function () {
+export default async function () {
     const container = document.querySelector('.lectures-list');
     if (!container) return;
 

@@ -18,10 +18,26 @@ import '../less/main.less';
  * @const {string} currentYear
  */
 
-window.barcamp = window.barcamp || {};
-const barcamp = window.barcamp;
+domready(function () {
+    netteInit();
+    imageFailover();
+    openNav();
+    heroslider();
+    accordion();
+    smoothScroll();
+    schedule();
+    lectures();
+    program();
+    avatarUploader();
+    talkVote();
+    disabledLinks();
+    cleanUrlParams();
+    document.body.classList.remove("preload");
+    document.body.classList.remove("no-js");
+});
 
-barcamp.imageFailover = async function () {
+
+async function imageFailover() {
     document.querySelectorAll('img.failover').forEach((img) => {
         const fix = () => img.src = `/static/${currentYear}/img/logo-icon-96.png`;
         if (img.complete) {
@@ -32,9 +48,9 @@ barcamp.imageFailover = async function () {
             img.addEventListener('error', fix, {once: true, passive: true});
         }
     });
-};
+}
 
-barcamp.openNav = async function () {
+async function openNav() {
     const header = document.querySelector('header');
     header.querySelector('.btn-mobile-menu-open-container').addEventListener('click', function (e) {
         const container = e.currentTarget;
@@ -44,11 +60,9 @@ barcamp.openNav = async function () {
         mobileMenu.classList.toggle('active');
         container.querySelector('.item-text').innerText = mobileMenu.classList.contains('active') ? 'Zavřít' : 'Menu';
     });
-};
+}
 
-barcamp.slider = heroslider;
-
-barcamp.accordion = async function () {
+async function accordion() {
     const container = document.querySelector('.faq');
     if (!container) {
         return;
@@ -61,9 +75,9 @@ barcamp.accordion = async function () {
         });
     });
 
-};
+}
 
-barcamp.smoothScroll = async function () {
+async function smoothScroll() {
 
     document.querySelectorAll('a.scrollto').forEach((link) => {
         const href = link.getAttribute('href');
@@ -82,13 +96,9 @@ barcamp.smoothScroll = async function () {
             target.scrollIntoView({behavior: "smooth"});
         });
     });
-};
+}
 
-barcamp.schedule = schedule;
-
-barcamp.lectures = lectures;
-
-barcamp.program = async function () {
+async function program() {
     var val, vals = "";
 
     $('.js-program-filter input').change(function () {
@@ -165,9 +175,9 @@ barcamp.program = async function () {
         fixedHeader();
     });
 
-};
+}
 
-barcamp.avatarUploader = async function () {
+async function avatarUploader() {
     var $button = $('#avatar-upload-button');
     if ($button.length === 0) {
         return;
@@ -210,9 +220,9 @@ barcamp.avatarUploader = async function () {
                 console.log(error);
             });
     };
-};
+}
 
-barcamp.talkVote = async function () {
+async function talkVote() {
     var $list = $('.lectures-list,.talk-detail');
 
     if ($list.length === 0) {
@@ -248,10 +258,10 @@ barcamp.talkVote = async function () {
         });
     });
 
-};
+}
 
 // TODO: Remove placeholders
-barcamp.disabledLinks = async function () {
+async function disabledLinks() {
     $('a.disabled').click(function (e) {
         e.preventDefault();
         console.log('Clicked to disabled link');
@@ -261,17 +271,17 @@ barcamp.disabledLinks = async function () {
         console.log('Clicked to placeholder link');
         alert('Omlouváme se, tato funkce ještě není dostupná');
     })
-};
+}
 
-barcamp.netteInit = async function () {
+async function netteInit() {
     $.nette.init();
-};
+}
 
 /**
  * Remove _ugly_ URL parameters (`fbclid`, `gclid`, `utm_*`, `_fid`) which is only used for tracking.
  * This not affects the functionality of the analytics, only removes params from the URL.
  */
-barcamp.cleanUrlParams = function () {
+async function cleanUrlParams() {
     const url = new URL(window.location.href);
     const params = url.searchParams;
     let changed = false;
@@ -286,25 +296,3 @@ barcamp.cleanUrlParams = function () {
         setTimeout(() => window.history.replaceState({}, document.title, url.toString()), 1000);
     }
 }
-
-barcamp.init = async function () {
-    barcamp.netteInit();
-    barcamp.imageFailover();
-    barcamp.openNav();
-    barcamp.slider();
-    barcamp.accordion();
-    barcamp.smoothScroll();
-    barcamp.schedule();
-    barcamp.lectures();
-    barcamp.program();
-    barcamp.avatarUploader();
-    barcamp.talkVote();
-    barcamp.disabledLinks();
-    barcamp.cleanUrlParams();
-};
-
-domready(function () {
-    barcamp.init();
-    $("body").removeClass("preload").removeClass("no-js");
-});
-
