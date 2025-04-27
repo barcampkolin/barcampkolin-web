@@ -39,38 +39,9 @@ class ConfereeForm
             ->setOption('description', 'E-mail nikde nezobrazujeme, ale bude sloužit pro přihlášení a tak…')
             ->setRequired('Prosíme, vyplňte svůj e-mail');
 
-        $form->addTextArea('bio', 'Řekni nám něco o sobě:')
-            ->setOption(
-                'description',
-                'Pokud to vyplníte, zobrazíme to na webu u Vašeho jména. '
-                . 'Formátování není dovoleno.'
-            );
-
-        $form->addGroup('Dotační dotazník');
-
-        $form->addText('extendedCompany', 'Firma či organizace:')
-            ->setOption('description', 'Odkud k nám přicházíte? (nepovinné, může se zobrazit na profilu a na visačce)');
-
-        $form->addText('extendedCompanyPosition', 'Pozice ve firmě:')
-            ->setOption(
-                'description',
-                'Jakou pozici máte ve firmě (nepovinné, může se zobrazit na profilu a na visačce)'
-            );
-
-        $form->addGroup();
-
-        $form->addRadioList(
-            'allowPublish',
-            'Souhlasíš se zveřejněním těchto údajů na seznamu účastníků na webu?',
-            [
-                true => 'Ano',
-                false => 'Ne'
-            ]
-        )->setDefaultValue(true)
-            ->setOption(
-                'description',
-                'E-mail samozřejmě nebudeme zobrazovat, pouze tvoje jméno, avatar, firmu a pokud vyplníš pár slov o sobě, tak i ty.'
-            );
+        $form->addText('extendedCompany', 'Čím se živíš?')
+            ->setOption('description', 'Dobrovolné - bude uvedeno na visačce. Například: Programátor v Redbit s.r.o.')
+        ;
 
         $form->addSubmit('send')
             ->setOption('itemClass', 'text-center')
@@ -90,7 +61,6 @@ class ConfereeForm
             $conferee->extended = Json::encode(
                 [
                     'company' => $values->extendedCompany,
-                    'position' => $values->extendedCompanyPosition,
                 ]
             );
 
@@ -104,7 +74,6 @@ class ConfereeForm
             try {
                 $extended = Json::decode($conferee->extended, Json::FORCE_ARRAY);
                 $values['extendedCompany'] = $extended['company'] ?? null;
-                $values['extendedCompanyPosition'] = $extended['position'] ?? null;
             } catch (JsonException) {
                 // void
             }
