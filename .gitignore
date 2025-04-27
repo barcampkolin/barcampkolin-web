@@ -8,3 +8,8 @@
 /www/archive/
 /www/static/**/*.*.map
 /www/upload/
+.idea/
+.symfony5/
+assets/bower_components/
+assets/vendor/
+var/
