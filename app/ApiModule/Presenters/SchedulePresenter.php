@@ -4,7 +4,7 @@ namespace App\ApiModule\Presenters;
 
 use App\Model\DateProvider;
 use App\Model\ScheduleManager;
-use Nette\Utils\DateTime;
+use JetBrains\PhpStorm\NoReturn;
 
 class SchedulePresenter extends BasePresenter
 {
@@ -16,6 +16,7 @@ class SchedulePresenter extends BasePresenter
     }
 
 
+    #[NoReturn]
     public function actionStepNext(): void
     {
         $steps = $this->scheduleManager->getSteps(true);
@@ -23,7 +24,7 @@ class SchedulePresenter extends BasePresenter
         foreach ($steps as $step) {
             if ($step['isNext']) {
                 $configs = $this->getStepConfigs($step);
-                if ($configs['auto'] != true) {
+                if ($configs['auto'] !== true) {
                     $this->sendSuceessResponse(null, 'Nothing to do, automatic step is disabled on step.');
                 } elseif ($this->dateProvider->isPassed($this->dateProvider->strToDate($configs['date']), true)) {
                     $this->scheduleManager->changeCurrentStep($step['key']);
