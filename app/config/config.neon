@@ -1,7 +1,3 @@
-#
-# WARNING: it is CRITICAL that this file & directory are NOT accessible directly via a web browser!
-# https://nette.org/security-warning
-#
 parameters:
     mail:
         from: "Barcamp Kolín <info@barcampkolin.cz>"
@@ -63,6 +59,9 @@ nextras.dbal:
 nextras.orm:
     model: App\Orm\Orm
 
+php:
+    date.timezone: Europe/Prague
+
 security:
     debugger: true
 
@@ -81,6 +80,7 @@ services:
     - App\Model\Authenticator\Email
     - App\Model\ConfereeManager
     - App\Model\ConfigManager
+    - App\Model\DateProvider
     - App\Model\EnumeratorManager
     - App\Model\EventInfoProvider
     - App\Model\FileManager
@@ -121,6 +121,9 @@ services:
 
     # Router
     router: App\Router\RouterFactory::createRouter
+
+    # Environment
+    - DateTimeZone('Europe/Prague')
 
     # System
     debugModeDetector:
