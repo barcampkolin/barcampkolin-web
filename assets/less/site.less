@@ -2364,12 +2364,15 @@ form .error {
 }
 
 .organizers {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
     overflow: hidden;
     text-align: center;
 
     .organizer {
-        display: inline-block;
-        text-align: center;
         width: 297px;
 
         h3 {

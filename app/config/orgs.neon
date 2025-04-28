@@ -1,0 +1,96 @@
+parameters:
+    orgs:
+        - name: Martin Dostál
+          role: Hlavní organizátor
+          photo: martin-dostal.jpg
+          phone: "730540532"
+          mail: martin@martindostal.com
+          twitter: _MartinDostal
+          facebook: ing.martin.dostal
+
+        - name: Lukáš Souček
+          role: Zajištění sponzorů
+          phone: "+420723022242"
+          mail: soucek.luk@gmail.com
+          facebook: lukas.holecek.98
+
+        - name: Adam Laita
+          role: Zástupce Martina
+          photo: adam-laita.webp
+          phone: "+420777086449"
+          mail: adam@laita.cz
+          homepage: https://www.laita.cz/
+          facebook: adam.laita
+          twitter: adam_laita
+
+        - name: David Němeček
+          role: Právní pomoc
+          photo: david-nemecek.webp
+          phone: "+420605076211"
+          mail: nemecek@nplegal.cz
+          homepage: https://nplegal.cz
+          facebook: nemecekdavid
+
+        - name: Jakub Bouček
+          role: Webař Barcampu
+          photo: https://www.jakub-boucek.cz/img/profil-500px.avif
+          phone: "608259497"
+          mail: pan@jakubboucek.cz
+          homepage: https://www.jakub-boucek.cz/
+          twitter: JakubBoucek
+          facebook: jakub.boucek
+
+        - name: Jiří Krejčík
+          role: Margeting a sociální sítě
+          photo: https://www.jirikrejcik.cz/portret-jirikrejcik.jpg
+          phone: "+420720384264"
+          mail: jirka@krejcik.eu
+          homepage: https://www.jirikrejcik.cz/
+          facebook: jiri.krejcik
+          twitter: jirikrejcik
+
+        - name: Edita Dostálová
+          role: Organizátor Barcampu
+          photo: edita-dostalova.jpg
+          # phone: "605742603"
+          # mail: edita.dostalova@gmail.com
+          # twitter: EditaDostalova
+          # facebook: edita.dostalova1
+
+        - name: Kristýna Zvonková
+          role: Zajišťuje vám jídlo
+          # phone: "+420604821200"
+          # mail: cristy.zvonk13@seznam.cz
+          # facebook: kikuska.zvonkova
+
+        - name: Vanesa Jeřábková
+          role: Socky
+          # phone: "+420773599593"
+          # mail: jerabkovanesa@gmail.com
+          # facebook: vanesa.jerabkova.1
+
+#        - name: Adéla Hubnerová
+#          role: Zajištění organizace akce
+#          # phone: "+420792363246"
+#          # mail: adela.hubnerova@jirkont.cz
+#
+#        - name: Denisa Kolaříková
+#          role: Sestavení programu
+#          photo: https://cdn.plzenskybarcamp.cz/public/2018/media/photos/profilovka_denis.png
+#          # phone: "+420774080118"
+#          # mail: endis@kolarikova.cz
+#          # homepage: https://kolarikova.cz
+#          # facebook: endis.kolarikova
+#          # twitter: endis_ka
+#
+#        - name: Lucie Sixtová
+#          role: "(bude doplněno)"
+#          photo: lucie-sixtova.webp
+#          # phone: "+420605296067"
+#          # mail: 1lucie.sixtova@seznam.cz
+#          # homepage: https://www.luciesixtova.cz
+#
+#        - name: Vít Vávra
+#          role: Webař Barcampu
+#          # phone: "+420773984640"
+#          # mail: vit.vavra.kh@gmail.com
