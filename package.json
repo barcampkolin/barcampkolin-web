@@ -1,7 +1,7 @@
 {
   "name": "barcampkolin-web",
-  "version": "1.0.0",
   "description": "Web Kolínského barcampu",
+  "private": true,
   "repository": {
     "type": "git",
     "url": "git+https://github.com/barcampkolin/barcampkolin-web.git"
