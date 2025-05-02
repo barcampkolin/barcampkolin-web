@@ -56,8 +56,6 @@ class ConfereeForm
 
             $conferee->name = $values->name;
             $conferee->email = $values->email;
-            $conferee->bio = $values->bio;
-            $conferee->allowPublish = (bool)$values->allowPublish;
             $conferee->extended = Json::encode(
                 [
                     'company' => $values->extendedCompany,
