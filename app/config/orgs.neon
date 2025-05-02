@@ -69,6 +69,9 @@ parameters:
           # mail: jerabkovanesa@gmail.com
           # facebook: vanesa.jerabkova.1
 
+        - name: Iveta Zlatníčková
+          role: Copywriting
+
 #        - name: Adéla Hubnerová
 #          role: Zajištění organizace akce
 #          # phone: "+420792363246"
