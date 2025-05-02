@@ -59,18 +59,20 @@ parameters:
 
         - name: Kristýna Zvonková
           role: Zajišťuje vám jídlo
+          photo: kristyna-zvonkova.webp
           # phone: "+420604821200"
           # mail: cristy.zvonk13@seznam.cz
           # facebook: kikuska.zvonkova
 
         - name: Vanesa Jeřábková
           role: Socky
+          photo: vanesa-jerabkova.webp
           # phone: "+420773599593"
           # mail: jerabkovanesa@gmail.com
           # facebook: vanesa.jerabkova.1
 
         - name: Iveta Zlatníčková
-          role: Copywriting
+          role: Krotitelka obsahu
 
 #        - name: Adéla Hubnerová
 #          role: Zajištění organizace akce
