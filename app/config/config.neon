@@ -89,6 +89,7 @@ services:
     - App\Model\MailDynamicLoader
     - App\Model\MailerManager(%mail%, '%tempDir%/cache')
     - App\Model\NewsletterSignupManager
+    - App\Model\OrgListProvider(%orgs%)
     - App\Model\PartnersManager
     - App\Model\ScheduleManager
     - App\Model\TalkManager

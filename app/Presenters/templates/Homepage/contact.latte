@@ -5,47 +5,25 @@
         <div class="container">
             <h1><span class="dot-end">Kontakt</span></h1>
 
+            {cache orgs}
             <div class="organizers">
-                <div class="organizer">
-                    <h3>Martin Dostál</h3>
-                    <img class="photo-pic" src="{$basePath}/static/{$year}/img/contact/martin-dostal.jpg" alt="Martin Dostál" width="180" height="180">
-                    <p>
-                        Hlavní organizátor<br>
-                        Tel.: <strong><a href="tel:730540532">730 540 532</a></strong>
-                    </p>
-                    <ul class="networks">
-                        <li class="email"><a href="mailto:martin@martindostal.com" title="martin@martindostal.com"><i>martin@martindostal.com</i></a></li>
-                        <li class="tw"><a href="https://twitter.com/_MartinDostal" target="_blank" rel="noopener" title="@_MartinDostal"><i>@_MartinDostal</i></a></li>
-                        <li class="fb"><a href="https://www.facebook.com/ing.martin.dostal" target="_blank" rel="noopener" title="Martin Dostál na Facebooku"><i>Martin Dostál na Facebooku</i></a></li>
-                    </ul>
-                </div>
-                <div class="organizer">
-                    <h3>Edita Dostálová</h3>
-                    <img class="photo-pic" src="{$basePath}/static/{$year}/img/contact/edita-dostalova.jpg" alt="Edita Dostálová" width="180" height="180">
-                    <p>
-                        Organizátor Barcampu<br>
-                        Tel.: <strong><a href="tel:605742603">605 742 603</a></strong>
-                    </p>
-                    <ul class="networks">
-                        <li class="email"><a href="mailto:edita.dostalova@gmail.com" title="edita.dostalova@gmail.com"><i>edita.dostalova@gmail.com</i></a></li>
-                        <li class="tw"><a href="https://twitter.com/EditaDostalova" target="_blank" rel="noopener" title="@EditaDostalova"><i>@EditaDostalova</i></a></li>
-                        <li class="fb"><a href="https://www.facebook.com/edita.dostalova1/" target="_blank" rel="noopener" title="Edita Dostálová na Facebooku"><i>Edita Dostálová na Facebooku</i></a></li>
-                    </ul>
-                </div>
-                <div class="organizer">
-                    <h3>Jakub Bouček</h3>
-                    <img class="photo-pic" src="https://www.jakub-boucek.cz/img/profil.jpg" alt="Jakub Bouček" width="180" height="180">
-                    <p>
-                        Webař Barcampu<br>
-                        Tel.: <strong><a href="tel:608259497">608 259 497</a></strong>
-                    </p>
-                    <ul class="networks">
-                        <li class="email"><a href="mailto:pan@jakubboucek.cz" title="pan@jakubboucek.cz"><i>pan@jakubboucek.cz</i></a></li>
-                        <li class="tw"><a href="https://twitter.com/JakubBoucek" target="_blank" rel="noopener" title="@JakubBoucek"><i>@JakubBoucek</i></a></li>
-                        <li class="fb"><a href="https://www.facebook.com/jakub.boucek" target="_blank" rel="noopener" title="jakub.boucek"><i>jakub.boucek</i></a></li>
-                    </ul>
-                </div>
+                {foreach $orgs as $org}
+                    <div class="organizer">
+                        <h3><a n:tag-ifset="$org->homepage" href="{$org->homepage}" target="_blank" rel="noopener">{$org->name}</a></h3>
+                        <a n:tag-ifset="$org->homepage" href="{$org->homepage}" target="_blank" rel="noopener"><img class="photo-pic" src="{ifset $org->photo}{if isAbsoluteUrl($org->photo)}{$org->photo}{else}{$basePath}/static/{$year}/img/contact/{$org->photo}{/if}{else}{$basePath}/static/{$year}/img/avatar.png{/ifset}" alt="Martin Dostál" width="180" height="180"></a>
+                        <p>
+                            {$org->role}{ifset $org->phone}<br>
+                            Tel.: <strong>{$org->phone|formatPhoneLink}</strong>{/ifset}
+                        </p>
+                        <ul class="networks" n:ifcontent>
+                            <li n:ifset="$org->mail" class="email"><a href="mailto:{$org->mail}" title="{$org->mail}"><i>{$org->mail}</i></a></li>
+                            <li n:ifset="$org->twitter" class="tw"><a href="https://twitter.com/{$org->twitter}" target="_blank" rel="noopener" title="@{$org->twitter}"><i>@{$org->twitter}</i></a></li>
+                            <li n:ifset="$org->twitter" class="fb"><a href="https://www.facebook.com/{$org->facebook}" target="_blank" rel="noopener" title="{$org->name} na Facebooku"><i>{$org->name} na Facebooku</i></a></li>
+                        </ul>
+                    </div>
+                {/foreach}
             </div>
+            {/cache}
 
             <h2 id="logo" class="cleaner">Logo Barcampu Kolín</h2>
             <p>Chceš použít naše logo? <a href="https://drive.google.com/open?id=1kot4TezPkobQfh89evv2dh7hpGqhWy2U" target="_blank" rel="noopener">Logo Barcampu Kolín</a></p>
