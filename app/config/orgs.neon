@@ -10,6 +10,7 @@ parameters:
 
         - name: Lukáš Souček
           role: Zajištění sponzorů
+          photo: lukas-soucek.webp
           phone: "+420723022242"
           mail: soucek.luk@gmail.com
           facebook: lukas.holecek.98
