@@ -75,7 +75,7 @@ npm install
 Po úpravě souborů v `assets/` zavolejte:
 
 ```shell
-npm run build:prod
+npm run build
 ```
 
 a vygenerují se soubory (místo `2025` se použije aktuální rok):
@@ -168,7 +168,7 @@ return [
 
 >[!TIP]
 > Než uděláte deploy na server, ujistěte se, že na Vaší lokální verzi obsahuje Composer balíčky určené pouze pro produkci
-> (`--no-dev`) a assety jsou vygenerované v produkčnm módu (`build:prod`). V opačném případě si na server nahrajete velmi
+> (`--no-dev`) a assety jsou vygenerované v produkčnm módu (`build`). V opačném případě si na server nahrajete velmi
 > neoptimalizovanou verzi. Pokud jste od předchozího deploye nespouštěni `Composer` ani `NPM`, tak je vše v pořádku.
 
 Deploy lze spustit připravenými scripty:
