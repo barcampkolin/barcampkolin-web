@@ -2487,35 +2487,10 @@ ul.networks {
 }
 
 .history {
-    background: #fff;
-
-    .barcamps {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-content: stretch;
-
-        a {
-            text-align: center;
-            border: 1px solid #aaa;
-            margin: 10px;
-            padding: 10px;
-            align-self: center;
-            flex-grow: 1;
-
-            img {
-                height: 80px;
-            }
-
-            &:hover {
-                box-shadow: 0px 0px 5px #555;
-            }
-        }
-    }
+    //background: #fff;
 
     p {
-        h2,
-        .h2 {
+        h2, .h2 {
             font-size: 3rem;
             font-weight: 700;
             display: block;
@@ -2531,8 +2506,7 @@ ul.networks {
             }
         }
 
-        h3,
-        .h3 {
+        h3, .h3 {
             font-size: 2rem;
             font-weight: 500;
             display: block;
@@ -2551,7 +2525,7 @@ ul.networks {
         img {
             &.left {
                 float: left;
-                margin: 0px 20px 20px 0px;
+                margin: 0 20px 20px 0;
             }
         }
 
@@ -2579,3 +2553,45 @@ ul.networks {
     font-weight: normal;
     color: #888;
 }
+
+.video-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+}
+
+.video-wrapper iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem; /* mezery mezi obrázky */
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1rem;
+
+    &.gallery-big {
+        grid-template-columns: 1fr;
+    }
+}
+
+.gallery figure {
+    margin: 0;
+}
+
+.gallery img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.video-wrapper iframe, .gallery img {
+    border-radius: 8px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+}
+
