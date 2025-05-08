@@ -74,6 +74,9 @@ parameters:
 
         - name: Iveta Zlatníčková
           role: Krotitelka obsahu
+          photo: iveta-zlatnickova.webp
+          mail: zlatnickovaiveta@gmail.com
+          homepage: https://zlatnickova.cz
 
 #        - name: Adéla Hubnerová
 #          role: Zajištění organizace akce
