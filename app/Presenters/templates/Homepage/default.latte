@@ -69,8 +69,9 @@
 
             </div>
 
-            <span class="hero-note">Zbývá <span>{$counts->conferee_left}</span> vstupenek</span>
-            {*<span class="hero-note">Už se přihlásilo <span>219</span> účastníků a je vypsáno <span>32</span> přednášek</span>*}
+            {if ($counts->conferee_left < 100) || $user->isInRole('admin')}
+            <span class="hero-note">Zbývá už jen <span>{$counts->conferee_left}</span> vstupenek</span>
+            {/if}
         </div>
     </div>
 </div>
