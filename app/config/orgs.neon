@@ -83,14 +83,14 @@ parameters:
 #          # phone: "+420792363246"
 #          # mail: adela.hubnerova@jirkont.cz
 #
-#        - name: Denisa Kolaříková
-#          role: Sestavení programu
-#          photo: https://cdn.plzenskybarcamp.cz/public/2018/media/photos/profilovka_denis.png
-#          # phone: "+420774080118"
-#          # mail: endis@kolarikova.cz
-#          # homepage: https://kolarikova.cz
-#          # facebook: endis.kolarikova
-#          # twitter: endis_ka
+        - name: Denisa Kolaříková
+          role: Sestavení programu
+          photo: denisa-kolarikova.webp
+#          phone: "+420774080118"
+          mail: endis@kolarikova.cz
+          homepage: https://kolarikova.cz
+          facebook: endis.kolarikova
+          twitter: endis_ka
 #
 #        - name: Lucie Sixtová
 #          role: "(bude doplněno)"
