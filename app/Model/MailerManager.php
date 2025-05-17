@@ -11,40 +11,25 @@ use App\Mails\ResetPasswordMessage;
 use App\Mails\UniversalDynamicMessage;
 use App\Mails\VoteAnnounceMessage;
 use Latte;
-use Nette\Mail\IMailer;
+use Nette\Mail\Mailer;
 use Nette\Mail\Message;
 
-class MailerManager
+readonly class MailerManager
 {
-    /**
-     * MailerManager constructor.
-     * @param array $config
-     * @param string $tempdir
-     * @param IMailer $mailer
-     * @param MailDynamicLoader $mailLoader
-     */
     public function __construct(
-        private $config,
-        private $tempdir,
-        private readonly IMailer $mailer,
-        private readonly MailDynamicLoader $mailLoader
+        private array $config,
+        private string  $tempdir,
+        private Mailer $mailer,
+        private MailDynamicLoader $mailLoader
     ) {
     }
 
 
-    /**
-     * @param $recipient
-     * @param $mailTemplateId
-     * @param array $parameters
-     * @return UniversalDynamicMessage
-     * @throws EntityNotFound
-     * @throws \Nette\Utils\JsonException
-     */
     public function getDynamicMessage(
-        $recipient,
-        $mailTemplateId,
+        ?string $recipient,
+        string $mailTemplateId,
         array $parameters = []
-    ): \App\Mails\UniversalDynamicMessage {
+    ): UniversalDynamicMessage {
         $mail = $this->mailLoader->getMailById($mailTemplateId);
 
         $message = new UniversalDynamicMessage();
@@ -58,13 +43,7 @@ class MailerManager
     }
 
 
-    /**
-     * @param $recipient
-     * @return RegistrationMessage
-     * @throws EntityNotFound
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getRegistrationMessage($recipient): \App\Mails\RegistrationMessage
+    public function getRegistrationMessage(string $recipient): RegistrationMessage
     {
         $mail = $this->mailLoader->getMailById('registration');
 
@@ -81,7 +60,7 @@ class MailerManager
      * @throws EntityNotFound
      * @throws \Nette\Utils\JsonException
      */
-    public function getResetPasswordMessage($recipient, $tokenUrl): \App\Mails\ResetPasswordMessage
+    public function getResetPasswordMessage($recipient, $tokenUrl): ResetPasswordMessage
     {
         $mail = $this->mailLoader->getMailById('reset-password');
 

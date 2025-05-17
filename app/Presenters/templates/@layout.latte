@@ -56,7 +56,7 @@
                     <li n:class="isLinkCurrent('Homepage:contact') ? active"><a href="{link :Homepage:contact}"><span class="nav-link">Kontakt</span></a></li>
                     {if $isArchivationProcess === false}
                         {if $user->isLoggedIn()}
-                            <li n:class="isLinkCurrent('User:*') ? active"><a href="{link User:profil}"><span class="nav-link">{$user->identity->name}</span></a></li>
+                            <li n:class="isLinkCurrent('User:*') ? active"><a href="{link User:profil}"><span class="nav-link">{$user->identity->name ?? "(" . $user->identity->email . ")"}</span></a></li>
                         {else}
                             <li n:class="isLinkCurrent('Sign:*') ? active"><a href="{link Sign:in}"><span class="nav-link">Přihlásit</span></a></li>
                         {/if}

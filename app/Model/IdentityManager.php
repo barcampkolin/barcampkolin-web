@@ -5,6 +5,7 @@ namespace App\Model;
 use App\Orm\Identity\Identity;
 use App\Orm\Identity\IdentityRepository;
 use App\Orm\Orm;
+use App\Orm\User\User;
 use Nextras\Orm\Entity\IEntity;
 
 
@@ -22,16 +23,6 @@ class IdentityManager
     public function getById(int $id): ?IEntity
     {
         return $this->identityRepository->getById($id);
-    }
-
-
-    /**
-     * Get Identity entity from Repository based on anotner Identity entity.
-     */
-    public function getIdentityByIdentity(Identity $identityTemplate): Identity
-    {
-        /** @var Identity $identity */
-        return $this->getIdentity($identityTemplate->platform, $identityTemplate->key);
     }
 
 
