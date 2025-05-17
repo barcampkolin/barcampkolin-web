@@ -52,16 +52,13 @@ class UserManager
         $this->userRepository->removeAndFlush($user);
     }
 
+
     public function removeRole(UserRole $role): void
     {
         $this->userRoleRepository->removeAndFlush($role);
     }
 
 
-    /**
-     * @throws NoUserLoggedIn
-     * @throws UserNotFound
-     */
     public function getByLoginUser(\Nette\Security\User $currentUser): User
     {
         if ($currentUser->isLoggedIn() === false) {

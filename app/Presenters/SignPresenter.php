@@ -21,7 +21,7 @@ use App\Orm\Identity\Identity;
 use App\Orm\Talk\Talk;
 use App\Orm\User\User;
 use App\Orm\UserRole\UserRole;
-use JetBrains\PhpStorm\NoReturn;
+use LogicException;
 use Nette\Application\UI\Form;
 use Nette\Http\IResponse;
 use Nette\Http\SessionSection;
@@ -31,7 +31,6 @@ use Nette\Security\SimpleIdentity;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Random;
 use Nextras\Orm\Entity\Entity;
-use Nextras\Orm\Entity\ToArrayConverter;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -102,9 +101,13 @@ class SignPresenter extends BasePresenter
             $this->redirect('Homepage:');
         }
 
-        $restoredUserIdentity = $this->getRestorableUserIdentity();
-
-        $user = $restoredUserIdentity->getUser();
+        try {
+            $user = $this->userManager->getByLoginUser($this->getUser());
+        } catch (NoUserLoggedIn|UserNotFound $e) {
+            // For cases: user not nogged or login user has no matches DB user (data integrity broken)
+            $this->getUser()->logout();
+            $this->redirect('up');
+        }
 
         /** @var Form $form */
         $form = $this['confereeForm'];
@@ -286,7 +289,7 @@ class SignPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function resetPassword($email, $resetToken, $password): void
+    public function resetPassword($email, $resetToken, $password): never
     {
         $identity = $this->authenticator->getIdentityByResetPasswordToken($email, $resetToken);
 
@@ -300,11 +303,7 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     *
-     * @throws \Nette\Application\AbortException
-     */
-    public function actionOut(): void
+    public function actionOut(): never
     {
         $this->getUser()->logout();
 
@@ -315,15 +314,16 @@ class SignPresenter extends BasePresenter
 
     /**
      * Sign-in form factory.
-     * @return Form
      */
-    protected function createComponentSignInForm()
+    protected function createComponentSignInForm(): Form
     {
         return $this->signInFormFactory->create(
             function (Identity $identity): void {
                 $user = $identity->user;
+
                 if (!$user instanceof User) {
-                    $this->redirect('conferee');
+                    $userId = $identity->id;
+                    throw new LogicException("No user was found for identity ID: $userId, that's integrity data error");
                 }
 
                 $this->login($user);
@@ -335,70 +335,48 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * Sign-up form factory.
-     * @return Form
-     */
-    protected function createComponentSignUpForm()
+    protected function createComponentSignUpForm(): Form
     {
         return $this->signUpFormFactory->create(
             function (Identity $identity): void {
                 $user = new User();
                 $user->email = $identity->key;
 
-                $this->storeEntity($identity, Identity::class);
-                $this->storeEntity($user, User::class);
+                $this->userManager->save($user);
+
+                $identity->user = $user;
+                $this->identityManager->save($identity);
+
+                $this->login($user);
+
                 $this->redirect('conferee');
             }
         );
     }
 
-
-    /**
-     * @return Form
-     */
-    protected function createComponentConfereeForm()
+    protected function createComponentConfereeForm(): Form
     {
-        /**
-         * @param Conferee $conferee
-         * @throws AuthenticationException
-         * @throws UserNotFound
-         * @throws \App\Model\EntityNotFound
-         * @throws \Nette\Application\AbortException
-         * @throws \Nette\Application\BadRequestException
-         * @throws \Nette\Utils\JsonException
-         */
-        $onSubmitCallback = function ($conferee): void {
-            $restoredUserIdentity = $this->getRestorableUserIdentity();
+        $onSubmitCallback = function (Conferee $conferee): void {
+            $user = $this->userManager->getByLoginUser($this->getUser());
+            $identity = $user->identity->getIterator()->fetch();
 
-            $user = $restoredUserIdentity->getUser();
-            $identity = $restoredUserIdentity->getIdentity();
-
-            $this->userManager->save($user);
-            $this->identityManager->save($identity);
-            $this->confereeManager->save($conferee);
+            if(!$identity instanceof Identity) {
+                throw new LogicException("No identity was found for user ID: {$user->id}, that's integrity data error");
+            }
 
             $user->name = $conferee->name;
             $user->email = $conferee->email;
 
-            //Currently not working on weird ORM bug
-            $identity->user = $user;
-
             $conferee->pictureUrl = $user->pictureUrl;
             $conferee->user = $user;
 
-            $this->userManager->save($user);
-
-            //dirty hack to weird ORM bug
-            $identity->setRawValue('user', $user->id);
-            $this->identityManager->save($identity, false);
-            //hack end
-
             $user->addRole('conferee');
+
             $this->userManager->save($user);
+            $this->confereeManager->save($conferee);
+            $this->identityManager->save($identity);
 
             $this->login($user);
-            $this->removePartialLoginSession();
 
             $flashMessage = 'Právě jste se zaregistrovali na Barcamp!';
 
@@ -442,7 +420,7 @@ class SignPresenter extends BasePresenter
     }
 
 
-    private function login(User $user): void
+    public function login(User $user): void
     {
         $roles = [];
         /** @var UserRole $role */
@@ -463,109 +441,5 @@ class SignPresenter extends BasePresenter
         );
 
         $this->getUser()->login($appIdentity);
-    }
-
-
-    /**
-     * Get User & Identity from restored object (created by partial login) or load it from logged user
-     */
-    protected function getRestorableUserIdentity(): RestoredUserIdentity
-    {
-        $user = null;
-
-        if ($this->getUser()->isLoggedIn() && $this->userManager->getByLoginUser($this->getUser())->conferee) {
-            $this->redirect('User:profil');
-        }
-
-        /** @var Identity|null $identity */
-        $identity = $this->restoreEntity(Identity::class);
-
-        if ($identity instanceof Identity === false && $user instanceof User) {
-            $identities = $user->identity;
-
-            if ($identities->count() > 0) {
-                $identity = $identities->getIterator()->fetch();
-            }
-        }
-
-        if ($identity instanceof Identity === false) {
-            $this->flashMessage('Pro účast na Barcampu se prosím nejdříve přihlaste nebo registrujte');
-            $this->redirect('up');
-        }
-
-        if ($user instanceof User === false) {
-            $user = $identity->user;
-        }
-
-        if ($user instanceof User === false) {
-            /** @var User|null $user */
-            $user = $this->restoreEntity(User::class);
-        }
-
-        if ($user instanceof User === false) {
-            Debugger::log('Při obnovení profilu pro dokončení registraci se nezachoval User', ILogger::ERROR);
-            $this->error('Chyba konzistence dat', IResponse::S500_InternalServerError);
-        }
-
-        return new RestoredUserIdentity($user, $identity);
-    }
-
-
-    private function storeEntity(Entity $entity, string $key): void
-    {
-        $session = $this->getPartialLoginSession(true);
-
-        $session->{$key} = [
-            'class' => $entity::class,
-            'entity' => $entity->getRawValues()
-        ];
-    }
-
-
-    private function restoreEntity(string $key): ?Entity
-    {
-        $session = $this->getPartialLoginSession();
-        if ($session === null || isset($session->{$key}) === false) {
-            return null;
-        }
-
-        $entityPack = $session->{$key};
-        $class = $entityPack['class'];
-
-        /** @var Entity $entity */
-        $entity = new $class();
-        foreach ($entityPack['entity'] as $name => $value) {
-            if ($value === null || (is_array($value) && empty($value))) {
-                continue;
-            }
-            $entity->setRawValue($name, $value);
-        }
-
-        return $entity;
-    }
-
-
-    private function getPartialLoginSession(bool $create = false): ?SessionSection
-    {
-        if (!$this->token) {
-            if ($create) {
-                $this->token = Random::generate(5);
-            } else {
-                return null;
-            }
-        }
-
-        $session = $this->getSession('part-login-storage/' . $this->token);
-        $session->setExpiration('15 minutes');
-        return $session;
-    }
-
-
-    private function removePartialLoginSession(): void
-    {
-        if ($session = $this->getPartialLoginSession()) {
-            $session->remove();
-            $this->token = '';
-        }
     }
 }

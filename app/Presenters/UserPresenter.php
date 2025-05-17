@@ -18,6 +18,7 @@ use App\Orm\Talk\Talk;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\Http\IResponse;
+use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -83,22 +84,10 @@ class UserPresenter extends BasePresenter
         }
     }
 
-
-    /**
-     * @return Form
-     * @throws ConfereeNotFound
-     * @throws NoUserLoggedIn
-     * @throws UserNotFound
-     */
-    protected function createComponentConfereeForm()
+    protected function createComponentConfereeForm(): Form
     {
-        /**
-         * @param Conferee $conferee
-         * @param $values
-         * @throws \Nette\Application\AbortException
-         */
-        $onSubmitCallback = function (Conferee $conferee, $values): void {
-            if ($conferee->id != $values->id) {
+        $onSubmitCallback = function (Conferee $conferee, ArrayHash $values): void {
+            if ($conferee->id !== (int)$values->id) {
                 Debugger::log(
                     'Security alert: ' . self::class . ':' . __METHOD__ . ' form send invalid $coferee->id',
                     ILogger::ERROR
@@ -112,7 +101,7 @@ class UserPresenter extends BasePresenter
             $this->confereeManager->save($conferee);
 
             $this->flashMessage('Váš profil byl upraven');
-            $this->redirect('User:profil');
+            $this->redirect('profil');
         };
 
         $conferee = $this->userManager->getByLoginUser($this->getUser())->getObligatoryConferee();
@@ -126,22 +115,10 @@ class UserPresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     * @throws ConfereeNotFound
-     * @throws NoUserLoggedIn
-     * @throws UserNotFound
-     * @throws TalkNotFound
-     * @throws \Nette\Utils\JsonException
-     */
-    protected function createComponentTalkForm()
+    protected function createComponentTalkForm(): Form
     {
-        /**
-         * @param Talk $talk
-         * @param $values
-         */
-        $onSubmitCallback = function (Talk $talk, $values): void {
-            if ($talk->id != $values->id) {
+        $onSubmitCallback = function (Talk $talk, ArrayHash $values): void {
+            if ($talk->id !== (int)$values->id) {
                 Debugger::log(
                     'Security alert: ' . self::class . ':' . __METHOD__ . ' form send invalid $coferee->id',
                     ILogger::ERROR

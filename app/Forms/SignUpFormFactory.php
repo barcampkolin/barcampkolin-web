@@ -7,18 +7,13 @@ use App\Model\DuplicateNameException;
 use Nette;
 use Nette\Application\UI\Form;
 
-class SignUpFormFactory
+readonly class SignUpFormFactory
 {
     use Nette\SmartObject;
 
-    const PASSWORD_MIN_LENGTH = 5;
+    public const int PASSWORD_MIN_LENGTH = 5;
 
 
-    /**
-     * SignUpFormFactory constructor.
-     * @param FormFactory $factory
-     * @param EmailAuthenticator $authenticator
-     */
     public function __construct(
         private FormFactory $factory,
         private EmailAuthenticator $authenticator
@@ -26,11 +21,7 @@ class SignUpFormFactory
     }
 
 
-    /**
-     * @param callable $onSuccess
-     * @return Form
-     */
-    public function create(callable $onSuccess)
+    public function create(callable $onSuccess): Form
     {
         $form = $this->factory->create();
         $form->addEmail('email', 'Váš e-mail:')
@@ -39,7 +30,7 @@ class SignUpFormFactory
         $form->addPassword('password', 'Vytvořte si heslo:')
             ->setOption('description', sprintf('alespoň %d znaků', self::PASSWORD_MIN_LENGTH))
             ->setRequired('Vytvořte si prosím heslo')
-            ->addRule($form::MIN_LENGTH, null, self::PASSWORD_MIN_LENGTH);
+            ->addRule($form::MinLength, null, self::PASSWORD_MIN_LENGTH);
 
         $form->addSubmit('send', 'Registrovat')
             ->setOption('itemClass', 'text-center')

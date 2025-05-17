@@ -15,30 +15,18 @@ use Nette\Utils\Random;
 
 class Email
 {
-    const PLATFORM_KEY = 'email';
+    public const string PLATFORM_KEY = 'email';
 
 
-    /**
-     * Email constructor.
-     * @param IdentityManager $identityManager
-     */
     public function __construct(
         private readonly IdentityManager $identityManager
     ) {
     }
 
 
-    /**
-     * @param $email
-     * @param $password
-     * @return Identity
-     * @throws PasswordMismatchException
-     * @throws UserNotFoundException
-     */
-    public function getIdentityByAuth($email, $password)
+    public function getIdentityByAuth(string $email, string $password): Identity
     {
         try {
-            /** @var Identity $identity */
             $identity = $this->getIdentityByEmail($email);
         } catch (IdentityNotFoundException) {
             throw new UserNotFoundException();
@@ -50,18 +38,9 @@ class Email
     }
 
 
-    /**
-     * @param $email
-     * @param $token
-     * @return Identity
-     * @throws TokenInvalidException
-     * @throws UserNotFoundException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getIdentityByResetPasswordToken($email, $token)
+    public function getIdentityByResetPasswordToken(string $email, string $token): Identity
     {
         try {
-            /** @var Identity $identity */
             $identity = $this->getIdentityByEmail($email);
         } catch (IdentityNotFoundException) {
             throw new UserNotFoundException();
@@ -73,12 +52,7 @@ class Email
     }
 
 
-    /**
-     * @param Identity $identity
-     * @param string $password
-     * @throws PasswordMismatchException
-     */
-    protected function verifyIdentityPassword(Identity $identity, $password)
+    protected function verifyIdentityPassword(Identity $identity, $password): void
     {
         if (password_verify($password, (string)$identity->token) === false) {
             throw new PasswordMismatchException();
@@ -86,13 +60,7 @@ class Email
     }
 
 
-    /**
-     * @param Identity $identity
-     * @param string $token
-     * @throws TokenInvalidException
-     * @throws \Nette\Utils\JsonException
-     */
-    protected function verifyIdentityResetPasswordToken(Identity $identity, $token)
+    protected function verifyIdentityResetPasswordToken(Identity $identity, $token): void
     {
         $details = [];
         if ($identity->identity) {
@@ -104,7 +72,7 @@ class Email
         }
 
         if ($details['resetPassword']['token'] !== $token) {
-            throw new TokenInvalidException("Token mismatch ()");
+            throw new TokenInvalidException("Token mismatch");
         }
 
         $expirationDate = new DateTime($details['resetPassword']['expiration']);
@@ -115,18 +83,11 @@ class Email
     }
 
 
-    /**
-     * @param string $email
-     * @param string $password
-     * @return Identity
-     * @throws DuplicateNameException
-     */
-    public function createNewIdentity($email, $password): Identity
+    public function createNewIdentity(string $email, string $password): Identity
     {
         $identity = null;
 
         try {
-            /** @var Identity $identity */
             $identity = $this->getIdentityByEmail($email);
         } catch (IdentityNotFoundException) {
             // required

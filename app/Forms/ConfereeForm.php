@@ -5,6 +5,7 @@ namespace App\Forms;
 use App\Orm\Conferee\Conferee;
 use Nette\Application\UI\Form;
 use Nette\SmartObject;
+use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
@@ -23,12 +24,7 @@ class ConfereeForm
     }
 
 
-    /**
-     * @param callable $onSuccess
-     * @param Conferee|null $conferee
-     * @return Form
-     */
-    public function create(callable $onSuccess, Conferee $conferee = null)
+    public function create(callable $onSuccess, ?Conferee $conferee = null): Form
     {
         $form = $this->factory->create();
         $form->addText('name', 'Jméno a příjmení:')
@@ -49,7 +45,7 @@ class ConfereeForm
 
         $form->addProtection('Prosím, odešlete formulář ještě jednou');
 
-        $form->onSuccess[] = function (Form $form, $values) use ($conferee, $onSuccess): void {
+        $form->onSuccess[] = static function (Form $form, ArrayHash $values) use ($conferee, $onSuccess): void {
             if ($conferee === null) {
                 $conferee = new Conferee();
             }
@@ -67,10 +63,9 @@ class ConfereeForm
 
         if ($conferee) {
             $values = $conferee->toArray();
-            $values['allowPublish'] = (int)$values['allowPublish'];
 
             try {
-                $extended = Json::decode($conferee->extended, Json::FORCE_ARRAY);
+                $extended = Json::decode($conferee->extended, forceArrays: true);
                 $values['extendedCompany'] = $extended['company'] ?? null;
             } catch (JsonException) {
                 // void

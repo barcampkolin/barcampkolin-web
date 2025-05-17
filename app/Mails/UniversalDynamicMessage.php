@@ -15,13 +15,13 @@ class UniversalDynamicMessage extends BaseMessage implements IMessage
     {
 
         $format = <<<EOT
-{layout 'layout'}
-%s
-%s
-%s
-{block content}
-%s
-EOT;
+            {layout 'layout'}
+            %s
+            %s
+            %s
+            {block content}
+            %s
+            EOT;
         $output = sprintf(
             $format,
             ($mail['header'] ? "{block header}$mail[header]{/block}" : ''),

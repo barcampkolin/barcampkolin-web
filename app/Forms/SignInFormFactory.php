@@ -25,11 +25,7 @@ class SignInFormFactory
     }
 
 
-    /**
-     * @param callable $onSuccess
-     * @return Form
-     */
-    public function create(callable $onSuccess)
+    public function create(callable $onSuccess): Form
     {
         $form = $this->factory->create();
         $form->addText('email', 'E-mail:')

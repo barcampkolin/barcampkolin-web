@@ -23,47 +23,47 @@ class RouterFactory
 
         // Admin
         $adminRouter = new RouteList('Admin');
-        $adminRouter[] = new Route('admin/<presenter>/<action>[/<id>]', 'Dashboard:default');
+        $adminRouter->addRoute('admin/<presenter>/<action>[/<id>]', 'Dashboard:default');
         $router[] = $adminRouter;
 
         $apiRouter = new RouteList('Api');
-        $apiRouter[] = new Route('api/<presenter>/<action>');
+        $apiRouter->addRoute('api/<presenter>/<action>');
         $router[] = $apiRouter;
 
         $year = $archiveManager->getCurrentYear();
         $requiredWhenArchive = $archiveManager->isArchivationProcess() ? '!' : '';
 
         //Custom routes
-        $router[] = new Route('[' . $requiredWhenArchive . $year . '/]kontakt', 'Homepage:contact');
-        $router[] = new Route('[!' . $year . '/]o-akci', 'Homepage:history');
-        $router[] = new Route('[!' . $year . '/]partneri', 'Homepage:partners');
-        $router[] = new Route('prihlaseni', 'Sign:in');
-        $router[] = new Route('odhlaseni', 'Sign:out');
-        $router[] = new Route('obnovit-heslo', 'Sign:resetPassword');
-        $router[] = new Route('obnovit-heslo/potvrzeni', 'Sign:resetPasswordConfirm');
-        $router[] = new Route('obnovit-heslo/odeslano', 'Sign:resetPasswordSent');
-        $router[] = new Route('registrace', 'Sign:conferee');
-        $router[] = new Route('vypsani-prednasky', 'Sign:talk');
-        $router[] = new Route('[!' . $year . '/]prednasky', 'Conference:talks');
+        $router->addRoute('[' . $requiredWhenArchive . $year . '/]kontakt', 'Homepage:contact');
+        $router->addRoute('[!' . $year . '/]o-akci', 'Homepage:history');
+        $router->addRoute('[!' . $year . '/]partneri', 'Homepage:partners');
+        $router->addRoute('prihlaseni', 'Sign:in');
+        $router->addRoute('odhlaseni', 'Sign:out');
+        $router->addRoute('obnovit-heslo', 'Sign:resetPassword');
+        $router->addRoute('obnovit-heslo/potvrzeni', 'Sign:resetPasswordConfirm');
+        $router->addRoute('obnovit-heslo/odeslano', 'Sign:resetPasswordSent');
+        $router->addRoute('registrace', 'Sign:conferee');
+        $router->addRoute('vypsani-prednasky', 'Sign:talk');
+        $router->addRoute('[!' . $year . '/]prednasky', 'Conference:talks');
         $router->addRoute($year.'/prednaska', 'Conference:talks', RouteList::ONE_WAY);
-        $router[] = new Route($year . '/prednaska/<id \d+>', 'Conference:talkDetail');
+        $router->addRoute($year . '/prednaska/<id \d+>', 'Conference:talkDetail');
         $router->addRoute($year.'/prednasky/<id \d+>', 'Conference:program', RouteList::ONE_WAY);
-        $router[] = new Route('[!' . $year . '/]program', 'Conference:program');
-        $router[] = new Route('profil', 'User:profil');
-        $router[] = new Route('upravit-profil', 'User:conferee');
-        $router[] = new Route('upravit-prednasku', 'User:talk');
-        $router[] = new Route('archiv', 'Archived:list');
-        $router[] = new Route('privacy-policy', 'PrivacyPolicy:default');
+        $router->addRoute('[!' . $year . '/]program', 'Conference:program');
+        $router->addRoute('profil', 'User:profil');
+        $router->addRoute('upravit-profil', 'User:conferee');
+        $router->addRoute('upravit-prednasku', 'User:talk');
+        $router->addRoute('archiv', 'Archived:list');
+        $router->addRoute('privacy-policy', 'PrivacyPolicy:default');
 
         $router[] = self::createArchiveRoutes($archiveManager->getArchivedYears());
 
-        $router[] = new Route('[' . $requiredWhenArchive . $year . ']', 'Homepage:default');
+        $router->addRoute('[' . $requiredWhenArchive . $year . ']', 'Homepage:default');
 
         // Simple page unger Homepage presenter
-        $router[] = new Route('<action>', 'Homepage:default');
+        $router->addRoute('<action>', 'Homepage:default');
 
         // Universal router to process another requests
-        $router[] = new Route('<presenter>/<action>[/<id \d+>]');
+        $router->addRoute('<presenter>/<action>[/<id \d+>]');
 
         return $router;
     }
@@ -79,7 +79,7 @@ class RouterFactory
         $archiveRouter = new RouteList();
 
         foreach ($archiverYears as $year) {
-            $archiveRouter[] = new Route($year . '[/<page [-a-z0-9/]+>]', [
+            $archiveRouter->addRoute($year . '[/<page [-a-z0-9/]+>]', [
                 'presenter' => 'Archived',
                 'action' => 'render',
                 'year' => $year,

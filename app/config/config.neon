@@ -50,11 +50,9 @@ http:
         ]
 
 mail:
-    smtp: false
-    host: vip-mail.superhosting.cz
-    username: info@barcampkolin.cz
-    password: app-password
-    secure: ssl
+    smtp: true
+    host: mailcatcher
+    port: 1025
 
 nextras.dbal:
     driver: App\Dbal\RawPdoMysqlDriver()

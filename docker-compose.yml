@@ -23,3 +23,9 @@ services:
         restart: always
         volumes:
             - "./.docker/mysql/data:/var/lib/mysql"
+
+    mailcatcher:
+        # https://github.com/sj26/mailcatcher
+        image: schickling/mailcatcher
+        ports:
+            - "127.0.0.1:1080:1080"
