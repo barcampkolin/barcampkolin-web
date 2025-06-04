@@ -182,7 +182,7 @@ class ConferencePresenter extends BasePresenter
         $this->template->program = null;
         if ($features['program'] && $talk->program->countStored()) {
             /** @var Program $program */
-            $program = $talk->program->get()->fetch();
+            $program = $talk->program->getIterator()->fetch();
 
             $this->template->program = [
                 'time' => $program->time->format('%H:%I'),
