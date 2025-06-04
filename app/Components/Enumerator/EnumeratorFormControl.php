@@ -72,12 +72,15 @@ class EnumeratorFormControl extends Control
 
             $enums->addSubmit('remove', '╳ Odstranit')
                 ->setValidationScope(null)
+                ->setHtmlAttribute('type', 'button')
                 ->onClick[] = $removeEvent;
         }, 1);
 
         $enums->addSubmit('add', '➕ Přidat další otázku')
             ->setValidationScope(null)
+            ->setHtmlAttribute('type', 'button')
             ->onClick[] = $this->addClicked(...);
+
 
         $form->addSubmit('submit', 'Uložit')->setHtmlAttribute('class', 'btn-primary');
         $form->addProtection('Prosím, odešlete tento formulář ještě jednou (bezpečnostní kontrola)');
