@@ -1,0 +1,149 @@
+{varType array $rooms}
+{varType array $times}
+{varType ?array $currentTalk}
+{varType ?bool $currentTalkFuture}
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="30">
+    <title>Barcamp Kolín - Program</title>
+    <style>
+        div {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .speaker {
+            font-size: 2.0em;
+            font-weight: 900;
+        }
+
+        .talkName {
+            font-size: 1.6em;
+        }
+
+        .big .speaker {
+            font-size: 4.0em;
+            font-weight: 900;
+        }
+
+        .big .talkName {
+            font-size: 2.5em;
+        }
+
+        .byznys {
+            color: #F00;
+            background: #FFCCA6
+        }
+
+        .technicka {
+            color: #3f5bea;
+            background: #EDEFFF
+        }
+
+        .osobniRozvoj {
+            color: #009309;
+            background: #DCFBDE
+        }
+
+        .none,
+        .style4 {
+            background: #ddd
+        }
+
+        .time {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        table {
+            table-layout: fixed;
+            width: 100%;
+        }
+
+        table .td1 {
+            width: 120px;
+        }
+
+        table .saly td {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-align: center;
+            vertical-align: top;
+        }
+
+        table td {
+            vertical-align: top;
+        }
+
+        table .saly td div {
+            border-bottom: 3px solid #000;
+            padding-bottom: 20px;
+        }
+
+    </style>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+</head>
+<div id="app">
+    {ifset $currentTalk}
+        {if $currentTalkFuture}
+            <div style="text-align:center;font-size:4.0em;padding:40px;">V tomto sále následuje přednáška:</div>
+        {else}
+            <div style="text-align:center;font-size:4.0em;padding:40px;">V tomto sále probíhá přednáška:</div>
+        {/if}
+        <table border="0" cellpadding="10"
+               style="max-width:900px;margin:auto;margin-bottom:100px;border:1px solid #000;padding:20px;">
+            <tr class="big">
+                <td style="width:120px;">
+                    <div class="time">{=$currentTalk['start']}</div>
+                </td>
+                <td class="{=$currentTalk['class']}">
+                    <div>
+                        <div>
+                            <div class="speaker">{=$currentTalk['speaker']}</div>
+                            <div class="talkName">{=$currentTalk['title']}</div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    {/ifset}
+
+    <table border="0" width="100%" cellpadding="10">
+        <tr class="saly">
+            <td class="td1"></td>
+            {foreach $rooms as $room}
+                <td>
+                    <div>{=$room}</div>
+                </td>
+            {/foreach}
+        </tr>
+        {foreach $times as $time => $currentRooms}
+            <tr>
+                <td>
+                    <div class="time">{=$time}</div>
+                </td>
+                {foreach $rooms as $roomKey => $room}
+                    {var $talk = $currentRooms[$roomKey]}
+                    {continueIf $talk === -1}
+
+                    {ifset $talk}
+                        <td class="{=$talk['class']}" rowspan="{=$talk['overflow'] ?? 1}">
+                            <div>
+                                <div>
+                                    <div class="speaker">{=$talk['speaker']}</div>
+                                    <div class="talkName">{=$talk['title']}</div>
+                                </div>
+                            </div>
+                        </td>
+                    {else}
+                        <td></td>
+                    {/ifset}
+                {/foreach}
+            </tr>
+        {/foreach}
+    </table>
+</div>
+

@@ -55,6 +55,96 @@ class ProgramControl extends Control
         $this->template->render();
     }
 
+    public function getProgramData(): array
+    {
+        $sortedItems = $this->getSortedItems();
+
+        $talks = [];
+        foreach ($sortedItems as $roomId => $roomTalks) {
+            /** @var InternalProgramEnvelope $talk */
+            foreach ($roomTalks as $id => $talk) {
+                $talks [] = [
+                    'id' => $id,
+                    'room' => $roomId,
+                    'title' => $talk->getTitle(),
+                    'speaker' => $talk->getSpeaker(),
+                    'start' => $this->formatClock($talk->getTime()),
+                    'end' => $this->formatClock($this->addIntervalDuration($talk->getTime(), $talk->getDuration())),
+                    'duration' => $talk->getDuration(),
+                    'category' => $talk->getCategory(),
+                    'style' => $talk->getStyle(),
+                    'class'=> $talk->getStyle() ?? ($talk->getCategory() ? lcfirst(str_replace('-', '', ucwords($talk->getCategory(), '-'))) : 'none'),
+                ];
+            }
+        }
+
+        $pattern = array_fill_keys(array_keys($sortedItems), null);
+        unset($sortedItems);
+
+        $times = [];
+
+        foreach ($talks as $talk) {
+            $time = $talk['start'];
+            if (!isset($times[$time])) {
+                $times[$time] = $pattern;
+            }
+            $times[$time][$talk['room']] = $talk;
+        }
+
+        ksort($times);
+
+        // Zjištění přetoků
+
+        // Projdeme každou místnost
+        foreach ($pattern as $roomId => $_) {
+            unset($lastTalk);
+
+            // Projdeme všechny časy v místnosti
+            foreach ($times as $time => $rooms) {
+                // Pokud máme uloženou poslední přednášku v místnosti, podíváme se, zda nepřetéká do dalšího časového bodu
+                if (isset($lastTalk) && ($lastTalk['end'] > $time)) {
+
+                    // Kontrola chyby v programu
+                    if ($rooms[$roomId] !== null) {
+                        throw new \Exception(
+                            sprintf(
+                                'Přednáška "%s" v místnosti "%s" se překrývá s předchozí přednáškou "%s".',
+                                $talk['title'],
+                                $roomId,
+                                $lastTalk['title']
+                            )
+                        );
+                    }
+
+                    // Pokud ano, přidáme do přetekající přednáčky příznak přetékání - pokud už je, inkrementujeme ho
+                    // bude použito pro rowspan v tabulce
+                    $lastTalk['overflow'] = ($lastTalk['overflow'] ?? 1) + 1;
+                    // A nálsedující čas v mástnost $roomId nastavíme na -1, což znamená, že se nemá vykreslit prázdná <td>
+                    // $times[$time] nelze nazhradit za $rooms - potřebujeme upravit původní pole $times
+                    /** @noinspection PhpArrayAccessCanBeReplacedWithForeachValueInspection */
+                    $times[$time][$roomId] = -1;
+                } else {
+                    // Pokud pokud přenáčka nepřetéká, tak ji dále nesledujeme
+                    unset($lastTalk);
+                }
+
+                // Kokuj je v aktuální mísntosti přednáška, tak ji uložíme jako poslední, abysme následně mohli kontrolovat přetékání
+                if (is_array($rooms[$roomId])) {
+                    // $times[$time] nelze nazhradit za $rooms - potřebujeme upravit původní pole $times
+                    /** @noinspection PhpArrayAccessCanBeReplacedWithForeachValueInspection */
+                    $lastTalk = &$times[$time][$roomId];
+                }
+            }
+        }
+
+        $rooms = $this->talkManager->getRooms();
+
+        return [
+            'times'=>$times,
+            'rooms' => $rooms,
+        ];
+    }
+
 
     /**
      * @return array
@@ -240,5 +330,19 @@ class ProgramControl extends Control
     private function formatClock(\DateInterval $dateInterval): string
     {
         return $dateInterval->format('%H:%I');
+    }
+
+    private function addIntervalDuration(\DateInterval $dateInterval, int $duration): \DateInterval
+    {
+        $dateInterval = clone $dateInterval;
+
+        $dateInterval->i += $duration;
+
+        while ($dateInterval->i >= 60) {
+            $dateInterval->i -= 60;
+            $dateInterval->h++;
+        }
+
+        return $dateInterval;
     }
 }
