@@ -204,13 +204,23 @@ class ConferencePresenter extends BasePresenter
         $this->template->addFilter('campainizeYouTube', $this->campainizeYouTube(...));
     }
 
-    public function renderTvProgram(?int $roomId = null, ?string $now = null): void
+    public function renderTvProgram(?int $roomId = null, ?int $offset = 20, ?string $now = null): void
     {
         $program = $this['program']->getProgramData();
 
         $rooms = array_keys($program['rooms']);
 
-        $now ??= (new DateTimeImmutable('now', new DateTimeZone('Europe/Prague')))->format('H:i');
+        $tz = new DateTimeZone('Europe/Prague');
+
+        $nowDt = new DateTimeImmutable('now', $tz);
+        if($now && preg_match('~^(?<hour>\d{1,2}):?(?<minute>\d{2})$~', $now, $matches)) {
+            $nowDt = $nowDt->setTime($matches['hour'], $matches['minute']);
+        }elseif ($now) {
+            $this->error('Invalid time format, expected HH:MM');
+        }
+
+        $nowOffset = $nowDt->modify("+ {$offset} minutes")->format('H:i');
+        $now = $nowDt->format('H:i');
 
         if ($roomId !== null) {
             $currentRoom = $rooms[$roomId - 1] ?? null;
@@ -224,7 +234,7 @@ class ConferencePresenter extends BasePresenter
         $currentTime = array_key_first($program['times']);
         $lastTalks = array_fill_keys($rooms, null);
         foreach ($program['times'] as $time => $rooms) {
-            if ($time <= $now) {
+            if ($time <= $nowOffset) {
                 $currentTime = $time;
                 foreach ($rooms as $room => $talk) {
                     if (is_array($talk)) {
@@ -263,7 +273,7 @@ class ConferencePresenter extends BasePresenter
                 $talk = $rooms[$currentRoom];
 
                 // Pokud je zvolený čas větší naž aktuální čas a je v něm přednáška, vypiš ji jako následující
-                if ($time >= $now && is_array($talk)) {
+                if ($time > $now && is_array($talk)) {
                     $this->template->currentTalk = $talk;
                     $this->template->currentTalkFuture = true;
                     break;
