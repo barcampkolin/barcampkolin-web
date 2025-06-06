@@ -36,7 +36,6 @@
 
         .big .head,
         .program .head {
-
             width: 4.75rem;
         }
 
@@ -105,7 +104,7 @@
             font-size: 1.56rem;
             font-weight: bold;
             text-align: center;
-            vertical-align: top;
+            vertical-align: bottom;
         }
 
         table td {
@@ -115,6 +114,18 @@
         table .saly td div {
             border-bottom: 3px solid #000;
             padding-bottom: 20px;
+        }
+
+        @media screen and (max-width: 1120px) {
+            table .saly td {
+                font-size: 1.25rem;
+            }
+        }
+
+        @media screen and (max-width: 900px) {
+            html {
+                font-size: 1.2em;
+            }
         }
 
         @media screen and (max-width: 800px) {
@@ -151,7 +162,7 @@
                 margin-right: auto;
             }
 
-            .program  {
+            .program {
                 min-width: 400px;
             }
         }
