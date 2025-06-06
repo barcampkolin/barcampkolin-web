@@ -7,29 +7,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="30">
+    {*    <meta http-equiv="refresh" content="30">*}
     <title>Barcamp Kolín - Program</title>
     <style>
-        div {
+        html {
             font-family: 'Montserrat', sans-serif;
-        }
-
-        .speaker {
-            font-size: 2.0em;
-            font-weight: 900;
-        }
-
-        .talkName {
             font-size: 1.6em;
         }
 
+        .speaker {
+            font-size: 1.25rem;
+            font-weight: 900;
+        }
+
+        .current-head {
+            text-align: center;
+            font-size: 2.5rem;
+            padding: 1.65rem 1rem;
+        }
+
+        .current {
+            max-width: 900px;
+            margin: auto;
+            margin-bottom: 4rem;
+            border: 1px solid #000;
+            padding: 20px;
+        }
+
+        .big .head,
+        .program .head {
+
+            width: 4.75rem;
+        }
+
         .big .speaker {
-            font-size: 4.0em;
+            font-size: 2.5rem;
             font-weight: 900;
         }
 
         .big .talkName {
-            font-size: 2.5em;
+            font-size: 1.56rem;
+        }
+
+        .sponsors {
+            text-align: center;
+            font-size: 1.5em;
+            padding: 20px 0px 0px;
+        }
+
+        .sponsors .logos {
+            text-align: center;
+        }
+
+        .sponsors .logos img {
+            display: inline-block;
+            height: 80px;
+            margin: 10px;
+            margin-right: 40px;
+        }
+
+        .sponsors .logos img:last-child {
+            margin-right: 10px;
         }
 
         .byznys {
@@ -53,7 +91,7 @@
         }
 
         .time {
-            font-size: 2.5em;
+            font-size: 1.56rem;
             font-weight: bold;
             text-align: center;
         }
@@ -63,12 +101,8 @@
             width: 100%;
         }
 
-        table .td1 {
-            width: 120px;
-        }
-
         table .saly td {
-            font-size: 2.5em;
+            font-size: 1.56rem;
             font-weight: bold;
             text-align: center;
             vertical-align: top;
@@ -83,76 +117,114 @@
             padding-bottom: 20px;
         }
 
+        @media screen and (max-width: 800px) {
+            html {
+                font-size: 1em;
+            }
+
+            .sponsors .logos img {
+                display: block;
+                height: 60px;
+                margin: 10px auto;
+            }
+
+            .sponsors .logos img:last-child {
+                margin-right: auto;
+            }
+        }
+
+        @media screen and (max-width: 570px) {
+            html {
+                font-size: 0.75em;
+            }
+
+            body {
+                overflow-x: auto;
+            }
+
+            .sponsors .logos img {
+                display: block;
+                height: 40px;
+            }
+
+            .sponsors .logos img:last-child {
+                margin-right: auto;
+            }
+
+            .program  {
+                min-width: 400px;
+            }
+        }
     </style>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
 </head>
-<div id="app">
-    {ifset $currentTalk}
-        {if $currentTalkFuture}
-            <div style="text-align:center;font-size:4.0em;padding:40px;">V tomto sále následuje přednáška:</div>
-        {else}
-            <div style="text-align:center;font-size:4.0em;padding:40px;">V tomto sále probíhá přednáška:</div>
-        {/if}
-        <table border="0" cellpadding="10"
-               style="max-width:900px;margin:auto;margin-bottom:100px;border:1px solid #000;padding:20px;">
-            <tr class="big">
-                <td style="width:120px;">
-                    <div class="time">{=$currentTalk['start']}</div>
-                </td>
-                <td class="{=$currentTalk['class']}">
+<body>
+{ifset $currentTalk}
+    {if $currentTalkFuture}
+        <div class="current-head">V tomto sále následuje přednáška:</div>
+    {else}
+        <div class="current-head">V tomto sále probíhá přednáška:</div>
+    {/if}
+    <table border="0" cellpadding="10" class="current">
+        <tr class="big">
+            <td class="head">
+                <div class="time">{=$currentTalk['start']}</div>
+            </td>
+            <td class="{=$currentTalk['class']}">
+                <div>
                     <div>
-                        <div>
-                            <div class="speaker">{=$currentTalk['speaker']}</div>
-                            <div class="talkName">{=$currentTalk['title']}</div>
-                        </div>
+                        <div class="speaker">{=$currentTalk['speaker']}</div>
+                        <div class="talkName">{=$currentTalk['title']}</div>
                     </div>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" style="text-align:center;font-size:1.5em;padding:20px 0px 0px;">
-                    <div>Tuto přednášku doporučuje:</div>
-                    <div>
-                        <img src="/upload/2025/partner-logo/vas-hosting-5xnse.png" style="display:inline-block;height:80px;margin:10px;margin-right:40px">
-                        <img src="/upload/2025/partner-logo/kopecky-hala-co-advokatni-kancelar-s-r-o-bmnog.png" style="display:inline-block;position:relative;top:10px;height:80px;margin:10px;">
-                    </div>
-                </td>
-            </tr>
-        </table>
-    {/ifset}
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" class="sponsors">
+                <div>Tuto přednášku doporučuje:</div>
+                <div class="logos">
+                    <img src="/upload/2025/partner-logo/vas-hosting-5xnse.png">
+                    <img src="/upload/2025/partner-logo/kopecky-hala-co-advokatni-kancelar-s-r-o-bmnog.png"
+                         style="position: relative; top: 10px;">
+                </div>
+            </td>
+        </tr>
+    </table>
+{/ifset}
 
-    <table border="0" width="100%" cellpadding="10">
-        <tr class="saly">
-            <td class="td1"></td>
-            {foreach $rooms as $room}
-                <td>
-                    <div>{=$room}</div>
-                </td>
+<table border="0" width="100%" cellpadding="10" class="program">
+    <tr class="saly">
+        <td class="head"></td>
+        {foreach $rooms as $room}
+            <td>
+                <div>{=$room}</div>
+            </td>
+        {/foreach}
+    </tr>
+    {foreach $times as $time => $currentRooms}
+        <tr>
+            <td>
+                <div class="time">{=$time}</div>
+            </td>
+            {foreach $rooms as $roomKey => $room}
+                {var $talk = $currentRooms[$roomKey]}
+                {continueIf $talk === -1}
+
+                {ifset $talk}
+                    <td class="{=$talk['class']}" rowspan="{=$talk['overflow'] ?? 1}">
+                        <div>
+                            <div>
+                                <div class="speaker">{=$talk['speaker']}</div>
+                                <div class="talkName">{=$talk['title']}</div>
+                            </div>
+                        </div>
+                    </td>
+                {else}
+                    <td></td>
+                {/ifset}
             {/foreach}
         </tr>
-        {foreach $times as $time => $currentRooms}
-            <tr>
-                <td>
-                    <div class="time">{=$time}</div>
-                </td>
-                {foreach $rooms as $roomKey => $room}
-                    {var $talk = $currentRooms[$roomKey]}
-                    {continueIf $talk === -1}
-
-                    {ifset $talk}
-                        <td class="{=$talk['class']}" rowspan="{=$talk['overflow'] ?? 1}">
-                            <div>
-                                <div>
-                                    <div class="speaker">{=$talk['speaker']}</div>
-                                    <div class="talkName">{=$talk['title']}</div>
-                                </div>
-                            </div>
-                        </td>
-                    {else}
-                        <td></td>
-                    {/ifset}
-                {/foreach}
-            </tr>
-        {/foreach}
-    </table>
-</div>
-
+    {/foreach}
+</table>
+</body>
+</html>
