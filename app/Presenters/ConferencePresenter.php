@@ -9,6 +9,8 @@ use App\Orm\Orm;
 use App\Orm\Program\Program;
 use App\Orm\Talk\Talk;
 use App\Orm\Talk\TalkRepository;
+use DateTimeImmutable;
+use DateTimeZone;
 use Nette\Utils\Json;
 use Nextras\Orm\Collection\ICollection;
 
@@ -202,11 +204,100 @@ class ConferencePresenter extends BasePresenter
         $this->template->addFilter('campainizeYouTube', $this->campainizeYouTube(...));
     }
 
+    public function renderTvProgram(?int $roomId = null, ?int $offset = 20, ?string $now = null): void
+    {
+        $program = $this['program']->getProgramData();
+
+        $rooms = array_keys($program['rooms']);
+
+        $tz = new DateTimeZone('Europe/Prague');
+
+        $nowDt = new DateTimeImmutable('now', $tz);
+        if($now && preg_match('~^(?<hour>\d{1,2}):?(?<minute>\d{2})$~', $now, $matches)) {
+            $nowDt = $nowDt->setTime($matches['hour'], $matches['minute']);
+        }elseif ($now) {
+            $this->error('Invalid time format, expected HH:MM');
+        }
+
+        $nowOffset = $nowDt->modify("+ {$offset} minutes")->format('H:i');
+        $now = $nowDt->format('H:i');
+
+        if ($roomId !== null) {
+            $currentRoom = $rooms[$roomId - 1] ?? null;
+            if (!$currentRoom) {
+                $this->error('Room not found');
+            }
+        }
+
+        // Zachytím si poslední přednášky před aktuálním časem - důležité při případ, že aktuálně bude běžět přednáška,
+        // která "přetéká" do dalšího času
+        $currentTime = array_key_first($program['times']);
+        $lastTalks = array_fill_keys($rooms, null);
+        foreach ($program['times'] as $time => $rooms) {
+            if ($time <= $nowOffset) {
+                $currentTime = $time;
+                foreach ($rooms as $room => $talk) {
+                    if (is_array($talk)) {
+                        $lastTalks[$room] = $talk;
+                    }
+                }
+            }
+        }
+
+        // Odstraním časy, které jsou menší než aktuální časový slot
+        foreach ($program['times'] as $time => $rooms) {
+            if ($time < $currentTime) {
+                unset($program['times'][$time]);
+            } else {
+                break;
+            }
+        }
+
+        // Zkontroluju, jestli v aktuální časovém slotu není přednáška, která "přetéká" z dřívějšího slotu a případně ji přidám
+        foreach ($program['times'][$currentTime] as $room => $talks) {
+            if ($talks === -1) {
+                $lastTalks[$room]['overflow'] = 1; //ugly hack - měla by se spočítat správná hodnota - // Fixme
+                $program['times'][$currentTime][$room] = $lastTalks[$room];
+            }
+        }
+
+        // todo - melo by se doplnit, pokud je v aktuálním slotu přednáška, která ale fakticky skončila a je pauza, aby
+        // se odstranila - ale pak je třeba řešit i odsranění slotu, pokud už v něm žádná přendáška nezbyla.
+
+        $this->template->rooms = $program['rooms'];
+        $this->template->times = $program['times'];
+        $this->template->currentRoom = $currentRoom ?? null;
+
+        if (isset($currentRoom)) {
+            foreach ($program['times'] as $time => $rooms) {
+                $talk = $rooms[$currentRoom];
+
+                // Pokud je zvolený čas větší naž aktuální čas a je v něm přednáška, vypiš ji jako následující
+                if ($time > $now && is_array($talk)) {
+                    $this->template->currentTalk = $talk;
+                    $this->template->currentTalkFuture = true;
+                    break;
+                }
+
+                // Pokud je ve zvoleném čase platná přednáška a její konec je v budoucnu, vypiš ji jako aktuální
+                if (is_array($talk) && $talk['end'] >= $now) {
+                    $this->template->currentTalk = $talk;
+                    $this->template->currentTalkFuture = false;
+                    break;
+                }
+            }
+        }
+
+
+        $this->getHttpResponse()->setExpiration(0);
+        //$this->sendJson($program);
+    }
+
 
     public function embedizeYouTube($url, $campainId = null)
     {
         $matches = null;
-        if (preg_match('~youtu\\.?be(?:\\.com)?/(?:watch\\?v=)?([-_a-z0-9]{8,15})~i', (string) $url, $matches)) {
+        if (preg_match('~youtu\\.?be(?:\\.com)?/(?:watch\\?v=)?([-_a-z0-9]{8,15})~i', (string)$url, $matches)) {
             return $this->buildCampainUrl(
                 "https://www.youtube.com/embed/$matches[1]",
                 'yt-video-embed',
@@ -229,7 +320,7 @@ class ConferencePresenter extends BasePresenter
     private function buildCampainUrl(string $url, string $medium, $campainId): string
     {
         $postfix = "utm_source=pbc-web&utm_medium=$medium&utm_content=$campainId&utm_campaign=talk-detail";
-        return $url . (str_contains((string) $url, '?') ? '&' : '?') . $postfix;
+        return $url . (str_contains((string)$url, '?') ? '&' : '?') . $postfix;
     }
 
 
