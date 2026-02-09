@@ -1,3 +1,9 @@
+{varType int $year}
+{varType string[] $pages}
+{varType string $csrfToken}
+{varType string $cookieKey}
+
+
 {block title}{block h1}Archivace webu{/block} - Barcamp Kolín{/block}
 {block content}
 
@@ -11,6 +17,15 @@
     <li>Smazání všech účasníků</li>
     <li>Smazání všech partnerů</li>
 </ul>
+<details style="margin-bottom: 1em;">
+    <summary>Seznam stránek, které budou archivovány</summary>
+    <div style="padding-left: 1em;">
+        <p>Prohlédněte si seznam a posuďte, zda něco nechybí.</p>
+        <ul>
+            <li n:foreach="$pages as $page"><a href="{$page}" target="_blank">{$page}</a></li>
+        </ul>
+    </div>
+</details>
 <p>
     <span class="label label-danger">POZOR</span>
     Provedené změny není možné vrátit zpět! Stránky budou archivovány ve stavu, v jakém se nacházejí, do HTML douborů, které nebude možné měnit.

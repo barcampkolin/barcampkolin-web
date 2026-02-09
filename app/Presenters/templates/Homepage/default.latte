@@ -1,3 +1,11 @@
+{varType string $wwwDir}
+{varType Nette\Utils\ArrayHash $dates}
+{varType Nette\Utils\ArrayHash $features}
+{varType Nette\Utils\ArrayHash $socialUrls}
+{varType int $year}
+
+{varType Nette\Utils\ArrayHash $counts}
+
 {block content}
 <div class="hero">
     <div class="hero-slider">
@@ -69,7 +77,7 @@
 
             </div>
 
-            {if ($counts->conferee_left < 100) || $user->isInRole('admin')}
+            {if $features->conferee && (($counts->conferee_left < 100) || $user->isInRole('admin'))}
             <span class="hero-note">Zbývá už jen <span>{$counts->conferee_left}</span> vstupenek</span>
             {/if}
         </div>
