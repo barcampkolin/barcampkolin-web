@@ -4,7 +4,7 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-const currentYear = '2025';
+const currentYear = '2026';
 
 module.exports = (env, argv) => {
     const isProd = argv.mode === 'production';
