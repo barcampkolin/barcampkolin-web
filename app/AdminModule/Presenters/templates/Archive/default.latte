@@ -21,8 +21,8 @@
     <summary>Seznam stránek, které budou archivovány</summary>
     <div style="padding-left: 1em;">
         <p>Prohlédněte si seznam a posuďte, zda něco nechybí.</p>
-        <ul n:foreach="$pages as $page">
-            <li><a href="{$page}" target="_blank">{$page}</a></li>
+        <ul>
+            <li n:foreach="$pages as $page"><a href="{$page}" target="_blank">{$page}</a></li>
         </ul>
     </div>
 </details>
