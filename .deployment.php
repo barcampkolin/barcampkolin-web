@@ -44,6 +44,7 @@ return [
             /rector.php
             /temp
             /tests
+            /webpack.config.js
             /www/upload
             /www/static/*/*/*.*.map
             /www/archive

@@ -56,13 +56,17 @@ export default async function () {
                 step.classList.add("item-active");
                 setSliderFull(sliderBefore);
 
-                sliderAfter.classList.add("active");
-                setSliderPercentagle(sliderAfter);
+                if(sliderAfter) {
+                    sliderAfter.classList.add("active");
+                    setSliderPercentagle(sliderAfter);
+                }
             }
             if (item.isDone) {
                 step.classList.add("item-done");
                 setSliderFull(sliderBefore);
-                setSliderFull(sliderAfter);
+                if(sliderAfter) {
+                    setSliderFull(sliderAfter);
+                }
             }
             if (item.isNext) {
                 sliderBefore?.classList.add("active");
