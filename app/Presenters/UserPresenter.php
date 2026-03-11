@@ -164,6 +164,11 @@ class UserPresenter extends BasePresenter
                 $this->error('Účastník nebyl nalezen');
             }
 
+            if ($conferee->enabled && $conferee->talk->count() > 0) {
+                $this->flashMessage('Nemůžete se odhlásit z akce, pokud máte aktivní přednášku.', 'danger');
+                $this->redirect('this');
+            }
+
             $conferee->setValue('enabled', !$conferee->enabled);
             $this->confereeManager->save($conferee);
 
