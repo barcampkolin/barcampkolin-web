@@ -3,34 +3,26 @@ parameters:
         - name: Martin Dostál
           role: Hlavní organizátor
           photo: martin-dostal.jpg
-          phone: "730540532"
+          phone: "+420730540532"
           mail: martin@martindostal.com
           twitter: _MartinDostal
           facebook: ing.martin.dostal
 
         - name: Lukáš Souček
-          role: Zajištění sponzorů
+          role: Finanční diplomacie
           photo: lukas-soucek.webp
           phone: "+420723022242"
           mail: soucek.luk@gmail.com
           facebook: lukas.holecek.98
 
         - name: Adam Laita
-          role: Zástupce Martina
+          role: WordPress specialista a BC pomocník.
           photo: adam-laita.webp
           phone: "+420777086449"
           mail: adam@laita.cz
           homepage: https://www.laita.cz/
           facebook: adam.laita
           twitter: adam_laita
-
-        - name: David Němeček
-          role: Právní pomoc
-          photo: david-nemecek.webp
-          phone: "+420605076211"
-          mail: nemecek@nplegal.cz
-          homepage: https://nplegal.cz
-          facebook: nemecekdavid
 
         - name: Jakub Bouček
           role: Webař Barcampu
@@ -42,7 +34,7 @@ parameters:
           facebook: jakub.boucek
 
         - name: Jiří Krejčík
-          role: Marketing a sociální sítě
+          role: Zajištění akce
           photo: https://www.jirikrejcik.cz/portret-jirikrejcik.jpg
           phone: "+420720384264"
           mail: jirka@krejcik.eu
@@ -50,56 +42,40 @@ parameters:
           facebook: jiri.krejcik
           twitter: jirikrejcik
 
-        - name: Edita Dostálová
-          role: Organizátor Barcampu
-          photo: edita-dostalova.jpg
-          # phone: "605742603"
-          # mail: edita.dostalova@gmail.com
-          # twitter: EditaDostalova
-          # facebook: edita.dostalova1
-
-        - name: Kristýna Zvonková
-          role: Zajišťuje vám jídlo
-          photo: kristyna-zvonkova.webp
-          # phone: "+420604821200"
-          # mail: cristy.zvonk13@seznam.cz
-          # facebook: kikuska.zvonkova
-
-        - name: Vanesa Jeřábková
-          role: Socky
-          photo: vanesa-jerabkova.webp
-          # phone: "+420773599593"
-          # mail: jerabkovanesa@gmail.com
-          # facebook: vanesa.jerabkova.1
-
         - name: Iveta Zlatníčková
           role: Krotitelka obsahu
           photo: iveta-zlatnickova.webp
           mail: zlatnickovaiveta@gmail.com
           homepage: https://zlatnickova.cz
 
-#        - name: Adéla Hubnerová
-#          role: Zajištění organizace akce
-#          # phone: "+420792363246"
-#          # mail: adela.hubnerova@jirkont.cz
-#
+        - name: Adéla Hubnerová
+          role: Zajištění sponzorů
+          phone: "+420732582561"
+          mail: adelahubnerova89@gmail.com
+
         - name: Denisa Kolaříková
-          role: Sestavení programu
+          role: "BC Girl :)"
           photo: denisa-kolarikova.webp
-#          phone: "+420774080118"
+          phone: "+420774080118"
           mail: endis@kolarikova.cz
           homepage: https://kolarikova.cz
           facebook: endis.kolarikova
           twitter: endis_ka
-#
-#        - name: Lucie Sixtová
-#          role: "(bude doplněno)"
-#          photo: lucie-sixtova.webp
-#          # phone: "+420605296067"
-#          # mail: 1lucie.sixtova@seznam.cz
-#          # homepage: https://www.luciesixtova.cz
-#
-#        - name: Vít Vávra
-#          role: Webař Barcampu
-#          # phone: "+420773984640"
-#          # mail: vit.vavra.kh@gmail.com
+
+        - name: Petra Tvrdá
+          role: Odbavení účastníků
+          facebook: jerry.petka
+
+        - name: Nikol Sporišová
+          role: Práce s přednášejícími
+
+        - name: Martin Kokeš
+          role: Příprava akce
+          photo: "https://1.gravatar.com/avatar/2a30a6fcbda2de71a14f0e1254dd76e16e0a6296e8526dd342b7369629fb8b51?size=256&d=initials"
+          phone: "+420606432141"
+          mail: martin@fondly.cz
+          homepage: fondly.cz
+
+        - name: Pepa Řezníček
+          role: Příprava akce
+          mail: josef@vceliste.cz
