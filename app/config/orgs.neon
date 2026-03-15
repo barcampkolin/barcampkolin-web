@@ -27,7 +27,7 @@ parameters:
         - name: Jakub Bouček
           role: Webař Barcampu
           photo: https://www.jakub-boucek.cz/img/profil-500px.avif
-          phone: "608259497"
+          phone: "+420608259497"
           mail: pan@jakubboucek.cz
           homepage: https://www.jakub-boucek.cz/
           twitter: JakubBoucek
@@ -74,7 +74,7 @@ parameters:
           photo: "https://1.gravatar.com/avatar/2a30a6fcbda2de71a14f0e1254dd76e16e0a6296e8526dd342b7369629fb8b51?size=256&d=initials"
           phone: "+420606432141"
           mail: martin@fondly.cz
-          homepage: fondly.cz
+          homepage: https://fondly.cz/
 
         - name: Pepa Řezníček
           role: Příprava akce
