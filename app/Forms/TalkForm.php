@@ -2,6 +2,7 @@
 
 namespace App\Forms;
 
+use App\Orm\Conferee\Conferee;
 use App\Orm\Talk\Talk;
 use Nette;
 use Nette\Application\UI\Form;
@@ -59,6 +60,11 @@ class TalkForm
                 ->setDefaultValue(key($durations));
         }
 
+	    $form->addText('phone', 'Telefonní číslo:')
+		    ->setOption('description', 'V případě potřeby rychlého kontaktu s organizátory.')
+		    ->addRule(Form::Filled)
+	    ;
+
         $form->addGroup('Něco o vás');
 
         $form->addText('company', 'Firma:')
@@ -70,20 +76,22 @@ class TalkForm
 
         $form->addText('url_www', 'WWW stránka:')
             ->setOption('description', 'Volitelné. Odkaz na vaše stránky, (příp. stránky firmy)')
-            ->addCondition(Form::FILLED)
+            ->addCondition(Form::Filled)
             ->addRule(Form::URL);
 
+
         $form->addText('url_facebook', 'URL Facebook profilu:')
-            ->addCondition(Form::FILLED)
+            ->addCondition(Form::Filled)
             ->addRule(Form::URL);
 
         $form->addText('url_twitter', 'URL Twitter profilu:')
-            ->addCondition(Form::FILLED)
+            ->addCondition(Form::Filled)
             ->addRule(Form::URL);
 
         $form->addText('url_linkedin', 'URL LinkedIn profilu:')
-            ->addCondition(Form::FILLED)
+            ->addCondition(Form::Filled)
             ->addRule(Form::URL);
+
 
         $form->addGroup('');
 

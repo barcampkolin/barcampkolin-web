@@ -12,6 +12,7 @@ use Nextras\Orm\Relationships\OneHasMany;
  * @property User|null                  $user          {1:1 User::$conferee, isMain=true}
  * @property string                     $name
  * @property string                     $email
+ * @property string|null                $phone         {default null}
  * @property string|null                $pictureUrl
  * @property string|null                $pictureOriginalUrl
  * @property string|null                $bio
@@ -25,5 +26,4 @@ use Nextras\Orm\Relationships\OneHasMany;
  */
 class Conferee extends Entity
 {
-
 }
