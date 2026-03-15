@@ -172,7 +172,7 @@ class UserPresenter extends BasePresenter
             $conferee->setValue('enabled', !$conferee->enabled);
             $this->confereeManager->save($conferee);
 
-            $this->flashMessage(!$conferee->enabled ? 'Účast byla potvrzena.' : 'Byli jste odhlášeni.');
+            $this->flashMessage($conferee->enabled ? 'Účast byla potvrzena.' : 'Byli jste odhlášeni.');
             $this->redirect('this');
         };
 
