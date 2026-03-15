@@ -11,7 +11,11 @@
 
             {control partners}
 
+            {if $isArchivationProcess === false}
             <script n:nonce type="text/javascript" src="https://form.simpleshop.cz/iframe/js/?id=YPeXO"></script>
+            {else}
+            <a href="/partneri" class="btn btn-brand btn-section mt-xs">Aktuální partneři</a>
+            {/if}
         </div>
     </div>
 </section>
