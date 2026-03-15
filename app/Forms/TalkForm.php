@@ -2,6 +2,7 @@
 
 namespace App\Forms;
 
+use App\Orm\Conferee\Conferee;
 use App\Orm\Talk\Talk;
 use Nette;
 use Nette\Application\UI\Form;
@@ -31,7 +32,7 @@ class TalkForm
      * @return Form
      * @throws Nette\Utils\JsonException
      */
-    public function create(callable $onSuccess, array $categories = null, array $durations = null, Talk $talk = null)
+    public function create(callable $onSuccess, array $categories = null, array $durations = null, Talk $talk = null, Conferee $conferee = null)
     {
         $form = $this->factory->create();
         $form->addText('title', 'Název tvojí přednášky:')
@@ -59,6 +60,14 @@ class TalkForm
                 ->setDefaultValue(key($durations));
         }
 
+	    $item = $form->addText('phone', 'Telefonní číslo:')
+		    ->setOption('description', 'V případě potřeby rychlého kontaktu s organizátory.')
+		    ->addRule(Form::Filled)
+	    ;
+		if ($conferee?->phone !== null) {
+			$item->setDefaultValue($conferee->phone);
+		}
+
         $form->addGroup('Něco o vás');
 
         $form->addText('company', 'Firma:')
@@ -70,20 +79,22 @@ class TalkForm
 
         $form->addText('url_www', 'WWW stránka:')
             ->setOption('description', 'Volitelné. Odkaz na vaše stránky, (příp. stránky firmy)')
-            ->addCondition(Form::FILLED)
+            ->addCondition(Form::Filled)
             ->addRule(Form::URL);
 
+
         $form->addText('url_facebook', 'URL Facebook profilu:')
-            ->addCondition(Form::FILLED)
+            ->addCondition(Form::Filled)
             ->addRule(Form::URL);
 
         $form->addText('url_twitter', 'URL Twitter profilu:')
-            ->addCondition(Form::FILLED)
+            ->addCondition(Form::Filled)
             ->addRule(Form::URL);
 
         $form->addText('url_linkedin', 'URL LinkedIn profilu:')
-            ->addCondition(Form::FILLED)
+            ->addCondition(Form::Filled)
             ->addRule(Form::URL);
+
 
         $form->addGroup('');
 

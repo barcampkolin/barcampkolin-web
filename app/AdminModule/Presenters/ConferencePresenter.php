@@ -328,6 +328,10 @@ class ConferencePresenter extends BasePresenter
         $grid->addColumnText('mail', 'Mail', 'conferee.email')
             ->setSortable();
 
+		$grid->addColumnText('phone', 'Telefon', 'conferee.phone')
+			->setSortable(false)
+		;
+
         $grid->addColumnText('votes', 'Hlasy')
             ->setSortable();
 
