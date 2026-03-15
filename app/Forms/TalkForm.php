@@ -32,7 +32,7 @@ class TalkForm
      * @return Form
      * @throws Nette\Utils\JsonException
      */
-    public function create(callable $onSuccess, array $categories = null, array $durations = null, Talk $talk = null, Conferee $conferee = null)
+    public function create(callable $onSuccess, array $categories = null, array $durations = null, Talk $talk = null)
     {
         $form = $this->factory->create();
         $form->addText('title', 'Název tvojí přednášky:')
@@ -60,13 +60,10 @@ class TalkForm
                 ->setDefaultValue(key($durations));
         }
 
-	    $item = $form->addText('phone', 'Telefonní číslo:')
+	    $form->addText('phone', 'Telefonní číslo:')
 		    ->setOption('description', 'V případě potřeby rychlého kontaktu s organizátory.')
 		    ->addRule(Form::Filled)
 	    ;
-		if ($conferee?->phone !== null) {
-			$item->setDefaultValue($conferee->phone);
-		}
 
         $form->addGroup('Něco o vás');
 

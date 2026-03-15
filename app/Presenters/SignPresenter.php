@@ -416,7 +416,9 @@ class SignPresenter extends BasePresenter
         $categories = $this->talkManager->getCategories();
         $durations = $this->talkManager->getDurations();
 
-        return $this->talkForm->create($onSubmitCallback, $categories, $durations, null, $conferee);
+        $form = $this->talkForm->create($onSubmitCallback, $categories, $durations);
+		$form->getComponent('phone', false)?->setDefaultValue($conferee->phone);
+		return $form;
     }
 
 
