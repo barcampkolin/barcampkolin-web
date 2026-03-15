@@ -151,6 +151,33 @@ class UserPresenter extends BasePresenter
         return $form;
     }
 
+    protected function createComponentToggleAttendanceForm(): Form
+    {
+        $form = new Form();
+        $form->addSubmit('submit');
+
+        $form->onSuccess[] = function () {
+            $user = $this->userManager->getByLoginUser($this->getUser());
+            $conferee = $user->conferee;
+
+            if (!$conferee) {
+                $this->error('Účastník nebyl nalezen');
+            }
+
+            if ($conferee->enabled && $conferee->talk->count() > 0) {
+                $this->flashMessage('Nemůžete se odhlásit z akce, pokud máte aktivní přednášku.', 'danger');
+                $this->redirect('this');
+            }
+
+            $conferee->setValue('enabled', !$conferee->enabled);
+            $this->confereeManager->save($conferee);
+
+            $this->flashMessage($conferee->enabled ? 'Účast byla potvrzena.' : 'Byli jste odhlášeni.');
+            $this->redirect('this');
+        };
+
+        return $form;
+    }
 
     /**
      * @throws NoUserLoggedIn

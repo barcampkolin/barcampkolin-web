@@ -10,6 +10,30 @@
                     <div class="item">
                         <div id="avatar" class="item-image" style="background-image: url('{gravatarize($user->identity->pictureUrl, $user->identity->email)}')"></div>
                         <div class="item-content">
+                          <div class="mb-sm">
+                            <h2 class="item-title">Vstupenka</h2>
+                            {if $conferee}
+                                {if $conferee->enabled}
+                                    <div><strong>✔️ Počítáme s tebou!</strong></div>
+                                    <em>Vstupenka ti přijde před akcí na e-mail</em>
+                                    {form toggleAttendanceForm}
+                                        <button n:name="submit" class="btn btn-brand btn-tiny btn-block mt-xs">
+                                            Odhlásit z akce (nemůžu přijít)
+                                        </button>
+                                    {/form}
+                                {else}
+                                    <span><strong>✘ Momentálně jsi z akce odhlášen(a).</strong></span>
+                                    {form toggleAttendanceForm}
+                                        <button n:name="submit" class="btn btn-secondary btn-tiny btn-block mt-xs">
+                                            Znovu se přihlásit na akci
+                                        </button>
+                                    {/form}
+                                {/if}
+                            {else}
+                                <span>✘ Zatím nejsi registrovaný účastník.</span>
+                            {/if}
+                          </div>
+
                             <h2 class="item-title">{$user->identity->name}</h2>
                             <span n:if="$conferee" class="item-meta" title="{$conferee->bio|stripHtml}">{$conferee->bio|stripHtml|truncate:50|breakLines}</span>
                             <div class="item-text">
