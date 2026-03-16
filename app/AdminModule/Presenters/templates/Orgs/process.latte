@@ -1,0 +1,9 @@
+{block title}{block h1}Kontakty{/block} - Barcamp Kolín{/block}
+{block content}
+
+{ifset $sourceUrl, $sourceName}
+    <p>Data byla stažena ze zdroje:
+    <strong><a href="{$sourceUrl}" target="_blank">{$sourceName}</a></strong>.</p>
+{/ifset}
+
+{include bootstrap-form confirmForm}

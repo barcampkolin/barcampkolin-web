@@ -15,7 +15,7 @@ use App\Components\SignupButtons\SignupButtonsControl;
 use App\Components\SignupButtons\SignupButtonsFactory;
 use App\Components\SpeakerList\ISpeakerListControlFactory;
 use App\Components\SpeakerList\SpeakerListControl;
-use App\Model\OrgListProvider;
+use App\Model\OrgListModel;
 use Nette\Utils\Html;
 
 class HomepagePresenter extends BasePresenter
@@ -28,7 +28,7 @@ class HomepagePresenter extends BasePresenter
         private readonly ISpeakerListControlFactory $speakerListFactory,
         private readonly IProgramControlFactory $programFactory,
         private readonly IPartnersControlFactory $partnersControlFactory,
-        private readonly OrgListProvider $orgListProvider,
+        private readonly OrgListModel $orgListModel,
     ) {
         parent::__construct();
     }
@@ -62,7 +62,7 @@ class HomepagePresenter extends BasePresenter
             return (bool)preg_match('~^https?://~', $value);
         });
 
-        $template->orgs = $this->orgListProvider->getOrgs();
+        $template->orgs = $this->orgListModel->getOrgs();
     }
 
 
