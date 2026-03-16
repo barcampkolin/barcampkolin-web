@@ -147,6 +147,7 @@ class UserPresenter extends BasePresenter
 
         //Additional form modification
         $form->addHidden('id', $talk->id);
+        $form['phone']->setDefaultValue($conferee->phone);
 
         return $form;
     }
