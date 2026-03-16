@@ -398,12 +398,12 @@ class SignPresenter extends BasePresenter
 
     protected function createComponentTalkForm(): Form
     {
-	    $conferee = $this->userManager->getByLoginUser($this->getUser())->getObligatoryConferee();
+        $conferee = $this->userManager->getByLoginUser($this->getUser())->getObligatoryConferee();
 
         $onSubmitCallback = function (Talk $talk, ArrayHash $values) use ($conferee): void {
             $talk->conferee = $conferee;
             $conferee->user->addRole('speaker');
-			$conferee->phone = $values->phone;
+            $conferee->phone = $values->phone;
             $this->talkManager->save($talk);
 
             //Reset app login - to reload roles
@@ -417,8 +417,8 @@ class SignPresenter extends BasePresenter
         $durations = $this->talkManager->getDurations();
 
         $form = $this->talkForm->create($onSubmitCallback, $categories, $durations);
-		$form->getComponent('phone', false)?->setDefaultValue($conferee->phone);
-		return $form;
+        $form['phone']?->setDefaultValue($conferee->phone);
+        return $form;
     }
 
 

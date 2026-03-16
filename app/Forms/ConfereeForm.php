@@ -35,11 +35,11 @@ class ConfereeForm
             ->setOption('description', 'E-mail nikde nezobrazujeme, ale bude sloužit pro přihlášení a tak…')
             ->setRequired('Prosíme, vyplňte svůj e-mail');
 
-		if ($conferee?->phone !== null) {
-			$form->addText('phone', 'Telefon:')
-				->setRequired('Prosíme, vyplňte svůj telefon')
-				->setOption('description', 'Telefon nikde nezobrazujeme, slouží pro rychlý kontakt s organizátory.');
-		}
+        if ($conferee?->phone !== null) {
+            $form->addText('phone', 'Telefon:')
+                ->setRequired('Prosíme, vyplňte svůj telefon')
+                ->setOption('description', 'Telefon nikde nezobrazujeme, slouží pro rychlý kontakt s organizátory.');
+        }
 
         $form->addText('extendedCompany', 'Čím se živíš?')
             ->setOption('description', 'Dobrovolné - bude uvedeno na visačce. Například: Programátor v Redbit s.r.o.')

@@ -2,7 +2,6 @@
 
 namespace App\Forms;
 
-use App\Orm\Conferee\Conferee;
 use App\Orm\Talk\Talk;
 use Nette;
 use Nette\Application\UI\Form;
@@ -60,10 +59,9 @@ class TalkForm
                 ->setDefaultValue(key($durations));
         }
 
-	    $form->addText('phone', 'Telefonní číslo:')
-		    ->setOption('description', 'V případě potřeby rychlého kontaktu s organizátory.')
-		    ->addRule(Form::Filled)
-	    ;
+        $form->addText('phone', 'Telefonní číslo:')
+            ->setOption('description', 'V případě potřeby rychlého kontaktu s organizátory.')
+            ->addRule(Form::Filled);
 
         $form->addGroup('Něco o vás');
 
