@@ -32,6 +32,7 @@ class RawPdoMysqlDriver extends PdoMysqlDriver
 
         // Workaround to fill private $this->resultNormalizerFactory
         (function ($factory) {
+            // @phpstan-ignore property.private
             $this->resultNormalizerFactory = $factory;
         })->bindTo($this, PdoMysqlDriver::class)(
             new PdoMysqlResultNormalizerFactory($this)

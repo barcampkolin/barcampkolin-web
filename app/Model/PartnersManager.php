@@ -151,7 +151,7 @@ EOT;
      * @param ActiveRow|null $nextItem
      * @throws InvalidArgumentException
      */
-    public function changePartnersOrder(ActiveRow $item, ActiveRow $prevItem = null, ActiveRow $nextItem = null): void
+    public function changePartnersOrder(ActiveRow $item, ?ActiveRow $prevItem = null, ?ActiveRow $nextItem = null): void
     {
         $this->sort(self::TABLE_PARTNERS, $item, $prevItem, $nextItem);
     }
@@ -218,7 +218,7 @@ EOT;
      * @param ActiveRow|null $nextItem
      * @throws InvalidArgumentException
      */
-    public function changeGroupsOrder(ActiveRow $item, ActiveRow $prevItem = null, ActiveRow $nextItem = null): void
+    public function changeGroupsOrder(ActiveRow $item, ?ActiveRow $prevItem = null, ?ActiveRow $nextItem = null): void
     {
         $this->sort(self::TABLE_GROUPS, $item, $prevItem, $nextItem);
     }
@@ -256,7 +256,7 @@ EOT;
      * @param ActiveRow|null $nextItem
      * @throws InvalidArgumentException
      */
-    private function sort(string $table, ActiveRow $item, ActiveRow $prevItem = null, ActiveRow $nextItem = null): void
+    private function sort(string $table, ActiveRow $item, ?ActiveRow $prevItem = null, ?ActiveRow $nextItem = null): void
     {
         if (!in_array($table, [self::TABLE_GROUPS, self::TABLE_PARTNERS], true)) {
             throw new InvalidArgumentException("Table name $table is invalid");

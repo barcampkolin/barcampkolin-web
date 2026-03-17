@@ -66,7 +66,7 @@ abstract class BaseMessage
     /**
      * @param MailerManager|null $manager
      */
-    public function setManager(MailerManager $manager = null): void
+    public function setManager(?MailerManager $manager = null): void
     {
         $this->manager = $manager;
     }
