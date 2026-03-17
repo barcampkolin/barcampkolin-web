@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Model\Entity\Org;
-use Nette\Utils\ArrayHash;
 
 class OrgListModel
 {
