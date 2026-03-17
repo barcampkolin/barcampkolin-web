@@ -1,0 +1,19 @@
+{block title}{block h1}Kontakty{/block} - Barcamp Kolín{/block}
+{block content}
+
+{include bootstrap-form updateForm}
+
+<script n:nonce>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Disable form inputs on submit to prevent multiple submissions
+        document.querySelector('form#frm-updateForm').addEventListener('submit', (event) => {
+            const form = event.target;
+            const inputs = form.querySelectorAll('input, select, textarea');
+            setTimeout(() => {
+                inputs.forEach(input => {
+                    input.disabled = true;
+                });
+            }, 200);
+        });
+    }, { once: true });
+</script>

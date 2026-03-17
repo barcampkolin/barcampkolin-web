@@ -16,8 +16,8 @@
                         </p>
                         <ul class="networks" n:ifcontent>
                             <li n:ifset="$org->mail" class="email"><a href="mailto:{$org->mail}" title="{$org->mail}"><i>{$org->mail}</i></a></li>
-                            <li n:ifset="$org->twitter" class="tw"><a href="https://twitter.com/{$org->twitter}" target="_blank" rel="noopener" title="@{$org->twitter}"><i>@{$org->twitter}</i></a></li>
-                            <li n:ifset="$org->twitter" class="fb"><a href="https://www.facebook.com/{$org->facebook}" target="_blank" rel="noopener" title="{$org->name} na Facebooku"><i>{$org->name} na Facebooku</i></a></li>
+                            <li n:ifset="$org->twitter" class="tw"><a href="{$org->twitter}" target="_blank" rel="noopener" title="{$org->name} na X"><i>{$org->name} na X</i></a></li>
+                            <li n:ifset="$org->facebook" class="fb"><a href="{$org->facebook}" target="_blank" rel="noopener" title="{$org->name} na Facebooku"><i>{$org->name} na Facebooku</i></a></li>
                         </ul>
                     </div>
                 {/foreach}
