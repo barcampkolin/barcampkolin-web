@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use App\Model\Entity\EventDates;
+use DateTimeImmutable;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\DateTime;
@@ -50,19 +52,18 @@ class EventInfoProvider
     }
 
 
-    public function getDates(): ArrayHash
+    public function getDates(): EventDates
     {
-        return ArrayHash::from([
-            'year' => (int)$this->config->get(self::CURRENT_YEAR, (new DateTime())->format('Y')),
-
-            'talks' => DateTime::from($this->config->get(self::DATE_TALKS)),
-            'vote' => DateTime::from($this->config->get(self::DATE_VOTE)),
-            'program' => DateTime::from($this->config->get(self::DATE_PROGRAM)),
-            'event' => DateTime::from($this->config->get(self::DATE_EVENT)),
-            'report' => DateTime::from($this->config->get(self::DATE_REPORT)),
-            'scheduleBegin' => DateTime::from($this->config->get(self::SCHEDULE_VISUAL_DATE_BEGIN)),
-            'scheduleEnd' => DateTime::from($this->config->get(self::SCHEDULE_VISUAL_DATE_END)),
-        ]);
+        return new EventDates(
+            year: (int)$this->config->get(self::CURRENT_YEAR, new DateTimeImmutable()->format('Y')),
+            talks: new DateTimeImmutable($this->config->get(self::DATE_TALKS)),
+            vote: new DateTimeImmutable($this->config->get(self::DATE_VOTE)),
+            program: new DateTimeImmutable($this->config->get(self::DATE_PROGRAM)),
+            event: new DateTimeImmutable($this->config->get(self::DATE_EVENT)),
+            report: new DateTimeImmutable($this->config->get(self::DATE_REPORT)),
+            scheduleBegin: new DateTimeImmutable($this->config->get(self::SCHEDULE_VISUAL_DATE_BEGIN)),
+            scheduleEnd: new DateTimeImmutable($this->config->get(self::SCHEDULE_VISUAL_DATE_END)),
+        );
     }
 
 
