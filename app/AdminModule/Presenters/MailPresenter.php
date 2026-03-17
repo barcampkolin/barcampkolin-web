@@ -123,7 +123,7 @@ class MailPresenter extends BasePresenter
      */
     public function renderPreview($id, string $parametersJson = '{}'): void
     {
-        $parameters = Json::decode($parametersJson, Json::FORCE_ARRAY);
+        $parameters = Json::decode($parametersJson, forceArrays: true);
 
         $message = $this->mailer->getDynamicMessage(null, $id, $parameters);
 
@@ -168,7 +168,7 @@ class MailPresenter extends BasePresenter
      */
     public function actionSend($templateId, $recipient, string $parametersJson = '{}'): void
     {
-        $parameters = Json::decode($parametersJson, Json::FORCE_ARRAY);
+        $parameters = Json::decode($parametersJson, forceArrays: true);
 
         $this->mailer->getDynamicMessage($recipient, $templateId, $parameters)->send();
 

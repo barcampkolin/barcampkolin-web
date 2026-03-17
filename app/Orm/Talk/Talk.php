@@ -36,7 +36,7 @@ class Talk extends Entity
      */
     public function getExpandedExtensions($item = null, $default = null)
     {
-        $extended = Json::decode($this->extended, Json::FORCE_ARRAY);
+        $extended = Json::decode($this->extended, forceArrays: true);
         if (is_null($item)) {
             return $extended;
         } else {

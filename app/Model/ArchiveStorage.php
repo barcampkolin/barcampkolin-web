@@ -6,24 +6,15 @@ use Nette\FileNotFoundException;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Strings;
 
-class ArchiveStorage
+readonly class ArchiveStorage
 {
-    /**
-     * @param string $storagePrefix
-     */
     public function __construct(
-        private $storagePrefix
+        private string $storagePrefix
     ) {
     }
 
 
-    /**
-     * @param $fileName
-     * @param $content
-     * @return string
-     * @throws \Nette\IOException
-     */
-    public function savePage($fileName, string $content): void
+    public function savePage(string $fileName, string $content): void
     {
         $filename = $this->getFilename($fileName);
 

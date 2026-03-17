@@ -123,7 +123,7 @@ class TalkForm
         if ($talk) {
             $values = $talk->toArray();
             try {
-                $extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
+                $extended = Json::decode($talk->extended, forceArrays: true);
                 $values += $this->mapFields($extended, $this->extendedFieldsMap());
             } catch (JsonException) {
                 // void

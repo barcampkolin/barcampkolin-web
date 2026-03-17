@@ -8,17 +8,16 @@ use Nette\Utils\Image;
 use Nette\Utils\Random;
 use Nette\Utils\Strings;
 
-class AvatarStorage
+readonly class AvatarStorage
 {
-
     public function __construct(
-        private readonly StoragePrefix $storagePrefix,
-        private readonly int $size
+        private StoragePrefix $storagePrefix,
+        private int $size
     ) {
     }
 
 
-    public function saveUploaded(FileUpload $file, $name = null): array
+    public function saveUploaded(FileUpload $file, ?string $name = null): array
     {
         if ($file->isImage() === false) {
             throw new \RuntimeException(
@@ -42,7 +41,7 @@ class AvatarStorage
     {
         $image = $file->toImage();
 
-        $image->resize($this->size, $this->size, Image::EXACT);
+        $image->resize($this->size, $this->size, Image::Cover);
 
         $filename = $this->getAttributedFilename($name, 'thumb', 'jpeg');
         $storageFile = $this->getStorageFilename($filename);

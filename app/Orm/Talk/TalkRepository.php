@@ -4,6 +4,9 @@ namespace App\Orm\Talk;
 
 use Nextras\Orm\Repository\Repository;
 
+/**
+ * @extends Repository<Talk>
+ */
 class TalkRepository extends Repository
 {
     public static function getEntityClassNames(): array

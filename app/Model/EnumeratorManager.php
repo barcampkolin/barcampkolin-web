@@ -5,19 +5,16 @@ namespace App\Model;
 use Nette\SmartObject;
 
 /**
- * Class EnumeratorManager
- * @package App\Model
- *
  * @property-read $sets
  */
 class EnumeratorManager
 {
     use SmartObject;
 
-    const SET_FAQS = 'faqs';
-    const SET_TALK_DURATIONS = 'talk_durations';
-    const SET_TALK_CATEGORIES = 'talk_categories';
-    const SET_TALK_ROOMS = 'talk_rooms';
+    public const string SET_FAQS = 'faqs';
+    public const string SET_TALK_DURATIONS = 'talk_durations';
+    public const string SET_TALK_CATEGORIES = 'talk_categories';
+    public const string SET_TALK_ROOMS = 'talk_rooms';
 
     private static array $sets = [
         self::SET_FAQS,
@@ -27,48 +24,28 @@ class EnumeratorManager
     ];
 
 
-    /**
-     * EnumeratorManager constructor.
-     * @param ConfigManager $config
-     */
     public function __construct(
-        private ConfigManager $config
+        private readonly ConfigManager $config
     ) {
     }
 
 
-    /**
-     * @param string $set
-     * @throws InvalidEnumeratorSetException
-     */
-    public static function validateSet($set): void
+    public static function validateSet(string $set): void
     {
         if (!in_array($set, self::$sets, true)) {
-            throw new InvalidEnumeratorSetException("Set \"$set\" is invalid");
+            throw new InvalidEnumeratorSetException("Set '$set' is invalid");
         }
     }
 
 
-    /**
-     * @param string $set
-     * @return array
-     * @throws InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function get($set): array
+    public function get(string $set): array
     {
         self::validateSet($set);
         return (array)$this->config->get($set, []);
     }
 
 
-    /**
-     * @param string $set
-     * @return array
-     * @throws InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getPairs($set): array
+    public function getPairs(string $set): array
     {
         self::validateSet($set);
         $arr = (array)$this->config->get($set, []);
@@ -80,13 +57,7 @@ class EnumeratorManager
     }
 
 
-    /**
-     * @param string $set
-     * @param array $faqs
-     * @throws InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function set($set, $faqs): void
+    public function set(string $set, array $faqs): void
     {
         self::validateSet($set);
         $this->config->set($set, $faqs);

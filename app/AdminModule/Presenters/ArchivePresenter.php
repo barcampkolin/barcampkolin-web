@@ -45,7 +45,7 @@ class ArchivePresenter extends BasePresenter
         $form->addGroup();
 
         $form->addHidden('fromYear', $this->archiveManager->getCurrentYear());
-        $form->addHidden('expectedPages', count($this->archiveManager->getArchiveUrls('any')));
+        $form->addHidden('expectedPages', count($this->archiveManager->getArchiveUrls()));
         $form->addHidden('archivedPages', 0)->setHtmlId('archivedPagesValue');
 
         $form->addInteger('toYear', 'Rok nového ročníku')
@@ -70,19 +70,9 @@ class ArchivePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     * @throws InvalidStateException
-     * @throws \App\Model\DuplicateNameException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\IOException
-     * @throws \Nette\Utils\JsonException
-     * @throws \InvalidArgumentException
-     */
     public function onArchiveFormSuccess(Form $form, ArrayHash $values): void
     {
-        $fromYear = $values['fromYear'];
+        $fromYear = (int)$values['fromYear'];
         $toYear = $values['toYear'];
         $eventDate = DateTime::from($values['eventDate']);
 

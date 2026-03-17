@@ -4,6 +4,9 @@ namespace App\Orm\UserRole;
 
 use Nextras\Orm\Repository\Repository;
 
+/**
+ * @extends Repository<UserRole>
+ */
 class UserRoleRepository extends Repository
 {
     public static function getEntityClassNames(): array
