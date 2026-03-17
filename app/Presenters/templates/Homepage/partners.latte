@@ -1,3 +1,5 @@
+{varType App\Model\Entity\EventUrls $socialUrls}
+
 {block title}Partneři{/block}
 {block content}
 <section>
@@ -6,7 +8,7 @@
             <h1><span class="dot-end">Partneři</span></h1>
 
             <div class="text-center mt-xs">
-            <a href="{$socialUrls['partnerProposal']}" class="btn btn-brand btn-section mt-xs">Stáhnout informace o partnerství (PDF)</a>
+            <a href="{$socialUrls->partnerProposal}" class="btn btn-brand btn-section mt-xs">Stáhnout informace o partnerství (PDF)</a>
             </div>
 
             {control partners}
