@@ -49,7 +49,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $dataLayer = new Nette\Utils\ArrayHash();
         if ($this->isArchivationProcess) {
             $dataLayer['isArchive'] = true;
-            $dataLayer['archiveYear'] = $dates['year'];
+            $dataLayer['archiveYear'] = $dates->year;
         }
 
         $this->template->wwwDir = $parameters['wwwDir'];
@@ -57,7 +57,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
         $this->template->dates = $dates;
         $this->template->features = $this->eventInfo->getFeatures();
         $this->template->socialUrls = $this->eventInfo->getUrls();
-        $this->template->year = $dates['year'];
+        $this->template->year = $dates->year;
 
         $this->template->dataLayer = $dataLayer;
 

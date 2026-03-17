@@ -40,7 +40,7 @@ class SpeakerListControl extends Control
 
         $this->template->setFile(__DIR__ . '/SpeakerList.latte');
         $this->template->talks = $talks;
-        $this->template->isProgram = $this->eventInfoProvider->getFeatures()['program'];
+        $this->template->isProgram = $this->eventInfoProvider->getFeatures()->program;
         $this->template->addFunction('gravatarize', $this->gravatarImageProvider->gravatarize(...));
         $this->template->render();
     }

@@ -12,7 +12,7 @@ use Nette\Utils\JsonException;
 
 class ArchiveManager
 {
-    const IN_ARCHIVATION_COOKIE_KEY = '_in_archivation';
+    public const string IN_ARCHIVATION_COOKIE_KEY = '_in_archivation';
 
 
     /**
@@ -48,7 +48,7 @@ class ArchiveManager
         $currentYear = (new DateTime)->format('Y');
 
         try {
-            return (int)$this->config->get('dates.currentYear', $currentYear);
+            return (int)$this->config->get(EventInfoProvider::CURRENT_YEAR, $currentYear);
         } catch (JsonException) {
             return (int)$currentYear;
         }
@@ -61,7 +61,7 @@ class ArchiveManager
      */
     private function setCurrentYear($year): void
     {
-        $this->config->set('dates.currentYear', (int)$year);
+        $this->config->set(EventInfoProvider::CURRENT_YEAR, (int)$year);
     }
 
 
