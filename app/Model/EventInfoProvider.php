@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Model\Entity\EventDates;
+use App\Model\Entity\EventUrls;
 use DateTimeImmutable;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -67,17 +68,17 @@ class EventInfoProvider
     }
 
 
-    public function getUrls(): ArrayHash
+    public function getUrls(): EventUrls
     {
-        return ArrayHash::from([
-            'facebook' => $this->config->get(self::URL_FACEBOOK),
-            'twitter' => $this->config->get(self::URL_TWITTER),
-            'youtube' => $this->config->get(self::URL_YOUTUBE),
-            'instagram' => $this->config->get(self::URL_INSTAGRAM),
-            'way' => $this->config->get(self::URL_WAY_TO_EVENT),
-            'ogImage' => $this->config->get(self::URL_OG_IMAGE),
-            'partnerProposal' => $this->config->get(self::URL_PARTNER_PROPOSAL),
-        ]);
+        return new EventUrls(
+            facebook: $this->config->get(self::URL_FACEBOOK),
+            twitter: $this->config->get(self::URL_TWITTER),
+            youtube: $this->config->get(self::URL_YOUTUBE),
+            instagram: $this->config->get(self::URL_INSTAGRAM),
+            way: $this->config->get(self::URL_WAY_TO_EVENT),
+            ogImage: $this->config->get(self::URL_OG_IMAGE),
+            partnerProposal: $this->config->get(self::URL_PARTNER_PROPOSAL),
+        );
     }
 
 
