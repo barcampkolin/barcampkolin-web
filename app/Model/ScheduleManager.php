@@ -7,14 +7,14 @@ use Nette\Utils\DateTime;
 
 class ScheduleManager
 {
-    const NOFLAG = 0;
-    const REQUIRED = 1;
+    private const int NOFLAG = 0;
+    private const int REQUIRED = 1;
 
-    const IDX_KEY = 0;
-    const IDX_TYPE = 1;
-    const IDX_NAME = 2;
-    const IDX_FLAGS = 3;
-    const IDX_ENUM = 4;
+    private const int IDX_KEY = 0;
+    private const int IDX_TYPE = 1;
+    private const int IDX_NAME = 2;
+    private const int IDX_FLAGS = 3;
+    private const int IDX_ENUM = 4;
 
     private array $steps = [
         ['talks', 'Registrace přednášek'],
@@ -115,7 +115,7 @@ class ScheduleManager
      */
     public function setCurrentStep($value): void
     {
-        $this->configManager->set('schedule.currentStep', $value);
+        $this->configManager->set(Event::SCHEDULE_CURRENT_STEP, $value);
     }
 
 
@@ -218,7 +218,7 @@ class ScheduleManager
      */
     public function getCurrentStepKey()
     {
-        return $this->configManager->get('schedule.currentStep');
+        return $this->configManager->get(Event::SCHEDULE_CURRENT_STEP);
     }
 
 

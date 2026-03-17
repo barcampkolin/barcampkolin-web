@@ -13,37 +13,38 @@ class EventInfoProvider
 {
     use SmartObject;
 
-    public const CURRENT_YEAR = 'dates.currentYear';
+    public const string CURRENT_YEAR = 'dates.currentYear';
 
-    public const COUNTS_CONFEREE = 'counts.conferee';
-    public const COUNTS_TALKS = 'counts.talks';
-    public const COUNTS_TALKS_LIMIT = 'counts.talks.limit';
-    public const COUNTS_WORKSHOPS = 'counts.workshops';
-    public const COUNTS_HALLS = 'counts.halls';
-    public const COUNTS_WARMUPPARTY = 'counts.warmupparty';
-    public const COUNTS_AFTERPARTY = 'counts.afterparty';
-    public const DATE_TALKS = 'schedule.talks.date';
-    public const DATE_VOTE = 'schedule.vote.date';
-    public const DATE_EVENT = 'schedule.event.date';
-    public const DATE_PROGRAM = 'schedule.program.date';
-    public const DATE_REPORT = 'schedule.report.date';
-    public const FEATURE_CONFEREE = 'features.registerConferee.enabled';
-    public const FEATURE_TALK = 'features.registerTalk.enabled';
-    public const FEATURE_TALK_EDIT = 'features.editTalk.enabled';
-    public const FEATURE_TALK_ORDER = 'features.talk.order';
-    public const FEATURE_VOTE = 'features.voteTalk.enabled';
-    public const FEATURE_SHOW_VOTE = 'features.showVoteTalk.enabled';
-    public const FEATURE_PROGRAM = 'features.showProgram.enabled';
-    public const FEATURE_REPORT = 'features.showReport.enabled';
-    public const URL_FACEBOOK = 'url.social.facebook';
-    public const URL_TWITTER = 'url.social.twitter';
-    public const URL_YOUTUBE = 'url.social.youtube';
-    public const URL_INSTAGRAM = 'url.social.instagram';
-    public const URL_WAY_TO_EVENT = 'url.post.howToWay';
-    public const URL_OG_IMAGE = 'url.igImage';
-    public const URL_PARTNER_PROPOSAL = 'url.partnersProposal';
-    public const SCHEDULE_VISUAL_DATE_BEGIN = 'schedule.visualDate.begin';
-    public const SCHEDULE_VISUAL_DATE_END = 'schedule.visualDate.end';
+    public const string COUNTS_CONFEREE = 'counts.conferee';
+    public const string COUNTS_TALKS = 'counts.talks';
+    public const string COUNTS_TALKS_LIMIT = 'counts.talks.limit';
+    public const string COUNTS_WORKSHOPS = 'counts.workshops';
+    public const string COUNTS_HALLS = 'counts.halls';
+    public const string COUNTS_WARMUPPARTY = 'counts.warmupparty';
+    public const string COUNTS_AFTERPARTY = 'counts.afterparty';
+    public const string DATE_TALKS = 'schedule.talks.date';
+    public const string DATE_VOTE = 'schedule.vote.date';
+    public const string DATE_EVENT = 'schedule.event.date';
+    public const string DATE_PROGRAM = 'schedule.program.date';
+    public const string DATE_REPORT = 'schedule.report.date';
+    public const string FEATURE_CONFEREE = 'features.registerConferee.enabled';
+    public const string FEATURE_TALK = 'features.registerTalk.enabled';
+    public const string FEATURE_TALK_EDIT = 'features.editTalk.enabled';
+    public const string FEATURE_TALK_ORDER = 'features.talk.order';
+    public const string FEATURE_VOTE = 'features.voteTalk.enabled';
+    public const string FEATURE_SHOW_VOTE = 'features.showVoteTalk.enabled';
+    public const string FEATURE_PROGRAM = 'features.showProgram.enabled';
+    public const string FEATURE_REPORT = 'features.showReport.enabled';
+    public const string URL_FACEBOOK = 'url.social.facebook';
+    public const string URL_TWITTER = 'url.social.twitter';
+    public const string URL_YOUTUBE = 'url.social.youtube';
+    public const string URL_INSTAGRAM = 'url.social.instagram';
+    public const string URL_WAY_TO_EVENT = 'url.post.howToWay';
+    public const string URL_OG_IMAGE = 'url.igImage';
+    public const string URL_PARTNER_PROPOSAL = 'url.partnersProposal';
+    public const string SCHEDULE_VISUAL_DATE_BEGIN = 'schedule.visualDate.begin';
+    public const string SCHEDULE_VISUAL_DATE_END = 'schedule.visualDate.end';
+    public const string SCHEDULE_CURRENT_STEP = 'schedule.currentStep';
 
 
     public function __construct(
