@@ -31,7 +31,7 @@ class TalkForm
      * @return Form
      * @throws Nette\Utils\JsonException
      */
-    public function create(callable $onSuccess, array $categories = null, array $durations = null, Talk $talk = null)
+    public function create(callable $onSuccess, ?array $categories = null, ?array $durations = null, ?Talk $talk = null)
     {
         $form = $this->factory->create();
         $form->addText('title', 'Název tvojí přednášky:')
