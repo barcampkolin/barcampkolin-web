@@ -2,6 +2,7 @@
 
 namespace App\Model;
 
+use App\Model\Entity\EventCounts;
 use App\Model\Entity\EventDates;
 use App\Model\Entity\EventUrls;
 use DateTimeImmutable;
@@ -82,19 +83,19 @@ class EventInfoProvider
     }
 
 
-    public function getCounts(): ArrayHash
+    public function getCounts(): EventCounts
     {
-        return ArrayHash::from([
-            'conferee' => $this->config->get(self::COUNTS_CONFEREE),
-            'conferee_registered' => $this->getConfereeRegisteredCount(),
-            'conferee_left' => $this->getConfereeAvailableCount(),
-            'talks' => $this->config->get(self::COUNTS_TALKS),
-            'talks_limit' => $this->config->get(self::COUNTS_TALKS_LIMIT),
-            'workshops' => $this->config->get(self::COUNTS_WORKSHOPS),
-            'halls' => $this->config->get(self::COUNTS_HALLS),
-            'warmupparty' => $this->config->get(self::COUNTS_WARMUPPARTY),
-            'afterparty' => $this->config->get(self::COUNTS_AFTERPARTY),
-        ]);
+        return new EventCounts(
+           conferee: $this->config->get(self::COUNTS_CONFEREE),
+           conferee_registered: $this->getConfereeRegisteredCount(),
+           conferee_left: $this->getConfereeAvailableCount(),
+           talks: $this->config->get(self::COUNTS_TALKS),
+           talks_limit: $this->config->get(self::COUNTS_TALKS_LIMIT),
+           workshops: $this->config->get(self::COUNTS_WORKSHOPS),
+           halls: $this->config->get(self::COUNTS_HALLS),
+           warmupparty: $this->config->get(self::COUNTS_WARMUPPARTY),
+           afterparty: $this->config->get(self::COUNTS_AFTERPARTY),
+        );
     }
 
 
