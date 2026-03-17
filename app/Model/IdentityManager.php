@@ -20,7 +20,7 @@ class IdentityManager
     }
 
 
-    public function getById(int $id): ?IEntity
+    public function getById(int $id): ?Identity
     {
         return $this->identityRepository->getById($id);
     }

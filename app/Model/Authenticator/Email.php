@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model\Authenticator;
 
 use App\Model\DuplicateNameException;
@@ -52,7 +54,7 @@ class Email
     }
 
 
-    protected function verifyIdentityPassword(Identity $identity, $password): void
+    protected function verifyIdentityPassword(Identity $identity, string $password): void
     {
         if (password_verify($password, (string)$identity->token) === false) {
             throw new PasswordMismatchException();
@@ -60,11 +62,11 @@ class Email
     }
 
 
-    protected function verifyIdentityResetPasswordToken(Identity $identity, $token): void
+    protected function verifyIdentityResetPasswordToken(Identity $identity, string $token): void
     {
         $details = [];
         if ($identity->identity) {
-            $details = Json::decode($identity->identity, Json::FORCE_ARRAY);
+            $details = Json::decode($identity->identity, forceArrays: true);
         }
 
         if (!isset($details['resetPassword']['token'])) {
@@ -113,7 +115,7 @@ class Email
 
         $details = [];
         if ($identity->identity) {
-            $details = Json::decode($identity->identity, Json::FORCE_ARRAY);
+            $details = Json::decode($identity->identity, forceArrays: true);
         }
 
 
@@ -130,15 +132,11 @@ class Email
     }
 
 
-    /**
-     * @param Identity $identity
-     * @throws \Nette\Utils\JsonException
-     */
     public function invalidateResetPasswordToken(Identity $identity): void
     {
         $details = [];
         if ($identity->identity) {
-            $details = Json::decode($identity->identity, Json::FORCE_ARRAY);
+            $details = Json::decode($identity->identity, forceArrays:true);
         }
 
         unset($details['resetPassword']);
@@ -148,11 +146,7 @@ class Email
     }
 
 
-    /**
-     * @param Identity $identity
-     * @param string $password
-     */
-    public function setPassword(Identity $identity, $password): void
+    public function setPassword(Identity $identity, string $password): void
     {
         $identity->token = password_hash($password, PASSWORD_DEFAULT);
         $this->identityManager->save($identity);
