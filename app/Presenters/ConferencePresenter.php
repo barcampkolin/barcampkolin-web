@@ -90,7 +90,7 @@ class ConferencePresenter extends BasePresenter
         $this->template->allowTalkEdit = $this->eventInfoProvider->getFeatures()['talks_edit'];
         $this->template->selectedLimit = false;
 
-        $talks_limit = $this->eventInfoProvider->getCounts()['talks_limit'];
+        $talks_limit = $this->eventInfoProvider->getCounts()->talks_limit;
 
         if ($sort === 'vote' && $talks_limit > 0) {
             $this->template->selectedLimit = $talks_limit;
