@@ -51,6 +51,6 @@ class BasePresenter extends Presenter
     {
         parent::beforeRender();
         $dates = $this->eventInfo->getDates();
-        $this->template->year = $dates['year'];
+        $this->template->year = $dates->year;
     }
 }
