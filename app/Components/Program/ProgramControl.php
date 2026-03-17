@@ -109,7 +109,7 @@ class ProgramControl extends Control
                         throw new \Exception(
                             sprintf(
                                 'Přednáška "%s" v místnosti "%s" se překrývá s předchozí přednáškou "%s".',
-                                $talk['title'],
+                                $rooms[$roomId]['title'],
                                 $roomId,
                                 $lastTalk['title']
                             )
