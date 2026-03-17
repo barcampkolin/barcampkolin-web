@@ -87,7 +87,7 @@ class SignPresenter extends BasePresenter
             $this->redirect('User:profil');
         }
 
-        if (!$this->eventInfoProvider->getFeatures()['conferee']) {
+        if (!$this->eventInfoProvider->getFeatures()->conferee) {
             $this->flashMessage('Registrace ještě nejsou otevřeny, omlouváme se');
             $this->redirect('Homepage:');
         }
@@ -96,7 +96,7 @@ class SignPresenter extends BasePresenter
 
     public function renderConferee(): void
     {
-        if (!$this->eventInfoProvider->getFeatures()['conferee']) {
+        if (!$this->eventInfoProvider->getFeatures()->conferee) {
             $this->flashMessage('Registrace ještě nejsou otevřeny, omlouváme se');
             $this->redirect('Homepage:');
         }
@@ -139,7 +139,7 @@ class SignPresenter extends BasePresenter
             $this->redirect('User:talk');
         }
 
-        if (!$this->eventInfoProvider->getFeatures()['talks']) {
+        if (!$this->eventInfoProvider->getFeatures()->talks) {
             $this->flashMessage('Vypisování přednášek není v tuto chvíli povoleno, omlouváme se');
             $this->redirect('Homepage:');
         }
