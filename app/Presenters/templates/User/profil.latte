@@ -1,3 +1,10 @@
+{varType ?App\Orm\Conferee\Conferee $conferee}
+{varType App\Orm\Talk\Talk[] $talks}
+{varType string $profileImage}
+{varType bool $allowRegisterConferee}
+{varType bool $allowRegisterTalk}
+{varType bool $allowEditTalk}
+
 {block title}Profil{/block}
 {block content}
 <section>
@@ -8,7 +15,7 @@
             <ul class="row people-list flexible mt-xs">
                 <li>
                     <div class="item">
-                        <div id="avatar" class="item-image" style="background-image: url('{gravatarize($user->identity->pictureUrl, $user->identity->email)}')"></div>
+                        <div id="avatar" class="item-image" style="background-image: url('{gravatarize($user->getIdentity()->pictureUrl, $user->getIdentity()->email)}')"></div>
                         <div class="item-content">
                           <div class="mb-sm">
                             <h2 class="item-title">Vstupenka</h2>
@@ -34,7 +41,7 @@
                             {/if}
                           </div>
 
-                            <h2 class="item-title">{$user->identity->name}</h2>
+                            <h2 class="item-title">{$user->getIdentity()->name}</h2>
                             <span n:if="$conferee" class="item-meta" title="{$conferee->bio|stripHtml}">{$conferee->bio|stripHtml|truncate:50|breakLines}</span>
                             <div class="item-text">
                                 {if $conferee}
