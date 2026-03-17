@@ -7,7 +7,7 @@ Web Kolínského barcampu (https://www.barcampkolin.cz/)
 Požadavky pro běh
 -----------------
 
-PHP 8.3 nebo vyšší, Mysql, Git.
+PHP 8.4, Mysql, Git.
 
 V PHP jsou potřeba rozšření: `pdo_mysql`.
 
