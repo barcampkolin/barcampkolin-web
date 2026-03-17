@@ -1,27 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model;
 
-class ApiTokenManager
+readonly class ApiTokenManager
 {
-    /**
-     * ApiTokenManager constructor.
-     * @param string $secretKey
-     * @param ConfigManager $configManager
-     */
     public function __construct(
-        private $secretKey,
-        private readonly ConfigManager $configManager
+        private string $secretKey,
+        private ConfigManager $configManager
     ) {
     }
 
 
-    /**
-     * @param $token
-     * @throws TokenInvalidException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function validateToken($token): void
+    public function validateToken(?string $token): void
     {
         if (empty($token) || !$this->isTokenValid($token)) {
             throw new TokenInvalidException('Token invalid');
@@ -29,19 +21,14 @@ class ApiTokenManager
     }
 
 
-    /**
-     * @param $token
-     * @return bool
-     * @throws \Nette\Utils\JsonException
-     */
-    private function isTokenValid($token): bool
+    private function isTokenValid(string $token): bool
     {
-        $hash = hash_hmac('sha256', (string)$token, $this->secretKey);
+        $hash = hash_hmac('sha256', $token, $this->secretKey);
 
         $hashes = $this->getTokenHashes();
 
         foreach ($hashes as $hashItem) {
-            if ($hashItem['value'] == $hash) {
+            if (hash_equals($hashItem['value'], $hash)) {
                 return true;
             }
         }
@@ -50,15 +37,8 @@ class ApiTokenManager
     }
 
 
-    /**
-     * @return mixed
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getTokenHashes()
+    public function getTokenHashes():array
     {
-        $hashes = $this->configManager->get('api.token.hashes', []);
-
-        return $hashes;
+        return $this->configManager->get('api.token.hashes', []);
     }
-
 }

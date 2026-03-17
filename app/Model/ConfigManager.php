@@ -7,9 +7,9 @@ use Nette\Utils\Json;
 
 class ConfigManager
 {
-    private const TABLE_NAME = 'config';
-    private const COLUMN_ID = 'id';
-    private const COLUMN_VALUE = 'value';
+    private const string TABLE_NAME = 'config';
+    private const string COLUMN_ID = 'id';
+    private const string COLUMN_VALUE = 'value';
 
     private ?array $configs = null;
 
@@ -20,7 +20,7 @@ class ConfigManager
     }
 
 
-    public function get(string $key, $default = null)
+    public function get(string $key, $default = null): mixed
     {
         $configs = $this->load();
 
@@ -41,14 +41,14 @@ class ConfigManager
         foreach ($configs as $row) {
             $key = $row[self::COLUMN_ID];
             $value = $row[self::COLUMN_VALUE];
-            $this->configs[$key] = Json::decode($value, Json::FORCE_ARRAY);
+            $this->configs[$key] = Json::decode($value, forceArrays: true);
         }
 
         return $this->configs;
     }
 
 
-    public function set(string $key, $value): void
+    public function set(string $key, mixed $value): void
     {
         $this->load();
 
@@ -58,7 +58,7 @@ class ConfigManager
     }
 
 
-    private function saveOne(string $key, $value): void
+    private function saveOne(string $key, mixed $value): void
     {
         $json = Json::encode($value);
 
