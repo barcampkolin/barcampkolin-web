@@ -50,7 +50,7 @@ class ConferencePresenter extends BasePresenter
         );
         $categories = $this->talkManager->getCategories();
 
-        $sort = $this->eventInfoProvider->getFeatures()['talks_order'];
+        $sort = $this->eventInfoProvider->getFeatures()->talks_order;
         if ($sort === 'random') {
             $talks = $talks->fetchAll();
             shuffle($talks);
@@ -86,8 +86,8 @@ class ConferencePresenter extends BasePresenter
         }
 
         $this->template->votes = $votes;
-        $this->template->allowVote = $this->eventInfoProvider->getFeatures()['vote'];
-        $this->template->allowTalkEdit = $this->eventInfoProvider->getFeatures()['talks_edit'];
+        $this->template->allowVote = $this->eventInfoProvider->getFeatures()->vote;
+        $this->template->allowTalkEdit = $this->eventInfoProvider->getFeatures()->talks_edit;
         $this->template->selectedLimit = false;
 
         $talks_limit = $this->eventInfoProvider->getCounts()->talks_limit;
@@ -178,11 +178,11 @@ class ConferencePresenter extends BasePresenter
         $this->template->ogImageUrl = $extended['ogImageUrl'] ?? null;
 
         $features = $this->eventInfoProvider->getFeatures();
-        $this->template->allowVote = $features['vote'];
-        $this->template->showReport = $features['report'];
+        $this->template->allowVote = $features->vote;
+        $this->template->showReport = $features->report;
 
         $this->template->program = null;
-        if ($features['program'] && $talk->program->countStored()) {
+        if ($features->program && $talk->program->countStored()) {
             /** @var Program $program */
             $program = $talk->program->getIterator()->fetch();
 

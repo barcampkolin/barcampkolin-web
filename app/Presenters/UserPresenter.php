@@ -66,9 +66,9 @@ class UserPresenter extends BasePresenter
         $this->template->profileImage = $user->pictureUrl ?? $this->gravatar->getGravatarUrl($user->email);
 
         $features = $this->eventInfoProvider->getFeatures();
-        $this->template->allowRegisterConferee = $features['conferee'];
-        $this->template->allowRegisterTalk = $features['talks'];
-        $this->template->allowEditTalk = $features['talks_edit'];
+        $this->template->allowRegisterConferee = $features->conferee;
+        $this->template->allowRegisterTalk = $features->talks;
+        $this->template->allowEditTalk = $features->talks_edit;
     }
 
 
@@ -78,7 +78,7 @@ class UserPresenter extends BasePresenter
      */
     public function renderTalk(): void
     {
-        if (!$this->eventInfoProvider->getFeatures()['talks_edit']) {
+        if (!$this->eventInfoProvider->getFeatures()->talks_edit) {
             $this->flashMessage('Upravování přednášek není v tuto chvíli povoleno, omlouváme se');
             $this->redirect('profil');
         }

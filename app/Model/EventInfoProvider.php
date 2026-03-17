@@ -4,11 +4,10 @@ namespace App\Model;
 
 use App\Model\Entity\EventCounts;
 use App\Model\Entity\EventDates;
+use App\Model\Entity\EventFeatures;
 use App\Model\Entity\EventUrls;
 use DateTimeImmutable;
 use Nette\SmartObject;
-use Nette\Utils\ArrayHash;
-use Nette\Utils\DateTime;
 
 class EventInfoProvider
 {
@@ -86,36 +85,38 @@ class EventInfoProvider
     public function getCounts(): EventCounts
     {
         return new EventCounts(
-           conferee: $this->config->get(self::COUNTS_CONFEREE),
-           conferee_registered: $this->getConfereeRegisteredCount(),
-           conferee_left: $this->getConfereeAvailableCount(),
-           talks: $this->config->get(self::COUNTS_TALKS),
-           talks_limit: $this->config->get(self::COUNTS_TALKS_LIMIT),
-           workshops: $this->config->get(self::COUNTS_WORKSHOPS),
-           halls: $this->config->get(self::COUNTS_HALLS),
-           warmupparty: $this->config->get(self::COUNTS_WARMUPPARTY),
-           afterparty: $this->config->get(self::COUNTS_AFTERPARTY),
+            conferee: $this->config->get(self::COUNTS_CONFEREE),
+            conferee_registered: $this->getConfereeRegisteredCount(),
+            conferee_left: $this->getConfereeAvailableCount(),
+            talks: $this->config->get(self::COUNTS_TALKS),
+            talks_limit: $this->config->get(self::COUNTS_TALKS_LIMIT),
+            workshops: $this->config->get(self::COUNTS_WORKSHOPS),
+            halls: $this->config->get(self::COUNTS_HALLS),
+            warmupparty: $this->config->get(self::COUNTS_WARMUPPARTY),
+            afterparty: $this->config->get(self::COUNTS_AFTERPARTY),
         );
     }
 
 
-    public function getFeatures(): ArrayHash
+    public function getFeatures(): EventFeatures
     {
-        $features = ArrayHash::from([
-            'conferee' => $this->isConfereeRegistrationAvailable(),
-            'conferee_enabled' => $this->config->get(self::FEATURE_CONFEREE),
-            'talks' => $this->config->get(self::FEATURE_TALK),
-            'talks_edit' => $this->config->get(self::FEATURE_TALK_EDIT),
-            'talks_order' => $this->config->get(self::FEATURE_TALK_ORDER),
-            'vote' => $this->config->get(self::FEATURE_VOTE),
-            'show_vote' => $this->config->get(self::FEATURE_SHOW_VOTE),
-            'program' => $this->config->get(self::FEATURE_PROGRAM),
-            'report' => $this->config->get(self::FEATURE_REPORT),
-        ]);
+        $talks = $this->config->get(self::FEATURE_TALK);
+        $vote = $this->config->get(self::FEATURE_VOTE);
+        $show_vote = $this->config->get(self::FEATURE_SHOW_VOTE);
+        $talks_show = $talks || $vote || $show_vote;
 
-        $features['talks_show'] = $features['talks'] || $features['vote'] || $features['show_vote'];
-
-        return $features;
+        return new EventFeatures(
+            conferee: $this->isConfereeRegistrationAvailable(),
+            conferee_enabled: $this->config->get(self::FEATURE_CONFEREE),
+            talks: $talks,
+            talks_edit: $this->config->get(self::FEATURE_TALK_EDIT),
+            talks_order: $this->config->get(self::FEATURE_TALK_ORDER),
+            vote: $vote,
+            show_vote: $show_vote,
+            program: $this->config->get(self::FEATURE_PROGRAM),
+            report: $this->config->get(self::FEATURE_REPORT),
+            talks_show: $talks_show,
+        );
     }
 
 
