@@ -121,7 +121,7 @@ class MailPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function renderPreview($id, string $parametersJson = '{}'): void
+    public function renderPreview(string $id, string $parametersJson = '{}'): void
     {
         $parameters = Json::decode($parametersJson, forceArrays: true);
 
@@ -166,7 +166,7 @@ class MailPresenter extends BasePresenter
      * @throws \Nette\Utils\JsonException
      * @throws EntityNotFound
      */
-    public function actionSend($templateId, $recipient, string $parametersJson = '{}'): void
+    public function actionSend(string $templateId, ?string $recipient, string $parametersJson = '{}'): void
     {
         $parameters = Json::decode($parametersJson, forceArrays: true);
 

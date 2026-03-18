@@ -112,7 +112,7 @@ class SignPresenter extends BasePresenter
 
         try {
             $user = $this->userManager->getByLoginUser($this->getUser());
-        } catch (NoUserLoggedIn|UserNotFound $e) {
+        } catch (NoUserLoggedIn|UserNotFound) {
             // For cases: user not nogged or login user has no matches DB user (data integrity broken)
             $this->getUser()->logout();
             $this->redirect('up');
@@ -302,7 +302,7 @@ class SignPresenter extends BasePresenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
-    public function resetPassword($email, $resetToken, $password): never
+    public function resetPassword(string $email, string $resetToken, string $password): never
     {
         $identity = $this->authenticator->getIdentityByResetPasswordToken($email, $resetToken);
 

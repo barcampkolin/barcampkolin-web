@@ -11,7 +11,7 @@ use Nextras\Orm\Entity\IEntity;
 
 class IdentityManager
 {
-    private IdentityRepository $identityRepository;
+    private readonly IdentityRepository $identityRepository;
 
 
     public function __construct(Orm $orm)

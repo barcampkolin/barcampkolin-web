@@ -11,7 +11,7 @@ use Nextras\Orm\Collection\ICollection;
 
 class ConfereeManager
 {
-    private ConfereeRepository $confereeRepository;
+    private readonly ConfereeRepository $confereeRepository;
 
 
     public function __construct(Orm $orm)

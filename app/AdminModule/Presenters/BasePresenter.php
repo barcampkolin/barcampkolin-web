@@ -28,6 +28,7 @@ class BasePresenter extends Presenter
      * @throws ForbiddenRequestException
      * @throws \Nette\Application\AbortException
      */
+    #[\Override]
     protected function startup()
     {
         parent::startup();

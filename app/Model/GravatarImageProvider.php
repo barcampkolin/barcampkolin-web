@@ -6,7 +6,7 @@ namespace App\Model;
 
 class GravatarImageProvider
 {
-    private string $fallbackUrl;
+    private readonly string $fallbackUrl;
 
     public function __construct(
         private readonly int $size,

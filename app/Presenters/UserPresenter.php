@@ -38,6 +38,7 @@ class UserPresenter extends BasePresenter
     }
 
 
+    #[\Override]
     protected function startup(): void
     {
         parent::startup();
@@ -157,7 +158,7 @@ class UserPresenter extends BasePresenter
         $form = new Form();
         $form->addSubmit('submit');
 
-        $form->onSuccess[] = function () {
+        $form->onSuccess[] = function (): void {
             $user = $this->userManager->getByLoginUser($this->getUser());
             $conferee = $user->conferee;
 

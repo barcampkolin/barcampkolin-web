@@ -24,6 +24,7 @@ class BasePresenter extends Presenter
      * @throws \Nette\Application\AbortException
      * @throws \Nette\Utils\JsonException
      */
+    #[\Override]
     protected function startup()
     {
         parent::startup();

@@ -21,7 +21,7 @@ class OrgsPresenter extends BasePresenter
         parent::__construct();
     }
 
-    public function renderDefault()
+    public function renderDefault(): void
     {
         $this->template->orgs = $this->orgListModel->getOrgs();
 
@@ -35,17 +35,13 @@ class OrgsPresenter extends BasePresenter
         string $url,
         ?string $sourceUrl = null,
         ?string $sourceName = null,
-    ) {
+    ): void {
         $this->template->sourceUrl = $sourceUrl;
         $this->template->sourceName = $sourceName;
 
         $form = $this['confirmForm'];
 
-        $filtered = array_map(static function ($org) {
-            return array_filter($org, static function ($value) {
-                return $value !== null;
-            });
-        }, $orgs);
+        $filtered = array_map(static fn($org): ?array => array_filter($org, static fn($value): bool => $value !== null), $orgs);
 
         $form['neon']->setValue(Neon::encode($filtered, blockMode: true, indentation: '  '));
         $form['url']->setValue($url);
@@ -64,7 +60,7 @@ class OrgsPresenter extends BasePresenter
 
         $form->addSubmit('submit', 'Stáhnout seznam organizátorů');
 
-        $form->onSuccess[] = function (Form $form, ArrayHash $values) {
+        $form->onSuccess[] = function (Form $form, ArrayHash $values): void {
             $url = $values->url;
 
             try {
@@ -131,7 +127,7 @@ class OrgsPresenter extends BasePresenter
 
         $form->addSubmit('submit', 'Aktualizovat seznam organizátorů');
 
-        $form->onSuccess[] = function (Form $form, ArrayHash $values) {
+        $form->onSuccess[] = function (Form $form, ArrayHash $values): void {
             $data = Json::decode($values->data, forceArrays: true);
             $this->orgListModel->update($data, $values['url']);
 

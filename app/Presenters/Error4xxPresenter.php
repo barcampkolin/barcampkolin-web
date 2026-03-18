@@ -9,6 +9,7 @@ class Error4xxPresenter extends BasePresenter
     /**
      * @throws Nette\Application\BadRequestException
      */
+    #[\Override]
     public function startup(): void
     {
         parent::startup();

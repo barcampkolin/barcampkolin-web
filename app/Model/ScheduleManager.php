@@ -216,7 +216,7 @@ class ScheduleManager
      * @return mixed
      * @throws \Nette\Utils\JsonException
      */
-    public function getCurrentStepKey()
+    public function getCurrentStepKey(): mixed
     {
         return $this->configManager->get(Event::SCHEDULE_CURRENT_STEP);
     }
@@ -266,7 +266,7 @@ class ScheduleManager
         return match ($type) {
             'bool' => (bool)$value,
             'select' => $value,
-            'datetime', 'datetime-local' => (new DateTime($value))->format('c'),
+            'datetime', 'datetime-local' => new DateTime($value)->format('c'),
             default => throw new \LogicException("Invalid form field type: $type"),
         };
     }

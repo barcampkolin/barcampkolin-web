@@ -34,7 +34,7 @@ class ScheduleControl extends Control
         $template->setFile(__DIR__ . '/Schedule.latte');
         $template->addFilter(
             'json',
-            fn($value) => json_encode($value, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
+            fn($value): string => json_encode($value, JSON_THROW_ON_ERROR | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
         );
 
         $template->features = $features;

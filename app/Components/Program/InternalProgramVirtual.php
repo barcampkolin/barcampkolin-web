@@ -41,7 +41,7 @@ class InternalProgramVirtual extends InternalProgram implements IInternalProgram
     /**
      * @return string
      */
-    public function getTalkId()
+    public function getTalkId(): null
     {
         return null;
     }

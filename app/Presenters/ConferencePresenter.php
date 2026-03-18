@@ -356,7 +356,7 @@ class ConferencePresenter extends BasePresenter
     /**
      * @return \App\Components\Program\ProgramControl
      */
-    public function createComponentProgram()
+    public function createComponentProgram(): \App\Components\Program\ProgramControl
     {
         return $this->programFactory->create();
     }

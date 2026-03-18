@@ -297,7 +297,7 @@ class ProgramControl extends Control
      * @return ArrayHash
      * @throws \Exception
      */
-    private function getMinMaxBorder(array $sortedItems, $roundWholeHour = true)
+    private function getMinMaxBorder(array $sortedItems, $roundWholeHour = true): \Nette\Utils\ArrayHash
     {
         $max = $min = null;
 
