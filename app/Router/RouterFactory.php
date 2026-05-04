@@ -55,6 +55,7 @@ class RouterFactory
         $router->addRoute('upravit-prednasku', 'User:talk');
         $router->addRoute('archiv', 'Archived:list');
         $router->addRoute('privacy-policy', 'PrivacyPolicy:default');
+        $router->addRoute('general-partner', 'GeneralPartner:default');
 
         $router[] = self::createArchiveRoutes($archiveManager->getArchivedYears());
 
