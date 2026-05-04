@@ -52,6 +52,7 @@
                     {*<li><a href="#program" class="scrollto"><span class="nav-link">Program</span></a></li>*}
                     <li n:if="$features->program" n:class="isLinkCurrent(':Conference:program') ? active"><a href="{link :Conference:program}"><span class="nav-link">Program</span></a></li>
                     <li n:if="$features->talks_show" n:class="isLinkCurrent(':Conference:talks') ? active"><a href="{link :Conference:talks}"><span class="nav-link">Přednášky</span></a></li>
+                    <li n:class="isLinkCurrent(':Homepage:generalPartner') ? active"><a href="{link :Homepage:generalPartner}"><span class="nav-link">Generální partner</span></a></li>
                     <li n:class="isLinkCurrent(':Homepage:partners') ? active"><a href="{link :Homepage:partners}"><span class="nav-link">Partneři</span></a></li>
                     <li n:class="isLinkCurrent('Homepage:contact') ? active"><a href="{link :Homepage:contact}"><span class="nav-link">Kontakt</span></a></li>
                     {if $isArchivationProcess === false}

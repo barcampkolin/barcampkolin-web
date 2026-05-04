@@ -37,6 +37,7 @@ class RouterFactory
         $router->addRoute('[' . $requiredWhenArchive . $year . '/]kontakt', 'Homepage:contact');
         $router->addRoute('[!' . $year . '/]o-akci', 'Homepage:history');
         $router->addRoute('[!' . $year . '/]partneri', 'Homepage:partners');
+        $router->addRoute('[!' . $year . '/]general-partner', 'Homepage:generalPartner');
         $router->addRoute('prihlaseni', 'Sign:in');
         $router->addRoute('odhlaseni', 'Sign:out');
         $router->addRoute('obnovit-heslo', 'Sign:resetPassword');
