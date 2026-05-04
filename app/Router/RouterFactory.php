@@ -37,6 +37,7 @@ class RouterFactory
         $router->addRoute('[' . $requiredWhenArchive . $year . '/]kontakt', 'Homepage:contact');
         $router->addRoute('[!' . $year . '/]o-akci', 'Homepage:history');
         $router->addRoute('[!' . $year . '/]partneri', 'Homepage:partners');
+        $router->addRoute('[!' . $year . '/]general-partner', 'Homepage:generalPartner');
         $router->addRoute('prihlaseni', 'Sign:in');
         $router->addRoute('odhlaseni', 'Sign:out');
         $router->addRoute('obnovit-heslo', 'Sign:resetPassword');
@@ -55,7 +56,6 @@ class RouterFactory
         $router->addRoute('upravit-prednasku', 'User:talk');
         $router->addRoute('archiv', 'Archived:list');
         $router->addRoute('privacy-policy', 'PrivacyPolicy:default');
-        $router->addRoute('general-partner', 'GeneralPartner:default');
 
         $router[] = self::createArchiveRoutes($archiveManager->getArchivedYears());
 
