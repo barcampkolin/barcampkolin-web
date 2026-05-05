@@ -4,15 +4,16 @@ namespace App\ApiModule\Presenters;
 
 use App\Model\ApiTokenManager;
 use App\Model\TokenInvalidException;
+use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\UI\Presenter;
-use Nette\Http\Response;
+use Nette\Http\IResponse;
 use Nextras\Application\UI\SecuredLinksPresenterTrait;
 
 class BasePresenter extends Presenter
 {
     use SecuredLinksPresenterTrait;
 
-    private ?\App\Model\ApiTokenManager $apiTokenManager = null;
+    private ?ApiTokenManager $apiTokenManager = null;
 
 
     public function injectApiTokenManager(ApiTokenManager $apiTokenManager): void
@@ -20,11 +21,7 @@ class BasePresenter extends Presenter
         $this->apiTokenManager = $apiTokenManager;
     }
 
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    protected function startup()
+    protected function startup(): void
     {
         parent::startup();
 
@@ -33,37 +30,33 @@ class BasePresenter extends Presenter
         try {
             $this->apiTokenManager->validateToken($token);
         } catch (TokenInvalidException) {
-            $this->sendErrorResponse('Authentication failed', Response::S403_FORBIDDEN);
+            $this->sendErrorResponse('Authentication failed', IResponse::S403_Forbidden);
         }
     }
 
 
-    /**
-     * @param string $message
-     * @param int|null $code
-     * @throws \Nette\Application\AbortException
-     */
-    protected function sendErrorResponse($message, $code = null)
+    #[NoReturn]
+    protected function sendErrorResponse(string $message, ?int $code = null, mixed $details = null): void
     {
         if ($code) {
             $this->getHttpResponse()->setCode($code);
         }
 
-        $this->sendJson([
+        $response = [
             'status' => false,
             'errror' => [
                 'message' => $message,
             ],
-        ]);
+        ];
+        if ($details) {
+            $response['errror']['details'] = $details;
+        }
+        $this->sendJson($response);
     }
 
 
-    /**
-     * @param mixed|null $data
-     * @param string|null $message
-     * @throws \Nette\Application\AbortException
-     */
-    protected function sendSuceessResponse($data = null, $message = null)
+    #[NoReturn]
+    protected function sendSuceessResponse(mixed $data = null, ?string $message = null): void
     {
         $response = [
             'status' => true,
@@ -77,6 +70,4 @@ class BasePresenter extends Presenter
         }
         $this->sendJson($response);
     }
-
-
 }

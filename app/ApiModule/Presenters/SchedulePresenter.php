@@ -2,26 +2,21 @@
 
 namespace App\ApiModule\Presenters;
 
+use App\Model\DateProvider;
 use App\Model\ScheduleManager;
-use Nette\Utils\DateTime;
+use JetBrains\PhpStorm\NoReturn;
 
 class SchedulePresenter extends BasePresenter
 {
-    /**
-     * SchedulePresenter constructor.
-     * @param ScheduleManager $scheduleManager
-     */
     public function __construct(
-        private readonly ScheduleManager $scheduleManager
+        private readonly ScheduleManager $scheduleManager,
+        private readonly DateProvider $dateProvider,
     ) {
         parent::__construct();
     }
 
 
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
+    #[NoReturn]
     public function actionStepNext(): void
     {
         $steps = $this->scheduleManager->getSteps(true);
@@ -29,11 +24,11 @@ class SchedulePresenter extends BasePresenter
         foreach ($steps as $step) {
             if ($step['isNext']) {
                 $configs = $this->getStepConfigs($step);
-                if ($configs['auto'] != true) {
+                if ($configs['auto'] !== true) {
                     $this->sendSuceessResponse(null, 'Nothing to do, automatic step is disabled on step.');
-                } elseif ($this->isDatePassed($configs['date'], true)) {
+                } elseif ($this->dateProvider->isPassed($this->dateProvider->strToDate($configs['date']), true)) {
                     $this->scheduleManager->changeCurrentStep($step['key']);
-                    $this->sendSuceessResponse($step, "Move schedule to step '$step[key]' is done.");
+                    $this->sendSuceessResponse($step, "Move schedule to step '{$step['key']}' is done.");
                 } else {
                     $this->sendSuceessResponse(null, 'Nothing to do, time not mature yet.');
                 }
@@ -44,10 +39,6 @@ class SchedulePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param array $step
-     * @return array
-     */
     private function getStepConfigs(array $step): array
     {
         $configs = [];
@@ -57,23 +48,5 @@ class SchedulePresenter extends BasePresenter
         }
 
         return $configs;
-    }
-
-
-    /**
-     * @param string $dateString
-     * @param bool $byMidnight
-     * @return bool
-     */
-    private function isDatePassed($dateString, bool $byMidnight = false): bool
-    {
-        $decisiveDate = new DateTime($dateString);
-        $now = new DateTime();
-
-        if ($byMidnight) {
-            $decisiveDate->setTime(0, 0, 0);
-        }
-
-        return $decisiveDate <= $now;
     }
 }

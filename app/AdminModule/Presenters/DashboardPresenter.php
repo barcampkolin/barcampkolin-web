@@ -4,20 +4,20 @@ namespace App\AdminModule\Presenters;
 
 use App\Components\Enumerator\IEnumeratorFormControlFactory;
 use App\Model\ConfigManager;
+use App\Model\DateProvider;
 use App\Model\EnumeratorManager;
 use App\Model\EventInfoProvider as Event;
 use App\Model\ScheduleManager;
-use Nette\Application\Request;
+use JetBrains\PhpStorm\NoReturn;
 use Nette\Application\UI\Form;
-use Nette\Http\IResponse;
+use Nette\Forms\Form as BaseForm;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\DateTime;
 
 class DashboardPresenter extends BasePresenter
 {
 
-    const NOFLAG = 0;
-    const REQUIRED = 1;
+    private const NOFLAG = 0;
+    private const REQUIRED = 1;
 
     private array $simpleConfigs = [
         Event::COUNTS_CONFEREE => [
@@ -99,24 +99,16 @@ class DashboardPresenter extends BasePresenter
     ];
 
 
-    /**
-     * DashboardPresenter constructor.
-     * @param ConfigManager $configManager
-     * @param ScheduleManager $scheduleManager
-     * @param IEnumeratorFormControlFactory $enumeratorFormControlFactory
-     */
     public function __construct(
         private readonly ConfigManager $configManager,
         private readonly ScheduleManager $scheduleManager,
-        private readonly IEnumeratorFormControlFactory $enumeratorFormControlFactory
+        private readonly IEnumeratorFormControlFactory $enumeratorFormControlFactory,
+        private readonly DateProvider $dateProvider,
     ) {
         parent::__construct();
     }
 
 
-    /**
-     *
-     */
     public function actionEnums(): void
     {
         $this['faq'] = $this->enumeratorFormControlFactory->create(EnumeratorManager::SET_FAQS);
@@ -126,9 +118,6 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws \Nette\Utils\JsonException
-     */
     public function renderSchedule(): void
     {
         $steps = $this->scheduleManager->getSteps();
@@ -139,13 +128,9 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $step
-     * @secured
-     * @throws \Nette\Utils\JsonException
-     * @throws \Nette\Application\AbortException
-     */
-    public function handleScheduleStepActivate($step): void
+    /** @secured */
+    #[NoReturn]
+    public function handleScheduleStepActivate(?string $step): void
     {
         $this->scheduleManager->changeCurrentStep($step);
 
@@ -155,11 +140,7 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     * @throws \Nette\Utils\JsonException
-     */
-    public function createComponentConfigForm(): \Nette\Application\UI\Form
+    public function createComponentConfigForm(): Form
     {
         $form = new Form();
         foreach ($this->simpleConfigs as $key => $data) {
@@ -173,16 +154,16 @@ class DashboardPresenter extends BasePresenter
                     break;
                 case 'url':
                     $item = $form->addText($formId, $data[1])
-                        ->setType($data[0])
+                        ->setHtmlType($data[0])
                         ->setDefaultValue($this->configManager->get($key, ''));
-                    $item->addCondition(Form::FILLED)
-                        ->addRule(Form::URL, 'Toto není platné URL');
+                    $item->addCondition(BaseForm::Filled)
+                        ->addRule(BaseForm::URL, 'Toto není platné URL');
                     break;
                 case 'date':
                 case 'time':
                 case 'datetime-local':
                     $item = $form->addText($formId, $data[1])
-                        ->setType($data[0])
+                        ->setHtmlType($data[0])
                         ->setDefaultValue($this->configManager->get($key, ''));
                     break;
                 case 'bool':
@@ -210,13 +191,8 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function onConfigFormSuccess(Form $form, $values): void
+    #[NoReturn]
+    public function onConfigFormSuccess(Form $form, ArrayHash $values): void
     {
         foreach ($this->simpleConfigs as $key => $data) {
             $id = $this->ideable($key);
@@ -230,7 +206,7 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    public function createComponentScheduleConfigForm(): \Nette\Application\UI\Form
+    public function createComponentScheduleConfigForm(): Form
     {
         $form = new Form();
 
@@ -258,9 +234,9 @@ class DashboardPresenter extends BasePresenter
 
         foreach ($this->visualDates as $key => $name) {
             $form->addText($this->ideable($key), $name)
-                ->setType('datetime-local')
+                ->setHtmlType('datetime-local')
                 ->setDefaultValue($this->dateToHtml5($this->configManager->get($key)))
-                ->getControlPrototype()->addAttributes(['step'=>1]);
+                ->getControlPrototype()->addAttributes(['step' => 1]);
         }
 
         $form->addGroup();
@@ -274,13 +250,8 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param $values
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function onScheduleConfigFormSuccess(Form $form, $values): void
+    #[NoReturn]
+    public function onScheduleConfigFormSuccess(Form $form, ArrayHash $values): void
     {
         $bothConfigs = array_merge($this->featureConfigs, $this->visualDates);
 
@@ -292,15 +263,11 @@ class DashboardPresenter extends BasePresenter
         }
 
         $this->flashMessage('Nastavení bylo upraveno a změny se hned projevily na webu', 'success');
-        $this->redirect( 'this');
+        $this->redirect('this');
     }
 
 
-    /**
-     * @return Form
-     * @throws \Nette\Utils\JsonException
-     */
-    public function createComponentScheduleForm(): \Nette\Application\UI\Form
+    public function createComponentScheduleForm(): Form
     {
         $steps = $this->scheduleManager->getSteps(true);
 
@@ -316,9 +283,9 @@ class DashboardPresenter extends BasePresenter
                     'select' => $form->addSelect($fomId, $config['name'], $config['enum'])
                         ->setDefaultValue($config['value']),
                     'datetime-local' => $form->addText($fomId, $config['name'])
-                        ->setType($config['type'])
+                        ->setHtmlType($config['type'])
                         ->setDefaultValue($config['value'] ? $this->dateToHtml5($config['value']) : null)
-                        ->getControlPrototype()->addAttributes(['step'=>1]),
+                        ->getControlPrototype()->addAttributes(['step' => 1]),
                     default => throw new \LogicException("Invalid form field type: $config[type]"),
                 };
                 if ($config['isRequired']) {
@@ -335,13 +302,8 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function onScheduleFormSuccess(Form $form, array $values): void
+    #[NoReturn]
+    public function onScheduleFormSuccess(Form $form, ArrayHash $values): void
     {
         $steps = $this->scheduleManager->getSteps(false);
 
@@ -357,22 +319,14 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param string $key
-     * @return string
-     */
-    private function ideable($key): string
+    private function ideable(string $key): string
     {
         return str_replace('.', '', $key);
     }
 
 
-    /**
-     * @param string $date
-     * @return string
-     */
     private function dateToHtml5($date): string
     {
-        return (new DateTime($date))->format('Y-m-d\TH:i:s');
+        return $this->dateProvider->strToDate($date)->format('Y-m-d\TH:i:s');
     }
 }
