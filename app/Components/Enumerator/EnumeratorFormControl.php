@@ -63,6 +63,13 @@ class EnumeratorFormControl extends Control
     {
         $form = new Form();
 
+        // Hidden submit button placed first in DOM to catch Enter key presses,
+        // preventing accidental triggering of remove/add buttons.
+        // original fix in 1c542a98a9768445c95e96616342edad74088094
+        $form->addSubmit('defaultSubmit', '')
+            ->setOmitted()
+            ->setOption('rendered', true);
+
         $removeEvent = $this->removeClicked(...);
 
         /** @var Replicator\Container $enums */
@@ -72,13 +79,11 @@ class EnumeratorFormControl extends Control
 
             $enums->addSubmit('remove', '╳ Odstranit')
                 ->setValidationScope(null)
-                ->setHtmlAttribute('type', 'button')
                 ->onClick[] = $removeEvent;
         }, 1);
 
         $enums->addSubmit('add', '➕ Přidat další otázku')
             ->setValidationScope(null)
-            ->setHtmlAttribute('type', 'button')
             ->onClick[] = $this->addClicked(...);
 
 
@@ -98,7 +103,7 @@ class EnumeratorFormControl extends Control
      */
     public function onFormSuccess(Form $form, $values): void
     {
-        if ($form['submit']->isSubmittedBy() === false) {
+        if ($form['submit']->isSubmittedBy() === false && $form['defaultSubmit']->isSubmittedBy() === false) {
             return;
         }
 

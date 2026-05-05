@@ -1,4 +1,6 @@
 <form n:name="form" class="form-horizontal form-grouped">
+    {input defaultSubmit, style => 'display:none'}
+
     <ul class="error" n:if="$form->ownErrors">
         <li n:foreach="$form->ownErrors as $error">{$error}</li>
     </ul>
