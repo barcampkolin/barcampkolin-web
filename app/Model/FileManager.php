@@ -6,67 +6,43 @@ use App\Orm\File\File;
 use App\Orm\File\FileRepository;
 use App\Orm\Orm;
 use Nette\Http\FileUpload;
+use Nextras\Orm\Collection\ICollection;
 
-class FileManager
+readonly class FileManager
 {
-    /**
-     * @var FileRepository
-     */
-    private $fileRepository;
+    private FileRepository $fileRepository;
 
 
-    /**
-     * @param Orm $orm
-     * @param LocalFileStorage $fileStorage
-     */
     public function __construct(
         Orm $orm,
-        private readonly LocalFileStorage $fileStorage
+        private LocalFileStorage $fileStorage
     ) {
         $this->fileRepository = $orm->file;
     }
 
 
     /**
-     * @return \Nextras\Orm\Collection\ICollection
+     * @return ICollection<File>
      */
-    public function findAll(): \Nextras\Orm\Collection\ICollection
+    public function findAll(): ICollection
     {
         return $this->fileRepository->findAll();
     }
 
 
-    /**
-     * @param string $url
-     * @return bool
-     */
-    public function isManagable($url)
+    public function isManagable(string $url): bool
     {
-        $match = $this->fileStorage->match($url);
-        return $match;
+        return $this->fileStorage->match($url);
     }
 
 
-    /**
-     * @param int $id
-     * @return File|null
-     * @throws \Nextras\Orm\InvalidArgumentException
-     */
-    public function getById($id): ?\Nextras\Orm\Entity\IEntity
+    public function getById(int $id): ?File
     {
         return $this->fileRepository->getById($id);
     }
 
 
-    /**
-     * @param FileUpload $fileUpload
-     * @param string|null $name
-     * @return string
-     * @throws \InvalidArgumentException
-     * @throws \Nette\IOException
-     * @throws \Nette\InvalidArgumentException
-     */
-    public function createByUpload(FileUpload $fileUpload, $name = null): string
+    public function createByUpload(FileUpload $fileUpload, ?string $name = null): string
     {
         // Set name from file if not defined
         $name ??= $fileUpload->name;
@@ -81,11 +57,6 @@ class FileManager
     }
 
 
-    /**
-     * @param File $file
-     * @throws \InvalidArgumentException
-     * @throws \Nette\IOException
-     */
     public function remove(File $file): void
     {
         $this->fileStorage->delete($file->url);

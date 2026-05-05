@@ -67,7 +67,7 @@ class ConferencePresenter extends BasePresenter
             $extended = [];
 
             if ($talk->extended) {
-                $extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
+                $extended = Json::decode($talk->extended, forceArrays: true);
             }
 
             $filtered[] = [
@@ -171,7 +171,7 @@ class ConferencePresenter extends BasePresenter
             $this->error('Přednáška nenalezena');
         }
 
-        $extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
+        $extended = Json::decode($talk->extended, forceArrays: true);
 
         $this->template->talk = $talk;
         $this->template->extended = $extended;

@@ -5,47 +5,33 @@ namespace App\Model;
 use App\Orm\Talk\Talk;
 use DateInterval;
 use DateTime;
+use DateTimeImmutable;
 use Nette\Http\Request;
 use Nette\Utils\DateTime as NetteDateTime;
 use Nette\Utils\FileSystem;
 use Nette\Utils\JsonException;
 
-class ArchiveManager
+readonly class ArchiveManager
 {
     const IN_ARCHIVATION_COOKIE_KEY = '_in_archivation';
 
-
-    /**
-     * @param array $archivedStaticFolders
-     * @param array $pages
-     * @param ConfigManager $config
-     * @param Request $httpRequest
-     * @param TalkManager $talkManager
-     * @param ArchiveStorage $archiveStorage
-     * @param PartnersManager $partnersManager
-     * @param ConfereeManager $confereeManager
-     * @param ScheduleManager $scheduleManager
-     */
     public function __construct(
-        private readonly array $archivedStaticFolders,
+        private array $archivedStaticFolders,
         private array $pages,
-        private readonly ConfigManager $config,
-        private readonly Request $httpRequest,
-        private readonly TalkManager $talkManager,
-        private readonly ArchiveStorage $archiveStorage,
-        private readonly PartnersManager $partnersManager,
-        private readonly ConfereeManager $confereeManager,
-        private readonly ScheduleManager $scheduleManager
+        private ConfigManager $config,
+        private Request $httpRequest,
+        private TalkManager $talkManager,
+        private ArchiveStorage $archiveStorage,
+        private PartnersManager $partnersManager,
+        private ConfereeManager $confereeManager,
+        private ScheduleManager $scheduleManager
     ) {
     }
 
 
-    /**
-     * @return int
-     */
     public function getCurrentYear(): int
     {
-        $currentYear = (new DateTime)->format('Y');
+        $currentYear = new DateTimeImmutable()->format('Y');
 
         try {
             return (int)$this->config->get('dates.currentYear', $currentYear);
@@ -55,18 +41,14 @@ class ArchiveManager
     }
 
 
-    /**
-     * @param $year
-     * @throws JsonException
-     */
-    private function setCurrentYear($year): void
+    private function setCurrentYear(int $year): void
     {
-        $this->config->set('dates.currentYear', (int)$year);
+        $this->config->set('dates.currentYear', $year);
     }
 
 
     /**
-     * @return array
+     * @return int[]
      */
     public function getArchivedYears(): array
     {
@@ -78,14 +60,10 @@ class ArchiveManager
     }
 
 
-    /**
-     * @param $year
-     * @throws JsonException
-     */
-    public function addArchivedYear($year): void
+    public function addArchivedYear(int $year): void
     {
         $years = $this->getArchivedYears();
-        $years[] = (int)$year;
+        $years[] = $year;
         $this->config->set('archive.years', $years);
     }
 
@@ -99,19 +77,10 @@ class ArchiveManager
     }
 
 
-    /**
-     * @param $currentYear
-     * @param $toYear
-     * @param DateTime $newEventDate
-     * @throws DuplicateNameException
-     * @throws JsonException
-     * @throws \Nette\IOException
-     * @throws \InvalidArgumentException
-     */
-    public function archive($currentYear, $toYear, DateTime $newEventDate): void
+    public function archive(int $currentYear, int $toYear, DateTime $newEventDate): void
     {
-        $realCurrentYear = (int)$this->getCurrentYear();
-        if (((int)$currentYear) !== $realCurrentYear) {
+        $realCurrentYear = $this->getCurrentYear();
+        if ($currentYear !== $realCurrentYear) {
             throw new DuplicateNameException(
                 "Unable to archive year $currentYear because it is not real current year ($realCurrentYear)"
             );
@@ -129,10 +98,9 @@ class ArchiveManager
 
 
     /**
-     * @param $year
      * @return string[]
      */
-    public function getArchiveUrls($year = null): array
+    public function getArchiveUrls(?int $year = null): array
     {
         $yearPrefix = $year !== null ? '/' . $year : '';
 
@@ -152,34 +120,19 @@ class ArchiveManager
     }
 
 
-    /**
-     * @param $url
-     * @param $content
-     * @throws \Nette\IOException
-     */
-    public function saveArchivedPage($url, string $content): void
+    public function saveArchivedPage(string $url, string $content): void
     {
         $this->archiveStorage->savePage($url, $content);
     }
 
 
-    /**
-     * @param string $url
-     * @return string
-     * @throws \Nette\FileNotFoundException
-     */
-    public function loadArchivedPage($url): string
+    public function loadArchivedPage(string $url): string
     {
         return $this->archiveStorage->loadPage($url);
     }
 
 
-    /**
-     * @param int $fromYear
-     * @param int $toYear
-     * @throws \Nette\IOException
-     */
-    private function archiveStaticFiles($fromYear, $toYear): void
+    private function archiveStaticFiles(int $fromYear, int $toYear): void
     {
         foreach ($this->archivedStaticFolders as $folderPrefix) {
             $old = $folderPrefix . '/' . $fromYear;
@@ -189,21 +142,12 @@ class ArchiveManager
     }
 
 
-    /**
-     * @param $fromDir
-     * @param $toDir
-     * @throws \Nette\IOException
-     */
     private function copyStaticFiles(string $fromDir, string $toDir): void
     {
         FileSystem::copy($fromDir, $toDir);
     }
 
 
-    /**
-     * @param DateTime $newEventDate
-     * @throws JsonException
-     */
     private function updateDates(DateTime $newEventDate): void
     {
         $dateKeys = [
@@ -216,7 +160,6 @@ class ArchiveManager
             EventInfoProvider::SCHEDULE_VISUAL_DATE_END,
         ];
 
-        /** @var DateInterval $dateDiff */
         $dateDiff = $this->getDateDiff($this->getCurrentEventDate(), $newEventDate);
 
         foreach ($dateKeys as $key) {
@@ -225,23 +168,13 @@ class ArchiveManager
     }
 
 
-    /**
-     * @param DateTime $oldDate
-     * @param DateTime $newDate
-     * @return DateInterval
-     */
-    private function getDateDiff(DateTime $oldDate, DateTime $newDate): \DateInterval
+    private function getDateDiff(DateTime $oldDate, DateTime $newDate): DateInterval
     {
-        return $oldDate->diff($newDate, false);
+        return $oldDate->diff($newDate, absolute: false);
     }
 
 
-    /**
-     * @param $key
-     * @param DateInterval $dateDiff
-     * @throws JsonException
-     */
-    protected function updateDate($key, DateInterval $dateDiff)
+    protected function updateDate(string $key, DateInterval $dateDiff): void
     {
         $oldDate = NetteDateTime::from($this->config->get($key));
 
@@ -251,29 +184,18 @@ class ArchiveManager
     }
 
 
-    /**
-     * @return NetteDateTime
-     * @throws JsonException
-     */
-    public function getCurrentEventDate()
+    public function getCurrentEventDate(): NetteDateTime
     {
         return NetteDateTime::from($this->config->get(EventInfoProvider::DATE_EVENT));
     }
 
 
-    /**
-     * @param DateTime $date
-     * @return string
-     */
     private function formatDate(DateTime $date): string
     {
         return $date->format('Y-m-d\TH:i:s');
     }
 
 
-    /**
-     * @throws \InvalidArgumentException
-     */
     private function purgeAllOldData(): void
     {
         $this->partnersManager->purgeAll(true);
@@ -283,9 +205,6 @@ class ArchiveManager
     }
 
 
-    /**
-     * @throws JsonException
-     */
     private function resetSchedule(): void
     {
         $this->scheduleManager->changeCurrentStep(null);

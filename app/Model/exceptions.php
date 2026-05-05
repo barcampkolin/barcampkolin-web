@@ -1,20 +1,26 @@
 <?php
+/**
+ * @noinspection PhpIllegalPsrClassPathInspection
+ * @noinspection PhpMultipleClassesDeclarationsInOneFile
+ */
 
 namespace App\Model;
 
-class DuplicateNameException extends \Exception
+use Exception;
+
+class DuplicateNameException extends Exception
 {
 }
 
 
 
-class IdentityNotFoundException extends \Exception
+class IdentityNotFoundException extends Exception
 {
 }
 
 
 
-class AuthenticationException extends \Exception
+class AuthenticationException extends Exception
 {
 }
 
@@ -38,13 +44,13 @@ class TokenInvalidException extends AuthenticationException
 
 
 
-class NoUserLoggedIn extends \Exception
+class NoUserLoggedIn extends Exception
 {
 }
 
 
 
-class EntityNotFound extends \Exception
+class EntityNotFound extends Exception
 {
 }
 

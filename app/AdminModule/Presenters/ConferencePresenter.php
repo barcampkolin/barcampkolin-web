@@ -267,7 +267,7 @@ class ConferencePresenter extends BasePresenter
         /** @var Conferee $conferee */
         foreach ($allConferee as $conferee) {
             try {
-                $extended = Json::decode($conferee->extended, Json::FORCE_ARRAY);
+                $extended = Json::decode($conferee->extended, forceArrays: true);
             } catch (JsonException) {
                 $extended = [];
             }
@@ -676,7 +676,7 @@ class ConferencePresenter extends BasePresenter
             $id = $talk->id;
 
             $requestedDuration = "";
-            $extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
+            $extended = Json::decode($talk->extended, forceArrays: true);
             $duration = isset($extended['requested_duration']) ? intval($extended['requested_duration']) : null;
             if ($duration) {
                 $requestedDuration = " (požadováno $duration minut)";
