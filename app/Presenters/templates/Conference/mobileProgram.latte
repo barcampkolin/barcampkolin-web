@@ -1,0 +1,612 @@
+{varType array $mobile}
+{varType int $year}
+{varType ?int $nowOverride}
+{varType ?string $cspNonce}
+{var int $pxPerMin = 4}
+{var int $rangeMin = $mobile['maxMinutes'] - $mobile['minMinutes']}
+{var int $trackWidth = $rangeMin * $pxPerMin}
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Barcamp Kolín {$year} – Program</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: #f4f4f4;
+            color: #222;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #ffcb00;
+            color: #000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 30;
+            position: sticky;
+            left: 0;
+            width: 100vw;
+        }
+
+        header .brand {
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        header h1 {
+            margin: 0 0 0 12px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .grid {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .grid-inner {
+            position: relative;
+            width: {= $trackWidth + 80 }px;
+            min-height: 100dvh;
+        }
+
+        .time-axis {
+            position: sticky;
+            top: 0;
+            display: flex;
+            background: #fff;
+            border-bottom: 2px solid #ddd;
+            z-index: 20;
+            margin-left: 80px;
+            height: 36px;
+        }
+
+        .time-axis .hour {
+            flex: 0 0 auto;
+            width: {= 60 * $pxPerMin }px;
+            font-size: calc(12px * var(--zoom));
+            font-weight: 600;
+            color: #666;
+            padding: 10px 0 0 6px;
+            border-left: 1px solid #eee;
+        }
+
+        .room-row {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            min-height: calc(120px * var(--zoom));
+            position: relative;
+        }
+
+        .room-label {
+            position: relative;
+            flex: 0 0 80px;
+            width: 80px;
+            z-index: 16;
+            display: flex;
+            align-items: stretch;
+            justify-content: flex-start;
+        }
+
+        .grid.scrolled-x .room-label {
+            position: sticky;
+            left: 0;
+        }
+
+        .label-column-bg {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 100dvh;
+            margin-bottom: -100dvh;
+            background: #fafafa;
+            border-right: 1px solid #ddd;
+            z-index: 16;
+            pointer-events: none;
+            transition: width 0.18s ease;
+        }
+
+        .grid.scrolled-x .label-column-bg {
+            width: 30px;
+        }
+
+        .room-label .label-text {
+            width: 100%;
+            background: #fafafa;
+            padding: 10px 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .grid.scrolled-x .room-label .label-text {
+            width: 30px;
+            padding: 6px 2px;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-right: none;
+            border-left: 1px solid #ddd;
+            border-top: 1px solid #ddd;
+        }
+
+        .room-track {
+            position: relative;
+            flex: 1 1 auto;
+            min-height: calc(135px * var(--zoom));
+        }
+
+        .grid-inner {
+            --zoom: 1;
+        }
+
+        .card {
+            position: absolute;
+            top: 6px;
+            bottom: 6px;
+            background: #fff;
+            border-radius: 6px;
+            border-left: 4px solid #999;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            padding: 6px 8px;
+            font-size: calc(12px * var(--zoom));
+            line-height: 1.25;
+            transition: background 0.15s;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card.favorite {
+            background: #fff3a0;
+            box-shadow: 0 1px 4px rgba(255,200,0,0.5);
+        }
+
+        .card .title {
+            font-weight: 600;
+            font-size: calc(12px * var(--zoom));
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            position: sticky;
+            left: 88px;
+            max-width: calc(100vw - 96px);
+            transition: left 0.18s ease, max-width 0.18s ease;
+        }
+
+        .card .time {
+            font-size: calc(11px * var(--zoom));
+            color: #555;
+            margin-top: auto;
+            margin-bottom: 2px;
+            position: sticky;
+            left: 88px;
+            max-width: calc(100vw - 96px);
+            transition: left 0.18s ease, max-width 0.18s ease;
+        }
+
+        .card .speaker {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: calc(11px * var(--zoom));
+            color: #555;
+            position: sticky;
+            left: 88px;
+            max-width: calc(100vw - 96px);
+            transition: left 0.18s ease, max-width 0.18s ease;
+        }
+
+        .grid.scrolled-x .card .title,
+        .grid.scrolled-x .card .time,
+        .grid.scrolled-x .card .speaker {
+            left: 38px;
+            max-width: calc(100vw - 46px);
+        }
+
+        .card .speaker img {
+            width: calc(22px * var(--zoom));
+            height: calc(22px * var(--zoom));
+            border-radius: 50%;
+            object-fit: cover;
+            flex: 0 0 auto;
+        }
+
+        .card .speaker span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Kategorie barvy - stejné jako tvProgram */
+        .card.byznys { border-left-color: #F00; background: #FFCCA6; }
+        .card.byznys.favorite { background: #fff3a0; }
+        .card.technicka { border-left-color: #3f5bea; background: #EDEFFF; }
+        .card.technicka.favorite { background: #fff3a0; }
+        .card.osobniRozvoj { border-left-color: #009309; background: #DCFBDE; }
+        .card.osobniRozvoj.favorite { background: #fff3a0; }
+        .card.none, .card.style4 { border-left-color: #aaa; background: #eee; }
+        .card.none.favorite, .card.style4.favorite { background: #fff3a0; }
+
+        /* Nepřednáškové sloty - bez fotky */
+        .card.type-coffee, .card.type-lunch, .card.type-custom {
+            background: #f0f0f0;
+            border-left-color: #888;
+            font-style: italic;
+            color: #555;
+        }
+        .card.type-coffee.favorite, .card.type-lunch.favorite, .card.type-custom.favorite {
+            background: #fff3a0;
+        }
+
+        .past-overlay {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 80px;
+            background: rgba(120,120,120,0.35);
+            pointer-events: none;
+            z-index: 10;
+            width: 0;
+        }
+
+        .now-line {
+            position: absolute;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            background: #888;
+            pointer-events: none;
+            z-index: 10;
+            display: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="grid" id="grid"
+     data-min="{$mobile['minMinutes']}"
+     data-max="{$mobile['maxMinutes']}"
+     data-pxmin="{$pxPerMin}"
+     data-year="{$year}"
+     n:attr="data-now-override => $nowOverride">
+    <div class="grid-inner">
+        <div class="label-column-bg"></div>
+        <header>
+            <div class="brand">BCK {$year}</div>
+            <h1>Program</h1>
+        </header>
+{if count($mobile['rooms']) === 0}
+        <div class="empty-state">Program zatím není zveřejněn.</div>
+{else}
+        <div class="time-axis">
+            {for $h = (int)($mobile['minMinutes'] / 60); $h < $mobile['maxMinutes'] / 60; $h++}
+                <div class="hour">{= sprintf('%02d:00', $h) }</div>
+            {/for}
+        </div>
+
+        {foreach $mobile['rooms'] as $roomKey => $roomLabel}
+            <div class="room-row">
+                <div class="room-label"><span class="label-text">{= $roomLabel }</span></div>
+                <div class="room-track">
+                    {foreach $mobile['slots'][$roomKey] as $slot}
+                        {var int $left = ($slot['startMin'] - $mobile['minMinutes']) * $pxPerMin}
+                        {var int $width = $slot['durMin'] * $pxPerMin}
+                        <div class="card {$slot['styleClass']} {$slot['type'] !== 'talk' ? 'type-' . $slot['type']}"
+                             data-id="{$slot['id']}"
+                             data-startmin="{$slot['startMin']}"
+                             data-durmin="{$slot['durMin']}"
+                             style="left: {$left}px; width: {$width}px;">
+                            <div class="title">{= $slot['title'] }</div>
+                            <div class="time">{= $slot['timeRange'] }</div>
+                            {if $slot['type'] === 'talk' && $slot['speaker']}
+                                <div class="speaker">
+                                    {if $slot['speakerPic']}
+                                        <img src="{$slot['speakerPic']}" alt="" loading="lazy">
+                                    {/if}
+                                    <span>{= $slot['speaker'] }</span>
+                                </div>
+                            {/if}
+                        </div>
+                    {/foreach}
+                </div>
+            </div>
+        {/foreach}
+
+        <div class="past-overlay" id="pastOverlay"></div>
+        <div class="now-line" id="nowLine"></div>
+{/if}
+    </div>
+</div>
+
+<script n:attr="nonce => $cspNonce">
+{syntax off}
+(function () {
+    var grid = document.getElementById('grid');
+    if (!grid) return;
+
+    var YEAR = parseInt(grid.dataset.year, 10);
+    var STORAGE_KEY = 'bck-favorites-' + YEAR;
+    var ZOOM_STORAGE_KEY = 'bck-zoom-' + YEAR;
+    var LABEL_W = 80;
+    var minMin = parseInt(grid.dataset.min, 10);
+    var maxMin = parseInt(grid.dataset.max, 10);
+    var BASE_PX_MIN = parseFloat(grid.dataset.pxmin);
+    var pxMin = BASE_PX_MIN;
+    var ZOOM_MIN = 0.6;
+    var ZOOM_MAX = 2.5;
+    var zoomRaw = parseFloat(localStorage.getItem(ZOOM_STORAGE_KEY));
+    var zoom = (!isNaN(zoomRaw) && isFinite(zoomRaw)) ? Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, zoomRaw)) : 1;
+    var gridInner = grid.querySelector('.grid-inner');
+    var nowOverrideRaw = grid.dataset.nowOverride;
+    var nowOverride = (nowOverrideRaw !== undefined && nowOverrideRaw !== '') ? parseInt(nowOverrideRaw, 10) : null;
+    var nowLine = document.getElementById('nowLine');
+    var pastOverlay = document.getElementById('pastOverlay');
+
+    function currentMinutes() {
+        if (nowOverride !== null && !isNaN(nowOverride)) return nowOverride;
+        var d = new Date();
+        return d.getHours() * 60 + d.getMinutes();
+    }
+
+    function updateNow() {
+        var nowMin = currentMinutes();
+        if (nowMin < minMin) {
+            nowLine.style.display = 'none';
+            pastOverlay.style.width = '0px';
+            return;
+        }
+        if (nowMin > maxMin) {
+            nowLine.style.display = 'none';
+            pastOverlay.style.width = ((maxMin - minMin) * pxMin) + 'px';
+            return;
+        }
+        var offset = (nowMin - minMin) * pxMin;
+        nowLine.style.display = 'block';
+        nowLine.style.left = (LABEL_W + offset) + 'px';
+        pastOverlay.style.width = offset + 'px';
+    }
+
+    function autoScrollToNow() {
+        var nowMin = currentMinutes();
+        var target;
+        if (nowMin < minMin) {
+            target = 0;
+        } else if (nowMin > maxMin) {
+            target = grid.scrollWidth;
+        } else {
+            var offset = (nowMin - minMin) * pxMin;
+            // NOW na ~1/3 zleva; pokud aktuální přednáška začala dříve, posunout ještě o 90 minut zpět,
+            // aby byla vidět celá - ale ne tak, aby NOW vyletělo z viewportu
+            var leftPad = Math.min(grid.clientWidth / 3, 90 * pxMin);
+            target = LABEL_W + offset - leftPad;
+        }
+        grid.scrollLeft = Math.max(0, target);
+    }
+
+    function loadFavorites() {
+        try {
+            var raw = localStorage.getItem(STORAGE_KEY);
+            if (!raw) return new Set();
+            var arr = JSON.parse(raw);
+            return new Set(Array.isArray(arr) ? arr.map(String) : []);
+        } catch (e) {
+            return new Set();
+        }
+    }
+
+    function saveFavorites(set) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(set)));
+        } catch (e) { /* quota exceeded - ignore */ }
+    }
+
+    var favorites = loadFavorites();
+
+    function applyFavorites() {
+        document.querySelectorAll('.card').forEach(function (card) {
+            if (favorites.has(card.dataset.id)) {
+                card.classList.add('favorite');
+            } else {
+                card.classList.remove('favorite');
+            }
+        });
+    }
+
+    function toggleFavorite(card) {
+        var id = card.dataset.id;
+        if (favorites.has(id)) {
+            favorites.delete(id);
+        } else {
+            favorites.add(id);
+        }
+        saveFavorites(favorites);
+        applyFavorites();
+    }
+
+    var pressTimer = null;
+    var pressTarget = null;
+    var startX = 0, startY = 0;
+    var LONG_PRESS_MS = 350;
+    var MOVE_THRESHOLD = 10;
+
+    function clearPress() {
+        if (pressTimer) {
+            clearTimeout(pressTimer);
+            pressTimer = null;
+        }
+        pressTarget = null;
+    }
+
+    document.addEventListener('pointerdown', function (e) {
+        var card = e.target.closest('.card');
+        if (!card) return;
+        pressTarget = card;
+        startX = e.clientX;
+        startY = e.clientY;
+        pressTimer = setTimeout(function () {
+            if (pressTarget) {
+                toggleFavorite(pressTarget);
+                if (navigator.vibrate) navigator.vibrate(40);
+            }
+            clearPress();
+        }, LONG_PRESS_MS);
+    }, { passive: true });
+
+    document.addEventListener('pointermove', function (e) {
+        if (!pressTimer) return;
+        if (Math.abs(e.clientX - startX) > MOVE_THRESHOLD || Math.abs(e.clientY - startY) > MOVE_THRESHOLD) {
+            clearPress();
+        }
+    }, { passive: true });
+
+    document.addEventListener('pointerup', clearPress, { passive: true });
+    document.addEventListener('pointercancel', clearPress, { passive: true });
+
+    document.addEventListener('contextmenu', function (e) {
+        if (e.target.closest('.card')) {
+            e.preventDefault();
+        }
+    });
+
+    applyFavorites();
+    // Layout může být ve chvíli běhu skriptu nedopočítaný - rAF zajistí, že
+    // updateNow a autoScrollToNow běží až po prvním layout/paint cyklu.
+    requestAnimationFrame(function () {
+        updateNow();
+        autoScrollToNow();
+        updateScrolledClass();
+    });
+    if (nowOverride === null) {
+        setInterval(updateNow, 60 * 1000);
+    }
+
+    // Při horizontálním scrollu zúžit & rotovat labely sálů.
+    // Spustí se až když se celý label (80 px) dostane "za okraj".
+    var SCROLL_X_THRESHOLD = 80;
+    function updateScrolledClass() {
+        if (grid.scrollLeft > SCROLL_X_THRESHOLD) {
+            grid.classList.add('scrolled-x');
+        } else {
+            grid.classList.remove('scrolled-x');
+        }
+    }
+    grid.addEventListener('scroll', updateScrolledClass, { passive: true });
+
+    // Pinch-to-zoom: škáluje pouze oblast přednášek (časová osa, karty, fonty
+    // uvnitř karet). Hlavička a názvy sálů zůstávají v přirozené velikosti.
+    function applyZoom(newZoom, anchorScreenX) {
+        var oldPxMin = pxMin;
+        zoom = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, newZoom));
+        pxMin = BASE_PX_MIN * zoom;
+
+        gridInner.style.setProperty('--zoom', zoom);
+        gridInner.style.width = ((maxMin - minMin) * pxMin + LABEL_W) + 'px';
+
+        var hours = grid.querySelectorAll('.time-axis .hour');
+        for (var i = 0; i < hours.length; i++) {
+            hours[i].style.width = (60 * pxMin) + 'px';
+        }
+
+        var cards = grid.querySelectorAll('.card');
+        for (var j = 0; j < cards.length; j++) {
+            var c = cards[j];
+            var sm = parseInt(c.dataset.startmin, 10);
+            var dm = parseInt(c.dataset.durmin, 10);
+            c.style.left = ((sm - minMin) * pxMin) + 'px';
+            c.style.width = (dm * pxMin) + 'px';
+        }
+
+        // Zachovat anchor: pozice pod prsty zůstane na stejném místě obrazovky.
+        if (anchorScreenX !== undefined && oldPxMin > 0) {
+            var rect = grid.getBoundingClientRect();
+            var screenInGridX = anchorScreenX - rect.left;
+            var oldGridX = grid.scrollLeft + screenInGridX;
+            var ratio = pxMin / oldPxMin;
+            var newAnchorX = (oldGridX - LABEL_W) * ratio + LABEL_W;
+            grid.scrollLeft = Math.max(0, newAnchorX - screenInGridX);
+        }
+
+        updateNow();
+    }
+
+    function persistZoom() {
+        try { localStorage.setItem(ZOOM_STORAGE_KEY, String(zoom)); } catch (e) {}
+    }
+
+    var pinchStartZoom = null;
+    var pinchStartDistance = 0;
+    var pinchAnchorScreenX = 0;
+
+    function pinchDistance(t1, t2) {
+        var dx = t2.clientX - t1.clientX;
+        var dy = t2.clientY - t1.clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    grid.addEventListener('touchstart', function (e) {
+        if (e.touches.length === 2) {
+            clearPress();
+            pinchStartZoom = zoom;
+            pinchStartDistance = pinchDistance(e.touches[0], e.touches[1]);
+            pinchAnchorScreenX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+        }
+    }, { passive: true });
+
+    grid.addEventListener('touchmove', function (e) {
+        if (e.touches.length === 2 && pinchStartDistance > 0) {
+            var newDist = pinchDistance(e.touches[0], e.touches[1]);
+            var ratio = newDist / pinchStartDistance;
+            var screenX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+            applyZoom(pinchStartZoom * ratio, screenX);
+            e.preventDefault();
+        }
+    }, { passive: false });
+
+    grid.addEventListener('touchend', function (e) {
+        if (pinchStartDistance > 0 && e.touches.length < 2) {
+            pinchStartDistance = 0;
+            pinchStartZoom = null;
+            persistZoom();
+        }
+    }, { passive: true });
+
+    // Restore persistovaný zoom na startu (přepíše PHP-renderované styly)
+    if (Math.abs(zoom - 1) > 0.001) {
+        applyZoom(zoom);
+    }
+})();
+{/syntax}
+</script>
+</body>
+</html>

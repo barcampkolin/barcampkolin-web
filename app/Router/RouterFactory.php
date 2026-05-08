@@ -51,6 +51,7 @@ class RouterFactory
         $router->addRoute($year.'/prednasky/<id \d+>', 'Conference:talkDetail', RouteList::ONE_WAY);
         $router->addRoute('[!' . $year . '/]program', 'Conference:program');
         $router->addRoute('[!' . $year . '/]program/tv[/<roomId \d+>]', 'Conference:tvProgram');
+        $router->addRoute('[!' . $year . '/]program/mobil', 'Conference:mobileProgram');
         $router->addRoute('profil', 'User:profil');
         $router->addRoute('upravit-profil', 'User:conferee');
         $router->addRoute('upravit-prednasku', 'User:talk');

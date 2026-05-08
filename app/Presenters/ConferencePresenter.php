@@ -294,6 +294,37 @@ class ConferencePresenter extends BasePresenter
     }
 
 
+    /**
+     * @throws \App\Model\InvalidEnumeratorSetException
+     * @throws \Nette\Utils\JsonException
+     */
+    public function renderMobileProgram(?string $now = null): void
+    {
+        $mobile = $this['program']->getMobileProgramData();
+
+        $nowOverride = null;
+        if ($now !== null) {
+            if (preg_match('~^(?<hour>\d{1,2}):?(?<minute>\d{2})$~', $now, $matches)) {
+                $nowOverride = ((int)$matches['hour']) * 60 + ((int)$matches['minute']);
+            } else {
+                $this->error('Invalid time format, expected HH:MM or HHMM');
+            }
+        }
+
+        // Nette generuje CSP nonce, ale zveřejňuje ho jen v HTTP hlavičce.
+        // Pro inline <script> ho musíme vytáhnout zpět odtud.
+        $cspHeader = $this->getHttpResponse()->getHeader('Content-Security-Policy');
+        $cspNonce = ($cspHeader !== null && preg_match("/'nonce-([^']+)'/", $cspHeader, $m)) ? $m[1] : null;
+
+        $this->template->mobile = $mobile;
+        $this->template->year = $this->eventInfoProvider->getDates()->year;
+        $this->template->nowOverride = $nowOverride;
+        $this->template->cspNonce = $cspNonce;
+
+        $this->getHttpResponse()->setExpiration(0);
+    }
+
+
     public function embedizeYouTube($url, $campainId = null)
     {
         $matches = null;
