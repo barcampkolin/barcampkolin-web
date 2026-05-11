@@ -310,7 +310,7 @@
 
         .now-label {
             position: absolute;
-            top: 4px;
+            top: 7px;
             transform: translateX(-50%);
             background: #888;
             color: #fff;
@@ -487,6 +487,56 @@
         .modal-links:empty {
             display: none;
         }
+
+        /* Když NOW vypadne za okraj viewportu, .now-label se přepne do
+           "jump" módu: text "TEĎ", šipka mířící ke straně kam NOW zmizela,
+           pozicování na kraji viewportu, klikatelné. Vertikálně zůstává
+           v .time-axis (žádné top řešení). Position sticky nechá horizontální
+           pozici řešit prohlížeč (žádné JS-driven skoky při scrollu). */
+        .now-label.jump {
+            position: sticky;
+            top: auto;
+            align-self: center;
+            transform: none;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        .now-label.jump-left {
+            left: 12px;
+            order: -1;
+        }
+        .now-label.jump-right {
+            right: 12px;
+            order: 999;
+            margin-left: auto;
+        }
+        .now-label.jump::after {
+            top: 50%;
+            left: auto;
+            transform: translateY(-50%);
+            border: none;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        .now-label.jump-right::after {
+            right: -5px;
+            border-left: 5px solid #888;
+        }
+        .now-label.jump-left::after {
+            display: none;
+        }
+        .now-label.jump-left::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -5px;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 5px solid #888;
+        }
     </style>
 </head>
 <body>
@@ -603,6 +653,56 @@
     var reloadBtn = document.getElementById('reloadBtn');
     if (reloadBtn) {
         reloadBtn.addEventListener('click', function () { location.reload(); });
+    }
+
+    // Když NOW vyleze za okraj viewportu, .now-label se přepne do "jump"
+    // módu - text "TEĎ", šipka ke straně kam NOW zmizela, kliknutí scrollne.
+    function updateNowJumpVisibility() {
+        if (!nowLabel) return;
+        if (nowLine.style.display === 'none') {
+            return; // už ho updateNow() schoval
+        }
+        var nowPxGrid = parseFloat(nowLine.style.left);
+        if (isNaN(nowPxGrid)) return;
+        var viewLeft = grid.scrollLeft;
+        var viewRight = viewLeft + grid.clientWidth;
+        var EDGE_TOL = 4;
+        var nowMin = currentMinutes();
+        var offset = (nowMin - minMin) * pxMin;
+
+        // Text labelu je vždycky aktuální čas - jump mode jen mění šipku
+        // (doleva/doprava) a pozici (sticky na kraji vs nad NOW čárou).
+        nowLabel.textContent = formatHHMM(nowMin);
+
+        if (nowPxGrid < viewLeft - EDGE_TOL) {
+            // NOW vlevo mimo viewport - sticky CSS drží label na left:12
+            nowLabel.classList.add('jump', 'jump-left');
+            nowLabel.classList.remove('jump-right');
+            nowLabel.style.left = '';   // sticky offset z CSS
+        } else if (nowPxGrid > viewRight + EDGE_TOL) {
+            nowLabel.classList.add('jump', 'jump-right');
+            nowLabel.classList.remove('jump-left');
+            nowLabel.style.left = '';
+        } else {
+            // NOW visible v viewport - vrátit do default módu (čas nad čárou)
+            nowLabel.classList.remove('jump', 'jump-left', 'jump-right');
+            nowLabel.style.left = offset + 'px';
+        }
+    }
+
+    function scrollNowToCenter() {
+        if (nowLine.style.display === 'none') return;
+        var nowPxGrid = parseFloat(nowLine.style.left);
+        if (isNaN(nowPxGrid)) return;
+        grid.scrollLeft = Math.max(0, nowPxGrid - grid.clientWidth / 2);
+    }
+
+    if (nowLabel) {
+        nowLabel.addEventListener('click', function () {
+            if (nowLabel.classList.contains('jump')) {
+                scrollNowToCenter();
+            }
+        });
     }
 
     // --- Modal s detailem přednášky ---
@@ -730,12 +830,14 @@
             nowLine.style.display = 'none';
             if (nowLabel) nowLabel.style.display = 'none';
             pastOverlay.style.width = '0px';
+            updateNowJumpVisibility();
             return;
         }
         if (nowMin > maxMin) {
             nowLine.style.display = 'none';
             if (nowLabel) nowLabel.style.display = 'none';
             pastOverlay.style.width = ((maxMin - minMin) * pxMin) + 'px';
+            updateNowJumpVisibility();
             return;
         }
         var offset = (nowMin - minMin) * pxMin;
@@ -748,6 +850,7 @@
             nowLabel.style.left = offset + 'px';
             nowLabel.style.display = 'inline-block';
         }
+        updateNowJumpVisibility();
     }
 
     function autoScrollToNow() {
@@ -872,17 +975,44 @@
         autoScrollToNow();
         updateScrolledClass();
     });
+    // Po probuzení mobilu / návratu na záložku přepočítat NOW, a pokud čára
+    // byla před uspáním vidět v právě zobrazené části, ale nová pozice už
+    // pohodlně ve viewportu není, posunout scroll na novou pozici.
+    function refreshNowAndScrollIfDrifted() {
+        if (nowOverride !== null) {
+            updateNow();
+            return;
+        }
+        var oldLeftStr = nowLine.style.left;
+        var oldNowPx = (nowLine.style.display !== 'none' && oldLeftStr)
+            ? parseFloat(oldLeftStr) : null;
+
+        updateNow();
+
+        if (oldNowPx === null || nowLine.style.display === 'none') {
+            return;
+        }
+        var newNowPx = parseFloat(nowLine.style.left);
+        var viewLeft = grid.scrollLeft;
+        var viewRight = viewLeft + grid.clientWidth;
+        var oldWasVisible = oldNowPx >= viewLeft && oldNowPx <= viewRight;
+        var EDGE_GAP = 60;
+        var newComfortablyVisible =
+            newNowPx >= viewLeft + EDGE_GAP &&
+            newNowPx <= viewRight - EDGE_GAP;
+        if (oldWasVisible && !newComfortablyVisible) {
+            autoScrollToNow();
+        }
+    }
+
     if (nowOverride === null) {
         setInterval(updateNow, 5 * 1000);
-        // Při probuzení mobilu nebo návratu z pozadí ihned přepočítat -
-        // setInterval po uspání nečeká přesně 60 s, čára by se na okamžik
-        // mohla zobrazit na staré pozici.
         document.addEventListener('visibilitychange', function () {
             if (document.visibilityState === 'visible') {
-                updateNow();
+                refreshNowAndScrollIfDrifted();
             }
         });
-        window.addEventListener('pageshow', updateNow);
+        window.addEventListener('pageshow', refreshNowAndScrollIfDrifted);
     }
 
     // Při horizontálním scrollu zúžit & rotovat labely sálů.
@@ -895,7 +1025,10 @@
             grid.classList.remove('scrolled-x');
         }
     }
-    grid.addEventListener('scroll', updateScrolledClass, { passive: true });
+    grid.addEventListener('scroll', function () {
+        updateScrolledClass();
+        updateNowJumpVisibility();
+    }, { passive: true });
 
     // Pinch-to-zoom: škáluje pouze oblast přednášek (časová osa, karty, fonty
     // uvnitř karet). Hlavička a názvy sálů zůstávají v přirozené velikosti.
