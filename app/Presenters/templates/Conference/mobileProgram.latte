@@ -2,6 +2,7 @@
 {varType int $year}
 {varType ?int $nowOverride}
 {varType ?string $cspNonce}
+{varType string $slotsJson}
 {var int $pxPerMin = 4}
 {var int $rangeMin = $mobile['maxMinutes'] - $mobile['minMinutes']}
 {var int $trackWidth = $rangeMin * $pxPerMin}
@@ -341,6 +342,151 @@
             padding: 40px 20px;
             color: #666;
         }
+
+        /* Modal s detailem přednášky */
+        .talk-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .talk-modal.open {
+            display: flex;
+        }
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            position: relative;
+            max-width: 600px;
+            width: 92%;
+            max-height: 86vh;
+            overflow-y: auto;
+            background: #fff;
+            border-radius: 8px;
+            padding: 44px 20px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+        .modal-close, .modal-fav {
+            position: absolute;
+            top: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 6px 10px;
+            line-height: 1;
+        }
+        .modal-close {
+            right: 4px;
+            font-size: 26px;
+            color: #888;
+        }
+        .modal-fav {
+            right: 40px;
+            color: #bbb;
+        }
+        .modal-fav svg {
+            fill: currentColor;
+            stroke: currentColor;
+            stroke-width: 1;
+        }
+        .modal-fav.active {
+            color: #ffcb00;
+        }
+        .modal-speaker {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+        .modal-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex: 0 0 80px;
+            background: #eee;
+        }
+        .modal-speaker-info {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        .modal-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #222;
+        }
+        .modal-company {
+            font-size: 13px;
+            color: #666;
+            margin-top: 2px;
+        }
+        .modal-company:empty {
+            display: none;
+        }
+        .modal-links {
+            margin-top: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+        }
+        .modal-links a {
+            font-size: 13px;
+            color: #2588db;
+            text-decoration: none;
+        }
+        .modal-links a:hover {
+            text-decoration: underline;
+        }
+        .modal-talk {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+        }
+        .modal-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin: 0 0 4px;
+            color: #222;
+        }
+        .modal-time {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        .modal-desc {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            margin: 0 0 12px;
+            white-space: pre-line;
+        }
+        .modal-desc:empty {
+            display: none;
+        }
+        .modal-purpose-label {
+            font-size: 13px;
+            font-weight: 700;
+            margin: 12px 0 4px;
+            color: #555;
+        }
+        .modal-purpose {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            margin: 0;
+            white-space: pre-line;
+        }
+        .modal-desc:empty,
+        .modal-purpose:empty,
+        .modal-purpose-label.hidden,
+        .modal-company:empty,
+        .modal-links:empty {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -401,6 +547,35 @@
     </div>
 </div>
 
+{if count($mobile['rooms']) > 0}
+<script type="application/json" id="slotsData" n:attr="nonce => $cspNonce">{$slotsJson|noescape}</script>
+
+<div class="talk-modal" id="talkModal">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-content">
+        <button type="button" class="modal-close" id="modalClose" aria-label="Zavřít">×</button>
+        <button type="button" class="modal-fav" id="modalFav" aria-label="Přidat do oblíbených">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
+        </button>
+        <div class="modal-speaker">
+            <img class="modal-photo" id="modalPhoto" alt="">
+            <div class="modal-speaker-info">
+                <div class="modal-name" id="modalName"></div>
+                <div class="modal-company" id="modalCompany"></div>
+                <div class="modal-links" id="modalLinks"></div>
+            </div>
+        </div>
+        <div class="modal-talk">
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-time" id="modalTime"></div>
+            <p class="modal-desc" id="modalDesc"></p>
+            <h3 class="modal-purpose-label" id="modalPurposeLabel">Komu je určena</h3>
+            <p class="modal-purpose" id="modalPurpose"></p>
+        </div>
+    </div>
+</div>
+{/if}
+
 <script n:attr="nonce => $cspNonce">
 {syntax off}
 (function () {
@@ -428,6 +603,113 @@
     var reloadBtn = document.getElementById('reloadBtn');
     if (reloadBtn) {
         reloadBtn.addEventListener('click', function () { location.reload(); });
+    }
+
+    // --- Modal s detailem přednášky ---
+    var modal = document.getElementById('talkModal');
+    var slotsById = {};
+    if (modal) {
+        try {
+            var rawSlots = JSON.parse(document.getElementById('slotsData').textContent);
+            Object.keys(rawSlots).forEach(function (room) {
+                rawSlots[room].forEach(function (s) { slotsById[s.id] = s; });
+            });
+        } catch (e) { /* fallback - modal won't work but page renders */ }
+    }
+    var modalBackdrop = document.getElementById('modalBackdrop');
+    var modalClose = document.getElementById('modalClose');
+    var modalFav = document.getElementById('modalFav');
+    var modalPhoto = document.getElementById('modalPhoto');
+    var modalName = document.getElementById('modalName');
+    var modalCompany = document.getElementById('modalCompany');
+    var modalLinks = document.getElementById('modalLinks');
+    var modalTitle = document.getElementById('modalTitle');
+    var modalTime = document.getElementById('modalTime');
+    var modalDesc = document.getElementById('modalDesc');
+    var modalPurpose = document.getElementById('modalPurpose');
+    var modalPurposeLabel = document.getElementById('modalPurposeLabel');
+    var currentModalCard = null;
+
+    function renderModalLinks(links) {
+        modalLinks.innerHTML = '';
+        if (!links) return;
+        Object.keys(links).forEach(function (type) {
+            var items = links[type];
+            if (!Array.isArray(items)) return;
+            items.forEach(function (item) {
+                if (!item || !item.url) return;
+                var a = document.createElement('a');
+                a.href = item.url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.textContent = item.name || item.url;
+                modalLinks.appendChild(a);
+            });
+        });
+    }
+
+    function updateModalFavIcon(id) {
+        if (favorites.has(String(id))) {
+            modalFav.classList.add('active');
+            modalFav.setAttribute('aria-label', 'Odebrat z oblíbených');
+        } else {
+            modalFav.classList.remove('active');
+            modalFav.setAttribute('aria-label', 'Přidat do oblíbených');
+        }
+    }
+
+    function openModal(card) {
+        if (!modal) return;
+        var slot = slotsById[card.dataset.id];
+        if (!slot || slot.type !== 'talk') return;
+        currentModalCard = card;
+
+        if (slot.speakerPic) {
+            modalPhoto.src = slot.speakerPic;
+            modalPhoto.style.display = '';
+        } else {
+            modalPhoto.removeAttribute('src');
+            modalPhoto.style.display = 'none';
+        }
+        modalName.textContent = slot.speaker || '';
+        modalCompany.textContent = slot.company || '';
+        modalTitle.textContent = slot.title || '';
+        modalTime.textContent = slot.timeRange + ' • ' + slot.room;
+        modalDesc.textContent = slot.description || '';
+        modalPurpose.textContent = slot.purpose || '';
+        if (slot.purpose) {
+            modalPurposeLabel.classList.remove('hidden');
+        } else {
+            modalPurposeLabel.classList.add('hidden');
+        }
+        renderModalLinks(slot.links);
+        updateModalFavIcon(card.dataset.id);
+
+        document.body.style.overflow = 'hidden';
+        modal.classList.add('open');
+        modal.querySelector('.modal-content').scrollTop = 0;
+    }
+
+    function closeModal() {
+        if (!modal) return;
+        modal.classList.remove('open');
+        document.body.style.overflow = '';
+        currentModalCard = null;
+    }
+
+    if (modal) {
+        modalBackdrop.addEventListener('click', closeModal);
+        modalClose.addEventListener('click', closeModal);
+        modalFav.addEventListener('click', function (e) {
+            e.stopPropagation();
+            if (currentModalCard) {
+                toggleFavorite(currentModalCard);
+                updateModalFavIcon(currentModalCard.dataset.id);
+            }
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && modal.classList.contains('open')) closeModal();
+        });
     }
 
     function currentMinutes() {
@@ -561,7 +843,19 @@
         }
     }, { passive: true });
 
-    document.addEventListener('pointerup', clearPress, { passive: true });
+    document.addEventListener('pointerup', function () {
+        // Pokud pressTimer ještě běží = krátký tap (long-press se nestihl spustit).
+        // Tap na kartě otevře modal s detailem (jen pro talks).
+        if (pressTimer && pressTarget && pressTarget.classList && pressTarget.classList.contains('card')) {
+            clearTimeout(pressTimer);
+            pressTimer = null;
+            var tapTarget = pressTarget;
+            pressTarget = null;
+            openModal(tapTarget);
+            return;
+        }
+        clearPress();
+    }, { passive: true });
     document.addEventListener('pointercancel', clearPress, { passive: true });
 
     document.addEventListener('contextmenu', function (e) {

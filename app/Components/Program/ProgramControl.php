@@ -150,7 +150,7 @@ class ProgramControl extends Control
 
 
     /**
-     * @return array{rooms: array<string,string>, minMinutes: int, maxMinutes: int, slots: array<string,list<array{id:int,startMin:int,durMin:int,timeRange:string,title:?string,speaker:?string,speakerPic:?string,styleClass:string,type:?string}>>}
+     * @return array{rooms: array<string,string>, minMinutes: int, maxMinutes: int, slots: array<string,list<array{id:int,startMin:int,durMin:int,timeRange:string,title:?string,speaker:?string,speakerPic:?string,styleClass:string,type:?string,description:?string,purpose:?string,company:?string,links:array<string,mixed>,room:string}>>}
      * @throws \App\Model\InvalidEnumeratorSetException
      * @throws \Nette\Utils\JsonException
      */
@@ -201,10 +201,20 @@ class ProgramControl extends Control
                     ?? ($category ? lcfirst(str_replace('-', '', ucwords($category, '-'))) : 'none');
 
                 $program = $envelope->getProgram();
-                $conferee = $program->talk?->conferee;
+                $talk = $program->talk;
+                $conferee = $talk?->conferee;
                 $speakerPic = $conferee
                     ? $this->gravatarImageProvider->gravatarize($conferee->pictureUrl, $conferee->email)
                     : null;
+
+                $links = [];
+                if ($talk) {
+                    try {
+                        $links = (array)$talk->getExpandedExtensions('links', []);
+                    } catch (\Nette\Utils\JsonException) {
+                        $links = [];
+                    }
+                }
 
                 $slots[$roomKey][] = [
                     'id' => $envelope->getProgramId(),
@@ -222,6 +232,11 @@ class ProgramControl extends Control
                     'speakerPic' => $speakerPic,
                     'styleClass' => $styleClass,
                     'type' => $envelope->getType(),
+                    'description' => $talk?->description,
+                    'purpose' => $talk?->purpose,
+                    'company' => $talk?->company,
+                    'links' => $links,
+                    'room' => $roomLabel,
                 ];
             }
         }

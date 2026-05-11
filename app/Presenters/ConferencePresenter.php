@@ -324,6 +324,12 @@ class ConferencePresenter extends BasePresenter
         $this->template->year = $this->eventInfoProvider->getDates()->year;
         $this->template->nowOverride = $nowOverride;
         $this->template->cspNonce = $cspNonce;
+        // JSON_HEX_TAG escapuje "<" a ">" na </> - inline <script> tak nemůže
+        // být přeruěn </script> v textu přednášky.
+        $this->template->slotsJson = json_encode(
+            $mobile['slots'],
+            JSON_HEX_TAG | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
+        );
 
         $this->getHttpResponse()->setExpiration(0);
     }
