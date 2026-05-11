@@ -322,7 +322,7 @@
                     {foreach $mobile['slots'][$roomKey] as $slot}
                         {var int $left = ($slot['startMin'] - $mobile['minMinutes']) * $pxPerMin}
                         {var int $width = $slot['durMin'] * $pxPerMin}
-                        <div class="card {$slot['styleClass']} {$slot['type'] !== 'talk' ? 'type-' . $slot['type']}"
+                        <div class="card {$slot['styleClass']}{if $slot['type'] && $slot['type'] !== 'talk'} type-{$slot['type']}{/if}"
                              data-id="{$slot['id']}"
                              data-startmin="{$slot['startMin']}"
                              data-durmin="{$slot['durMin']}"

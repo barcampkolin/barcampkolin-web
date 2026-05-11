@@ -150,7 +150,7 @@ class ProgramControl extends Control
 
 
     /**
-     * @return array{rooms: array<string,string>, minMinutes: int, maxMinutes: int, slots: array<string,list<array{id:int,startMin:int,durMin:int,title:?string,speaker:?string,speakerPic:?string,styleClass:string,type:?string}>>}
+     * @return array{rooms: array<string,string>, minMinutes: int, maxMinutes: int, slots: array<string,list<array{id:int,startMin:int,durMin:int,timeRange:string,title:?string,speaker:?string,speakerPic:?string,styleClass:string,type:?string}>>}
      * @throws \App\Model\InvalidEnumeratorSetException
      * @throws \Nette\Utils\JsonException
      */

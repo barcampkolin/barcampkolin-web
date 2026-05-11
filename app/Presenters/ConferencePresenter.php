@@ -304,11 +304,15 @@ class ConferencePresenter extends BasePresenter
 
         $nowOverride = null;
         if ($now !== null) {
-            if (preg_match('~^(?<hour>\d{1,2}):?(?<minute>\d{2})$~', $now, $matches)) {
-                $nowOverride = ((int)$matches['hour']) * 60 + ((int)$matches['minute']);
-            } else {
+            if (!preg_match('~^(?<hour>\d{1,2}):?(?<minute>\d{2})$~', $now, $matches)) {
                 $this->error('Invalid time format, expected HH:MM or HHMM');
             }
+            $hour = (int)$matches['hour'];
+            $minute = (int)$matches['minute'];
+            if ($hour > 23 || $minute > 59) {
+                $this->error('Invalid time, hour must be 0-23 and minute 0-59');
+            }
+            $nowOverride = $hour * 60 + $minute;
         }
 
         // Nette generuje CSP nonce, ale zveřejňuje ho jen v HTTP hlavičce.
