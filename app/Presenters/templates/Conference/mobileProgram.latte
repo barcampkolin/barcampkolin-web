@@ -49,6 +49,21 @@
             font-weight: 600;
         }
 
+        .reload-btn {
+            margin-left: auto;
+            background: transparent;
+            border: none;
+            color: #000;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 10px;
+            line-height: 1;
+        }
+
+        .reload-btn:active {
+            opacity: 0.6;
+        }
+
         .grid {
             width: 100%;
             height: 100%;
@@ -77,7 +92,7 @@
         .time-axis .hour {
             flex: 0 0 auto;
             width: {= 60 * $pxPerMin }px;
-            font-size: calc(12px * var(--zoom));
+            font-size: 12px;
             font-weight: 600;
             color: #666;
             padding: 10px 0 0 6px;
@@ -180,10 +195,8 @@
             flex-direction: column;
         }
 
-        .card.favorite {
-            background: #fff3a0;
-            box-shadow: 0 1px 4px rgba(255,200,0,0.5);
-        }
+        /* .card.favorite je definováno níže, po style pravidlech, aby je
+           přepsalo (CSS cascade: equal specificity = later wins). */
 
         .card .title {
             font-weight: 600;
@@ -243,20 +256,28 @@
             white-space: nowrap;
         }
 
-        /* Kategorie barvy - stejné jako tvProgram */
-        .card.byznys { border-left-color: #F00; background: #FFCCA6; }
-        .card.byznys.favorite { background: #fff3a0; }
-        .card.technicka { border-left-color: #3f5bea; background: #EDEFFF; }
-        .card.technicka.favorite { background: #fff3a0; }
-        .card.osobniRozvoj { border-left-color: #009309; background: #DCFBDE; }
-        .card.osobniRozvoj.favorite { background: #fff3a0; }
-        .card.none, .card.style4 { border-left-color: #aaa; background: #eee; }
-        .card.none.favorite, .card.style4.favorite { background: #fff3a0; }
+        /* Style barvy - mapuje na site.less .style1-.style8 (s aliasy
+           style-byznys=style7, style-osobni-rozvoj=style6, style-technicka=style8). */
+        .card.style1 { border-left-color: #001e9a; background: #ebeef8; }
+        .card.style2 { border-left-color: #ff6600; background: #fff3eb; }
+        .card.style3 { border-left-color: #e02f2f; background: #fdefef; }
+        .card.style4 { border-left-color: #2588db; background: #eef6fc; }
+        .card.style5 { border-left-color: #b42676; background: #f6cae3; }
+        .card.style6, .card.style-osobni-rozvoj, .card.osobniRozvoj { border-left-color: #009309; background: #dcfbde; }
+        .card.style7, .card.style-byznys, .card.byznys { border-left-color: #e26000; background: #ffcca6; }
+        .card.style8, .card.style-technicka, .card.technicka { border-left-color: #3f5bea; background: #edefff; }
+        .card.none { border-left-color: #aaa; background: #eee; }
 
-        /* Nepřednáškové sloty - bez fotky */
+        /* Favorite musí přepsat všechny style barvy - umístěno až za ně. */
+        .card.favorite {
+            background: #fff3a0;
+            box-shadow: 0 1px 4px rgba(255,200,0,0.5);
+        }
+
+        /* Nepřednáškové sloty - bez fotky. Background a border-left necháváme
+           na admin-nastavené styleClass (byznys, style4, none, ...), zde jen
+           kosmeticky odlišíme typ italic/šedým textem. */
         .card.type-coffee, .card.type-lunch, .card.type-custom {
-            background: #f0f0f0;
-            border-left-color: #888;
             font-style: italic;
             color: #555;
         }
@@ -286,6 +307,35 @@
             display: none;
         }
 
+        .now-label {
+            position: absolute;
+            top: 4px;
+            transform: translateX(-50%);
+            background: #888;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 3px;
+            white-space: nowrap;
+            z-index: 1;
+            pointer-events: none;
+            display: none;
+        }
+
+        .now-label::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #888;
+        }
+
         .empty-state {
             text-align: center;
             padding: 40px 20px;
@@ -305,6 +355,7 @@
         <header>
             <div class="brand">BCK {$year}</div>
             <h1>Program</h1>
+            <button type="button" id="reloadBtn" class="reload-btn" aria-label="Obnovit program">↻</button>
         </header>
 {if count($mobile['rooms']) === 0}
         <div class="empty-state">Program zatím není zveřejněn.</div>
@@ -313,6 +364,7 @@
             {for $h = (int)($mobile['minMinutes'] / 60); $h < $mobile['maxMinutes'] / 60; $h++}
                 <div class="hour">{= sprintf('%02d:00', $h) }</div>
             {/for}
+            <span class="now-label" id="nowLabel"></span>
         </div>
 
         {foreach $mobile['rooms'] as $roomKey => $roomLabel}
@@ -371,7 +423,12 @@
     var nowOverrideRaw = grid.dataset.nowOverride;
     var nowOverride = (nowOverrideRaw !== undefined && nowOverrideRaw !== '') ? parseInt(nowOverrideRaw, 10) : null;
     var nowLine = document.getElementById('nowLine');
+    var nowLabel = document.getElementById('nowLabel');
     var pastOverlay = document.getElementById('pastOverlay');
+    var reloadBtn = document.getElementById('reloadBtn');
+    if (reloadBtn) {
+        reloadBtn.addEventListener('click', function () { location.reload(); });
+    }
 
     function currentMinutes() {
         if (nowOverride !== null && !isNaN(nowOverride)) return nowOverride;
@@ -379,15 +436,23 @@
         return d.getHours() * 60 + d.getMinutes();
     }
 
+    function formatHHMM(min) {
+        var hh = Math.floor(min / 60);
+        var mm = min % 60;
+        return (hh < 10 ? '0' : '') + hh + ':' + (mm < 10 ? '0' : '') + mm;
+    }
+
     function updateNow() {
         var nowMin = currentMinutes();
         if (nowMin < minMin) {
             nowLine.style.display = 'none';
+            if (nowLabel) nowLabel.style.display = 'none';
             pastOverlay.style.width = '0px';
             return;
         }
         if (nowMin > maxMin) {
             nowLine.style.display = 'none';
+            if (nowLabel) nowLabel.style.display = 'none';
             pastOverlay.style.width = ((maxMin - minMin) * pxMin) + 'px';
             return;
         }
@@ -395,6 +460,12 @@
         nowLine.style.display = 'block';
         nowLine.style.left = (LABEL_W + offset) + 'px';
         pastOverlay.style.width = offset + 'px';
+        if (nowLabel) {
+            nowLabel.textContent = formatHHMM(nowMin);
+            // Label je uvnitř .time-axis, která má margin-left:80 — left tedy bez LABEL_W.
+            nowLabel.style.left = offset + 'px';
+            nowLabel.style.display = 'inline-block';
+        }
     }
 
     function autoScrollToNow() {
@@ -508,7 +579,16 @@
         updateScrolledClass();
     });
     if (nowOverride === null) {
-        setInterval(updateNow, 60 * 1000);
+        setInterval(updateNow, 5 * 1000);
+        // Při probuzení mobilu nebo návratu z pozadí ihned přepočítat -
+        // setInterval po uspání nečeká přesně 60 s, čára by se na okamžik
+        // mohla zobrazit na staré pozici.
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'visible') {
+                updateNow();
+            }
+        });
+        window.addEventListener('pageshow', updateNow);
     }
 
     // Při horizontálním scrollu zúžit & rotovat labely sálů.

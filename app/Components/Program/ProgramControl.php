@@ -157,7 +157,23 @@ class ProgramControl extends Control
     public function getMobileProgramData(): array
     {
         $sortedItems = $this->getSortedItems();
-        $allRooms = $this->talkManager->getRooms();
+        $rawRooms = $this->talkManager->getRooms();
+
+        // Mobilní view zobrazuje sály jako řádky shora dolů. V administrátorském
+        // pořadí jsou v posloupnosti, jak byly přidány (Dolní → Střední → Horní),
+        // ale fyzické rozložení budovy je naopak (Horní je nahoře). V tabulkových
+        // views to nevadí (sály jsou sloupce), tady ano. Otočíme tedy první N−1
+        // sálů; poslední (typicky "Venku" / outdoor stage) ponecháme na konci.
+        $keys = array_keys($rawRooms);
+        if (count($keys) > 1) {
+            $last = array_pop($keys);
+            $keys = array_reverse($keys);
+            $keys[] = $last;
+        }
+        $allRooms = [];
+        foreach ($keys as $k) {
+            $allRooms[$k] = $rawRooms[$k];
+        }
 
         $rooms = [];
         $slots = [];
