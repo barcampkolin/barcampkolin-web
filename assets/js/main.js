@@ -9,6 +9,7 @@ import {toggle as slideToggle} from 'slide-element';
 import schedule from './modules/schedule.mjs';
 import heroslider from './modules/heroslider.mjs';
 import lectures from './modules/lectures.mjs';
+import mobileProgram from './modules/mobileProgram.mjs';
 
 // Call LESS processor
 import '../less/main.less';
@@ -27,6 +28,7 @@ domready(function () {
     smoothScroll();
     schedule();
     lectures();
+    mobileProgram();
     program();
     avatarUploader();
     talkVote();

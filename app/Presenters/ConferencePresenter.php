@@ -294,6 +294,35 @@ class ConferencePresenter extends BasePresenter
     }
 
 
+    /**
+     * @throws \App\Model\InvalidEnumeratorSetException
+     * @throws \Nette\Utils\JsonException
+     */
+    public function renderMobileProgram(?string $now = null): void
+    {
+        $mobile = $this['program']->getMobileProgramData();
+
+        $nowOverride = null;
+        if ($now !== null) {
+            if (!preg_match('~^(?<hour>\d{1,2}):?(?<minute>\d{2})$~', $now, $matches)) {
+                $this->error('Invalid time format, expected HH:MM or HHMM');
+            }
+            $hour = (int)$matches['hour'];
+            $minute = (int)$matches['minute'];
+            if ($hour > 23 || $minute > 59) {
+                $this->error('Invalid time, hour must be 0-23 and minute 0-59');
+            }
+            $nowOverride = $hour * 60 + $minute;
+        }
+
+        $this->template->mobile = $mobile;
+        $this->template->year = $this->eventInfoProvider->getDates()->year;
+        $this->template->nowOverride = $nowOverride;
+
+        $this->getHttpResponse()->setExpiration(0);
+    }
+
+
     public function embedizeYouTube($url, $campainId = null)
     {
         $matches = null;

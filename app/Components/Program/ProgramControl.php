@@ -3,6 +3,7 @@
 namespace App\Components\Program;
 
 use App\Model\EventInfoProvider;
+use App\Model\GravatarImageProvider;
 use App\Model\TalkCategoryStyler;
 use App\Model\TalkManager;
 use App\Orm\Program\Program;
@@ -18,10 +19,12 @@ class ProgramControl extends Control
      * ProgramControl constructor.
      * @param EventInfoProvider $infoProvider
      * @param TalkManager $talkManager
+     * @param GravatarImageProvider $gravatarImageProvider
      */
     public function __construct(
         private readonly EventInfoProvider $infoProvider,
-        private readonly TalkManager $talkManager
+        private readonly TalkManager $talkManager,
+        private readonly GravatarImageProvider $gravatarImageProvider
     ) {
     }
 
@@ -142,6 +145,116 @@ class ProgramControl extends Control
         return [
             'times'=>$times,
             'rooms' => $rooms,
+        ];
+    }
+
+
+    /**
+     * @return array{rooms: array<string,string>, minMinutes: int, maxMinutes: int, slots: array<string,list<array{id:int,startMin:int,durMin:int,timeRange:string,title:?string,speaker:?string,speakerPic:?string,styleClass:string,type:?string,description:?string,purpose:?string,company:?string,links:array<string,mixed>,room:string}>>}
+     * @throws \App\Model\InvalidEnumeratorSetException
+     * @throws \Nette\Utils\JsonException
+     */
+    public function getMobileProgramData(): array
+    {
+        $sortedItems = $this->getSortedItems();
+        $rawRooms = $this->talkManager->getRooms();
+
+        // Mobilní view zobrazuje sály jako řádky shora dolů. V administrátorském
+        // pořadí jsou v posloupnosti, jak byly přidány (Dolní → Střední → Horní),
+        // ale fyzické rozložení budovy je naopak (Horní je nahoře). V tabulkových
+        // views to nevadí (sály jsou sloupce), tady ano. Otočíme tedy první N−1
+        // sálů; poslední (typicky "Venku" / outdoor stage) ponecháme na konci.
+        $keys = array_keys($rawRooms);
+        if (count($keys) > 1) {
+            $last = array_pop($keys);
+            $keys = array_reverse($keys);
+            $keys[] = $last;
+        }
+        $allRooms = [];
+        foreach ($keys as $k) {
+            $allRooms[$k] = $rawRooms[$k];
+        }
+
+        $rooms = [];
+        $slots = [];
+        $minMin = null;
+        $maxMin = null;
+
+        foreach ($allRooms as $roomKey => $roomLabel) {
+            if (!isset($sortedItems[$roomKey])) {
+                continue;
+            }
+
+            $rooms[$roomKey] = $roomLabel;
+            $slots[$roomKey] = [];
+
+            /** @var InternalProgramEnvelope $envelope */
+            foreach ($sortedItems[$roomKey] as $startMin => $envelope) {
+                $duration = (int)$envelope->getDuration();
+                $endMin = $startMin + $duration;
+
+                $minMin = $minMin === null ? $startMin : min($minMin, $startMin);
+                $maxMin = $maxMin === null ? $endMin : max($maxMin, $endMin);
+
+                $category = $envelope->getCategory();
+                $styleClass = $envelope->getStyle()
+                    ?? ($category ? lcfirst(str_replace('-', '', ucwords($category, '-'))) : 'none');
+
+                $program = $envelope->getProgram();
+                $talk = $program->talk;
+                $conferee = $talk?->conferee;
+                $speakerPic = $conferee
+                    ? $this->gravatarImageProvider->gravatarize($conferee->pictureUrl, $conferee->email)
+                    : null;
+
+                $links = [];
+                if ($talk) {
+                    try {
+                        $links = (array)$talk->getExpandedExtensions('links', []);
+                    } catch (\Nette\Utils\JsonException) {
+                        $links = [];
+                    }
+                }
+
+                $slots[$roomKey][] = [
+                    'id' => $envelope->getProgramId(),
+                    'startMin' => (int)$startMin,
+                    'durMin' => $duration,
+                    'timeRange' => sprintf(
+                        '%02d:%02d – %02d:%02d',
+                        intdiv((int)$startMin, 60),
+                        ((int)$startMin) % 60,
+                        intdiv($endMin, 60),
+                        $endMin % 60,
+                    ),
+                    'title' => $envelope->getTitle(),
+                    'speaker' => $envelope->getSpeaker(),
+                    'speakerPic' => $speakerPic,
+                    'styleClass' => $styleClass,
+                    'type' => $envelope->getType(),
+                    'description' => $talk?->description,
+                    'purpose' => $talk?->purpose,
+                    'company' => $talk?->company,
+                    'links' => $links,
+                    'room' => $roomLabel,
+                ];
+            }
+        }
+
+        // Zaokrouhlení na celé hodiny pro hezkou časovou osu
+        if ($minMin !== null) {
+            $minMin -= $minMin % 60;
+            $maxMin = $maxMin + 60 - (($maxMin % 60) ?: 60);
+        } else {
+            $minMin = 0;
+            $maxMin = 0;
+        }
+
+        return [
+            'rooms' => $rooms,
+            'minMinutes' => $minMin,
+            'maxMinutes' => $maxMin,
+            'slots' => $slots,
         ];
     }
 

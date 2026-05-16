@@ -1,0 +1,629 @@
+{varType array $mobile}
+{varType int $year}
+{varType ?int $nowOverride}
+{var int $pxPerMin = 4}
+{var int $rangeMin = $mobile['maxMinutes'] - $mobile['minMinutes']}
+{var int $trackWidth = $rangeMin * $pxPerMin}
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Barcamp Kolín {$year} – Program</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            background: #f4f4f4;
+            color: #222;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: #ffcb00;
+            color: #000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            z-index: 30;
+            position: sticky;
+            left: 0;
+            width: 100vw;
+        }
+
+        header .brand {
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        header h1 {
+            margin: 0 0 0 12px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .reload-btn {
+            margin-left: auto;
+            background: transparent;
+            border: none;
+            color: #000;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 10px;
+            line-height: 1;
+        }
+
+        .reload-btn:active {
+            opacity: 0.6;
+        }
+
+        .grid {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .grid-inner {
+            position: relative;
+            width: {= $trackWidth + 80 }px;
+            min-height: 100dvh;
+        }
+
+        .time-axis {
+            position: sticky;
+            top: 0;
+            display: flex;
+            background: #fff;
+            border-bottom: 2px solid #ddd;
+            z-index: 20;
+            margin-left: 80px;
+            height: 36px;
+        }
+
+        .time-axis .hour {
+            flex: 0 0 auto;
+            width: {= 60 * $pxPerMin }px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            padding: 10px 0 0 6px;
+            border-left: 1px solid #eee;
+        }
+
+        .room-row {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            min-height: calc(120px * var(--zoom));
+            position: relative;
+        }
+
+        .room-label {
+            position: relative;
+            flex: 0 0 80px;
+            width: 80px;
+            z-index: 16;
+            display: flex;
+            align-items: stretch;
+            justify-content: flex-start;
+        }
+
+        .grid.scrolled-x .room-label {
+            position: sticky;
+            left: 0;
+        }
+
+        .label-column-bg {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 80px;
+            height: 100dvh;
+            margin-bottom: -100dvh;
+            background: #fafafa;
+            border-right: 1px solid #ddd;
+            z-index: 16;
+            pointer-events: none;
+            transition: width 0.18s ease;
+        }
+
+        .grid.scrolled-x .label-column-bg {
+            width: 30px;
+        }
+
+        .room-label .label-text {
+            width: 100%;
+            background: #fafafa;
+            padding: 10px 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.2;
+        }
+
+        .grid.scrolled-x .room-label .label-text {
+            width: 30px;
+            padding: 6px 2px;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            border-right: none;
+            border-left: 1px solid #ddd;
+            border-top: 1px solid #ddd;
+        }
+
+        .room-track {
+            position: relative;
+            flex: 1 1 auto;
+            min-height: calc(135px * var(--zoom));
+        }
+
+        .grid-inner {
+            --zoom: 1;
+        }
+
+        .card {
+            position: absolute;
+            top: 6px;
+            bottom: 6px;
+            background: #fff;
+            border-radius: 6px;
+            border-left: 4px solid #999;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            padding: 6px 8px;
+            font-size: calc(12px * var(--zoom));
+            line-height: 1.25;
+            transition: background 0.15s;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* .card.favorite je definováno níže, po style pravidlech, aby je
+           přepsalo (CSS cascade: equal specificity = later wins). */
+
+        .card .title {
+            font-weight: 600;
+            font-size: calc(12px * var(--zoom));
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            position: sticky;
+            left: 88px;
+            max-width: calc(100vw - 96px);
+            transition: left 0.18s ease, max-width 0.18s ease;
+        }
+
+        .card .time {
+            font-size: calc(11px * var(--zoom));
+            color: #555;
+            margin-top: auto;
+            margin-bottom: 2px;
+            position: sticky;
+            left: 88px;
+            max-width: calc(100vw - 96px);
+            transition: left 0.18s ease, max-width 0.18s ease;
+        }
+
+        .card .speaker {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: calc(11px * var(--zoom));
+            color: #555;
+            position: sticky;
+            left: 88px;
+            max-width: calc(100vw - 96px);
+            transition: left 0.18s ease, max-width 0.18s ease;
+        }
+
+        .grid.scrolled-x .card .title,
+        .grid.scrolled-x .card .time,
+        .grid.scrolled-x .card .speaker {
+            left: 38px;
+            max-width: calc(100vw - 46px);
+        }
+
+        .card .speaker img {
+            width: calc(22px * var(--zoom));
+            height: calc(22px * var(--zoom));
+            border-radius: 50%;
+            object-fit: cover;
+            flex: 0 0 auto;
+        }
+
+        .card .speaker span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Style barvy - mapuje na site.less .style1-.style8 (s aliasy
+           style-byznys=style7, style-osobni-rozvoj=style6, style-technicka=style8). */
+        .card.style1 { border-left-color: #001e9a; background: #ebeef8; }
+        .card.style2 { border-left-color: #ff6600; background: #fff3eb; }
+        .card.style3 { border-left-color: #e02f2f; background: #fdefef; }
+        .card.style4 { border-left-color: #2588db; background: #eef6fc; }
+        .card.style5 { border-left-color: #b42676; background: #f6cae3; }
+        .card.style6, .card.style-osobni-rozvoj, .card.osobniRozvoj { border-left-color: #009309; background: #dcfbde; }
+        .card.style7, .card.style-byznys, .card.byznys { border-left-color: #e26000; background: #ffcca6; }
+        .card.style8, .card.style-technicka, .card.technicka { border-left-color: #3f5bea; background: #edefff; }
+        .card.none { border-left-color: #aaa; background: #eee; }
+
+        /* Favorite musí přepsat všechny style barvy - umístěno až za ně. */
+        .card.favorite {
+            background: #fff3a0;
+            box-shadow: 0 1px 4px rgba(255,200,0,0.5);
+        }
+
+        /* Nepřednáškové sloty - bez fotky. Background a border-left necháváme
+           na admin-nastavené styleClass (byznys, style4, none, ...), zde jen
+           kosmeticky odlišíme typ italic/šedým textem. */
+        .card.type-coffee, .card.type-lunch, .card.type-custom {
+            font-style: italic;
+            color: #555;
+        }
+        .card.type-coffee.favorite, .card.type-lunch.favorite, .card.type-custom.favorite {
+            background: #fff3a0;
+        }
+
+        .past-overlay {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 80px;
+            background: rgba(120,120,120,0.35);
+            pointer-events: none;
+            z-index: 10;
+            width: 0;
+        }
+
+        .now-line {
+            position: absolute;
+            top: 0;
+            width: 1px;
+            height: 100%;
+            background: #888;
+            pointer-events: none;
+            z-index: 10;
+            display: none;
+        }
+
+        .now-label {
+            position: absolute;
+            top: 7px;
+            transform: translateX(-50%);
+            background: #888;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 3px;
+            white-space: nowrap;
+            z-index: 1;
+            pointer-events: none;
+            display: none;
+        }
+
+        .now-label::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid #888;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        /* Modal s detailem přednášky */
+        .talk-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .talk-modal.open {
+            display: flex;
+        }
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            position: relative;
+            max-width: 600px;
+            width: 92%;
+            max-height: 86vh;
+            overflow-y: auto;
+            background: #fff;
+            border-radius: 8px;
+            padding: 44px 20px 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+        .modal-close, .modal-fav {
+            position: absolute;
+            top: 8px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 6px 10px;
+            line-height: 1;
+        }
+        .modal-close {
+            right: 4px;
+            font-size: 26px;
+            color: #888;
+        }
+        .modal-fav {
+            right: 40px;
+            color: #bbb;
+        }
+        .modal-fav svg {
+            fill: currentColor;
+            stroke: currentColor;
+            stroke-width: 1;
+        }
+        .modal-fav.active {
+            color: #ffcb00;
+        }
+        .modal-speaker {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+        .modal-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex: 0 0 80px;
+            background: #eee;
+        }
+        .modal-speaker-info {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        .modal-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #222;
+        }
+        .modal-company {
+            font-size: 13px;
+            color: #666;
+            margin-top: 2px;
+        }
+        .modal-company:empty {
+            display: none;
+        }
+        .modal-links {
+            margin-top: 6px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px 10px;
+        }
+        .modal-links a {
+            font-size: 13px;
+            color: #2588db;
+            text-decoration: none;
+        }
+        .modal-links a:hover {
+            text-decoration: underline;
+        }
+        .modal-talk {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+        }
+        .modal-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin: 0 0 4px;
+            color: #222;
+        }
+        .modal-time {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        .modal-desc {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            margin: 0 0 12px;
+            white-space: pre-line;
+        }
+        .modal-desc:empty {
+            display: none;
+        }
+        .modal-purpose-label {
+            font-size: 13px;
+            font-weight: 700;
+            margin: 12px 0 4px;
+            color: #555;
+        }
+        .modal-purpose {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            margin: 0;
+            white-space: pre-line;
+        }
+        .modal-desc:empty,
+        .modal-purpose:empty,
+        .modal-purpose-label.hidden,
+        .modal-company:empty,
+        .modal-links:empty {
+            display: none;
+        }
+
+        /* Když NOW vypadne za okraj viewportu, .now-label se přepne do
+           "jump" módu: text "TEĎ", šipka mířící ke straně kam NOW zmizela,
+           pozicování na kraji viewportu, klikatelné. Vertikálně zůstává
+           v .time-axis (žádné top řešení). Position sticky nechá horizontální
+           pozici řešit prohlížeč (žádné JS-driven skoky při scrollu). */
+        .now-label.jump {
+            position: sticky;
+            top: auto;
+            align-self: center;
+            transform: none;
+            cursor: pointer;
+            pointer-events: auto;
+        }
+        .now-label.jump-left {
+            left: 12px;
+            order: -1;
+        }
+        .now-label.jump-right {
+            right: 12px;
+            order: 999;
+            margin-left: auto;
+        }
+        .now-label.jump::after {
+            top: 50%;
+            left: auto;
+            transform: translateY(-50%);
+            border: none;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        .now-label.jump-right::after {
+            right: -5px;
+            border-left: 5px solid #888;
+        }
+        .now-label.jump-left::after {
+            display: none;
+        }
+        .now-label.jump-left::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -5px;
+            transform: translateY(-50%);
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 5px solid #888;
+        }
+    </style>
+</head>
+<body>
+<div class="grid" id="grid"
+     data-min="{$mobile['minMinutes']}"
+     data-max="{$mobile['maxMinutes']}"
+     data-pxmin="{$pxPerMin}"
+     data-year="{$year}"
+     n:attr="data-now-override => $nowOverride">
+    <div class="grid-inner">
+        <div class="label-column-bg"></div>
+        <header>
+            <div class="brand">BCK {$year}</div>
+            <h1>Program</h1>
+            <button type="button" id="reloadBtn" class="reload-btn" aria-label="Obnovit program">↻</button>
+        </header>
+{if count($mobile['rooms']) === 0}
+        <div class="empty-state">Program zatím není zveřejněn.</div>
+{else}
+        <div class="time-axis">
+            {for $h = (int)($mobile['minMinutes'] / 60); $h < $mobile['maxMinutes'] / 60; $h++}
+                <div class="hour">{= sprintf('%02d:00', $h) }</div>
+            {/for}
+            <span class="now-label" id="nowLabel"></span>
+        </div>
+
+        {foreach $mobile['rooms'] as $roomKey => $roomLabel}
+            <div class="room-row">
+                <div class="room-label"><span class="label-text">{= $roomLabel }</span></div>
+                <div class="room-track">
+                    {foreach $mobile['slots'][$roomKey] as $slot}
+                        {var int $left = ($slot['startMin'] - $mobile['minMinutes']) * $pxPerMin}
+                        {var int $width = $slot['durMin'] * $pxPerMin}
+                        <div class="card {$slot['styleClass']}{if $slot['type'] && $slot['type'] !== 'talk'} type-{$slot['type']}{/if}"
+                             data-id="{$slot['id']}"
+                             data-startmin="{$slot['startMin']}"
+                             data-durmin="{$slot['durMin']}"
+                             style="left: {$left}px; width: {$width}px;">
+                            <div class="title">{= $slot['title'] }</div>
+                            <div class="time">{= $slot['timeRange'] }</div>
+                            {if $slot['type'] === 'talk' && $slot['speaker']}
+                                <div class="speaker">
+                                    {if $slot['speakerPic']}
+                                        <img src="{$slot['speakerPic']}" alt="" loading="lazy">
+                                    {/if}
+                                    <span>{= $slot['speaker'] }</span>
+                                </div>
+                            {/if}
+                        </div>
+                    {/foreach}
+                </div>
+            </div>
+        {/foreach}
+
+        <div class="past-overlay" id="pastOverlay"></div>
+        <div class="now-line" id="nowLine"></div>
+{/if}
+    </div>
+</div>
+
+{if count($mobile['rooms']) > 0}
+<script type="application/json" id="slotsData" n:nonce>{=$mobile['slots']}</script>
+
+<div class="talk-modal" id="talkModal">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-content">
+        <button type="button" class="modal-close" id="modalClose" aria-label="Zavřít">×</button>
+        <button type="button" class="modal-fav" id="modalFav" aria-label="Přidat do oblíbených">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 21s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 11c0 5.5-7 10-7 10z"/></svg>
+        </button>
+        <div class="modal-speaker">
+            <img class="modal-photo" id="modalPhoto" alt="">
+            <div class="modal-speaker-info">
+                <div class="modal-name" id="modalName"></div>
+                <div class="modal-company" id="modalCompany"></div>
+                <div class="modal-links" id="modalLinks"></div>
+            </div>
+        </div>
+        <div class="modal-talk">
+            <h2 class="modal-title" id="modalTitle"></h2>
+            <div class="modal-time" id="modalTime"></div>
+            <p class="modal-desc" id="modalDesc"></p>
+            <h3 class="modal-purpose-label" id="modalPurposeLabel">Komu je určena</h3>
+            <p class="modal-purpose" id="modalPurpose"></p>
+        </div>
+    </div>
+</div>
+{/if}
+
+<script src="{$basePath}/static/{$year}/js/main.js?{=filemtime($wwwDir . '/static/'.$year.'/js/main.js')}" async n:nonce></script>
+</body>
+</html>

@@ -72,6 +72,18 @@ class InternalProgramEnvelope extends InternalProgram
     }
 
 
+    public function getProgramId(): int
+    {
+        return $this->program->id;
+    }
+
+
+    public function getProgram(): Program
+    {
+        return $this->program;
+    }
+
+
     /**
      * @return null|string
      */
