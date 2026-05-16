@@ -596,7 +596,7 @@
 </div>
 
 {if count($mobile['rooms']) > 0}
-<script type="application/json" id="slotsData" n:nonce>{=Nette\Utils\Json::encode($mobile['slots'], false, false, true)|noescape}</script>
+<script type="application/json" id="slotsData" n:nonce>{=$mobile['slots']}</script>
 
 <div class="talk-modal" id="talkModal">
     <div class="modal-backdrop" id="modalBackdrop"></div>
