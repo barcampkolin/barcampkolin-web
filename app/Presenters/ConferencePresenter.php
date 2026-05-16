@@ -315,21 +315,9 @@ class ConferencePresenter extends BasePresenter
             $nowOverride = $hour * 60 + $minute;
         }
 
-        // Nette generuje CSP nonce, ale zveřejňuje ho jen v HTTP hlavičce.
-        // Pro inline <script> ho musíme vytáhnout zpět odtud.
-        $cspHeader = $this->getHttpResponse()->getHeader('Content-Security-Policy');
-        $cspNonce = ($cspHeader !== null && preg_match("/'nonce-([^']+)'/", $cspHeader, $m)) ? $m[1] : null;
-
         $this->template->mobile = $mobile;
         $this->template->year = $this->eventInfoProvider->getDates()->year;
         $this->template->nowOverride = $nowOverride;
-        $this->template->cspNonce = $cspNonce;
-        // JSON_HEX_TAG escapuje "<" a ">" na </> - inline <script> tak nemůže
-        // být přeruěn </script> v textu přednášky.
-        $this->template->slotsJson = json_encode(
-            $mobile['slots'],
-            JSON_HEX_TAG | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES,
-        );
 
         $this->getHttpResponse()->setExpiration(0);
     }
