@@ -890,15 +890,17 @@ body.no-js .js-only {
     list-style: none;
     overflow: hidden;
     border-top: 1px solid #d6d6d6;
+    --tag-width: 12rem;
 
     li {
         width: 100%;
         display: block;
         position: relative;
-        padding: 2rem 21rem 2rem 25rem;
+        padding: 1rem 21rem 1rem 25rem;
         border-bottom: 1px solid #d6d6d6;
         transition: max-height 0.15s ease-out;
         height: 11rem;
+        overflow: hidden;
         .tr();
     }
 
@@ -986,6 +988,7 @@ body.no-js .js-only {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            padding-right: var(--tag-width);
         }
 
         .item-text {
@@ -1006,8 +1009,7 @@ body.no-js .js-only {
         position: absolute;
         right: 0;
         top: 0;
-        width: 12rem;
-        padding-top: 2rem;
+        width: var(--tag-width);
     }
 
     .item-tag {
