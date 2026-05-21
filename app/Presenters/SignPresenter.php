@@ -12,7 +12,6 @@ use App\Model\IdentityManager;
 use App\Model\IdentityNotFoundException;
 use App\Model\MailerManager;
 use App\Model\NoUserLoggedIn;
-use App\Model\RestoredUserIdentity;
 use App\Model\TalkManager;
 use App\Model\UserManager;
 use App\Model\UserNotFound;
@@ -23,14 +22,9 @@ use App\Orm\User\User;
 use App\Orm\UserRole\UserRole;
 use LogicException;
 use Nette\Application\UI\Form;
-use Nette\Http\IResponse;
-use Nette\Http\SessionSection;
 use Nette\Mail\SendException;
-use Nette\Security\AuthenticationException;
 use Nette\Security\SimpleIdentity;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\Random;
-use Nextras\Orm\Entity\Entity;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -172,17 +166,14 @@ class SignPresenter extends BasePresenter
         switch ($domain) {
             case 'gmail.com':
                 return 'https://mail.google.com/';
-                break;
             case 'seznam.cz':
             case 'email.cz':
             case 'post.cz':
                 return 'https://email.seznam.cz/';
-                break;
             case 'outlook.cz':
             case 'outlook.com':
             case 'hotmail.com':
                 return 'https://outlook.live.com/';
-                break;
         }
 
         getmxrr($domain, $mxhosts);
@@ -190,9 +181,13 @@ class SignPresenter extends BasePresenter
         if (isset($mxhosts[0])) {
             if (preg_match('/google\.com$/', (string)$mxhosts[0])) {
                 return 'https://mail.google.com/';
-            } elseif (preg_match('/seznam\.cz$/', (string)$mxhosts[0])) {
+            }
+
+            if (preg_match('/seznam\.cz$/', (string)$mxhosts[0])) {
                 return 'https://email.seznam.cz/';
-            } elseif (preg_match('/outlook\.com$/', (string)$mxhosts[0])) {
+            }
+
+            if (preg_match('/outlook\.com$/', (string)$mxhosts[0])) {
                 return 'https://outlook.live.com/';
             }
         }
@@ -265,9 +260,6 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     */
     protected function createComponentUpdatePasswordForm(): Form
     {
         $form = new Form();
@@ -278,14 +270,14 @@ class SignPresenter extends BasePresenter
         $form->addPassword('password', 'Nové heslo')
             ->setOption('description', sprintf('alespoň %d znaků', Forms\SignUpFormFactory::PASSWORD_MIN_LENGTH))
             ->setRequired('Vytvořte si prosím heslo')
-            ->addRule($form::MIN_LENGTH, null, Forms\SignUpFormFactory::PASSWORD_MIN_LENGTH);
+            ->addRule($form::MinLength, null, Forms\SignUpFormFactory::PASSWORD_MIN_LENGTH);
 
         $form->addSubmit('submit', 'Nastavit heslo')
             ->setOption('itemClass', 'text-center')
             ->getControlPrototype()->setName('button')
             ->setText('Nastavit nové heslo');
 
-        $form->onSuccess[] = function (Form $form, $values): void {
+        $form->onSuccess[] = function (Form $form, ArrayHash $values): void {
             $this->resetPassword($values->email, $values->token, $values->password);
         };
 
@@ -293,15 +285,6 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $email
-     * @param $resetToken
-     * @param $password
-     * @throws \App\Model\TokenInvalidException
-     * @throws \App\Model\UserNotFoundException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
     public function resetPassword(string $email, string $resetToken, string $password): never
     {
         $identity = $this->authenticator->getIdentityByResetPasswordToken($email, $resetToken);
@@ -325,9 +308,6 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * Sign-in form factory.
-     */
     protected function createComponentSignInForm(): Form
     {
         return $this->signInFormFactory->create(
@@ -373,8 +353,8 @@ class SignPresenter extends BasePresenter
             $user = $this->userManager->getByLoginUser($this->getUser());
             $identity = $user->identity->getIterator()->fetch();
 
-            if(!$identity instanceof Identity) {
-                throw new LogicException("No identity was found for user ID: {$user->id}, that's integrity data error");
+            if (!$identity instanceof Identity) {
+                throw new LogicException("No identity was found for user ID: $user->id, that's integrity data error");
             }
 
             $user->name = $conferee->name;

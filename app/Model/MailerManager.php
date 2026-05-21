@@ -53,14 +53,7 @@ readonly class MailerManager
     }
 
 
-    /**
-     * @param $recipient
-     * @param $tokenUrl
-     * @return ResetPasswordMessage
-     * @throws EntityNotFound
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getResetPasswordMessage($recipient, $tokenUrl): ResetPasswordMessage
+    public function getResetPasswordMessage(string $recipient, string $tokenUrl): ResetPasswordMessage
     {
         $mail = $this->mailLoader->getMailById('reset-password');
 

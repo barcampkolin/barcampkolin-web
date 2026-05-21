@@ -10,26 +10,14 @@ use Nette\Utils\Strings;
 
 class LocalFileStorage
 {
-    /**
-     * @param StoragePrefix $storagePrefix
-     * @param bool $isRandomizeName
-     */
     public function __construct(
         private readonly StoragePrefix $storagePrefix,
-        private $isRandomizeName = true
+        private readonly bool $isRandomizeName = true
     ) {
     }
 
 
-    /**
-     * @param string $content
-     * @param string $name
-     * @param string $extextOverride
-     * @return string
-     * @throws InvalidArgumentException
-     * @throws \Nette\IOException
-     */
-    public function saveContent(string $content, $name = null, $extextOverride = null): string
+    public function saveContent(string $content, ?string $name = null, ?string $extextOverride = null): string
     {
         $filename = $this->getSafeFilename($name, $extextOverride);
         $storageFile = $this->getStorageFilename($filename);
@@ -40,15 +28,7 @@ class LocalFileStorage
     }
 
 
-    /**
-     * @param FileUpload $file
-     * @param string|null $name
-     * @return string
-     * @throws InvalidArgumentException
-     * @throws \Nette\IOException
-     * @throws \Nette\InvalidArgumentException
-     */
-    public function saveUploaded(FileUpload $file, $name = null): string
+    public function saveUploaded(FileUpload $file, ?string $name = null): string
     {
         $filename = $this->getSafeFilename($name, $this->getExtension($file->name));
 
@@ -60,14 +40,7 @@ class LocalFileStorage
     }
 
 
-    /**
-     * @param string|null $name
-     * @param string|null $extOverride
-     * @return string
-     * @throws InvalidArgumentException
-     * @throws \Nette\InvalidArgumentException
-     */
-    public function getSafeFilename($name, $extOverride = null): string
+    public function getSafeFilename(?string $name, ?string $extOverride = null): string
     {
         $filename = pathinfo((string)$name, PATHINFO_FILENAME);
 
@@ -99,60 +72,35 @@ class LocalFileStorage
     }
 
 
-    /**
-     * @param string $url
-     * @return bool
-     */
-    public function match($url): bool
+    public function match(string $url): bool
     {
         $urlPrefix = $this->storagePrefix->getUrlPath();
         return str_starts_with($url, $urlPrefix);
     }
 
 
-    /**
-     * @param string $url
-     * @return bool
-     * @throws InvalidArgumentException
-     */
-    public function exists($url): bool
+    public function exists(string $url): bool
     {
         $filename = $this->urlToFilename($url);
         return file_exists($filename);
     }
 
 
-    /**
-     * @param string $url
-     * @return string
-     * @throws InvalidArgumentException
-     * @throws \Nette\IOException
-     */
-    public function getFileContent($url): string
+    public function getFileContent(string $url): string
     {
         $filename = $this->urlToFilename($url);
         return FileSystem::read($filename);
     }
 
 
-    /**
-     * @param string $url
-     * @throws InvalidArgumentException
-     * @throws \Nette\IOException
-     */
-    public function delete($url): void
+    public function delete(string $url): void
     {
         $filename = $this->urlToFilename($url);
         FileSystem::delete($filename);
     }
 
 
-    /**
-     * @param string $url
-     * @return string
-     * @throws InvalidArgumentException
-     */
-    protected function urlToFilename($url): string|array
+    protected function urlToFilename(string $url): string
     {
         $urlPrefix = $this->storagePrefix->getUrlPath();
         $storagePrefix = $this->storagePrefix->getStoragePath();
@@ -162,27 +110,16 @@ class LocalFileStorage
             throw new InvalidArgumentException("URL \"$url\" is not matching to prefix \"$urlPrefix\"");
         }
 
-        $filename = str_replace($urlPrefix, $storagePrefix, $url);
-
-        return $filename;
+        return str_replace($urlPrefix, $storagePrefix, $url);
     }
 
 
-    /**
-     * @param string $name
-     * @return string
-     */
-    protected function getExtension($name): string
+    protected function getExtension(string $name): string
     {
         return pathinfo($name, PATHINFO_EXTENSION);
     }
 
 
-    /**
-     * @param string $filename
-     * @return string
-     * @throws \Nette\IOException
-     */
     protected function getStorageFilename(string $filename): string
     {
         $uploadDir = $this->storagePrefix->getStoragePath();
@@ -191,10 +128,6 @@ class LocalFileStorage
     }
 
 
-    /**
-     * @param string $filename
-     * @return string
-     */
     protected function getUrl(string $filename): string
     {
         return $this->storagePrefix->getUrlPath() . '/' . $filename;
