@@ -62,6 +62,10 @@ vlastní driver `App\Dbal\RawPdoMysqlDriver` (viz `config.neon`, sekce
   sesynchronizovat** s `dates.currentYear` v DB. Jde o samostatný zdroj pravdy.
 - V kódu assetů odkazuj relativně; pro absolutní cesty použij `currentYear` (JS)
   nebo `@staticBase` (Less).
+- Design stojí na **zastaralé verzi Bootstrap CSS** (3.x). Upgrade na novější
+  verzi není snadný – je na něj navázaný rozsáhlý vlastní design, který je
+  s novou verzí Bootstrapu nekompatibilní. Bootstrap neupgraduj bez výslovného
+  zadání; počítej s tím, že nové verze frameworku se zde nepoužijí.
 
 ## Lint, statická analýza, testy
 
