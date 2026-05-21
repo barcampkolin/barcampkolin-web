@@ -43,6 +43,42 @@ Vedle NEON konfigurace existuje **runtime konfigurace v DB tabulce `config`**
 Drží mj. `dates.currentYear`, `archive.years`, termíny akce. Při změnách dat
 ročníku se sahá sem, ne do NEON.
 
+## Plánovač a feature-flagy (časté nedorozumění)
+
+Stav webu (které funkce jsou zapnuté – registrace účastníků, zápis přednášek,
+hlasování, zobrazení programu apod.) řídí feature-flagy. **Tyto flagy se
+nepřepínají dynamicky** porovnáváním aktuálního času při každém requestu –
+i když to tak na první pohled vypadá.
+
+**Jak to funguje ve skutečnosti:**
+
+- Efektivní (živé) hodnoty flagů jsou **staticky uložené v DB tabulce `config`**
+  pod klíči `features.*` (definované v `App\Model\EventInfoProvider`). Při
+  requestu je web čte přes `EventInfoProvider::getFeatures()`, který vychází
+  z `ConfigManager` – ten celou tabulku načte **jediným `SELECT`em** a drží
+  v paměti. Žádné date-related výpočty na request-path neprobíhají.
+- `App\Model\ScheduleManager` je definiční a plánovací vrstva. Drží **kroky
+  harmonogramu** (`talks`, `vote`, `program`, `event`, `report`) a pro každý
+  krok **plán** požadovaného stavu flagů. Plán je uložený v `config` pod
+  oddělenými klíči `schedule.<krok>.<flag>` – tedy odděleně od živých hodnot.
+- Aktivace kroku (`ScheduleManager::changeCurrentStep()`) je **jednorázová
+  zapisovací operace**: nastaví ukazatel `schedule.currentStep` a metodou
+  `propagateConfigsByStep()` **zkopíruje plánované hodnoty kroku do živých
+  klíčů `features.*`**. Od té chvíle web jede podle nově zapsaných hodnot.
+
+**Důsledky, na které je nutné dbát:**
+
+- Živé flagy lze kdykoliv **ručně přepnout** (admin UI / `config`) nezávisle na
+  plánu – plán harmonogramu se tím nemění a naopak.
+- Krok se reálně posune **jen přes cron endpoint** `POST /api/schedule/step-next`
+  (`App\ApiModule\Presenters\SchedulePresenter::actionStepNext()`). To je
+  **jediné místo, které porovnává datumy**: vezme následující krok, a pokud má
+  zapnutý příznak `auto` a jeho plánované datum už nastalo (porovnání po
+  půlnoci), zavolá `changeCurrentStep()`. Bez zavolání cronu k automatickému
+  posunu nikdy nedojde.
+- Při rotaci ročníku `ArchiveManager::archive()` harmonogram resetuje
+  (`changeCurrentStep(null)`).
+
 ## Dvě datové vrstvy nad jedním PDO
 
 Aplikace používá **současně** Nextras ORM (doménové entity `App\Orm\*`)
