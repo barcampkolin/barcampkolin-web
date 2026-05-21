@@ -194,8 +194,15 @@
             <td colspan="2" class="sponsors">
                 <div>Tuto přednášku doporučuje:</div>
                 <div class="logos">
-                    <img src="/upload/2025/partner-logo/vas-hosting-5xnse.png">
-                    <img src="/upload/2025/partner-logo/kopecky-hala-co-advokatni-kancelar-s-r-o-bmnog.png"
+                    {switch $currentTalk['room']}
+                        {case 'down'}
+                            <img src="/upload/2026/partner-logo/ascenta-xhhx1.png">
+                        {case 'middle'}
+                            <img src="/upload/2026/partner-logo/danitax-ourm2.png">
+                        {case 'up'}
+                            <img src="/upload/2026/partner-logo/vas-hosting-geqrd.png">
+                    {/switch}
+                    <img src="/upload/2026/partner-logo/radka-stepak-p8dzf.png"
                          style="position: relative; top: 10px;">
                 </div>
             </td>
