@@ -109,6 +109,10 @@ class SignPresenter extends BasePresenter
             $this->redirect('up');
         }
 
+        if($user->conferee) {
+            $this->redirect('User:profil');
+        }
+
         /** @var Form $form */
         $form = $this['confereeForm'];
         $form->setDefaults(
