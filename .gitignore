@@ -1,3 +1,4 @@
+/.claude/
 /.deployment-credentials.php
 /.docker/
 /app/config/config.local.neon

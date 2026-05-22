@@ -22,6 +22,7 @@ return [
             .git
             .gitignore
             .DS_Store
+            /.claude
             /.deployment.php
             /.deployment-credentials.php
             /.docker
@@ -32,6 +33,7 @@ return [
             /app/config/config.local-sample.neon
             /assets
             /bin
+            /CLAUDE.md
             /composer.json
             /composer.lock
             /docker-compose.yml

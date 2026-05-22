@@ -107,7 +107,8 @@ vlastní driver `App\Dbal\RawPdoMysqlDriver` (viz `config.neon`, sekce
 
 - `composer run lint` – PHP + Latte + NEON lint; `composer run phpstan`
   (úroveň 1, bez konfiguračního souboru). CI (`.github/workflows`) spouští
-  pouze tyto kontroly.
+  pouze tyto kontroly. Lokálně je spouštěj uvnitř kontejneru – viz sekci
+  Lokální vývoj a deploy.
 - Testy v `tests/` (Nette Tester `.phpt`) jsou **pahýl – nepoužívají se**.
   Nejsou v CI, nemají composer skript a `nette/tester` ani není závislostí.
   Nepiš proti nim nové testy a nespoléhej na ně; ber je jako mrtvý kód.
@@ -128,6 +129,11 @@ metodou `POST` s HTTP hlavičkou `authtoken` (token z administrace).
 - Lokální běh: Docker image `jakubboucek/docker-lamp-devstack`
   (`docker compose up -d`). DB: host `127.0.0.1` (ne `localhost`), port `33060`,
   user `root`, heslo `devstack`, databáze `default`.
+- **PHP a Composer příkazy je doporučené spouštět uvnitř kontejneru, ne na hostiteli.** PHP
+  na hostiteli nemusí být udržované a jeho verze a nastavení se může lišit od verze,
+  kterou projekt vyžaduje. Doporučený postup: každý `php` / `composer`
+  příkaz prefixuj `docker compose exec web`, např.
+  `docker compose exec web composer phpstan`.
 - Před prvním během je nutné vytvořit prázdný `app/config/config.local.neon`
   (neverzovaný, drží produkční DB přístupy) a adresáře `temp/` a `log/`.
 - Deploy přes FTP nástrojem `dg/ftp-deployment` (`bin/deploy.sh`,
