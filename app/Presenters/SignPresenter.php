@@ -87,6 +87,11 @@ class SignPresenter extends BasePresenter
             $this->redirect('User:profil');
         }
 
+        if (!$this->eventInfoProvider->getFeatures()->conferee) {
+            $this->flashMessage('Registrace ještě nejsou otevřeny, omlouváme se');
+            $this->redirect('Homepage:');
+        }
+
         $forceExternalRegistrationUrl = $this->eventInfoProvider->getUrls()->forceExternalRegistration;
         $this->template->forceExternalRegistrationUrl = $forceExternalRegistrationUrl;
 
@@ -94,11 +99,6 @@ class SignPresenter extends BasePresenter
         // the sign-up form, independently of the conferee feature flag.
         if ($forceExternalRegistrationUrl) {
             return;
-        }
-
-        if (!$this->eventInfoProvider->getFeatures()->conferee) {
-            $this->flashMessage('Registrace ještě nejsou otevřeny, omlouváme se');
-            $this->redirect('Homepage:');
         }
     }
 
