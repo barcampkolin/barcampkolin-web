@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use Nette\Utils\ArrayHash;
+use App\Model\Entity\Org;
 
 class OrgListModel
 {
@@ -21,12 +21,15 @@ class OrgListModel
         return $this->configManager->get(self::LastUpdateUrlKeyConfigKey);
     }
 
+    /**
+     * @return iterable<Org>
+     */
     public function getOrgs(): iterable
     {
         $orgs = $this->configManager->get(self::ListConfigKey, []);
 
         foreach ($orgs as $org) {
-            yield ArrayHash::from($org);
+            yield Org::from($org);
         }
     }
 

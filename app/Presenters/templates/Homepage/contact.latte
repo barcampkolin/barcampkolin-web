@@ -1,3 +1,6 @@
+{varType int $year}
+{varType iterable $orgs}
+
 {block title}Kontakt{/block}
 {block content}
 <section>
@@ -7,6 +10,7 @@
 
             <div class="organizers">
                 {foreach $orgs as $org}
+                    {varType \App\Model\Entity\Org $org}
                     <div class="organizer">
                         <h3><a n:tag-ifset="$org->homepage" href="{$org->homepage}" target="_blank" rel="noopener">{$org->name}</a></h3>
                         <a n:tag-ifset="$org->homepage" href="{$org->homepage}" target="_blank" rel="noopener"><img class="photo-pic" src="{ifset $org->photo}{if isAbsoluteUrl($org->photo)}{$org->photo}{else}{$basePath}/static/{$year}/img/contact/{$org->photo}{/if}{else}{$basePath}/static/{$year}/img/avatar.png{/ifset}" alt="{$org->name}" width="180" height="180"></a>
