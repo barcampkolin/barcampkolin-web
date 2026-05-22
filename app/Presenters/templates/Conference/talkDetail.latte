@@ -6,7 +6,7 @@
 {varType App\Model\Entity\EventFeatures $features}
 
 {varType App\Orm\Talk\Talk $talk}
-{varType App\Orm\Program\Program $program}
+{varType ?array $program}
 
 {block title}Přednáška {$talk->title}{/block}
 {block ogImage}{ifset $ogImageUrl}{$ogImageUrl}{else}{gravatarize($talk->conferee->pictureUrl, $talk->conferee->email)}{/ifset}{/block}
