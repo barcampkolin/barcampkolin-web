@@ -70,6 +70,12 @@ class DashboardPresenter extends BasePresenter
         Event::URL_WAY_TO_EVENT => ['url', 'URL na článek Jak se k nám dostanete'],
         Event::URL_OG_IMAGE => ['url', 'URL na OG image', self::NOFLAG, 'Při nevyplnění se použije systémové logo'],
         Event::URL_PARTNER_PROPOSAL => ['url', 'URL na Informace pro partnery (PDF)'],
+        Event::URL_FORCE_EXTERNAL_REGISTRATION => [
+            'url',
+            'Nahradit registrace vstupenkovým systémem (URL)',
+            self::NOFLAG,
+            'Vyplněním se uzavřou registrace a uživatel bude přesměrován na zadané URL. Po obnovení registrací URL vymažte.'
+        ],
     ];
 
     private array $featureConfigs = [

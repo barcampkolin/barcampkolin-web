@@ -91,6 +91,15 @@ class SignPresenter extends BasePresenter
             $this->flashMessage('Registrace ještě nejsou otevřeny, omlouváme se');
             $this->redirect('Homepage:');
         }
+
+        $forceExternalRegistrationUrl = $this->eventInfoProvider->getUrls()->forceExternalRegistration;
+        $this->template->forceExternalRegistrationUrl = $forceExternalRegistrationUrl;
+
+        // Registration is forced to an external system: show a redirect instead of
+        // the sign-up form, independently of the conferee feature flag.
+        if ($forceExternalRegistrationUrl) {
+            return;
+        }
     }
 
 
