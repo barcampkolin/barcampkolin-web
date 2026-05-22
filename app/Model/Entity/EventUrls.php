@@ -18,6 +18,7 @@ readonly class EventUrls implements ArrayAccess
         public string $way,
         public string $ogImage,
         public string $partnerProposal,
+        public ?string $forceExternalRegistration = null,
     ) {
     }
 }

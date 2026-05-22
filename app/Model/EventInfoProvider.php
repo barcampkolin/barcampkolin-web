@@ -42,6 +42,7 @@ class EventInfoProvider
     public const string URL_WAY_TO_EVENT = 'url.post.howToWay';
     public const string URL_OG_IMAGE = 'url.igImage';
     public const string URL_PARTNER_PROPOSAL = 'url.partnersProposal';
+    public const string URL_FORCE_EXTERNAL_REGISTRATION = 'url.forceExternalRegistration';
     public const string SCHEDULE_VISUAL_DATE_BEGIN = 'schedule.visualDate.begin';
     public const string SCHEDULE_VISUAL_DATE_END = 'schedule.visualDate.end';
     public const string SCHEDULE_CURRENT_STEP = 'schedule.currentStep';
@@ -79,6 +80,7 @@ class EventInfoProvider
             way: $this->config->get(self::URL_WAY_TO_EVENT),
             ogImage: $this->config->get(self::URL_OG_IMAGE),
             partnerProposal: $this->config->get(self::URL_PARTNER_PROPOSAL),
+            forceExternalRegistration: $this->config->get(self::URL_FORCE_EXTERNAL_REGISTRATION),
         );
     }
 

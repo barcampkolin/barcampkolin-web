@@ -1,3 +1,5 @@
+{varType ?string $forceExternalRegistrationUrl}
+
 {block title}Registrace{/block}
 {block content}
 
@@ -5,41 +7,57 @@
     <div class="wrapper">
         <div class="container-wide">
             <div class="form-newsletter">
-                <div class="text-center">
-                    <span class="item-title">Registrace</span>
-                    <span class="text-md">Máte už účet? <a n:href="in">Přihlaste se</a></span>
-{*                    <div class="item-social mt-md mb-md">*}
-{*                        <a n:href="federatedLogin, 'platform'=>'facebook'" class="btn btn-section btn-lg btn-action">*}
-{*                            <span class="icon icon-facebook-1"><span class="path1"></span><span class="path2"></span></span> Facebook*}
-{*                        </a>*}
-{*                    </div>*}
-
-                </div>
-
-                <form n:name="signUpForm" class="mt-md">
-                    <ul class=error n:if="$form->ownErrors">
-                        <li n:foreach="$form->ownErrors as $error">{$error}</li>
-                    </ul>
-                    <div n:foreach="$form->controls as $name => $input"
-                            n:if="!$input->getOption(rendered) && $input->getOption(type) !== hidden"
-                            n:class="form-row, $input->getOption(itemClass), $input->required ? required, $input->error ? error">
-
-                        {label $input/}
-
-                        {if $input->getOption(type) in [text, select, textarea]}
-                            {input $input class => form-control}
-                        {elseif $input->getOption(type) === button}
-                            {input $input class => "btn btn-action btn-section text-upper"}
-                        {elseif $input->getOption(type) === checkbox}
-                        <div class="checkbox">{input $input:} {label $input:/}</div>
-                        {else}
-                            {input $input}
-                        {/if}
-                        <span class="error-text" n:ifcontent>{$input->error}</span>
-                        <span class="help-text" n:ifcontent>{$input->getOption(description)}</span>
+                {if $forceExternalRegistrationUrl}
+                    <div class="text-center">
+                        <span class="item-title">Registrace</span>
+                        <p class="text-md mt-md">
+                            Těsně před akcí už lze provést registraci jen v našem vstupenkovém systému.
+                        </p>
+                        <p class="text-md mt-md">
+                            Pokračujte na něj kliknutím na tlačítko níže.
+                        </p>
+                        <p class="mt-md">
+                            <a href="{$forceExternalRegistrationUrl}" class="btn btn-lg btn-brand btn-section text-bold">
+                                Pokračovat na registraci
+                            </a>
+                        </p>
                     </div>
-                </form>
+                {else}
+                    <div class="text-center">
+                        <span class="item-title">Registrace</span>
+                        <span class="text-md">Máte už účet? <a n:href="in">Přihlaste se</a></span>
+{*                        <div class="item-social mt-md mb-md">*}
+{*                            <a n:href="federatedLogin, 'platform'=>'facebook'" class="btn btn-section btn-lg btn-action">*}
+{*                                <span class="icon icon-facebook-1"><span class="path1"></span><span class="path2"></span></span> Facebook*}
+{*                            </a>*}
+{*                        </div>*}
 
+                    </div>
+
+                    <form n:name="signUpForm" class="mt-md">
+                        <ul class=error n:if="$form->ownErrors">
+                            <li n:foreach="$form->ownErrors as $error">{$error}</li>
+                        </ul>
+                        <div n:foreach="$form->controls as $name => $input"
+                                n:if="!$input->getOption(rendered) && $input->getOption(type) !== hidden"
+                                n:class="form-row, $input->getOption(itemClass), $input->required ? required, $input->error ? error">
+
+                            {label $input/}
+
+                            {if $input->getOption(type) in [text, select, textarea]}
+                                {input $input class => form-control}
+                            {elseif $input->getOption(type) === button}
+                                {input $input class => "btn btn-action btn-section text-upper"}
+                            {elseif $input->getOption(type) === checkbox}
+                            <div class="checkbox">{input $input:} {label $input:/}</div>
+                            {else}
+                                {input $input}
+                            {/if}
+                            <span class="error-text" n:ifcontent>{$input->error}</span>
+                            <span class="help-text" n:ifcontent>{$input->getOption(description)}</span>
+                        </div>
+                    </form>
+                {/if}
             </div>
         </div>
     </div>
