@@ -2,15 +2,14 @@
 
 namespace App\Components\Program;
 
+use DateInterval;
 use Nette\SmartObject;
 
 /**
- * Class InternalProgram
- * @package App\Components\Program
  * @property-read int $talkId
  * @property-read string $title
  * @property-read string $speaker
- * @property-read \DateInterval $time
+ * @property-read DateInterval $time
  * @property-read string $startClock
  * @property-read string $endClock
  * @property-read string $type
@@ -22,62 +21,34 @@ abstract class InternalProgram implements IInternalProgram
     use SmartObject;
 
 
-    /**
-     * @return int
-     */
-    abstract public function getTalkId();
+    abstract public function getTalkId(): ?int;
 
 
-    /**
-     * @return string
-     */
-    abstract public function getTitle();
+    abstract public function getTitle(): string;
 
 
-    /**
-     * @return bool
-     */
-    abstract public function isTitleOverridden();
+    abstract public function isTitleOverridden(): bool;
 
 
-    /**
-     * @return string
-     */
-    abstract public function getSpeaker();
+    abstract public function getSpeaker(): ?string;
 
 
-    /**
-     * @return string
-     */
-    abstract public function getType();
+    abstract public function getType(): string;
 
 
-    /**
-     * @return \DateInterval
-     */
-    abstract public function getTime();
+    abstract public function getTime(): DateInterval;
 
 
-    /**
-     * @return int
-     */
-    abstract public function getDuration();
+    abstract public function getDuration(): int;
 
 
-    /**
-     * @return string|null
-     */
-    abstract public function getStyle();
+    abstract public function getStyle(): ?string;
 
 
-    /**
-     * @return \DateInterval
-     * @throws \Exception
-     */
-    public function getEndTime()
+    public function getEndTime(): DateInterval
     {
         $start = $this->getTime();
-        $end = new \DateInterval('PT0H');
+        $end = new DateInterval('PT0H');
         $h = $start->h;
         $i = $start->i + $this->getDuration();
 
@@ -92,32 +63,19 @@ abstract class InternalProgram implements IInternalProgram
     }
 
 
-    /**
-     * @return string
-     */
-    public function getStartClock()
+    public function getStartClock(): string
     {
-        $start = $this->getTime();
-        return $start->format('%H:%I');
+        return $this->getTime()->format('%H:%I');
     }
 
 
-    /**
-     * @return string
-     * @throws \Exception
-     */
-    public function getEndClock()
+    public function getEndClock(): string
     {
-        $end = $this->getEndTime();
-        return $end->format('%H:%I');
+        return $this->getEndTime()->format('%H:%I');
     }
 
 
-    /**
-     * @param \DateInterval $previousEnd
-     * @return float|int
-     */
-    public function computePreviousSpaceMinutes(\DateInterval $previousEnd)
+    public function computePreviousSpaceMinutes(DateInterval $previousEnd): float|int
     {
         $start = $this->getTime();
 
@@ -126,6 +84,4 @@ abstract class InternalProgram implements IInternalProgram
 
         return $space;
     }
-
-
 }

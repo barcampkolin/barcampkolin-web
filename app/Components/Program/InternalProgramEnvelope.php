@@ -3,72 +3,49 @@
 namespace App\Components\Program;
 
 use App\Orm\Program\Program;
+use DateInterval;
 
 /**
- * Class InternalProgramEnvelope
- * @package App\components\Program
  * @property-read string|null $category
  */
 class InternalProgramEnvelope extends InternalProgram
 {
-    /**
-     * @var string
-     */
-    private $defaultTitle;
+    private string $defaultTitle;
 
 
-    /**
-     * InternalProgramEnvelope constructor.
-     * @param Program $program
-     */
     public function __construct(
         private readonly Program $program
     ) {
     }
 
 
-    /**
-     * @return \DateInterval
-     */
-    public function getTime()
+    public function getTime(): DateInterval
     {
         return $this->program->time;
     }
 
 
-    /**
-     * @return int
-     */
-    public function getDuration()
+    public function getDuration(): int
     {
         return $this->program->duration;
     }
 
 
-    /**
-     * @return string|null
-     */
-    public function getCategory()
+    public function getCategory(): ?string
     {
         return $this->program->talk ? $this->program->talk->category : $this->program->category;
     }
 
 
-    /**
-     * @return null|string
-     */
-    public function getStyle()
+    public function getStyle(): ?string
     {
         return $this->program->style;
     }
 
 
-    /**
-     * @return int
-     */
-    public function getTalkId()
+    public function getTalkId(): ?int
     {
-        return $this->program->talk ? $this->program->talk->id : null;
+        return $this->program->talk->id ?? null;
     }
 
 
@@ -84,56 +61,43 @@ class InternalProgramEnvelope extends InternalProgram
     }
 
 
-    /**
-     * @return null|string
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         if (empty($this->program->title) && $this->program->talk) {
             return $this->program->talk->title;
-        } elseif (empty($this->program->title)) {
-            return $this->defaultTitle;
-        } else {
-            return $this->program->title;
         }
+
+        if (empty($this->program->title)) {
+            return $this->defaultTitle;
+        }
+
+        return $this->program->title;
     }
 
 
-    /**
-     * @return bool
-     */
     public function isTitleOverridden(): bool
     {
         return !empty($this->program->title);
     }
 
 
-    /**
-     * @return null|string
-     */
-    public function getSpeaker()
+    public function getSpeaker(): string
     {
         if (empty($this->program->speaker) && $this->program->talk) {
             return $this->program->talk->conferee->name;
-        } else {
-            return $this->program->speaker;
         }
+
+        return $this->program->speaker;
     }
 
 
-    /**
-     * @return null|string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->program->type;
     }
 
 
-    /**
-     * @param string $defaultTitle
-     */
-    public function setDefaultTitle($defaultTitle): void
+    public function setDefaultTitle(string $defaultTitle): void
     {
         $this->defaultTitle = $defaultTitle;
     }

@@ -6,32 +6,17 @@ use Nette\Mail\SendException;
 
 interface IMessage
 {
-    /**
-     * @throws SendException
-     */
     public function send();
 
 
-    /**
-     * @return ITemplate
-     */
-    public function getTemplate();
+    public function getTemplate(): ITemplate;
 
 
-    /**
-     * @return array
-     */
-    public function getTemplateParameters();
+    public function getTemplateParameters(): array;
 
 
-    /**
-     * @return array
-     */
-    public function getRecipients();
+    public function getRecipients(): array;
 
 
-    /**
-     * @return string
-     */
-    public function getSubject();
+    public function getSubject(): string;
 }

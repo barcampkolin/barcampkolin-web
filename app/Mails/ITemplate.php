@@ -4,5 +4,4 @@ namespace App\Mails;
 
 interface ITemplate
 {
-
 }

@@ -11,11 +11,6 @@ use Nette\Application\UI\Control;
 class SpeakerListControl extends Control
 {
 
-    /**
-     * SpeakerListControl constructor.
-     * @param TalkManager $talkManager
-     * @param EventInfoProvider $eventInfoProvider
-     */
     public function __construct(
         private readonly TalkManager $talkManager,
         private readonly EventInfoProvider $eventInfoProvider,
@@ -24,14 +19,11 @@ class SpeakerListControl extends Control
     }
 
 
-    /**
-     * @throws \Nette\Utils\JsonException
-     */
     public function render(): void
     {
         $talks = $this->talkManager->findActive();
 
-        if ($talks->countStored() == 0) {
+        if ($talks->countStored() === 0) {
             return;
         }
 

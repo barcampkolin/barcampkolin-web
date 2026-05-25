@@ -2,15 +2,13 @@
 
 namespace App\Mails;
 
-class UniversalDynamicMessage extends BaseMessage implements IMessage
+use LogicException;
+
+class UniversalDynamicMessage extends BaseMessage
 {
-    private ?\App\Mails\MessageLatteStringTemplate $template = null;
+    private ?MessageLatteStringTemplate $template = null;
 
 
-    /**
-     * @param array $mail
-     * @return string
-     */
     private function injectLatteConnectors(array $mail): string
     {
 
@@ -33,29 +31,23 @@ class UniversalDynamicMessage extends BaseMessage implements IMessage
     }
 
 
-    /**
-     * @return ITemplate
-     */
-    public function getTemplate(): ?\App\Mails\MessageLatteStringTemplate
+    public function getTemplate(): MessageLatteStringTemplate
     {
+        if(!$this->template) {
+            throw new LogicException('Template is not set for this message');
+        }
+
         return $this->template;
     }
 
 
-    /**
-     * @param MessageLatteStringTemplate $template
-     */
     public function setTemplate(MessageLatteStringTemplate $template): void
     {
         $this->template = $template;
     }
 
 
-    /**
-     * @param array $mail
-     * @param array $layout
-     */
-    public function setTemlateFromString(array $mail, $layout = null): void
+    public function setTemlateFromString(array $mail, ?array $layout = null): void
     {
         $template = new MessageLatteStringTemplate();
 
@@ -69,13 +61,8 @@ class UniversalDynamicMessage extends BaseMessage implements IMessage
     }
 
 
-    /**
-     * @param array $layout
-     */
     public function setLayout(array $layout): void
     {
         $this->template->setLayout($layout['body']);
     }
-
-
 }

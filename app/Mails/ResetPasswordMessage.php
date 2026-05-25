@@ -2,14 +2,8 @@
 
 namespace App\Mails;
 
-class ResetPasswordMessage extends UniversalDynamicMessage implements IMessage
+class ResetPasswordMessage extends UniversalDynamicMessage
 {
-    /**
-     * RegistrationMessage constructor.
-     * @param string $recipient
-     * @param array $mail
-     * @param string $tokenUrl
-     */
     public function __construct(string $recipient, array $mail, string $tokenUrl)
     {
         $this->addRecipient($recipient);

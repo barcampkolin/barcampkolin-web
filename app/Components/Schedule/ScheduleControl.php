@@ -8,11 +8,6 @@ use Nette\Application\UI\Control;
 
 class ScheduleControl extends Control
 {
-    /**
-     * ScheduleControl constructor.
-     * @param EventInfoProvider $infoProvider
-     * @param ScheduleManager $scheduleManager
-     */
     public function __construct(
         private readonly EventInfoProvider $infoProvider,
         private readonly ScheduleManager $scheduleManager
@@ -20,10 +15,6 @@ class ScheduleControl extends Control
     }
 
 
-    /**
-     *
-     * @throws \Nette\Utils\JsonException
-     */
     public function render(): void
     {
         $dates = $this->infoProvider->getDates();

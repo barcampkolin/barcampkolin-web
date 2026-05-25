@@ -2,50 +2,25 @@
 
 namespace App\Components\Program;
 
-/**
- * Interface IInternalProgram
- * @package App\Components\Program
- */
 interface IInternalProgram
 {
-    /**
-     * @return string
-     */
-    public function getTitle();
+    public function getTitle(): string;
 
 
-    /**
-     * @return bool
-     */
-    public function isTitleOverridden();
+    public function isTitleOverridden(): bool;
 
 
-    /**
-     * @return string
-     */
-    public function getSpeaker();
+    public function getSpeaker(): ?string;
 
 
-    /**
-     * @return string
-     */
-    public function getType();
+    public function getType(): string;
 
 
-    /**
-     * @return \DateInterval
-     */
-    public function getTime();
+    public function getTime(): \DateInterval;
 
 
-    /**
-     * @return int
-     */
-    public function getDuration();
+    public function getDuration(): int;
 
 
-    /**
-     * @return string|null
-     */
-    public function getStyle();
+    public function getStyle(): ?string;
 }

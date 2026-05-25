@@ -7,6 +7,7 @@ use Kdyby\Replicator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\ArrayHash;
@@ -15,12 +16,10 @@ use Nette\Application\UI;
 class EnumeratorFormControl extends Control
 {
     /**
-     * EnumeratorFormControl constructor.
      * @param string $setName Name set name (in database)
-     * @param EnumeratorManager $enumeratorManager
      */
     public function __construct(
-        private $setName,
+        private string $setName,
         private readonly EnumeratorManager $enumeratorManager
     ) {
 
@@ -28,7 +27,7 @@ class EnumeratorFormControl extends Control
     }
 
 
-    protected function init(\Nette\ComponentModel\IComponent $presenter): void
+    protected function init(IComponent $presenter): void
     {
         if ($presenter instanceof Presenter) {
             /** @var Form $form */
@@ -44,10 +43,6 @@ class EnumeratorFormControl extends Control
     }
 
 
-    /**
-     * @throws \App\Model\InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
-     */
     public function render(): void
     {
         $this->template->setFile(__DIR__ . '/EnumeratorForm.latte');
@@ -56,10 +51,7 @@ class EnumeratorFormControl extends Control
     }
 
 
-    /**
-     * @return Form
-     */
-    public function createComponentForm(): \Nette\Application\UI\Form
+    public function createComponentForm(): Form
     {
         $form = new Form();
 
@@ -94,14 +86,7 @@ class EnumeratorFormControl extends Control
     }
 
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     * @throws \App\Model\InvalidEnumeratorSetException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function onFormSuccess(Form $form, $values): void
+    public function onFormSuccess(Form $form, ArrayHash $values): void
     {
         if ($form['submit']->isSubmittedBy() === false && $form['defaultSubmit']->isSubmittedBy() === false) {
             return;
@@ -121,9 +106,6 @@ class EnumeratorFormControl extends Control
     }
 
 
-    /**
-     * @param SubmitButton $button
-     */
     public function addClicked(SubmitButton $button): void
     {
         /** @var Replicator\Container $enums */
@@ -132,9 +114,6 @@ class EnumeratorFormControl extends Control
     }
 
 
-    /**
-     * @param SubmitButton $button
-     */
     public function removeClicked(SubmitButton $button): void
     {
         /** @var Container $container */
@@ -143,6 +122,4 @@ class EnumeratorFormControl extends Control
         $enums = $container->parent;
         $enums->remove($container, true);
     }
-
-
 }

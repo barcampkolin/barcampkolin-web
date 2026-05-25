@@ -7,10 +7,6 @@ use Nette\Application\UI\Control;
 
 class PartnersControl extends Control
 {
-    /**
-     * PartnersControl constructor.
-     * @param PartnersManager $partnerManager
-     */
     public function __construct(
         private readonly PartnersManager $partnerManager
     ) {

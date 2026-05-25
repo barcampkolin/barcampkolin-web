@@ -10,19 +10,12 @@ use Nette\Utils\ArrayHash;
 
 class NewsletterSignupControl extends Control
 {
-    /**
-     * NewsletterSignupControl constructor.
-     * @param NewsletterSignupManager $manager
-     */
     public function __construct(
         private readonly NewsletterSignupManager $manager
     ) {
     }
 
 
-    /**
-     *
-     */
     public function render(): void
     {
         $this->template->setFile(__DIR__ . '/NewsletterSignup.latte');
@@ -30,9 +23,6 @@ class NewsletterSignupControl extends Control
     }
 
 
-    /**
-     * @return Form
-     */
     protected function createComponentForm(): \Nette\Application\UI\Form
     {
         $form = new Form();
@@ -47,12 +37,7 @@ class NewsletterSignupControl extends Control
     }
 
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     * @throws \Nette\Application\AbortException
-     */
-    public function formSucceeded(Form $form, $values): void
+    public function formSucceeded(Form $form, ArrayHash $values): void
     {
         try {
             $this->manager->add($values->email, 'Subscribed by newsletter form');

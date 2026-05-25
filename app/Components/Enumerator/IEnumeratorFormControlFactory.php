@@ -7,8 +7,7 @@ interface IEnumeratorFormControlFactory
 
     /**
      * @param string $setName Name set name (in database)
-     * @return EnumeratorFormControl
      */
-    public function create($setName): EnumeratorFormControl;
+    public function create(string $setName): EnumeratorFormControl;
 
 }

@@ -7,6 +7,7 @@ use App\Model\GravatarImageProvider;
 use App\Model\TalkCategoryStyler;
 use App\Model\TalkManager;
 use App\Orm\Program\Program;
+use DateInterval;
 use Nette\Application\UI\Control;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
@@ -15,12 +16,6 @@ use Tracy\ILogger;
 class ProgramControl extends Control
 {
 
-    /**
-     * ProgramControl constructor.
-     * @param EventInfoProvider $infoProvider
-     * @param TalkManager $talkManager
-     * @param GravatarImageProvider $gravatarImageProvider
-     */
     public function __construct(
         private readonly EventInfoProvider $infoProvider,
         private readonly TalkManager $talkManager,
@@ -29,11 +24,6 @@ class ProgramControl extends Control
     }
 
 
-    /**
-     * @throws \Nette\Utils\JsonException
-     * @throws \App\Model\InvalidEnumeratorSetException
-     * @throws \Exception
-     */
     public function render(): void
     {
         $this->template->setFile(__DIR__ . '/Program.latte');
@@ -151,8 +141,6 @@ class ProgramControl extends Control
 
     /**
      * @return array{rooms: array<string,string>, minMinutes: int, maxMinutes: int, slots: array<string,list<array{id:int,startMin:int,durMin:int,timeRange:string,title:?string,speaker:?string,speakerPic:?string,styleClass:string,type:?string,description:?string,purpose:?string,company:?string,links:array<string,mixed>,room:string}>>}
-     * @throws \App\Model\InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
      */
     public function getMobileProgramData(): array
     {
@@ -259,9 +247,6 @@ class ProgramControl extends Control
     }
 
 
-    /**
-     * @return array
-     */
     private function getSortedItems(): array
     {
         $program = $this->talkManager->findAllProgram();
@@ -292,12 +277,8 @@ class ProgramControl extends Control
     /**
      * Get min-max minute mantilels of all exists program items.
      * For spped is using array key (that represent minutes delay of item begin from midnight).
-     * @param array $sortedItems
-     * @param bool $roundWholeHour
-     * @return ArrayHash
-     * @throws \Exception
      */
-    private function getMinMaxBorder(array $sortedItems, $roundWholeHour = true): \Nette\Utils\ArrayHash
+    private function getMinMaxBorder(array $sortedItems, bool $roundWholeHour = true): ArrayHash
     {
         $max = $min = null;
 
@@ -324,12 +305,6 @@ class ProgramControl extends Control
     }
 
 
-    /**
-     * @param array $sortedItems
-     * @param ArrayHash $minMaxBorder
-     * @return array
-     * @throws \Exception
-     */
     private function getRenderableItems(array $sortedItems, ArrayHash $minMaxBorder): array
     {
         $renderableItems = [];
@@ -371,14 +346,11 @@ class ProgramControl extends Control
     }
 
 
-    /**
-     * @return mixed[]
-     */
     private function getTimeRows(ArrayHash $minMaxBorder): array
     {
         $rows = [];
 
-        $time = new \DateInterval('PT0H');
+        $time = new DateInterval('PT0H');
         $time->h = $minMaxBorder->min->h;
         $time->i = $minMaxBorder->min->i;
 
@@ -391,26 +363,17 @@ class ProgramControl extends Control
     }
 
 
-    /**
-     * @param \DateInterval $start
-     * @param int $minutes
-     * @return InternalProgramVirtual
-     */
-    private function getSpacer(\DateInterval $start, float|int $minutes): \App\Components\Program\InternalProgramVirtual
+    private function getSpacer(DateInterval $start, float|int $minutes): InternalProgramVirtual
     {
         return new InternalProgramVirtual('space', $start, $minutes);
     }
 
 
-    /**
-     * @param \DateInterval $dateInterval
-     * @return int
-     */
-    private function dateIntervalToMinutes(\DateInterval $dateInterval): int|float
+    private function dateIntervalToMinutes(DateInterval $dateInterval): int|float
     {
-        $hours = intval($dateInterval->h);
+        $hours = $dateInterval->h;
 
-        $minutes = intval($dateInterval->i);
+        $minutes = $dateInterval->i;
 
         $minutes += max(0, $hours) * 60;
 
@@ -418,14 +381,9 @@ class ProgramControl extends Control
     }
 
 
-    /**
-     * @param int $minutes
-     * @return \DateInterval
-     * @throws \Exception
-     */
-    private function minutesToDateInterval($minutes): \DateInterval
+    private function minutesToDateInterval(int $minutes): DateInterval
     {
-        $dateInterval = new \DateInterval('PT0H');
+        $dateInterval = new DateInterval('PT0H');
         $h = 0;
         $i = $minutes;
 
@@ -440,12 +398,13 @@ class ProgramControl extends Control
     }
 
 
-    private function formatClock(\DateInterval $dateInterval): string
+    private function formatClock(DateInterval $dateInterval): string
     {
         return $dateInterval->format('%H:%I');
     }
 
-    private function addIntervalDuration(\DateInterval $dateInterval, int $duration): \DateInterval
+
+    private function addIntervalDuration(DateInterval $dateInterval, int $duration): DateInterval
     {
         $dateInterval = clone $dateInterval;
 

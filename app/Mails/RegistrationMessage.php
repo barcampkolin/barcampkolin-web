@@ -2,7 +2,7 @@
 
 namespace App\Mails;
 
-class RegistrationMessage extends UniversalDynamicMessage implements IMessage
+class RegistrationMessage extends UniversalDynamicMessage
 {
     public function __construct(string $recipient, array $mail)
     {

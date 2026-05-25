@@ -14,13 +14,12 @@ class SignInFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var User */
-    private $user;
+    private User $user;
 
 
     public function __construct(
-        private FormFactory $factory,
-        private EmailAuthenticator $authenticator
+        private readonly FormFactory $factory,
+        private readonly EmailAuthenticator $authenticator
     ) {
     }
 
