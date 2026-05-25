@@ -37,7 +37,7 @@ readonly class ApiTokenManager
     }
 
 
-    public function getTokenHashes():array
+    public function getTokenHashes(): array
     {
         return $this->configManager->get('api.token.hashes', []);
     }

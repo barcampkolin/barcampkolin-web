@@ -134,7 +134,7 @@ $saly = ['sal1','sal2','sal3'];
                     <?php
                     foreach(['sal'.$_sal] as $sal){
                         ?>
-                        <td class="<?=$line[$sal]['type'] ?? isset($line[$sal]) ? 'none' : ''?>">
+                        <td class="<?= $line[$sal]['type'] ?? (isset($line[$sal]) ? 'none' : '') ?>">
                             <div>
                                 <div>
                                     <div class="speaker"><?=$line[$sal]['speaker']?></div>
@@ -183,7 +183,7 @@ $saly = ['sal1','sal2','sal3'];
                     <?php
                     foreach($saly as $sal){
                         ?>
-                        <td class="<?=$line[$sal]['type'] ?? isset($line[$sal]) ? 'none' : ''?>">
+                        <td class="<?= $line[$sal]['type'] ?? (isset($line[$sal]) ? 'none' : '') ?>">
                             <div>
                                 <div>
                                     <div class="speaker"><?=$line[$sal]['speaker']?></div>

@@ -10,7 +10,7 @@ class ConfereeMapper extends DbalMapper
 {
 
     #[\Override]
-    public function getTableName(): string
+    public function getTableName(): Fqn|string
     {
         return 'conferee';
     }

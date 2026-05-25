@@ -181,7 +181,7 @@ class ScheduleManager
     }
 
 
-    public function getCurrentStepKey(): string
+    public function getCurrentStepKey(): ?string
     {
         return $this->configManager->get(Event::SCHEDULE_CURRENT_STEP);
     }

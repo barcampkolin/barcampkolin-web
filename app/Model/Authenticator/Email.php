@@ -136,7 +136,7 @@ class Email
     {
         $details = [];
         if ($identity->identity) {
-            $details = Json::decode($identity->identity, forceArrays:true);
+            $details = Json::decode($identity->identity, forceArrays: true);
         }
 
         unset($details['resetPassword']);
