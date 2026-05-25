@@ -47,7 +47,7 @@ class UniversalDynamicMessage extends BaseMessage
     }
 
 
-    public function setTemlateFromString(array $mail, ?array $layout = null): void
+    public function setTemplateFromString(array $mail, ?array $layout = null): void
     {
         $template = new MessageLatteStringTemplate();
 

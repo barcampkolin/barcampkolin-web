@@ -8,7 +8,7 @@ class ResetPasswordMessage extends UniversalDynamicMessage
     {
         $this->addRecipient($recipient);
         $this->setSubject($mail['subject']);
-        $this->setTemlateFromString($mail);
+        $this->setTemplateFromString($mail);
         $this->addTemplateParameter('tokenUrl', $tokenUrl);
     }
 }

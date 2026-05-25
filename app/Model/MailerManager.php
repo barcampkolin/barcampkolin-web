@@ -37,7 +37,7 @@ readonly class MailerManager
             $message->addRecipient($recipient);
         }
         $message->setSubject($mail['subject']);
-        $message->setTemlateFromString($mail);
+        $message->setTemplateFromString($mail);
         $message->setTemplateParameters($parameters);
         $message->setManager($this);
 

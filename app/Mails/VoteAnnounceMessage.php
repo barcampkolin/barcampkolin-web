@@ -8,6 +8,6 @@ class VoteAnnounceMessage extends UniversalDynamicMessage
     {
         $this->addRecipient($recipient);
         $this->setSubject($mail['subject']);
-        $this->setTemlateFromString($mail);
+        $this->setTemplateFromString($mail);
     }
 }
