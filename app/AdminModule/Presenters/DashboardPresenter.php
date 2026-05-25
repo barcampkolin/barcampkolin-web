@@ -16,8 +16,8 @@ use Nette\Utils\DateTime;
 class DashboardPresenter extends BasePresenter
 {
 
-    const NOFLAG = 0;
-    const REQUIRED = 1;
+    private const int NOFLAG = 0;
+    private const int REQUIRED = 1;
 
     private array $simpleConfigs = [
         Event::COUNTS_CONFEREE => [
@@ -105,12 +105,6 @@ class DashboardPresenter extends BasePresenter
     ];
 
 
-    /**
-     * DashboardPresenter constructor.
-     * @param ConfigManager $configManager
-     * @param ScheduleManager $scheduleManager
-     * @param IEnumeratorFormControlFactory $enumeratorFormControlFactory
-     */
     public function __construct(
         private readonly ConfigManager $configManager,
         private readonly ScheduleManager $scheduleManager,
@@ -120,9 +114,7 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     *
-     */
+
     public function actionEnums(): void
     {
         $this['faq'] = $this->enumeratorFormControlFactory->create(EnumeratorManager::SET_FAQS);
@@ -132,9 +124,6 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws \Nette\Utils\JsonException
-     */
     public function renderSchedule(): void
     {
         $steps = $this->scheduleManager->getSteps();
@@ -145,13 +134,8 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $step
-     * @secured
-     * @throws \Nette\Utils\JsonException
-     * @throws \Nette\Application\AbortException
-     */
-    public function handleScheduleStepActivate($step): void
+    /** @secured */
+    public function handleScheduleStepActivate($step): never
     {
         $this->scheduleManager->changeCurrentStep($step);
 
@@ -161,11 +145,7 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     * @throws \Nette\Utils\JsonException
-     */
-    public function createComponentConfigForm(): \Nette\Application\UI\Form
+    public function createComponentConfigForm(): Form
     {
         $form = new Form();
         foreach ($this->simpleConfigs as $key => $data) {
@@ -216,13 +196,7 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function onConfigFormSuccess(Form $form, $values): void
+    public function onConfigFormSuccess(Form $form, ArrayHash $values): never
     {
         foreach ($this->simpleConfigs as $key => $data) {
             $id = $this->ideable($key);
@@ -236,7 +210,7 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    public function createComponentScheduleConfigForm(): \Nette\Application\UI\Form
+    public function createComponentScheduleConfigForm(): Form
     {
         $form = new Form();
 
@@ -264,7 +238,7 @@ class DashboardPresenter extends BasePresenter
 
         foreach ($this->visualDates as $key => $name) {
             $form->addText($this->ideable($key), $name)
-                ->setType('datetime-local')
+                ->setHtmlType('datetime-local')
                 ->setDefaultValue($this->dateToHtml5($this->configManager->get($key)))
                 ->getControlPrototype()->addAttributes(['step'=>1]);
         }
@@ -280,13 +254,7 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param $values
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function onScheduleConfigFormSuccess(Form $form, $values): void
+    public function onScheduleConfigFormSuccess(Form $form, array $values): never
     {
         $bothConfigs = array_merge($this->featureConfigs, $this->visualDates);
 
@@ -302,11 +270,7 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     * @throws \Nette\Utils\JsonException
-     */
-    public function createComponentScheduleForm(): \Nette\Application\UI\Form
+    public function createComponentScheduleForm(): Form
     {
         $steps = $this->scheduleManager->getSteps(true);
 
@@ -341,13 +305,7 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function onScheduleFormSuccess(Form $form, array $values): void
+    public function onScheduleFormSuccess(Form $form, array $values): never
     {
         $steps = $this->scheduleManager->getSteps(false);
 
@@ -363,21 +321,13 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param string $key
-     * @return string
-     */
-    private function ideable($key): string
+    private function ideable(string $key): string
     {
         return str_replace('.', '', $key);
     }
 
 
-    /**
-     * @param string $date
-     * @return string
-     */
-    private function dateToHtml5($date): string
+    private function dateToHtml5(string $date): string
     {
         return new DateTime($date)->format('Y-m-d\TH:i:s');
     }

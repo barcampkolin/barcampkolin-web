@@ -11,17 +11,8 @@ use Nette\Utils\ArrayHash;
 use Ublaboo\DataGrid\Column\Action\Confirmation\StringConfirmation;
 use Ublaboo\DataGrid\DataGrid;
 
-/**
- * Class PartnersPresenter
- * @package App\AdminModule\Presenters
- */
 class PartnersPresenter extends BasePresenter
 {
-    /**
-     * PartnersPresenter constructor.
-     * @param PartnersManager $partners
-     * @param PartnerLogoStorage $storage
-     */
     public function __construct(
         private readonly PartnersManager $partners,
         private readonly PartnerLogoStorage $storage
@@ -30,11 +21,7 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param null $id
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function renderPartner($id = null): void
+    public function renderPartner(?int $id): void
     {
         $partner = $id !== null ? $this->partners->getPartnerById($id) : null;
 
@@ -47,11 +34,7 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param null $id
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function renderGroup($id = null): void
+    public function renderGroup(?int $id ): void
     {
         $group = $id !== null ? $this->partners->getGroupById($id) : null;
 
@@ -64,18 +47,12 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /**
-     *
-     */
-    public function renderDefault()
+    public function renderDefault(): void
     {
     }
 
 
-    /**
-     * @return Form
-     */
-    public function createComponentPartnerForm(): \Nette\Application\UI\Form
+    public function createComponentPartnerForm(): Form
     {
         $form = new Form();
         $form->addHidden('id');
@@ -104,12 +81,7 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     * @throws \Nette\Application\AbortException
-     */
-    public function onPartnerFormSuccess(Form $form, ArrayHash $values): void
+    public function onPartnerFormSuccess(Form $form, ArrayHash $values): never
     {
         $id = $values->id ?: null;
 
@@ -130,11 +102,7 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /**
-     * @return DataGrid
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
-     */
-    public function createComponentPartnersDatagrid(): \Ublaboo\DataGrid\DataGrid
+    public function createComponentPartnersDatagrid(): DataGrid
     {
         DataGrid::$iconPrefix = 'glyphicon glyphicon-';
 
@@ -178,14 +146,8 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $item_id
-     * @param $prev_id
-     * @param $next_id
-     * @throws \Nette\Application\AbortException
-     * @secured
-     */
-    public function handleSortPartner($item_id = null, $prev_id = null, $next_id = null): void
+    /** @secured */
+    public function handleSortPartner(int $item_id, ?int $prev_id = null, ?int $next_id = null): void
     {
         $item = $this->partners->getPartnerById($item_id);
         $prevItem = $prev_id ? $this->partners->getPartnerById($prev_id) : null;
@@ -204,12 +166,8 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $id
-     * @throws \Nette\Application\AbortException
-     * @secured
-     */
-    public function handleDeletePartner($id): void
+    /** @secured */
+    public function handleDeletePartner(int $id): void
     {
         $partner = $this->partners->getPartnerById($id);
 
@@ -227,10 +185,7 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     */
-    public function createComponentGroupForm(): \Nette\Application\UI\Form
+    public function createComponentGroupForm(): Form
     {
         $form = new Form();
         $form->addHidden('id');
@@ -249,19 +204,11 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     * @throws \App\Model\PartnerNotFound
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\InvalidStateException
-     */
-    public function onGroupFormSuccess(Form $form, ArrayHash $values): void
+    public function onGroupFormSuccess(Form $form, ArrayHash $values): never
     {
         $id = $values->id ?: null;
 
         unset($values->id);
-
 
         $this->partners->insertUpdateGroup($values, $id);
 
@@ -270,10 +217,7 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
-     */
-    public function createComponentGroupsDatagrid(): \Ublaboo\DataGrid\DataGrid
+    public function createComponentGroupsDatagrid(): DataGrid
     {
         DataGrid::$iconPrefix = 'glyphicon glyphicon-';
 
@@ -307,15 +251,8 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param int $item_id
-     * @param int|NULL $prev_id
-     * @param int|NULL $next_id
-     * @return void
-     * @throws \Nette\Application\AbortException
-     * @secured
-     */
-    public function handleSortGroup($item_id = null, $prev_id = null, $next_id = null): void
+    /** @secured */
+    public function handleSortGroup(int $item_id, ?int $prev_id = null, ?int $next_id = null): void
     {
         $item = $this->partners->getGroupById($item_id);
         $prevItem = $prev_id ? $this->partners->getGroupById($prev_id) : null;
@@ -334,12 +271,8 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $id
-     * @throws \Nette\Application\AbortException
-     * @secured
-     */
-    public function handleDeleteGroup($id): void
+    /** @secured */
+    public function handleDeleteGroup(int $id): void
     {
         $group = $this->partners->getGroupById($id);
 

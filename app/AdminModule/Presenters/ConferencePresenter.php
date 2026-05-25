@@ -12,6 +12,7 @@ use App\Orm\Program\Program;
 use App\Orm\Talk\Talk;
 use App\Orm\UserRole\UserRole;
 use DateInterval;
+use DateTimeInterface;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\SubmitButton;
@@ -25,13 +26,6 @@ use Ublaboo\DataGrid\Exception\DataGridException;
 
 class ConferencePresenter extends BasePresenter
 {
-    /**
-     * ConferencePreseneter constructor.
-     * @param ConfereeManager $confereeManager
-     * @param TalkManager $talkManager
-     * @param IdentityManager $identityManager
-     * @param UserManager $userManager
-     */
     public function __construct(
         private readonly ConfereeManager $confereeManager,
         private readonly TalkManager $talkManager,
@@ -48,13 +42,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $name
-     * @throws DataGridException
-     * @throws \InvalidArgumentException
-     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
-     */
-    public function createComponentConfereeDatagrid($name): void
+    public function createComponentConfereeDatagrid(?string $name): void
     {
         $grid = new DataGrid($this, $name);
 
@@ -86,11 +74,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $id
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function renderConfereeEdit($id): void
+    public function renderConfereeEdit(int $id): void
     {
         $conferee = $this->confereeManager->getById($id);
 
@@ -112,10 +96,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     */
-    public function createComponentConfereeEditForm(): \Nette\Application\UI\Form
+    public function createComponentConfereeEditForm(): Form
     {
         $form = new Form();
 
@@ -138,10 +119,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     */
-    public function createComponentConfereeDeleteForm(): \Nette\Application\UI\Form
+    public function createComponentConfereeDeleteForm(): Form
     {
         $form = new Form();
 
@@ -156,13 +134,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param $values
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function onConfereeEditFormSuccess(Form $form, $values): void
+    public function onConfereeEditFormSuccess(Form $form, ArrayHash $values): never
     {
         $id = $values->id;
         $conferee = $this->confereeManager->getById($id);
@@ -186,13 +158,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param $values
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function onConfereeDeleteFormSuccess(Form $form, $values): void
+    public function onConfereeDeleteFormSuccess(Form $form, ArrayHash $values): never
     {
         /** @var SubmitButton $delete */
         $delete = $form['delete'];
@@ -208,10 +174,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * Remove user with all dependecies
-     * @param Conferee $conferee
-     */
+    /** Remove user with all dependecies */
     private function deleteConferee(Conferee $conferee): void
     {
         /** @var Talk $talk */
@@ -279,7 +242,7 @@ class ConferencePresenter extends BasePresenter
                     'Ano',
                     $conferee->allowMail ? 'Ano' : 'Ne',
                     count($conferee->talk) ? 'Ano' : 'Ne',
-                    $conferee->created->format(\DateTime::ATOM),
+                    $conferee->created->format(DateTimeInterface::ATOM),
                     $conferee->bio,
                     $extended['company'] ?? null,
                 ],
@@ -300,17 +263,9 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $name
-     * @throws \App\Model\InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
-     * @throws \Ublaboo\DataGrid\Exception\DataGridColumnStatusException
-     * @throws DataGridException
-     */
-    public function createComponentTalksDatagrid($name): void
+    public function createComponentTalksDatagrid(?string $name): void
     {
         $categories = $this->talkManager->getCategories();
-        $rooms = $this->talkManager->getRooms();
 
 
         $grid = new DataGrid($this, $name);
@@ -374,12 +329,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $id
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function renderTalkEdit($id): void
+    public function renderTalkEdit(int $id): void
     {
         /** @var Talk $talk */
         $talk = $this->talkManager->getById($id);
@@ -403,7 +353,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    public function renderEditLink($talkId, $type, $key): void
+    public function renderEditLink(int $talkId, string $type, string $key): void
     {
         $talk = $this->talkManager->getById($talkId);
         $links = $talk->getLinksByType($type);
@@ -417,7 +367,7 @@ class ConferencePresenter extends BasePresenter
         $link = null;
         if (isset($links[$key])) {
             $link = $links[$key];
-        } elseif ($key == 'new') {
+        } elseif ($key === 'new') {
             $link = [
                 'name' => $talk->conferee->name . ": " . $talk->title,
                 'url' => '',
@@ -438,7 +388,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    public function createComponentLinkEditForm(): \Nette\Application\UI\Form
+    public function createComponentLinkEditForm(): Form
     {
         $form = new Form();
 
@@ -460,7 +410,7 @@ class ConferencePresenter extends BasePresenter
                 'name' => $values->name,
                 'url' => $values->url,
             ];
-            if ($values->key == 'new') {
+            if ($values->key === 'new') {
                 $links[] = $link;
             } else {
                 $links[$values->key] = $link;
@@ -474,14 +424,8 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @secured
-     * @param $talkId
-     * @param $type
-     * @param $key
-     * @throws \Nette\Application\AbortException
-     */
-    public function handleDeleteLink($talkId, $type, $key): void
+    /** @secured */
+    public function handleDeleteLink(int $talkId, string $type, string $key): never
     {
         $talk = $this->talkManager->getById($talkId);
         $links = $talk->getLinksByType($type);
@@ -492,12 +436,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     * @throws \App\Model\InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function createComponentTalkForm(): \Nette\Application\UI\Form
+    public function createComponentTalkForm(): Form
     {
         $form = new Form();
 
@@ -510,7 +449,7 @@ class ConferencePresenter extends BasePresenter
         $form->addText('company', 'Firma');
         $form->addText('voteCoefficient', 'Hlasovací koeficient')
             ->setRequired('Hlasovací koeficient musí být vyplněn - zadejte 0.')
-            ->addRule(Form::INTEGER, 'Hlasovací koeficient musí být číslo')
+            ->addRule(Form::Integer, 'Hlasovací koeficient musí být číslo')
             ->setHtmlType('number');
         $form->addText('ogImageUrl', 'OG obrázek')
             ->setRequired(false);
@@ -525,14 +464,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Exception
-     */
-    public function onTalkFormSuccess(Form $form, $values): void
+    public function onTalkFormSuccess(Form $form, ArrayHash $values): never
     {
         $id = $values->id;
 
@@ -569,18 +501,12 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $name
-     * @throws JsonException
-     * @throws \App\Model\InvalidEnumeratorSetException
-     * @throws DataGridException
-     */
-    public function createComponentProgramDatagrid($name): void
+    public function createComponentProgramDatagrid(?string $name): void
     {
         $rooms = $this->talkManager->getRooms();
         $program = $this->talkManager->findAllProgram()
-            ->orderBy('room', ICollection::ASC)
-            ->orderBy('time', ICollection::ASC);
+            ->orderBy('room')
+            ->orderBy('time');
 
         $grid = new DataGrid($this, $name);
         DataGrid::$iconPrefix = 'glyphicon glyphicon-';
@@ -598,9 +524,9 @@ class ConferencePresenter extends BasePresenter
             /** @var Program $row */
             if (empty($row->title) && isset($row->talk)) {
                 return $row->talk->title;
-            } else {
-                return $row->title;
             }
+
+            return $row->title;
         });
 
         $grid->addColumnText('speaker', 'Přednášející')->setRenderer(function ($row) {
@@ -638,12 +564,8 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $id
-     * @throws \Nette\Application\AbortException
-     * @secured
-     */
-    public function handleDeleteProgram($id): void
+    /** @secured */
+    public function handleDeleteProgram(int $id): void
     {
         $program = $this->talkManager->getProgramById($id);
 
@@ -657,11 +579,6 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     *
-     * @return mixed[]
-     * @throws JsonException
-     */
     public function getMergedTalks(): array
     {
         $talks = $this->talkManager->findAll()->orderBy('votes', ICollection::DESC);
@@ -713,9 +630,6 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @return array
-     */
     private function getProgramListedTalksId(): array
     {
         $program = $this->talkManager->findAllProgram();
@@ -732,11 +646,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param null|id $id
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function renderProgramEdit($id = null): void
+    public function renderProgramEdit(?int $id = null): void
     {
         if ($id === null) {
             return;
@@ -759,12 +669,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     * @throws JsonException
-     * @throws \App\Model\InvalidEnumeratorSetException
-     */
-    public function createComponentProgramForm(): \Nette\Application\UI\Form
+    public function createComponentProgramForm(): Form
     {
         $durations = $this->talkManager->getDurations();
         $durations += $this->talkManager->getDurationChoice();
@@ -819,13 +724,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param $values
-     * @throws \Exception
-     * @throws \Nette\Application\AbortException
-     */
-    public function onProgramFormSuccess(Form $form, $values): void
+    public function onProgramFormSuccess(Form $form, ArrayHash $values): never
     {
         $id = $values->id;
 
@@ -873,11 +772,7 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $conferee
-     * @throws \Nette\Application\BadRequestException
-     */
-    private function validateConferee(?\Nextras\Orm\Entity\IEntity $conferee): void
+    private function validateConferee(?Conferee $conferee): void
     {
         if (!$conferee instanceof Conferee) {
             $this->error('Tento účastník nebyl nalezen');

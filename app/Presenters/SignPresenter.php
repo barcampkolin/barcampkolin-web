@@ -37,20 +37,6 @@ class SignPresenter extends BasePresenter
     public string $token = '';
 
 
-    /**
-     * SignPresenter constructor.
-     * @param Forms\SignInFormFactory $signInFormFactory
-     * @param Forms\SignUpFormFactory $signUpFormFactory
-     * @param Forms\ConfereeForm $confereeForm
-     * @param Forms\TalkForm $talkForm
-     * @param IdentityManager $identityManager
-     * @param ConfereeManager $confereeManager
-     * @param UserManager $userManager
-     * @param TalkManager $talkManager
-     * @param EventInfoProvider $eventInfoProvider
-     * @param MailerManager $mailer
-     * @param EmailAuthenticator $authenticator
-     */
     public function __construct(
         private readonly Forms\SignInFormFactory $signInFormFactory,
         private readonly Forms\SignUpFormFactory $signUpFormFactory,
@@ -346,6 +332,7 @@ class SignPresenter extends BasePresenter
             }
         );
     }
+
 
     protected function createComponentConfereeForm(): Form
     {

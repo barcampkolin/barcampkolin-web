@@ -4,6 +4,7 @@ namespace App\AdminModule\Presenters;
 
 use App\Model\ArchiveManager;
 use DateInterval;
+use DateTimeInterface;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\InvalidStateException;
@@ -21,10 +22,6 @@ class ArchivePresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws InvalidStateException
-     * @throws \Nette\InvalidArgumentException
-     */
     public function renderDefault(): void
     {
         $this->template->year = $this->archiveManager->getCurrentYear();
@@ -34,11 +31,7 @@ class ArchivePresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     * @throws \Nette\Utils\JsonException
-     */
-    public function createComponentArchiveForm(): \Nette\Application\UI\Form
+    public function createComponentArchiveForm(): Form
     {
         $form = new Form();
 
@@ -70,7 +63,7 @@ class ArchivePresenter extends BasePresenter
     }
 
 
-    public function onArchiveFormSuccess(Form $form, ArrayHash $values): void
+    public function onArchiveFormSuccess(Form $form, ArrayHash $values): never
     {
         $fromYear = (int)$values['fromYear'];
         $toYear = $values['toYear'];
@@ -90,14 +83,7 @@ class ArchivePresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\IOException
-     * @throws \Nette\InvalidArgumentException
-     * @throws \Nette\InvalidStateException
-     */
-    public function actionUploadArchive(): void
+    public function actionUploadArchive(): never
     {
         $httpRequest = $this->getHttpRequest();
         $url = $httpRequest->getPost('url');
@@ -112,22 +98,13 @@ class ArchivePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $date
-     * @return string
-     */
-    private function dateToHtml5($date): string
+    private function dateToHtml5(string|DateTimeInterface $date): string
     {
         return new DateTime($date)->format('Y-m-d\TH:i:s');
     }
 
 
-    /**
-     * @return string
-     * @throws \Nette\InvalidArgumentException
-     * @throws \Nette\InvalidStateException
-     */
-    private function getArchiveCsrfToken()
+    private function getArchiveCsrfToken(): string
     {
         $session = $this->getSession(self::class);
         if (!isset($session['csrfToken'])) {
@@ -138,13 +115,7 @@ class ArchivePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $token
-     * @throws ForbiddenRequestException
-     * @throws \Nette\InvalidArgumentException
-     * @throws \Nette\InvalidStateException
-     */
-    private function validateArchiveCsrfToken($token): void
+    private function validateArchiveCsrfToken(?string $token): void
     {
         if (Strings::compare($token, $this->getArchiveCsrfToken()) !== true) {
             throw new ForbiddenRequestException('Invalid archive CSRF token');

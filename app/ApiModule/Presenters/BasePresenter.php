@@ -10,9 +10,7 @@ use Nextras\Application\UI\SecuredLinksPresenterTrait;
 
 class BasePresenter extends Presenter
 {
-    use SecuredLinksPresenterTrait;
-
-    private ?\App\Model\ApiTokenManager $apiTokenManager = null;
+    private ApiTokenManager $apiTokenManager;
 
 
     public function injectApiTokenManager(ApiTokenManager $apiTokenManager): void
@@ -20,12 +18,8 @@ class BasePresenter extends Presenter
         $this->apiTokenManager = $apiTokenManager;
     }
 
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
     #[\Override]
-    protected function startup()
+    protected function startup(): void
     {
         parent::startup();
 
@@ -39,12 +33,7 @@ class BasePresenter extends Presenter
     }
 
 
-    /**
-     * @param string $message
-     * @param int|null $code
-     * @throws \Nette\Application\AbortException
-     */
-    protected function sendErrorResponse($message, $code = null)
+    protected function sendErrorResponse(string $message, ?int$code = null):never
     {
         if ($code) {
             $this->getHttpResponse()->setCode($code);
@@ -59,12 +48,7 @@ class BasePresenter extends Presenter
     }
 
 
-    /**
-     * @param mixed|null $data
-     * @param string|null $message
-     * @throws \Nette\Application\AbortException
-     */
-    protected function sendSuceessResponse($data = null, $message = null)
+    protected function sendSuceessResponse(mixed $data = null, ?string $message = null):never
     {
         $response = [
             'status' => true,
@@ -78,6 +62,4 @@ class BasePresenter extends Presenter
         }
         $this->sendJson($response);
     }
-
-
 }

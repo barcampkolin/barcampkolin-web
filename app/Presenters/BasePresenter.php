@@ -5,6 +5,7 @@ namespace App\Presenters;
 use App\Model\ArchiveManager;
 use App\Model\EventInfoProvider;
 use App\Model\GravatarImageProvider;
+use DateTimeInterface;
 use Nette;
 use Nextras\Application\UI\SecuredLinksPresenterTrait;
 
@@ -70,7 +71,7 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
     /**
      * @deprecated Stav webu by měl být řízen spíš stavem, než porovnánávním s aktuálním datem
      */
-    private function isDatePassed(\DateTimeInterface $date): bool
+    private function isDatePassed(DateTimeInterface $date): bool
     {
         return $date < new \DateTimeImmutable();
     }

@@ -73,10 +73,6 @@ class UserPresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
     public function renderTalk(): void
     {
         if (!$this->eventInfoProvider->getFeatures()->talks_edit) {
@@ -84,6 +80,7 @@ class UserPresenter extends BasePresenter
             $this->redirect('profil');
         }
     }
+
 
     protected function createComponentConfereeForm(): Form
     {
@@ -153,6 +150,7 @@ class UserPresenter extends BasePresenter
         return $form;
     }
 
+
     protected function createComponentToggleAttendanceForm(): Form
     {
         $form = new Form();
@@ -181,14 +179,8 @@ class UserPresenter extends BasePresenter
         return $form;
     }
 
-    /**
-     * @throws NoUserLoggedIn
-     * @throws UserNotFound
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\ImageException
-     */
-    public function handleUploadAvatar(): void
+
+    public function handleUploadAvatar(): never
     {
         $user = $this->userManager->getByLoginUser($this->getUser());
         $conferee = $user->conferee;

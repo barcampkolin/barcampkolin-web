@@ -14,11 +14,6 @@ use Ublaboo\DataGrid\DataGrid;
 
 class MailPresenter extends BasePresenter
 {
-    /**
-     * MailPresenter constructor.
-     * @param MailDynamicLoader $mailLoader
-     * @param MailerManager $mailer
-     */
     public function __construct(
         private readonly MailDynamicLoader $mailLoader,
         private readonly MailerManager $mailer
@@ -27,11 +22,7 @@ class MailPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param string $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
-     */
-    public function createComponentMailsDatagrid($name): void
+    public function createComponentMailsDatagrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
 
@@ -53,11 +44,7 @@ class MailPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $name
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
-     */
-    public function createComponentLayoutsDatagrid($name): void
+    public function createComponentLayoutsDatagrid(string $name): void
     {
         $grid = new DataGrid($this, $name);
 
@@ -77,12 +64,7 @@ class MailPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param string $id
-     * @throws BadRequestException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function renderEdit($id): void
+    public function renderEdit(string $id): void
     {
         $this->template->id = $id;
 
@@ -104,24 +86,13 @@ class MailPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $id
-     * @throws \Nette\Application\AbortException
-     */
-    public function renderView($id): void
+    public function renderView(int $id): never
     {
         $this->forward('preview', ['id' => $id]); //temporary
     }
 
 
-    /**
-     * @param $id
-     * @param string $parametersJson
-     * @throws EntityNotFound
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function renderPreview(string $id, string $parametersJson = '{}'): void
+    public function renderPreview(string $id, string $parametersJson = '{}'): never
     {
         $parameters = Json::decode($parametersJson, forceArrays: true);
 
@@ -135,12 +106,7 @@ class MailPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $id
-     * @throws \Nette\Utils\JsonException
-     * @throws BadRequestException
-     */
-    public function renderBulkSender($id): void
+    public function renderBulkSender(string $id): void
     {
         try {
             $mail = $this->mailLoader->getMailById($id);
@@ -158,15 +124,7 @@ class MailPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $templateId
-     * @param $recipient
-     * @param string $parametersJson
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     * @throws EntityNotFound
-     */
-    public function actionSend(string $templateId, ?string $recipient, string $parametersJson = '{}'): void
+    public function actionSend(string $templateId, ?string $recipient, string $parametersJson = '{}'): never
     {
         $parameters = Json::decode($parametersJson, forceArrays: true);
 
@@ -183,13 +141,7 @@ class MailPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $id
-     * @return array
-     * @throws BadRequestException
-     * @throws \Nette\Utils\JsonException
-     */
-    private function getMailById($id): array
+    private function getMailById(string $id): array
     {
         try {
             return $this->mailLoader->getMailById($id);
@@ -199,10 +151,7 @@ class MailPresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     */
-    public function createComponentEditForm(): \Nette\Application\UI\Form
+    public function createComponentEditForm(): Form
     {
         $form = new Form();
 
@@ -234,14 +183,7 @@ class MailPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Form $form
-     * @param ArrayHash $values
-     * @throws EntityNotFound
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function save(Form $form, ArrayHash $values): void
+    public function save(Form $form, ArrayHash $values): never
     {
         $id = $values->id;
         if ($id === 'layout') {

@@ -24,7 +24,7 @@ class FilePresenter extends BasePresenter
     }
 
 
-    public function createComponentFileDatagrid($name): \Ublaboo\DataGrid\DataGrid
+    public function createComponentFileDatagrid($name): DataGrid
     {
         $grid = new DataGrid($this, $name);
         DataGrid::$iconPrefix = 'glyphicon glyphicon-';
@@ -54,11 +54,7 @@ class FilePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $id
-     * @secured
-     * @throws \Nette\Application\AbortException
-     */
+    /** @secured */
     public function handleDeleteFile(int $id): void
     {
         $file = $this->fileManager->getById($id);
@@ -73,7 +69,7 @@ class FilePresenter extends BasePresenter
     }
 
 
-    public function createComponentUploadForm(): \Nette\Application\UI\Form
+    public function createComponentUploadForm(): Form
     {
         $form = new Form();
 
@@ -96,7 +92,7 @@ class FilePresenter extends BasePresenter
     }
 
 
-    public function onUploadFormSuccess(Form $form, ArrayHash $values): void
+    public function onUploadFormSuccess(Form $form, ArrayHash $values): never
     {
         $name = empty((string)$values->name) ? null : $values->name;
         $file = $values->file;
