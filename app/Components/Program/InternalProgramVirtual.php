@@ -6,9 +6,9 @@ use DateInterval;
 
 class InternalProgramVirtual extends InternalProgram
 {
-    private ?string $title;
-    private ?string $speaker;
-    private string $style;
+    private string $title = '';
+    private ?string $speaker = null;
+    private ?string $style = null;
 
 
     public function __construct(
@@ -97,7 +97,7 @@ class InternalProgramVirtual extends InternalProgram
     }
 
 
-    public function setSpeaker(string $speaker): void
+    public function setSpeaker(?string $speaker): void
     {
         $this->speaker = $speaker;
     }

@@ -10,7 +10,7 @@ use DateInterval;
  */
 class InternalProgramEnvelope extends InternalProgram
 {
-    private string $defaultTitle;
+    private string $defaultTitle = '';
 
 
     public function __construct(
@@ -81,7 +81,7 @@ class InternalProgramEnvelope extends InternalProgram
     }
 
 
-    public function getSpeaker(): string
+    public function getSpeaker(): ?string
     {
         if (empty($this->program->speaker) && $this->program->talk) {
             return $this->program->talk->conferee->name;
@@ -93,7 +93,7 @@ class InternalProgramEnvelope extends InternalProgram
 
     public function getType(): string
     {
-        return $this->program->type;
+        return $this->program->type ?? '';
     }
 
 

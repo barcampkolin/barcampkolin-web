@@ -4,15 +4,14 @@ namespace App\Mails;
 
 use App\Model\MailerManager;
 use Nette\InvalidStateException;
-use Nette\Mail\SendException;
 
 abstract class BaseMessage implements IMessage
 {
-    protected ?MailerManager $manager;
+    protected ?MailerManager $manager = null;
 
     protected array $recipients = [];
 
-    protected string $subject;
+    protected string $subject = '';
 
     protected array $parameters = [];
 

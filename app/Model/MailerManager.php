@@ -33,7 +33,9 @@ readonly class MailerManager
         $mail = $this->mailLoader->getMailById($mailTemplateId);
 
         $message = new UniversalDynamicMessage();
-        $message->addRecipient($recipient);
+        if ($recipient !== null) {
+            $message->addRecipient($recipient);
+        }
         $message->setSubject($mail['subject']);
         $message->setTemlateFromString($mail);
         $message->setTemplateParameters($parameters);

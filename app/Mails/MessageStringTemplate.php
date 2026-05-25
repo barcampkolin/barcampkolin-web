@@ -5,7 +5,7 @@ namespace App\Mails;
 class MessageStringTemplate implements ITemplate
 {
     public function __construct(
-        private $content
+        private string $content
     ) {
     }
 
