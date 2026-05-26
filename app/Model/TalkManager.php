@@ -8,9 +8,7 @@ use App\Orm\Program\ProgramRepository;
 use App\Orm\Talk\Talk;
 use App\Orm\Talk\TalkRepository;
 use InvalidArgumentException;
-use Nette\Database\Context;
 use Nette\Database\Explorer;
-use Nette\Database\ForeignKeyConstraintViolationException;
 use Nette\Database\Table\ActiveRow;
 use Nextras\Orm\Collection\ICollection;
 

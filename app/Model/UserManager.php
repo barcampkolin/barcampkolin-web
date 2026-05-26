@@ -8,7 +8,6 @@ use App\Orm\User\User;
 use App\Orm\User\UserRepository;
 use App\Orm\UserRole\UserRole;
 use App\Orm\UserRole\UserRoleRepository;
-use Nextras\Orm\Entity\IEntity;
 
 class UserManager
 {

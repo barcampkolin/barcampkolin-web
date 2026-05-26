@@ -2,7 +2,7 @@
 
 namespace App\Model;
 
-readonly class  StoragePrefix
+readonly class StoragePrefix
 {
     public function __construct(
         private string $storageBase,
