@@ -38,22 +38,12 @@ readonly class ArchiveStorage
     }
 
 
-    /**
-     * @param string $name
-     * @param string $ext
-     * @return string
-     */
     private function getFilename(string $name, string $ext = 'html'): string
     {
         return Strings::webalize($name) . '.' . $ext;
     }
 
 
-    /**
-     * @param string $filename
-     * @return string
-     * @throws \Nette\IOException
-     */
     private function getStorageFilename(string $filename): string
     {
         $uploadDir = $this->storagePrefix;

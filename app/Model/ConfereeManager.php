@@ -45,29 +45,19 @@ class ConfereeManager
     }
 
 
-    /**
-     * @return int
-     */
     public function getCount(): int
     {
         return $this->findAll()->countStored();
     }
 
 
-    /**
-     * @return int
-     */
     public function getActiveCount(): int
     {
         return $this->confereeRepository->findBy(['enabled' => true])->countStored();
     }
 
 
-    /**
-     * @param bool $really
-     * @throws InvalidArgumentException
-     */
-    public function purgeAll($really = false): void
+    public function purgeAll(bool $really = false): void
     {
         if ($really !== true) {
             throw new InvalidArgumentException('Purging all items MUST be confirmed');

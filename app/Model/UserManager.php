@@ -25,28 +25,18 @@ class UserManager
     }
 
 
-    /**
-     * @param $id
-     * @return User|null
-     */
-    public function getById($id): ?IEntity
+    public function getById(int $id): ?User
     {
         return $this->userRepository->getById($id);
     }
 
 
-    /**
-     * @param User $user
-     */
     public function save(User $user): void
     {
         $this->userRepository->persistAndFlush($user);
     }
 
 
-    /**
-     * @param User $user
-     */
     public function remove(User $user): void
     {
         $this->userRepository->removeAndFlush($user);

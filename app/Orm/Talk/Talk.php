@@ -27,14 +27,7 @@ use Nextras\Orm\Relationships\OneHasMany;
  */
 class Talk extends Entity
 {
-
-    /**
-     * @param string|null $item
-     * @param mixed|null $default
-     * @return mixed|null
-     * @throws JsonException
-     */
-    public function getExpandedExtensions($item = null, $default = null)
+    public function getExpandedExtensions(?string $item = null, mixed $default = null): mixed
     {
         $extended = Json::decode($this->extended, forceArrays: true);
         if (is_null($item)) {
@@ -45,12 +38,7 @@ class Talk extends Entity
     }
 
 
-    /**
-     * @param mixed $value
-     * @param string|null $item
-     * @throws JsonException
-     */
-    public function setExpandedExtenstios($value, $item = null): void
+    public function setExpandedExtenstios(mixed $value, ?string $item = null): void
     {
         if (is_null($item)) {
             $extended = $value;
@@ -63,20 +51,12 @@ class Talk extends Entity
     }
 
 
-    /**
-     * @return array
-     * @throws JsonException
-     */
-    private function getLinks()
+    private function getLinks(): array
     {
         return $this->getExpandedExtensions('links', []);
     }
 
 
-    /**
-     * @param array $links
-     * @throws JsonException
-     */
     private function setLinks(array $links): void
     {
         $this->setExpandedExtenstios($links, 'links');

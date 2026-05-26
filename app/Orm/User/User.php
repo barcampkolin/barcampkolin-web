@@ -20,9 +20,6 @@ use Nextras\Orm\Relationships\OneHasMany;
  */
 class User extends Entity
 {
-    /**
-     * @throws ConfereeNotFound
-     */
     public function getObligatoryConferee(): Conferee
     {
         $conferee = $this->conferee;

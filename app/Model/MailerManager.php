@@ -65,13 +65,7 @@ readonly class MailerManager
     }
 
 
-    /**
-     * @param $recipient
-     * @return VoteAnnounceMessage
-     * @throws EntityNotFound
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getVoteAnnounceMessage($recipient): \App\Mails\VoteAnnounceMessage
+    public function getVoteAnnounceMessage(string $recipient): VoteAnnounceMessage
     {
         $mail = $this->mailLoader->getMailById('vote-announce');
 
@@ -81,11 +75,6 @@ readonly class MailerManager
     }
 
 
-    /**
-     * @param IMessage $message
-     * @throws \Nette\Utils\JsonException
-     * @throws \Nette\Mail\SendException
-     */
     public function send(IMessage $message): void
     {
         $mail = new Message();
@@ -104,12 +93,7 @@ readonly class MailerManager
     }
 
 
-    /**
-     * @param IMessage $message
-     * @return string
-     * @throws \Nette\Utils\JsonException
-     */
-    public function compileBody(IMessage $message)
+    public function compileBody(IMessage $message): string
     {
         $template = $message->getTemplate();
 

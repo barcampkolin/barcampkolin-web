@@ -9,9 +9,9 @@ use App\Orm\User\User;
 use Nextras\Orm\Entity\IEntity;
 
 
-class IdentityManager
+readonly class IdentityManager
 {
-    private readonly IdentityRepository $identityRepository;
+    private IdentityRepository $identityRepository;
 
 
     public function __construct(Orm $orm)

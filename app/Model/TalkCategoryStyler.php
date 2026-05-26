@@ -2,26 +2,16 @@
 
 namespace App\Model;
 
-class TalkCategoryStyler
+readonly class TalkCategoryStyler
 {
-    /**
-     * @param array $keys
-     * @param string $default
-     */
     public function __construct(
         private array $keys,
-        private $default = 'style0'
+        private string $default = 'style0'
     ) {
     }
 
 
-    /**
-     * @param string|null $categoryKey
-     * @param string|null $color
-     * @param string|null $default
-     * @return string
-     */
-    public function getStyleClass($categoryKey, $color = null, $default = null)
+    public function getStyleClass(?string $categoryKey, ?string $color = null, ?string $default = null): string
     {
         if ($color !== null) {
             return $color;
@@ -37,5 +27,4 @@ class TalkCategoryStyler
 
         return $this->default;
     }
-
 }

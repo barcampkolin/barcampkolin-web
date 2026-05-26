@@ -9,30 +9,24 @@ use App\Orm\Talk\Talk;
 use App\Orm\Talk\TalkRepository;
 use InvalidArgumentException;
 use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\ForeignKeyConstraintViolationException;
 use Nette\Database\Table\ActiveRow;
+use Nextras\Orm\Collection\ICollection;
 
 class TalkManager
 {
-    const TABLE_TALK_VOTES_NAME = 'talk_votes';
-    const COLUMN_USER_ID = 'user_id';
-    const COLUMN_TALK_ID = 'talk_id';
+    private const string TABLE_TALK_VOTES_NAME = 'talk_votes';
+    private const string COLUMN_USER_ID = 'user_id';
+    private const string COLUMN_TALK_ID = 'talk_id';
 
-    /** @var TalkRepository $talkRepository */
-    private $talkRepository;
-    /** @var ProgramRepository $talkRepository */
-    private $programRepository;
+    private TalkRepository $talkRepository;
+    private ProgramRepository $programRepository;
 
 
-    /**
-     * TalkManager constructor.
-     * @param Orm $orm
-     * @param Context $database
-     * @param EnumeratorManager $enumerator
-     */
     public function __construct(
         Orm $orm,
-        private readonly Context $database,
+        private readonly Explorer $database,
         private readonly EnumeratorManager $enumerator
     ) {
         $this->talkRepository = $orm->talk;
@@ -40,27 +34,18 @@ class TalkManager
     }
 
 
-    /**
-     * @param Talk $talk
-     */
     public function save(Talk $talk): void
     {
         $this->talkRepository->persistAndFlush($talk);
     }
 
 
-    /**
-     * @param Talk $talk
-     */
     public function remove(Talk $talk): void
     {
         $this->talkRepository->removeAndFlush($talk);
     }
 
 
-    /**
-     * @param Program $program
-     */
     public function saveProgram(Program $program): void
     {
         $this->programRepository->persistAndFlush($program);
@@ -73,44 +58,25 @@ class TalkManager
     }
 
 
-    /**
-     * @return array
-     * @throws InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
-     */
     public function getCategories(): array
     {
         return $this->enumerator->getPairs(EnumeratorManager::SET_TALK_CATEGORIES);
     }
 
 
-    /**
-     * @return array
-     * @throws InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
-     */
     public function getDurations(): array
     {
         return $this->enumerator->getPairs(EnumeratorManager::SET_TALK_DURATIONS);
     }
 
 
-    /**
-     * @return array
-     * @throws InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
-     */
     public function getRooms(): array
     {
         return $this->enumerator->getPairs(EnumeratorManager::SET_TALK_ROOMS);
     }
 
 
-    /**
-     * @param int $userId
-     * @return array
-     */
-    public function getUserVotes($userId): array
+    public function getUserVotes(int $userId): array
     {
         $talkIds = [];
         $res = $this->database->table(self::TABLE_TALK_VOTES_NAME)
@@ -126,12 +92,7 @@ class TalkManager
     }
 
 
-    /**
-     * @param int $userId
-     * @param int $talkId
-     * @throws ForeignKeyConstraintViolationException
-     */
-    public function addVote($userId, $talkId): void
+    public function addVote(int $userId, int $talkId): void
     {
         $this->database->table(self::TABLE_TALK_VOTES_NAME)
             ->insert([
@@ -143,11 +104,7 @@ class TalkManager
     }
 
 
-    /**
-     * @param int $userId
-     * @param int $talkId
-     */
-    public function removeVote($userId, $talkId): void
+    public function removeVote(int $userId, int $talkId): void
     {
         $this->database->table(self::TABLE_TALK_VOTES_NAME)
             ->where([
@@ -159,10 +116,7 @@ class TalkManager
     }
 
 
-    /**
-     * @param int $talkId
-     */
-    public function recountVote($talkId): void
+    public function recountVote(int $talkId): void
     {
         $result = $this->database
             ->query('SELECT SUM(`value`) AS `value` FROM `talk_votes` WHERE `talk_id` = ?', $talkId)
@@ -176,30 +130,19 @@ class TalkManager
     }
 
 
-    /**
-     * @param int $id
-     * @return Talk|null
-     */
-    public function getById($id): ?\Nextras\Orm\Entity\IEntity
+    public function getById(int $id): ?Talk
     {
         return $this->talkRepository->getById($id);
     }
 
 
-    /**
-     * @param $id
-     * @return Program|null
-     */
-    public function getProgramById($id): ?\Nextras\Orm\Entity\IEntity
+    public function getProgramById(int $id): ?Program
     {
         return $this->programRepository->getById($id);
     }
 
 
-    /**
-     * @return \Nextras\Orm\Collection\ICollection
-     */
-    public function findActive(): \Nextras\Orm\Collection\ICollection
+    public function findActive(): ICollection
     {
         return $this->talkRepository->findBy([
             'enabled' => true
@@ -207,27 +150,18 @@ class TalkManager
     }
 
 
-    /**
-     * @return \Nextras\Orm\Collection\ICollection
-     */
-    public function findAll(): \Nextras\Orm\Collection\ICollection
+    public function findAll(): ICollection
     {
         return $this->talkRepository->findAll();
     }
 
 
-    /**
-     * @return \Nextras\Orm\Collection\ICollection
-     */
-    public function findAllProgram(): \Nextras\Orm\Collection\ICollection
+    public function findAllProgram(): ICollection
     {
         return $this->programRepository->findAll();
     }
 
 
-    /**
-     * @return array
-     */
     public function getDurationChoice(): array
     {
         $choice = [];
@@ -238,9 +172,6 @@ class TalkManager
     }
 
 
-    /**
-     * @return array
-     */
     public function getProgramTypes(): array
     {
         return [
@@ -252,12 +183,8 @@ class TalkManager
     }
 
 
-    /**
-     * DANGER remove all
-     * @param bool $really
-     * @throws InvalidArgumentException
-     */
-    public function purgeAll($really = false): void
+    /** DANGER remove all */
+    public function purgeAll(bool $really = false): void
     {
         if ($really !== true) {
             throw new InvalidArgumentException('Purging all items MUST be confirmed');
@@ -270,12 +197,8 @@ class TalkManager
     }
 
 
-    /**
-     * DANGER remove all
-     * @param bool $really
-     * @throws InvalidArgumentException
-     */
-    public function purgeAllProgram($really = false): void
+    /** DANGER remove all */
+    public function purgeAllProgram(bool $really = false): void
     {
         if ($really !== true) {
             throw new InvalidArgumentException('Purging all items MUST be confirmed');
