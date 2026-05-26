@@ -6,6 +6,7 @@ use App\Model\DuplicateNameException;
 use App\Model\NewsletterSignupManager;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\ArrayHash;
 
 class NewsletterSignupControl extends Control
@@ -44,7 +45,9 @@ class NewsletterSignupControl extends Control
             $this->presenter->flashMessage('Váš e-mail jsme přidali k příjemcům zpráv o Barcampu');
             $this->presenter->redirect(':Homepage:');
         } catch (DuplicateNameException) {
-            $form['email']->addError('Tento e-mail je již přihlášen.');
+            /** @var BaseControl $emailControl */
+            $emailControl = $form['email'];
+            $emailControl->addError('Tento e-mail je již přihlášen.');
         }
     }
 }

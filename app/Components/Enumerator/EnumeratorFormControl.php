@@ -64,8 +64,9 @@ class EnumeratorFormControl extends Control
 
         $removeEvent = $this->removeClicked(...);
 
+        // addDynamic() is provided by kdyby/forms-replicator at runtime via container macro
         /** @var Replicator\Container $enums */
-        $enums = $form->addDynamic('enums', function (Container $enums) use ($removeEvent): void {
+        $enums = $form->addDynamic('enums', function (Container $enums) use ($removeEvent): void { // @phpstan-ignore method.notFound
             $enums->addText('key', 'Klíč', 30);
             $enums->addText('value', 'Hodnota', 50);
 
@@ -88,12 +89,18 @@ class EnumeratorFormControl extends Control
 
     public function onFormSuccess(Form $form, ArrayHash $values): void
     {
-        if ($form['submit']->isSubmittedBy() === false && $form['defaultSubmit']->isSubmittedBy() === false) {
+        /** @var SubmitButton $submit */
+        $submit = $form['submit'];
+        /** @var SubmitButton $defaultSubmit */
+        $defaultSubmit = $form['defaultSubmit'];
+        if ($submit->isSubmittedBy() === false && $defaultSubmit->isSubmittedBy() === false) {
             return;
         }
 
+        /** @var Replicator\Container $enumsContainer */
+        $enumsContainer = $form['enums'];
         $enums = [];
-        foreach ($form['enums']->values as $enum) {
+        foreach ($enumsContainer->values as $enum) {
             if (empty($enum['key']) || empty($enum['value'])) {
                 continue;
             }

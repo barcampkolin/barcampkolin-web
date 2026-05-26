@@ -8,6 +8,7 @@ use App\Forms\FormFactory;
 use App\Model\OrgListModel;
 use Exception;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Neon\Neon;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Json;
@@ -27,7 +28,9 @@ class OrgsPresenter extends BasePresenter
 
         /** @var Form $form */
         $form = $this['updateForm'];
-        $form['url']->setDefaultValue($this->orgListModel->getLastUpdateUrl());
+        /** @var BaseControl $urlControl */
+        $urlControl = $form['url'];
+        $urlControl->setDefaultValue($this->orgListModel->getLastUpdateUrl());
     }
 
     public function renderProcess(
@@ -43,9 +46,15 @@ class OrgsPresenter extends BasePresenter
 
         $filtered = array_map(static fn($org): ?array => array_filter($org, static fn($value): bool => $value !== null), $orgs);
 
-        $form['neon']->setValue(Neon::encode($filtered, blockMode: true, indentation: '  '));
-        $form['url']->setValue($url);
-        $form['data']->setValue(Json::encode($orgs));
+        /** @var BaseControl $neonControl */
+        $neonControl = $form['neon'];
+        /** @var BaseControl $urlControl */
+        $urlControl = $form['url'];
+        /** @var BaseControl $dataControl */
+        $dataControl = $form['data'];
+        $neonControl->setValue(Neon::encode($filtered, blockMode: true, indentation: '  '));
+        $urlControl->setValue($url);
+        $dataControl->setValue(Json::encode($orgs));
     }
 
     public function createComponentUpdateForm(): Form

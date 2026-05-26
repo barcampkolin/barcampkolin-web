@@ -16,6 +16,7 @@ use App\Model\UserNotFound;
 use App\Orm\Conferee\Conferee;
 use App\Orm\Talk\Talk;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Http\FileUpload;
 use Nette\Http\IResponse;
 use Nette\Security\SimpleIdentity;
@@ -146,7 +147,9 @@ class UserPresenter extends BasePresenter
 
         //Additional form modification
         $form->addHidden('id', $talk->id);
-        $form['phone']->setDefaultValue($conferee->phone);
+        /** @var BaseControl $phoneControl */
+        $phoneControl = $form['phone'];
+        $phoneControl->setDefaultValue($conferee->phone);
 
         return $form;
     }

@@ -22,6 +22,7 @@ use App\Orm\User\User;
 use App\Orm\UserRole\UserRole;
 use LogicException;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Mail\SendException;
 use Nette\Security\SimpleIdentity;
 use Nette\Utils\ArrayHash;
@@ -198,10 +199,14 @@ class SignPresenter extends BasePresenter
             try {
                 $this->submitResetPasswordToken($values->email);
             } catch (IdentityNotFoundException) {
-                $form['email']->addError('Na tento e-mail není nikdo registrován, nemůžeme mu tedy ani poslat heslo');
+                /** @var BaseControl $emailControl */
+                $emailControl = $form['email'];
+                $emailControl->addError('Na tento e-mail není nikdo registrován, nemůžeme mu tedy ani poslat heslo');
             } catch (SendException $e) {
                 Debugger::log($e, ILogger::EXCEPTION);
-                $form['email']->addError(
+                /** @var BaseControl $emailControl */
+                $emailControl = $form['email'];
+                $emailControl->addError(
                     'Na zadaný e-mail se nám nedaří doručit zprávu s novým heslem – při doručování zprávy došlo k chybě.'
                 );
             }
@@ -397,7 +402,9 @@ class SignPresenter extends BasePresenter
         $durations = $this->talkManager->getDurations();
 
         $form = $this->talkForm->create($onSubmitCallback, $categories, $durations);
-        $form['phone']?->setDefaultValue($conferee->phone);
+        /** @var BaseControl|null $phoneControl */
+        $phoneControl = $form['phone'] ?? null;
+        $phoneControl?->setDefaultValue($conferee->phone);
         return $form;
     }
 

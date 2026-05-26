@@ -3,3 +3,4 @@ parameters:
 	paths:
 		- app
 		- www
+	reportUnmatchedIgnoredErrors: false
