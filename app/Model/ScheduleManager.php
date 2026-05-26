@@ -60,10 +60,6 @@ class ScheduleManager
     ];
 
 
-    /**
-     * ScheduleManager constructor.
-     * @param ConfigManager $configManager
-     */
     public function __construct(
         private readonly ConfigManager $configManager
     ) {
@@ -72,11 +68,7 @@ class ScheduleManager
     }
 
 
-    /**
-     * @param $stepKey
-     * @throws \Nette\Utils\JsonException
-     */
-    public function changeCurrentStep($stepKey): void
+    public function changeCurrentStep(?string $stepKey): void
     {
         $this->validateStepKey($stepKey);
 
@@ -88,11 +80,7 @@ class ScheduleManager
     }
 
 
-    /**
-     * @param $stepKey
-     * @return bool
-     */
-    public function validateStepKey($stepKey): bool
+    public function validateStepKey(?string $stepKey): bool
     {
         if (is_null($stepKey)) {
             return true;
@@ -104,26 +92,17 @@ class ScheduleManager
             }
         }
 
-        $stepKey = (string)$stepKey;
         throw new \InvalidArgumentException("Step key '$stepKey' is invalid.");
     }
 
 
-    /**
-     * @param string $value
-     * @throws \Nette\Utils\JsonException
-     */
-    public function setCurrentStep($value): void
+    public function setCurrentStep(?string $value): void
     {
         $this->configManager->set(Event::SCHEDULE_CURRENT_STEP, $value);
     }
 
 
-    /**
-     * @param $stepKey
-     * @throws \Nette\Utils\JsonException
-     */
-    private function propagateConfigsByStep($stepKey): void
+    private function propagateConfigsByStep(?string $stepKey): void
     {
         if (is_null($stepKey)) {
             return;
@@ -149,13 +128,7 @@ class ScheduleManager
     }
 
 
-    /**
-     * @param bool $withValues
-     * @param bool $withConfig
-     * @return array
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getSteps($withValues = false, $withConfig = true): array
+    public function getSteps(bool $withValues = false, bool $withConfig = true): array
     {
         $currentStepIndex = $this->getCurrentStepIndex();
 
@@ -165,7 +138,7 @@ class ScheduleManager
                 'index' => $stepIndex,
                 'key' => $step[0],
                 'name' => $step[1],
-                'isDone' => is_null($currentStepIndex) ? false : $stepIndex < $currentStepIndex,
+                'isDone' => !is_null($currentStepIndex) && $stepIndex < $currentStepIndex,
                 'isCurrent' => $currentStepIndex === $stepIndex,
                 'isNext' => $stepIndex - 1 === (is_null($currentStepIndex) ? -1 : $currentStepIndex)
             ];
@@ -179,7 +152,7 @@ class ScheduleManager
                         'type' => $stepConfig[self::IDX_TYPE],
                         'name' => $stepConfig[self::IDX_NAME],
                         'enum' => $stepConfig[self::IDX_ENUM] ?? null,
-                        'isRequired' => isset($stepConfig[self::IDX_FLAGS]) ? ($stepConfig[self::IDX_FLAGS] & self::REQUIRED) !== 0 : false,
+                        'isRequired' => isset($stepConfig[self::IDX_FLAGS]) && ($stepConfig[self::IDX_FLAGS] & self::REQUIRED) !== 0,
                     ];
                     if ($withValues) {
                         $conf['value'] = $this->getConfig($step[0], $stepConfig[self::IDX_KEY]);
@@ -195,11 +168,7 @@ class ScheduleManager
     }
 
 
-    /**
-     * @return int|null
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getCurrentStepIndex(): int|string|null
+    public function getCurrentStepIndex(): ?int
     {
         $currentStepName = $this->getCurrentStepKey();
         foreach ($this->steps as $stepIndex => $step) {
@@ -212,35 +181,19 @@ class ScheduleManager
     }
 
 
-    /**
-     * @return mixed
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getCurrentStepKey()
+    public function getCurrentStepKey(): ?string
     {
         return $this->configManager->get(Event::SCHEDULE_CURRENT_STEP);
     }
 
 
-    /**
-     * @param string $stepName
-     * @param string $configName
-     * @return string
-     */
-    private function getConfigKey($stepName, $configName): string
+    private function getConfigKey(string $stepName, string $configName): string
     {
         return sprintf("schedule.%s.%s", $stepName, $configName);
     }
 
 
-    /**
-     * @param string $stepName
-     * @param string $configName
-     * @param string $type
-     * @return bool|mixed|null|string
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getConfig($stepName, $configName, $type = null)
+    public function getConfig(string $stepName, string $configName, ?string $type = null)
     {
         $value = $this->configManager->get($this->getConfigKey($stepName, $configName));
 
@@ -252,12 +205,7 @@ class ScheduleManager
     }
 
 
-    /**
-     * @param mixed $value
-     * @param string $type
-     * @return bool|null|string
-     */
-    private function strictType($value, $type)
+    private function strictType(mixed $value, string $type): bool|string|null
     {
         if (is_null($value)) {
             return null;
@@ -266,49 +214,13 @@ class ScheduleManager
         return match ($type) {
             'bool' => (bool)$value,
             'select' => $value,
-            'datetime', 'datetime-local' => (new DateTime($value))->format('c'),
+            'datetime', 'datetime-local' => new DateTime($value)->format('c'),
             default => throw new \LogicException("Invalid form field type: $type"),
         };
     }
 
 
-    /**
-     * @param bool $withValues
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getCurrentStepConfigs($withValues = false): void
-    {
-        $step = $this->getCurrentStepKey();
-
-        $configSet = array_merge($this->featureConfigs, $this->singleStepConfigs);
-
-        $confs = [];
-
-        foreach ($configSet as $configItem) {
-            $conf = [
-                'id' => $this->getConfigKey($step, $configItem[self::IDX_KEY]),
-                'key' => $configItem[self::IDX_KEY],
-                'type' => $configItem[self::IDX_TYPE],
-                'name' => $configItem[self::IDX_NAME],
-                'enum' => $configItem[self::IDX_ENUM] ?? null,
-                'isRequired' => isset($configItem[self::IDX_FLAGS]) ? ($configItem[self::IDX_FLAGS] | self::REQUIRED) !== 0 : false,
-            ];
-            if ($withValues) {
-                $conf['value'] = $this->getConfig($step, $configItem[self::IDX_KEY]);
-            }
-            $confs[] = $conf;
-        }
-    }
-
-
-    /**
-     * @param string $stepName
-     * @param string $configName
-     * @param mixed $value
-     * @param string $type
-     * @throws \Nette\Utils\JsonException
-     */
-    public function setConfig($stepName, $configName, $value, $type = null): void
+    public function setConfig(string $stepName, string $configName, mixed $value, ?string $type = null): void
     {
         if ($type) {
             $value = $this->strictType($value, $type);
@@ -318,9 +230,6 @@ class ScheduleManager
     }
 
 
-    /**
-     * @throws \Nette\Utils\JsonException
-     */
     private function updateVisualDates(): void
     {
         $steps = $this->getSteps(true);

@@ -4,10 +4,5 @@ namespace App\Components\Faq;
 
 interface IFaqControlFactory
 {
-
-    /**
-     * @return FaqControl
-     */
-    public function create():FaqControl;
-
+    public function create(): FaqControl;
 }

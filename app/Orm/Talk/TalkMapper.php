@@ -7,6 +7,7 @@ use Nextras\Orm\Mapper\Dbal\DbalMapper;
 
 class TalkMapper extends DbalMapper
 {
+    #[\Override]
     public function getTableName(): Fqn|string
     {
         return 'talk';

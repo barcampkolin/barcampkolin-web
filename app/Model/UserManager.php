@@ -8,13 +8,12 @@ use App\Orm\User\User;
 use App\Orm\User\UserRepository;
 use App\Orm\UserRole\UserRole;
 use App\Orm\UserRole\UserRoleRepository;
-use Nextras\Orm\Entity\IEntity;
 
 class UserManager
 {
-    private UserRepository $userRepository;
-    private IdentityRepository $identityRepository;
-    private UserRoleRepository $userRoleRepository;
+    private readonly UserRepository $userRepository;
+    private readonly IdentityRepository $identityRepository;
+    private readonly UserRoleRepository $userRoleRepository;
 
 
     public function __construct(Orm $orm)
@@ -25,28 +24,18 @@ class UserManager
     }
 
 
-    /**
-     * @param $id
-     * @return User|null
-     */
-    public function getById($id): ?IEntity
+    public function getById(int $id): ?User
     {
         return $this->userRepository->getById($id);
     }
 
 
-    /**
-     * @param User $user
-     */
     public function save(User $user): void
     {
         $this->userRepository->persistAndFlush($user);
     }
 
 
-    /**
-     * @param User $user
-     */
     public function remove(User $user): void
     {
         $this->userRepository->removeAndFlush($user);

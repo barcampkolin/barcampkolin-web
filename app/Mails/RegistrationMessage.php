@@ -2,12 +2,12 @@
 
 namespace App\Mails;
 
-class RegistrationMessage extends UniversalDynamicMessage implements IMessage
+class RegistrationMessage extends UniversalDynamicMessage
 {
     public function __construct(string $recipient, array $mail)
     {
         $this->addRecipient($recipient);
         $this->setSubject($mail['subject']);
-        $this->setTemlateFromString($mail);
+        $this->setTemplateFromString($mail);
     }
 }

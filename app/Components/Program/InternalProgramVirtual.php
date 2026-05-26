@@ -2,163 +2,102 @@
 
 namespace App\Components\Program;
 
-/**
- * Class InternalProgramVirtual
- * @package App\Components\Program
- */
-class InternalProgramVirtual extends InternalProgram implements IInternalProgram
+use DateInterval;
+
+class InternalProgramVirtual extends InternalProgram
 {
-    /**
-     * @var string|null
-     */
-    private $title;
-    /**
-     * @var string|null
-     */
-    private $speaker;
-    /**
-     * @var string
-     */
-    private $style;
+    private string $title = '';
+    private ?string $speaker = null;
+    private ?string $style = null;
 
 
-    /**
-     * InternalProgramVirtual constructor.
-     * @param $type
-     * @param \DateInterval $time
-     * @param $duration
-     * @param string $type
-     * @param int $duration
-     */
     public function __construct(
-        private $type,
-        private \DateInterval $time,
-        private $duration
+        private string $type,
+        private DateInterval $time,
+        private int $duration
     ) {
     }
 
 
-    /**
-     * @return string
-     */
-    public function getTalkId()
+    public function getTalkId(): null
     {
         return null;
     }
 
 
-    /**
-     * @return \DateInterval
-     */
-    public function getTime(): \DateInterval
+    public function getTime(): DateInterval
     {
         return $this->time;
     }
 
 
-    /**
-     * @param \DateInterval $time
-     */
-    public function setTime(\DateInterval $time): void
+    public function setTime(DateInterval $time): void
     {
         $this->time = $time;
     }
 
 
-    /**
-     * @return int
-     */
-    public function getDuration()
+    public function getDuration(): int
     {
         return $this->duration;
     }
 
 
-    /**
-     * @param int $duration
-     */
-    public function setDuration($duration): void
+    public function setDuration(int $duration): void
     {
         $this->duration = $duration;
     }
 
 
-    /**
-     * @return string|null
-     */
-    public function getStyle()
+    public function getStyle(): ?string
     {
         return $this->style;
     }
 
 
-    /**
-     * @param string|null $style
-     */
-    public function setStyle($style): void
+    public function setStyle(?string $style): void
     {
         $this->style = $style;
     }
 
 
-    /**
-     * @return mixed
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
 
-    /**
-     * @param mixed $type
-     */
-    public function setType($type): void
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
 
 
-    /**
-     * @return mixed
-     */
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
 
-    /**
-     * @param mixed $title
-     */
-    public function setTitle($title): void
+    public function setTitle(string $title): void
     {
         $this->title = $title;
     }
 
 
-    /**
-     * @return bool
-     */
     public function isTitleOverridden(): bool
     {
         return true;
     }
 
 
-    /**
-     * @return mixed
-     */
-    public function getSpeaker()
+    public function getSpeaker():?string
     {
         return $this->speaker;
     }
 
 
-    /**
-     * @param mixed $speaker
-     */
-    public function setSpeaker($speaker): void
+    public function setSpeaker(?string $speaker): void
     {
         $this->speaker = $speaker;
     }

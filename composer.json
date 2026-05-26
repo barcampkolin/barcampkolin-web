@@ -52,9 +52,12 @@
 		"ublaboo/datagrid": "^6.10"
 	},
 	"require-dev": {
+		"nextras/orm-phpstan": "2.0.0",
 		"php-parallel-lint/php-console-highlighter": "^1.0",
 		"php-parallel-lint/php-parallel-lint": "^1.4",
-		"phpstan/phpstan": "^2.1"
+		"phpstan/extension-installer": "^1.4",
+		"phpstan/phpstan": "2.1.55",
+		"phpstan/phpstan-nette": "2.0.9"
 	},
 	"autoload": {
 		"psr-4": {
@@ -66,7 +69,10 @@
 	},
 	"config": {
 		"optimize-autoloader": true,
-		"sort-packages": true
+		"sort-packages": true,
+		"allow-plugins": {
+			"phpstan/extension-installer": true
+		}
 	},
 	"scripts": {
 		"lint": [
@@ -81,6 +87,6 @@
 		],
 		"lint-neon": "neon-lint ./app/config",
 		"lint-php": "parallel-lint -e php ./app ./www",
-		"phpstan": "phpstan analyze -l 1 ./app ./www"
+		"phpstan": "phpstan analyze"
 	}
 }

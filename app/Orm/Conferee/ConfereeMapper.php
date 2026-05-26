@@ -9,11 +9,13 @@ use Nextras\Orm\Mapper\Dbal\DbalMapper;
 class ConfereeMapper extends DbalMapper
 {
 
-    public function getTableName(): string
+    #[\Override]
+    public function getTableName(): Fqn|string
     {
         return 'conferee';
     }
 
+    #[\Override]
     protected function createConventions(): IConventions
     {
         $reflection = parent::createConventions();

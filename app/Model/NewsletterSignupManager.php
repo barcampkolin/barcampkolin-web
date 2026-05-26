@@ -2,35 +2,25 @@
 
 namespace App\Model;
 
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\UniqueConstraintViolationException;
 use Nette\Utils\DateTime;
 
 class NewsletterSignupManager
 {
-    const
-        TABLE_NAME = 'newsletter_subscribe',
-        COLUMN_EMAIL = 'email',
-        COLUMN_CONSENT_DATE = 'consent_date',
-        COLUMN_CONSENT_DESC = 'consent_desc';
+    private const string  TABLE_NAME = 'newsletter_subscribe';
+    private const string  COLUMN_EMAIL = 'email';
+    private const string  COLUMN_CONSENT_DATE = 'consent_date';
+    private const string  COLUMN_CONSENT_DESC = 'consent_desc';
 
 
-    /**
-     * NewsletterSignupManager constructor.
-     * @param Context $database
-     */
     public function __construct(
-        private readonly Context $database
+        private readonly Explorer $database
     ) {
     }
 
 
-    /**
-     * @param string $email
-     * @param string $consentDesc
-     * @throws DuplicateNameException
-     */
-    public function add($email, $consentDesc): void
+    public function add(string $email, string $consentDesc): void
     {
         try {
             $this->database->table(self::TABLE_NAME)->insert([

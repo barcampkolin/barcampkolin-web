@@ -106,9 +106,11 @@ vlastní driver `App\Dbal\RawPdoMysqlDriver` (viz `config.neon`, sekce
 ## Lint, statická analýza, testy
 
 - `composer run lint` – PHP + Latte + NEON lint; `composer run phpstan`
-  (úroveň 1, bez konfiguračního souboru). CI (`.github/workflows`) spouští
-  pouze tyto kontroly. Lokálně je spouštěj uvnitř kontejneru – viz sekci
-  Lokální vývoj a deploy.
+  (konfigurace v `phpstan.neon`, úroveň a paths jsou tam). Verze PHPStanu je
+  v `composer.json` zamčená na konkrétní patch verzi, aby CI dával stejné
+  výsledky napříč stroji. CI (`.github/workflows`) spouští pouze tyto
+  kontroly. Lokálně je spouštěj uvnitř kontejneru – viz sekci Lokální vývoj
+  a deploy.
 - Testy v `tests/` (Nette Tester `.phpt`) jsou **pahýl – nepoužívají se**.
   Nejsou v CI, nemají composer skript a `nette/tester` ani není závislostí.
   Nepiš proti nim nové testy a nespoléhej na ně; ber je jako mrtvý kód.

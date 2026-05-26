@@ -14,25 +14,18 @@ class TalkForm
     use Nette\SmartObject;
 
 
-    /**
-     * RegisterConfereeForm constructor.
-     * @param FormFactory $factory
-     */
     public function __construct(
-        private FormFactory $factory
+        private readonly FormFactory $factory
     ) {
     }
 
 
-    /**
-     * @param callable $onSuccess
-     * @param array|null $categories
-     * @param Talk $talk
-     * @return Form
-     * @throws Nette\Utils\JsonException
-     */
-    public function create(callable $onSuccess, ?array $categories = null, ?array $durations = null, ?Talk $talk = null)
-    {
+    public function create(
+        callable $onSuccess,
+        ?array $categories = null,
+        ?array $durations = null,
+        ?Talk $talk = null
+    ): Form {
         $form = $this->factory->create();
         $form->addText('title', 'Název tvojí přednášky:')
             ->setOption('description', 'Zvolte název, který zaujme; nepoužívejte však emotikony a jiné zvláštnosti')
@@ -123,7 +116,7 @@ class TalkForm
         if ($talk) {
             $values = $talk->toArray();
             try {
-                $extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
+                $extended = Json::decode($talk->extended, forceArrays: true);
                 $values += $this->mapFields($extended, $this->extendedFieldsMap());
             } catch (JsonException) {
                 // void
@@ -137,10 +130,6 @@ class TalkForm
 
     /**
      * Map values from structured fields to flat (Json to form fields)
-     *
-     * @param $inputValues
-     * @param $map
-     * @return array
      */
     private function mapFields($inputValues, array $map): array
     {
@@ -166,10 +155,6 @@ class TalkForm
 
     /**
      * Map values from flat fields to structured (form fields to Json)
-     *
-     * @param $inputValues
-     * @param $map
-     * @return array
      */
     private function reverseMapFields($inputValues, array $map): array
     {
@@ -180,8 +165,6 @@ class TalkForm
                 $outputValues[$outputKey] = $this->reverseMapFields($inputValues, $inputKey);
             } elseif (isset($inputValues[$inputKey])) {
                 $outputValues[$outputKey] = $inputValues[$inputKey];
-            } else {
-                continue;
             }
         }
 
@@ -189,9 +172,6 @@ class TalkForm
     }
 
 
-    /**
-     * @return array
-     */
     private function extendedFieldsMap(): array
     {
         return [

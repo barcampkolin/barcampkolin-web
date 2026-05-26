@@ -33,9 +33,11 @@ readonly class MailerManager
         $mail = $this->mailLoader->getMailById($mailTemplateId);
 
         $message = new UniversalDynamicMessage();
-        $message->addRecipient($recipient);
+        if ($recipient !== null) {
+            $message->addRecipient($recipient);
+        }
         $message->setSubject($mail['subject']);
-        $message->setTemlateFromString($mail);
+        $message->setTemplateFromString($mail);
         $message->setTemplateParameters($parameters);
         $message->setManager($this);
 
@@ -53,14 +55,7 @@ readonly class MailerManager
     }
 
 
-    /**
-     * @param $recipient
-     * @param $tokenUrl
-     * @return ResetPasswordMessage
-     * @throws EntityNotFound
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getResetPasswordMessage($recipient, $tokenUrl): ResetPasswordMessage
+    public function getResetPasswordMessage(string $recipient, string $tokenUrl): ResetPasswordMessage
     {
         $mail = $this->mailLoader->getMailById('reset-password');
 
@@ -70,13 +65,7 @@ readonly class MailerManager
     }
 
 
-    /**
-     * @param $recipient
-     * @return VoteAnnounceMessage
-     * @throws EntityNotFound
-     * @throws \Nette\Utils\JsonException
-     */
-    public function getVoteAnnounceMessage($recipient): \App\Mails\VoteAnnounceMessage
+    public function getVoteAnnounceMessage(string $recipient): VoteAnnounceMessage
     {
         $mail = $this->mailLoader->getMailById('vote-announce');
 
@@ -86,11 +75,6 @@ readonly class MailerManager
     }
 
 
-    /**
-     * @param IMessage $message
-     * @throws \Nette\Utils\JsonException
-     * @throws \Nette\Mail\SendException
-     */
     public function send(IMessage $message): void
     {
         $mail = new Message();
@@ -109,12 +93,7 @@ readonly class MailerManager
     }
 
 
-    /**
-     * @param IMessage $message
-     * @return string
-     * @throws \Nette\Utils\JsonException
-     */
-    public function compileBody(IMessage $message)
+    public function compileBody(IMessage $message): string
     {
         $template = $message->getTemplate();
 

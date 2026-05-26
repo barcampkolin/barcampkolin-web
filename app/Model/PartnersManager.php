@@ -3,36 +3,25 @@
 namespace App\Model;
 
 use InvalidArgumentException;
-use Nette\Database\Context;
-use Nette\Database\ForeignKeyConstraintViolationException;
+use Nette\Database\Explorer;
 use Nette\Database\ResultSet;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
-use Nette\InvalidStateException;
-use Traversable;
+use Nette\Utils\ArrayHash;
 
 class PartnersManager
 {
+    private const string TABLE_GROUPS = 'partner_groups';
+    private const string TABLE_PARTNERS = 'partners';
 
-    const TABLE_GROUPS = 'partner_groups';
-    const TABLE_PARTNERS = 'partners';
 
-
-    /**
-     * PartnersManager constructor.
-     * @param Context $database
-     */
     public function __construct(
-        private readonly Context $database
+        private readonly Explorer $database
     ) {
     }
 
 
-    /**
-     * @param bool $onlyEnabled
-     * @return array
-     */
-    public function getReport($onlyEnabled = true): array
+    public function getReport(bool $onlyEnabled = true): array
     {
         $groups = [];
         foreach ($this->getAll($onlyEnabled) as $item) {
@@ -54,39 +43,31 @@ class PartnersManager
     }
 
 
-    /**
-     * @param bool $onlyEnabled
-     * @return ResultSet
-     */
-    public function getAll($onlyEnabled = true): \Nette\Database\ResultSet
+    public function getAll(bool $onlyEnabled = true): ResultSet
     {
         $enabledPart = '';
         if ($onlyEnabled) {
             $enabledPart = 'WHERE `p`.`enabled` AND `pg`.`enabled`';
         }
 
-        $sql = <<<EOT
-SELECT `pg`.`id` AS `group_id`, `pg`.`name` AS `group_name`, `pg`.`height` AS `group_height`, `p`.`id`, `p`.`name`, `p`.`url`, `p`.`picture_url`, `p`.`height`
-FROM `partners` AS `p`
-LEFT JOIN `partner_groups` AS `pg` ON `p`.`group_id` = `pg`.`id`
-$enabledPart
-ORDER BY `pg`.`order`, `p`.`order`; 
-EOT;
+        $sql = <<<SQL
+            SELECT `pg`.`id` AS `group_id`, `pg`.`name` AS `group_name`, `pg`.`height` AS `group_height`, `p`.`id`, `p`.`name`, `p`.`url`, `p`.`picture_url`, `p`.`height`
+            FROM `partners` AS `p`
+            LEFT JOIN `partner_groups` AS `pg` ON `p`.`group_id` = `pg`.`id`
+            $enabledPart
+            ORDER BY `pg`.`order`, `p`.`order`; 
+            SQL;
 
         return $this->database->query($sql);
     }
 
 
-    /**
-     * @param bool $onlyEnabled
-     * @return Selection
-     */
-    public function getGroups($onlyEnabled = true)
+    public function getGroups(bool $onlyEnabled = true): Selection
     {
         $selection = $this->database->table(self::TABLE_GROUPS)
             ->order('order');
 
-        if ($onlyEnabled == true) {
+        if ($onlyEnabled) {
             $selection->where('enabled', 1);
         }
 
@@ -94,16 +75,12 @@ EOT;
     }
 
 
-    /**
-     * @param bool $onlyEnabled
-     * @return Selection
-     */
-    public function getPartners($onlyEnabled = true)
+    public function getPartners(bool $onlyEnabled = true): Selection
     {
         $selection = $this->database->table(self::TABLE_PARTNERS)
             ->order('order');
 
-        if ($onlyEnabled == true) {
+        if ($onlyEnabled) {
             $selection->where('enabled', 1);
         }
 
@@ -111,28 +88,17 @@ EOT;
     }
 
 
-    /**
-     * @param int $id
-     * @return ActiveRow
-     * @throws PartnerNotFound
-     */
-    public function getPartnerById($id)
+    public function getPartnerById(int $id): ActiveRow
     {
         $row = $this->database->table(self::TABLE_PARTNERS)->get($id);
         if (!$row instanceof ActiveRow) {
-            throw new PartnerNotFound("partner with id $id not found");
+            throw new PartnerNotFound("Partner with id $id not found");
         }
         return $row;
     }
 
 
-    /**
-     * @param Traversable $values
-     * @param int|null $id
-     * @throws InvalidStateException
-     * @throws PartnerNotFound
-     */
-    public function insertUpdatePartner($values, $id = null): void
+    public function insertUpdatePartner(ArrayHash|array $values, ?int $id = null): void
     {
         if ($id) {
             $this->getPartnerById($id)->update($values);
@@ -145,24 +111,13 @@ EOT;
     }
 
 
-    /**
-     * @param ActiveRow $item
-     * @param ActiveRow|null $prevItem
-     * @param ActiveRow|null $nextItem
-     * @throws InvalidArgumentException
-     */
     public function changePartnersOrder(ActiveRow $item, ?ActiveRow $prevItem = null, ?ActiveRow $nextItem = null): void
     {
         $this->sort(self::TABLE_PARTNERS, $item, $prevItem, $nextItem);
     }
 
 
-    /**
-     * @param $id
-     * @return ActiveRow
-     * @throws PartnerNotFound
-     */
-    public function getGroupById($id)
+    public function getGroupById(int $id): ActiveRow
     {
         $row = $this->database->table(self::TABLE_GROUPS)->get($id);
         if (!$row instanceof ActiveRow) {
@@ -172,13 +127,7 @@ EOT;
     }
 
 
-    /**
-     * @param Traversable $values
-     * @param int|null $id
-     * @throws PartnerNotFound
-     * @throws InvalidStateException
-     */
-    public function insertUpdateGroup($values, $id = null): void
+    public function insertUpdateGroup(ArrayHash|array $values, ?int $id = null): void
     {
         if ($id) {
             $this->getGroupById($id)->update($values);
@@ -191,12 +140,7 @@ EOT;
     }
 
 
-    /**
-     * @param string $table
-     * @param int $default
-     * @return int
-     */
-    protected function getNextOrderValue(string $table, $default = 0): int|float
+    protected function getNextOrderValue(string $table, int $default = 0): int
     {
         $latestValue = $this->database->table($table)
             ->select('order')
@@ -212,22 +156,12 @@ EOT;
     }
 
 
-    /**
-     * @param ActiveRow|null $item
-     * @param ActiveRow|null $prevItem
-     * @param ActiveRow|null $nextItem
-     * @throws InvalidArgumentException
-     */
     public function changeGroupsOrder(ActiveRow $item, ?ActiveRow $prevItem = null, ?ActiveRow $nextItem = null): void
     {
         $this->sort(self::TABLE_GROUPS, $item, $prevItem, $nextItem);
     }
 
 
-    /**
-     * @param ActiveRow $group
-     * @throws ForeignKeyConstraintViolationException
-     */
     public function delete(ActiveRow $group): void
     {
         $group->delete();
@@ -236,10 +170,8 @@ EOT;
 
     /**
      * DANGER remove all partners
-     * @param bool $really
-     * @throws InvalidArgumentException
      */
-    public function purgeAll($really = false): void
+    public function purgeAll(bool $really = false): void
     {
         if ($really !== true) {
             throw new InvalidArgumentException('Purging all items MUST be confirmed');
@@ -249,15 +181,12 @@ EOT;
     }
 
 
-    /**
-     * @param $table
-     * @param ActiveRow $item
-     * @param ActiveRow|null $prevItem
-     * @param ActiveRow|null $nextItem
-     * @throws InvalidArgumentException
-     */
-    private function sort(string $table, ActiveRow $item, ?ActiveRow $prevItem = null, ?ActiveRow $nextItem = null): void
-    {
+    private function sort(
+        string $table,
+        ActiveRow $item,
+        ?ActiveRow $prevItem = null,
+        ?ActiveRow $nextItem = null
+    ): void {
         if (!in_array($table, [self::TABLE_GROUPS, self::TABLE_PARTNERS], true)) {
             throw new InvalidArgumentException("Table name $table is invalid");
         }

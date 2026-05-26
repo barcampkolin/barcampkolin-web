@@ -4,10 +4,5 @@ namespace App\Model;
 
 interface IStoragePrefixFactory
 {
-    /**
-     * @param string|null $pathYearPrefix
-     * @param string|null $pathYearSuffix
-     * @return StoragePrefix
-     */
-    public function create($pathYearPrefix, $pathYearSuffix);
+    public function create(?string $pathYearPrefix, ?string $pathYearSuffix):StoragePrefix;
 }

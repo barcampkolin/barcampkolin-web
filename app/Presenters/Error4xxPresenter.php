@@ -6,9 +6,7 @@ use Nette;
 
 class Error4xxPresenter extends BasePresenter
 {
-    /**
-     * @throws Nette\Application\BadRequestException
-     */
+    #[\Override]
     public function startup(): void
     {
         parent::startup();
@@ -18,9 +16,6 @@ class Error4xxPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param Nette\Application\BadRequestException $exception
-     */
     public function renderDefault(Nette\Application\BadRequestException $exception): void
     {
         // load template 403.latte or 404.latte or ... 4xx.latte

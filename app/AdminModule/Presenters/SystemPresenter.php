@@ -26,11 +26,8 @@ class SystemPresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws \Nette\Application\AbortException
-     * @secured
-     */
-    public function handleTurnDebugOff(): void
+    /** @secured */
+    public function handleTurnDebugOff(): never
     {
         $this->debugMode->getEnabler()->activate(false);
         $this->flashMessage('Ladící režim vypnut.', 'success');
@@ -38,11 +35,8 @@ class SystemPresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws \Nette\Application\AbortException
-     * @secured
-     */
-    public function handleTurnDebugOn(): void
+    /** @secured */
+    public function handleTurnDebugOn(): never
     {
         $this->debugMode->getEnabler()->activate(true);
         $this->flashMessage('Ladící režim zapnut.', 'success');
@@ -50,7 +44,7 @@ class SystemPresenter extends BasePresenter
     }
 
 
-    public function handleResetDebug(): void
+    public function handleResetDebug(): never
     {
         $this->debugMode->getEnabler()->deactivate();
         $this->flashMessage('Ladící režim vrácen do výchozí hodnoty – nyní jej určuje nastavení prostředí.', 'success');
@@ -58,13 +52,7 @@ class SystemPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $name
-     * @return DataGrid
-     * @throws \Nette\Utils\JsonException
-     * @throws \Ublaboo\DataGrid\Exception\DataGridException
-     */
-    public function createComponentApiTokensDatagrid($name): \Ublaboo\DataGrid\DataGrid
+    public function createComponentApiTokensDatagrid(?string $name): DataGrid
     {
         $hashes = $this->apiTokenManager->getTokenHashes();
 
@@ -80,27 +68,18 @@ class SystemPresenter extends BasePresenter
 
         $grid->addColumnText('key', 'Název klíče');
 
-        $grid->addAction('delete', '', 'deleteApiToken!')
-            ->setIcon('trash')
-            ->setTitle('Smazat')
-            ->setClass('btn btn-xs btn-danger ajax')
-            ->setConfirmation(
-                new StringConfirmation(
-                    'Smazáním tokenu může dojít k poškození funkčnosti. Opravdu chcete smazat token %s?', 'key'
-                )
-            );
+        // // Not implemented yet
+
+        //$grid->addAction('delete', '', 'deleteApiToken!')
+        //    ->setIcon('trash')
+        //    ->setTitle('Smazat')
+        //    ->setClass('btn btn-xs btn-danger ajax')
+        //    ->setConfirmation(
+        //        new StringConfirmation(
+        //            'Smazáním tokenu může dojít k poškození funkčnosti. Opravdu chcete smazat token %s?', 'key'
+        //        )
+        //    );
 
         return $grid;
-    }
-
-
-    /**
-     * @param $id
-     * @throws \Nette\Application\AbortException
-     */
-    public function handleDeleteApiToken($id): void
-    {
-        $this->flashMessage('Token smazán', 'success');
-        $this->redirect('this');
     }
 }

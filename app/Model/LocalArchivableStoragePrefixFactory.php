@@ -30,21 +30,19 @@ use Nette\Http\Request;
  * Storage parts:
  * It has only $storageBase - it's used whole without dynamic prefix
  */
-class LocalArchivableStoragePrefixFactory implements IStoragePrefixFactory
+readonly class LocalArchivableStoragePrefixFactory implements IStoragePrefixFactory
 {
-    private readonly string $urlBase;
-    private readonly int $currentYear;
+    private string $urlBase;
+    private int $currentYear;
 
 
     /**
      * @param string $storageBase Absolute path (without trailing /)
      * @param string $urlPrefix Relative URL from project root
-     * @param ArchiveManager $archiveManager
-     * @param Request $httpRequest
      */
     public function __construct(
-        private $storageBase,
-        $urlPrefix,
+        private string $storageBase,
+        string $urlPrefix,
         ArchiveManager $archiveManager,
         Request $httpRequest
     ) {
@@ -54,12 +52,7 @@ class LocalArchivableStoragePrefixFactory implements IStoragePrefixFactory
     }
 
 
-    /**
-     * @param string|null $pathYearPrefix
-     * @param string|null $pathYearSuffix
-     * @return StoragePrefix
-     */
-    public function create($pathYearPrefix, $pathYearSuffix): \App\Model\StoragePrefix
+    public function create(?string $pathYearPrefix, ?string $pathYearSuffix): StoragePrefix
     {
         $pathPrefix = $pathYearPrefix . $this->currentYear . $pathYearSuffix;
         return new StoragePrefix($this->storageBase, $this->urlBase, $pathPrefix);

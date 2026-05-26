@@ -2,17 +2,12 @@
 
 namespace App\Mails;
 
-class VoteAnnounceMessage extends UniversalDynamicMessage implements IMessage
+class VoteAnnounceMessage extends UniversalDynamicMessage
 {
-    /**
-     * VoteAnnounceMessage constructor.
-     * @param string $recipient
-     * @param array $mail
-     */
-    public function __construct($recipient, array $mail)
+    public function __construct(string $recipient, array $mail)
     {
         $this->addRecipient($recipient);
         $this->setSubject($mail['subject']);
-        $this->setTemlateFromString($mail);
+        $this->setTemplateFromString($mail);
     }
 }

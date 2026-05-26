@@ -16,8 +16,10 @@ use App\Model\UserNotFound;
 use App\Orm\Conferee\Conferee;
 use App\Orm\Talk\Talk;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Http\FileUpload;
 use Nette\Http\IResponse;
+use Nette\Security\SimpleIdentity;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -38,6 +40,7 @@ class UserPresenter extends BasePresenter
     }
 
 
+    #[\Override]
     protected function startup(): void
     {
         parent::startup();
@@ -72,10 +75,6 @@ class UserPresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
     public function renderTalk(): void
     {
         if (!$this->eventInfoProvider->getFeatures()->talks_edit) {
@@ -83,6 +82,7 @@ class UserPresenter extends BasePresenter
             $this->redirect('profil');
         }
     }
+
 
     protected function createComponentConfereeForm(): Form
     {
@@ -147,17 +147,20 @@ class UserPresenter extends BasePresenter
 
         //Additional form modification
         $form->addHidden('id', $talk->id);
-        $form['phone']->setDefaultValue($conferee->phone);
+        /** @var BaseControl $phoneControl */
+        $phoneControl = $form['phone'];
+        $phoneControl->setDefaultValue($conferee->phone);
 
         return $form;
     }
+
 
     protected function createComponentToggleAttendanceForm(): Form
     {
         $form = new Form();
         $form->addSubmit('submit');
 
-        $form->onSuccess[] = function () {
+        $form->onSuccess[] = function (): void {
             $user = $this->userManager->getByLoginUser($this->getUser());
             $conferee = $user->conferee;
 
@@ -180,14 +183,8 @@ class UserPresenter extends BasePresenter
         return $form;
     }
 
-    /**
-     * @throws NoUserLoggedIn
-     * @throws UserNotFound
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\ImageException
-     */
-    public function handleUploadAvatar(): void
+
+    public function handleUploadAvatar(): never
     {
         $user = $this->userManager->getByLoginUser($this->getUser());
         $conferee = $user->conferee;
@@ -216,7 +213,9 @@ class UserPresenter extends BasePresenter
         $user->pictureUrl = $url;
         $conferee->pictureUrl = $url;
         $conferee->pictureOriginalUrl = $originalUrl;
-        $this->getUser()->getIdentity()->pictureUrl = $url;
+        /** @var SimpleIdentity $identity */
+        $identity = $this->getUser()->getIdentity();
+        $identity->pictureUrl = $url;
 
         $this->userManager->save($user);
 

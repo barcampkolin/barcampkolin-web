@@ -3,6 +3,7 @@
 namespace App\Presenters;
 
 use App\Components\Program\IProgramControlFactory;
+use App\Components\Program\ProgramControl;
 use App\Model\EventInfoProvider;
 use App\Model\TalkManager;
 use App\Orm\Orm;
@@ -11,22 +12,15 @@ use App\Orm\Talk\Talk;
 use App\Orm\Talk\TalkRepository;
 use DateTimeImmutable;
 use DateTimeZone;
+use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
 use Nette\Utils\Json;
 use Nextras\Orm\Collection\ICollection;
 
 class ConferencePresenter extends BasePresenter
 {
-    /** @var TalkRepository $talkRepository */
-    private $talkRepository;
+    private TalkRepository $talkRepository;
 
 
-    /**
-     * ConferencePresenter constructor.
-     * @param Orm $orm
-     * @param TalkManager $talkManager
-     * @param EventInfoProvider $eventInfoProvider
-     * @param IProgramControlFactory $programFactory
-     */
     public function __construct(
         Orm $orm,
         private readonly TalkManager $talkManager,
@@ -38,10 +32,6 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws \App\Model\InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
-     */
     public function renderTalks(): void
     {
         /** @var ICollection|Talk[] $talks */
@@ -59,6 +49,7 @@ class ConferencePresenter extends BasePresenter
         }
 
         $filtered = [];
+        /** @var Talk $talk */
         foreach ($talks as $talk) {
             if ($talk->conferee === null) {
                 continue;
@@ -67,7 +58,7 @@ class ConferencePresenter extends BasePresenter
             $extended = [];
 
             if ($talk->extended) {
-                $extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
+                $extended = Json::decode($talk->extended, forceArrays: true);
             }
 
             $filtered[] = [
@@ -81,8 +72,8 @@ class ConferencePresenter extends BasePresenter
 
         $votes = [];
 
-        if ($this->user->isLoggedIn()) {
-            $votes = $this->talkManager->getUserVotes($this->user->id);
+        if ($this->getUser()->isLoggedIn()) {
+            $votes = $this->talkManager->getUserVotes($this->getUser()->id);
         }
 
         $this->template->votes = $votes;
@@ -98,14 +89,10 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @secured
-     * @param int $talkId
-     * @throws \Nette\Application\AbortException
-     */
-    public function handleVote($talkId): void
+    /** @secured */
+    public function handleVote($talkId): never
     {
-        $userId = $this->user->id;
+        $userId = $this->getUser()->id;
         $this->talkManager->addVote($userId, $talkId);
         if ($this->isAjax()) {
             $talk = $this->talkManager->getById($talkId);
@@ -118,14 +105,10 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @secured
-     * @param int $talkId
-     * @throws \Nette\Application\AbortException
-     */
-    public function handleUnvote($talkId): void
+    /** @secured */
+    public function handleUnvote($talkId): never
     {
-        $userId = $this->user->id;
+        $userId = $this->getUser()->id;
         $this->talkManager->removeVote($userId, $talkId);
         if ($this->isAjax()) {
             $talk = $this->talkManager->getById($talkId);
@@ -139,12 +122,9 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws \Nette\Application\AbortException
-     */
-    public function handleSignToVote(): void
+    public function handleSignToVote(): never
     {
-        if ($this->user->isLoggedIn()) {
+        if ($this->getUser()->isLoggedIn()) {
             $this->redirect('this');
         } else {
             $this->redirect('Sign:in', [
@@ -154,24 +134,15 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $id
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function renderTalkDetail($id): void
+    public function renderTalkDetail(int $id): void
     {
-        if (!intval($id)) {
-            $this->error('Není vyplněno ID přednášky');
-        }
-
         $talk = $this->talkManager->getById($id);
 
         if (!$talk) {
             $this->error('Přednáška nenalezena');
         }
 
-        $extended = Json::decode($talk->extended, Json::FORCE_ARRAY);
+        $extended = Json::decode($talk->extended, forceArrays: true);
 
         $this->template->talk = $talk;
         $this->template->extended = $extended;
@@ -194,14 +165,16 @@ class ConferencePresenter extends BasePresenter
 
         $votes = [];
 
-        if ($this->user->isLoggedIn()) {
-            $votes = $this->talkManager->getUserVotes($this->user->id);
+        if ($this->getUser()->isLoggedIn()) {
+            $votes = $this->talkManager->getUserVotes($this->getUser()->id);
         }
 
         $this->template->votes = $votes;
 
-        $this->template->addFilter('embedizeYouTube', $this->embedizeYouTube(...));
-        $this->template->addFilter('campainizeYouTube', $this->campainizeYouTube(...));
+        /** @var LatteTemplate $template */
+        $template = $this->template;
+        $template->addFilter('embedizeYouTube', $this->embedizeYouTube(...));
+        $template->addFilter('campainizeYouTube', $this->campainizeYouTube(...));
     }
 
     public function renderTvProgram(?int $roomId = null, ?int $offset = 20, ?string $now = null): void
@@ -219,7 +192,7 @@ class ConferencePresenter extends BasePresenter
             $this->error('Invalid time format, expected HH:MM');
         }
 
-        $nowOffset = $nowDt->modify("+ {$offset} minutes")->format('H:i');
+        $nowOffset = $nowDt->modify("+ $offset minutes")->format('H:i');
         $now = $nowDt->format('H:i');
 
         if ($roomId !== null) {
@@ -288,16 +261,10 @@ class ConferencePresenter extends BasePresenter
             }
         }
 
-
-        $this->getHttpResponse()->setExpiration(0);
-        //$this->sendJson($program);
+        $this->getHttpResponse()->setExpiration(null);
     }
 
 
-    /**
-     * @throws \App\Model\InvalidEnumeratorSetException
-     * @throws \Nette\Utils\JsonException
-     */
     public function renderMobileProgram(?string $now = null): void
     {
         $mobile = $this['program']->getMobileProgramData();
@@ -323,16 +290,18 @@ class ConferencePresenter extends BasePresenter
     }
 
 
-    public function embedizeYouTube($url, $campainId = null)
+    public function embedizeYouTube(string $url, ?string $campainId = null): ?string
     {
         $matches = null;
-        if (preg_match('~youtu\\.?be(?:\\.com)?/(?:watch\\?v=)?([-_a-z0-9]{8,15})~i', (string)$url, $matches)) {
+        if (preg_match('~youtu\\.?be(?:\\.com)?/(?:watch\\?v=)?([-_a-z0-9]{8,15})~i', $url, $matches)) {
             return $this->buildCampainUrl(
                 "https://www.youtube.com/embed/$matches[1]",
                 'yt-video-embed',
                 $campainId
             );
         }
+
+        return null;
     }
 
 
@@ -348,15 +317,17 @@ class ConferencePresenter extends BasePresenter
 
     private function buildCampainUrl(string $url, string $medium, $campainId): string
     {
-        $postfix = "utm_source=pbc-web&utm_medium=$medium&utm_content=$campainId&utm_campaign=talk-detail";
-        return $url . (str_contains((string)$url, '?') ? '&' : '?') . $postfix;
+        $postfix = http_build_query([
+            'utm_source' => 'pbc-web',
+            'utm_medium' => $medium,
+            'utm_content' => $campainId,
+            'utm_campaign' => 'talk-detail',
+        ]);
+        return $url . (str_contains($url, '?') ? '&' : '?') . $postfix;
     }
 
 
-    /**
-     * @return \App\Components\Program\ProgramControl
-     */
-    public function createComponentProgram()
+    public function createComponentProgram(): ProgramControl
     {
         return $this->programFactory->create();
     }

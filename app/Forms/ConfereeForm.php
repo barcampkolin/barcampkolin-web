@@ -13,13 +13,8 @@ class ConfereeForm
 {
     use SmartObject;
 
-
-    /**
-     * RegisterConfereeForm constructor.
-     * @param FormFactory $factory
-     */
     public function __construct(
-        private FormFactory $factory
+        private readonly FormFactory $factory
     ) {
     }
 

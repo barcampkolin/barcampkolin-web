@@ -10,9 +10,6 @@ use Nette\Http\IResponse;
 
 class ArchivedPresenter extends BasePresenter
 {
-    /**
-     * @param ArchiveManager $archiveManager
-     */
     public function __construct(
         private readonly ArchiveManager $archiveManager
     ) {
@@ -20,13 +17,7 @@ class ArchivedPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $year
-     * @param $page
-     * @throws BadRequestException
-     * @throws \Nette\Application\AbortException
-     */
-    public function actionRender($year, $page): void
+    public function actionRender(string $year, ?string $page): void
     {
         try {
             $url = "/$year/$page";
@@ -38,7 +29,7 @@ class ArchivedPresenter extends BasePresenter
 
             $this->sendResponse(new TextResponse($file));
         } catch (FileNotFoundException $e) {
-            throw new BadRequestException("$url not found", IResponse::S404_NOT_FOUND, $e);
+            throw new BadRequestException("$url not found", IResponse::S404_NotFound, $e);
         }
     }
 

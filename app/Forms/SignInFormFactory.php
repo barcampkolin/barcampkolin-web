@@ -8,19 +8,19 @@ use App\Model\PasswordMismatchException;
 use App\Model\UserNotFoundException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Security\User;
 
 class SignInFormFactory
 {
     use Nette\SmartObject;
 
-    /** @var User */
-    private $user;
+    private User $user;
 
 
     public function __construct(
-        private FormFactory $factory,
-        private EmailAuthenticator $authenticator
+        private readonly FormFactory $factory,
+        private readonly EmailAuthenticator $authenticator
     ) {
     }
 
@@ -45,10 +45,14 @@ class SignInFormFactory
             } catch (AuthenticationException $e) {
                 $form->addError('Přihlášení se nepovedlo');
                 if ($e instanceof UserNotFoundException) {
-                    $form['email']->addError('Toto jméno jsme u nás nenalezli. Jste již registrováni?');
+                    /** @var BaseControl $emailControl */
+                    $emailControl = $form['email'];
+                    $emailControl->addError('Toto jméno jsme u nás nenalezli. Jste již registrováni?');
                 }
                 if ($e instanceof PasswordMismatchException) {
-                    $form['password']->addError('Heslo se neshoduje, zkuste to prosím znovu.');
+                    /** @var BaseControl $passwordControl */
+                    $passwordControl = $form['password'];
+                    $passwordControl->addError('Heslo se neshoduje, zkuste to prosím znovu.');
                 }
             }
         };

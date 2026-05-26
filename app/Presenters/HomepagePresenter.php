@@ -16,6 +16,7 @@ use App\Components\SignupButtons\SignupButtonsFactory;
 use App\Components\SpeakerList\ISpeakerListControlFactory;
 use App\Components\SpeakerList\SpeakerListControl;
 use App\Model\OrgListModel;
+use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
 use Nette\Utils\Html;
 
 class HomepagePresenter extends BasePresenter
@@ -42,11 +43,12 @@ class HomepagePresenter extends BasePresenter
 
     public function renderContact():void
     {
+        /** @var LatteTemplate $template */
         $template = $this->template;
 
-        $template->addFilter('formatPhoneLink', function (string $value)  {
+        $template->addFilter('formatPhoneLink', function (string $value): \Nette\Utils\Html  {
             $formatted = preg_replace('~(\d{3})(\d{3})(\d{3})$~', '$1 $2 $3', $value);
-            $formatted = (string)preg_replace_callback('~^((?:00|\+)\d+)(\d{3})~', static function ($matches) {
+            $formatted = (string)preg_replace_callback('~^((?:00|\+)\d+)(\d{3})~', static function ($matches): string {
                 if($matches[1] === '+420' || $matches[1] === '00420') {
                     return $matches[2];
                 }
@@ -58,9 +60,7 @@ class HomepagePresenter extends BasePresenter
             ])->setText($formatted);
         });
 
-        $template->addFunction('isAbsoluteUrl', function (string $value) {
-            return (bool)preg_match('~^https?://~', $value);
-        });
+        $template->addFunction('isAbsoluteUrl', fn(string $value): bool => (bool)preg_match('~^https?://~', $value));
 
         $template->orgs = $this->orgListModel->getOrgs();
     }

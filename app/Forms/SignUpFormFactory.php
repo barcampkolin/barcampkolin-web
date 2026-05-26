@@ -6,6 +6,7 @@ use App\Model\Authenticator\Email as EmailAuthenticator;
 use App\Model\DuplicateNameException;
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Forms\Controls\BaseControl;
 
 readonly class SignUpFormFactory
 {
@@ -41,7 +42,9 @@ readonly class SignUpFormFactory
                 $identity = $this->authenticator->createNewIdentity($values->email, $values->password);
                 $onSuccess($identity);
             } catch (DuplicateNameException) {
-                $form['email']->addError('Tento e-mail už u nás máte, zkuste se příhlásit');
+                /** @var BaseControl $emailControl */
+                $emailControl = $form['email'];
+                $emailControl->addError('Tento e-mail už u nás máte, zkuste se příhlásit');
                 return;
             }
         };

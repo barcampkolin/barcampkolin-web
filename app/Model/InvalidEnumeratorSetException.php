@@ -2,7 +2,8 @@
 
 namespace App\Model;
 
-class InvalidEnumeratorSetException extends \Exception
-{
+use Exception;
 
+class InvalidEnumeratorSetException extends Exception
+{
 }

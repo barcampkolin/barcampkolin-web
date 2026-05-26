@@ -5,7 +5,9 @@ namespace App\Presenters;
 use App\Model\ArchiveManager;
 use App\Model\EventInfoProvider;
 use App\Model\GravatarImageProvider;
+use DateTimeInterface;
 use Nette;
+use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
 use Nextras\Application\UI\SecuredLinksPresenterTrait;
 
 /**
@@ -52,25 +54,28 @@ abstract class BasePresenter extends Nette\Application\UI\Presenter
             $dataLayer['archiveYear'] = $dates->year;
         }
 
-        $this->template->wwwDir = $parameters['wwwDir'];
+        /** @var LatteTemplate $template */
+        $template = $this->template;
 
-        $this->template->dates = $dates;
-        $this->template->features = $this->eventInfo->getFeatures();
-        $this->template->socialUrls = $this->eventInfo->getUrls();
-        $this->template->year = $dates->year;
+        $template->wwwDir = $parameters['wwwDir'];
 
-        $this->template->dataLayer = $dataLayer;
+        $template->dates = $dates;
+        $template->features = $this->eventInfo->getFeatures();
+        $template->socialUrls = $this->eventInfo->getUrls();
+        $template->year = $dates->year;
 
-        $this->template->isArchivationProcess = $this->isArchivationProcess;
+        $template->dataLayer = $dataLayer;
 
-        $this->template->addFunction('isPassed', $this->isDatePassed(...));
-        $this->template->addFunction('gravatarize', $this->gravatarImageProvider->gravatarize(...));
+        $template->isArchivationProcess = $this->isArchivationProcess;
+
+        $template->addFunction('isPassed', $this->isDatePassed(...));
+        $template->addFunction('gravatarize', $this->gravatarImageProvider->gravatarize(...));
     }
 
     /**
      * @deprecated Stav webu by měl být řízen spíš stavem, než porovnánávním s aktuálním datem
      */
-    private function isDatePassed(\DateTimeInterface $date): bool
+    private function isDatePassed(DateTimeInterface $date): bool
     {
         return $date < new \DateTimeImmutable();
     }

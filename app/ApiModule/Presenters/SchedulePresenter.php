@@ -7,10 +7,6 @@ use Nette\Utils\DateTime;
 
 class SchedulePresenter extends BasePresenter
 {
-    /**
-     * SchedulePresenter constructor.
-     * @param ScheduleManager $scheduleManager
-     */
     public function __construct(
         private readonly ScheduleManager $scheduleManager
     ) {
@@ -18,10 +14,6 @@ class SchedulePresenter extends BasePresenter
     }
 
 
-    /**
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
     public function actionStepNext(): void
     {
         $steps = $this->scheduleManager->getSteps(true);
@@ -44,10 +36,6 @@ class SchedulePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param array $step
-     * @return array
-     */
     private function getStepConfigs(array $step): array
     {
         $configs = [];
@@ -60,12 +48,7 @@ class SchedulePresenter extends BasePresenter
     }
 
 
-    /**
-     * @param string $dateString
-     * @param bool $byMidnight
-     * @return bool
-     */
-    private function isDatePassed($dateString, bool $byMidnight = false): bool
+    private function isDatePassed(string $dateString, bool $byMidnight = false): bool
     {
         $decisiveDate = new DateTime($dateString);
         $now = new DateTime();

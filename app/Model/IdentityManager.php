@@ -9,7 +9,7 @@ use App\Orm\User\User;
 use Nextras\Orm\Entity\IEntity;
 
 
-class IdentityManager
+readonly class IdentityManager
 {
     private IdentityRepository $identityRepository;
 
@@ -20,7 +20,7 @@ class IdentityManager
     }
 
 
-    public function getById(int $id): ?IEntity
+    public function getById(int $id): ?Identity
     {
         return $this->identityRepository->getById($id);
     }

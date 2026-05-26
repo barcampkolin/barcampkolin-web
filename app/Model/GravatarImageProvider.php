@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-class GravatarImageProvider
+readonly class GravatarImageProvider
 {
     private string $fallbackUrl;
 
     public function __construct(
-        private readonly int $size,
+        private int $size,
         string $fallbackUrl,
         EventInfoProvider $infoProvider
     )

@@ -12,7 +12,6 @@ use App\Model\IdentityManager;
 use App\Model\IdentityNotFoundException;
 use App\Model\MailerManager;
 use App\Model\NoUserLoggedIn;
-use App\Model\RestoredUserIdentity;
 use App\Model\TalkManager;
 use App\Model\UserManager;
 use App\Model\UserNotFound;
@@ -23,14 +22,10 @@ use App\Orm\User\User;
 use App\Orm\UserRole\UserRole;
 use LogicException;
 use Nette\Application\UI\Form;
-use Nette\Http\IResponse;
-use Nette\Http\SessionSection;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Mail\SendException;
-use Nette\Security\AuthenticationException;
 use Nette\Security\SimpleIdentity;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\Random;
-use Nextras\Orm\Entity\Entity;
 use Tracy\Debugger;
 use Tracy\ILogger;
 
@@ -43,20 +38,6 @@ class SignPresenter extends BasePresenter
     public string $token = '';
 
 
-    /**
-     * SignPresenter constructor.
-     * @param Forms\SignInFormFactory $signInFormFactory
-     * @param Forms\SignUpFormFactory $signUpFormFactory
-     * @param Forms\ConfereeForm $confereeForm
-     * @param Forms\TalkForm $talkForm
-     * @param IdentityManager $identityManager
-     * @param ConfereeManager $confereeManager
-     * @param UserManager $userManager
-     * @param TalkManager $talkManager
-     * @param EventInfoProvider $eventInfoProvider
-     * @param MailerManager $mailer
-     * @param EmailAuthenticator $authenticator
-     */
     public function __construct(
         private readonly Forms\SignInFormFactory $signInFormFactory,
         private readonly Forms\SignUpFormFactory $signUpFormFactory,
@@ -112,7 +93,7 @@ class SignPresenter extends BasePresenter
 
         try {
             $user = $this->userManager->getByLoginUser($this->getUser());
-        } catch (NoUserLoggedIn|UserNotFound $e) {
+        } catch (NoUserLoggedIn|UserNotFound) {
             // For cases: user not nogged or login user has no matches DB user (data integrity broken)
             $this->getUser()->logout();
             $this->redirect('up');
@@ -172,17 +153,14 @@ class SignPresenter extends BasePresenter
         switch ($domain) {
             case 'gmail.com':
                 return 'https://mail.google.com/';
-                break;
             case 'seznam.cz':
             case 'email.cz':
             case 'post.cz':
                 return 'https://email.seznam.cz/';
-                break;
             case 'outlook.cz':
             case 'outlook.com':
             case 'hotmail.com':
                 return 'https://outlook.live.com/';
-                break;
         }
 
         getmxrr($domain, $mxhosts);
@@ -190,9 +168,13 @@ class SignPresenter extends BasePresenter
         if (isset($mxhosts[0])) {
             if (preg_match('/google\.com$/', (string)$mxhosts[0])) {
                 return 'https://mail.google.com/';
-            } elseif (preg_match('/seznam\.cz$/', (string)$mxhosts[0])) {
+            }
+
+            if (preg_match('/seznam\.cz$/', (string)$mxhosts[0])) {
                 return 'https://email.seznam.cz/';
-            } elseif (preg_match('/outlook\.com$/', (string)$mxhosts[0])) {
+            }
+
+            if (preg_match('/outlook\.com$/', (string)$mxhosts[0])) {
                 return 'https://outlook.live.com/';
             }
         }
@@ -217,10 +199,14 @@ class SignPresenter extends BasePresenter
             try {
                 $this->submitResetPasswordToken($values->email);
             } catch (IdentityNotFoundException) {
-                $form['email']->addError('Na tento e-mail není nikdo registrován, nemůžeme mu tedy ani poslat heslo');
+                /** @var BaseControl $emailControl */
+                $emailControl = $form['email'];
+                $emailControl->addError('Na tento e-mail není nikdo registrován, nemůžeme mu tedy ani poslat heslo');
             } catch (SendException $e) {
                 Debugger::log($e, ILogger::EXCEPTION);
-                $form['email']->addError(
+                /** @var BaseControl $emailControl */
+                $emailControl = $form['email'];
+                $emailControl->addError(
                     'Na zadaný e-mail se nám nedaří doručit zprávu s novým heslem – při doručování zprávy došlo k chybě.'
                 );
             }
@@ -265,9 +251,6 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @return Form
-     */
     protected function createComponentUpdatePasswordForm(): Form
     {
         $form = new Form();
@@ -278,14 +261,14 @@ class SignPresenter extends BasePresenter
         $form->addPassword('password', 'Nové heslo')
             ->setOption('description', sprintf('alespoň %d znaků', Forms\SignUpFormFactory::PASSWORD_MIN_LENGTH))
             ->setRequired('Vytvořte si prosím heslo')
-            ->addRule($form::MIN_LENGTH, null, Forms\SignUpFormFactory::PASSWORD_MIN_LENGTH);
+            ->addRule($form::MinLength, null, Forms\SignUpFormFactory::PASSWORD_MIN_LENGTH);
 
         $form->addSubmit('submit', 'Nastavit heslo')
             ->setOption('itemClass', 'text-center')
             ->getControlPrototype()->setName('button')
             ->setText('Nastavit nové heslo');
 
-        $form->onSuccess[] = function (Form $form, $values): void {
+        $form->onSuccess[] = function (Form $form, ArrayHash $values): void {
             $this->resetPassword($values->email, $values->token, $values->password);
         };
 
@@ -293,16 +276,7 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * @param $email
-     * @param $resetToken
-     * @param $password
-     * @throws \App\Model\TokenInvalidException
-     * @throws \App\Model\UserNotFoundException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Utils\JsonException
-     */
-    public function resetPassword($email, $resetToken, $password): never
+    public function resetPassword(string $email, string $resetToken, string $password): never
     {
         $identity = $this->authenticator->getIdentityByResetPasswordToken($email, $resetToken);
 
@@ -325,9 +299,6 @@ class SignPresenter extends BasePresenter
     }
 
 
-    /**
-     * Sign-in form factory.
-     */
     protected function createComponentSignInForm(): Form
     {
         return $this->signInFormFactory->create(
@@ -367,14 +338,15 @@ class SignPresenter extends BasePresenter
         );
     }
 
+
     protected function createComponentConfereeForm(): Form
     {
         $onSubmitCallback = function (Conferee $conferee): void {
             $user = $this->userManager->getByLoginUser($this->getUser());
             $identity = $user->identity->getIterator()->fetch();
 
-            if(!$identity instanceof Identity) {
-                throw new LogicException("No identity was found for user ID: {$user->id}, that's integrity data error");
+            if (!$identity instanceof Identity) {
+                throw new LogicException("No identity was found for user ID: $user->id, that's integrity data error");
             }
 
             $user->name = $conferee->name;
@@ -430,7 +402,9 @@ class SignPresenter extends BasePresenter
         $durations = $this->talkManager->getDurations();
 
         $form = $this->talkForm->create($onSubmitCallback, $categories, $durations);
-        $form['phone']?->setDefaultValue($conferee->phone);
+        /** @var BaseControl|null $phoneControl */
+        $phoneControl = $form['phone'] ?? null;
+        $phoneControl?->setDefaultValue($conferee->phone);
         return $form;
     }
 
