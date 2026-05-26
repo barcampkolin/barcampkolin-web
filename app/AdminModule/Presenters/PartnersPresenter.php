@@ -4,6 +4,7 @@ namespace App\AdminModule\Presenters;
 
 use App\Model\PartnerLogoStorage;
 use App\Model\PartnersManager;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\ForeignKeyConstraintViolationException;
 use Nette\Http\FileUpload;
@@ -34,7 +35,7 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    public function renderGroup(?int $id ): void
+    public function renderGroup(?int $id): void
     {
         $group = $id !== null ? $this->partners->getGroupById($id) : null;
 
@@ -146,9 +147,20 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /** @secured */
-    public function handleSortPartner(int $item_id, ?int $prev_id = null, ?int $next_id = null): void
+    /**
+     * @secured
+     *
+     * @param int|null $item_id It's required, but must be nullable because is created as link (by Presenter::link())
+     *                          as template and parameters are filled later on front-end.
+     */
+    public function handleSortPartner(?int $item_id = null, ?int $prev_id = null, ?int $next_id = null): void
     {
+        if($item_id === null) {
+            throw new BadRequestException(
+                sprintf("Method '%s' requires parameter 'item_id' to be set.", __METHOD__)
+            );
+        }
+
         $item = $this->partners->getPartnerById($item_id);
         $prevItem = $prev_id ? $this->partners->getPartnerById($prev_id) : null;
         $nextItem = $next_id ? $this->partners->getPartnerById($next_id) : null;
@@ -251,9 +263,20 @@ class PartnersPresenter extends BasePresenter
     }
 
 
-    /** @secured */
-    public function handleSortGroup(int $item_id, ?int $prev_id = null, ?int $next_id = null): void
+    /**
+     * @secured
+     *
+     * @param int|null $item_id It's required, but must be nullable because is created as link (by Presenter::link())
+     *                           as template and parameters are filled later on front-end.
+     */
+    public function handleSortGroup(?int $item_id = null, ?int $prev_id = null, ?int $next_id = null): void
     {
+        if($item_id === null) {
+            throw new BadRequestException(
+                sprintf("Method '%s' requires parameter 'item_id' to be set.", __METHOD__)
+            );
+        }
+
         $item = $this->partners->getGroupById($item_id);
         $prevItem = $prev_id ? $this->partners->getGroupById($prev_id) : null;
         $nextItem = $next_id ? $this->partners->getGroupById($next_id) : null;
