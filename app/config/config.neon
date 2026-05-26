@@ -51,7 +51,7 @@ http:
 
 mail:
     smtp: true
-    host: mailcatcher
+    host: maildev
     port: 1025
 
 nextras.dbal:
