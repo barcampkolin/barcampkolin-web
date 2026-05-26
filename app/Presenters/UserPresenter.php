@@ -18,6 +18,7 @@ use App\Orm\Talk\Talk;
 use Nette\Application\UI\Form;
 use Nette\Http\FileUpload;
 use Nette\Http\IResponse;
+use Nette\Security\SimpleIdentity;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 use Tracy\ILogger;
@@ -209,7 +210,9 @@ class UserPresenter extends BasePresenter
         $user->pictureUrl = $url;
         $conferee->pictureUrl = $url;
         $conferee->pictureOriginalUrl = $originalUrl;
-        $this->getUser()->getIdentity()->pictureUrl = $url;
+        /** @var SimpleIdentity $identity */
+        $identity = $this->getUser()->getIdentity();
+        $identity->pictureUrl = $url;
 
         $this->userManager->save($user);
 

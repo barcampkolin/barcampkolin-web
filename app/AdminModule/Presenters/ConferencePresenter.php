@@ -572,7 +572,9 @@ class ConferencePresenter extends BasePresenter
         $this->talkManager->removeProgram($program);
 
         if ($this->isAjax()) {
-            $this['programDatagrid']->reload();
+            /** @var DataGrid $grid */
+            $grid = $this['programDatagrid'];
+            $grid->reload();
         } else {
             $this->redirect('this');
         }

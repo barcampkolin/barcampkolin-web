@@ -48,6 +48,7 @@ class ConferencePresenter extends BasePresenter
         }
 
         $filtered = [];
+        /** @var Talk $talk */
         foreach ($talks as $talk) {
             if ($talk->conferee === null) {
                 continue;

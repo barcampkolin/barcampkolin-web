@@ -4,9 +4,6 @@ namespace App\Model;
 
 use Nette\SmartObject;
 
-/**
- * @property-read $sets
- */
 class EnumeratorManager
 {
     use SmartObject;

@@ -3,6 +3,7 @@
 use Nette\Bootstrap\Configurator;
 use Redbitcz\DebugMode;
 use Tracy\Debugger;
+use Tracy\Logger;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -15,7 +16,9 @@ $debugModeDetector = new DebugMode\Detector(DebugMode\Detector::MODE_FULL, $debu
 $configurator->setDebugMode($debugModeDetector->isDebugMode());
 
 $configurator->enableTracy(__DIR__ . '/../log', 'pan@jakubboucek.cz');
-Debugger::getLogger()->emailSnooze = '1 hour';
+/** @var Logger $tracyLogger */
+$tracyLogger = Debugger::getLogger();
+$tracyLogger->emailSnooze = '1 hour';
 
 $configurator->setTimeZone('Europe/Prague');
 $configurator->setTempDirectory($tempDir);
