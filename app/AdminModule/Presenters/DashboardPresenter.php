@@ -7,6 +7,7 @@ use App\Model\ConfigManager;
 use App\Model\EnumeratorManager;
 use App\Model\EventInfoProvider as Event;
 use App\Model\ScheduleManager;
+use DateTimeInterface;
 use Nette\Application\Request;
 use Nette\Application\UI\Form;
 use Nette\Http\IResponse;
@@ -327,8 +328,8 @@ class DashboardPresenter extends BasePresenter
     }
 
 
-    private function dateToHtml5(string $date): string
+    private function dateToHtml5(string|DateTimeInterface $date): string
     {
-        return new DateTime($date)->format('Y-m-d\TH:i:s');
+        return DateTime::from($date)->format('Y-m-d\TH:i:s');
     }
 }

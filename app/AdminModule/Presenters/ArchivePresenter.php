@@ -100,7 +100,7 @@ class ArchivePresenter extends BasePresenter
 
     private function dateToHtml5(string|DateTimeInterface $date): string
     {
-        return new DateTime($date)->format('Y-m-d\TH:i:s');
+        return DateTime::from($date)->format('Y-m-d\TH:i:s');
     }
 
 
