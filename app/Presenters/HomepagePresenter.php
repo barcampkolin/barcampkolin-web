@@ -16,6 +16,7 @@ use App\Components\SignupButtons\SignupButtonsFactory;
 use App\Components\SpeakerList\ISpeakerListControlFactory;
 use App\Components\SpeakerList\SpeakerListControl;
 use App\Model\OrgListModel;
+use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
 use Nette\Utils\Html;
 
 class HomepagePresenter extends BasePresenter
@@ -42,6 +43,7 @@ class HomepagePresenter extends BasePresenter
 
     public function renderContact():void
     {
+        /** @var LatteTemplate $template */
         $template = $this->template;
 
         $template->addFilter('formatPhoneLink', function (string $value): \Nette\Utils\Html  {

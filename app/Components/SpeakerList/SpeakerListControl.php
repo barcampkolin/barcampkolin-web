@@ -7,6 +7,7 @@ use App\Model\GravatarImageProvider;
 use App\Model\TalkManager;
 use App\Orm\Talk\Talk;
 use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
 
 class SpeakerListControl extends Control
 {
@@ -30,10 +31,12 @@ class SpeakerListControl extends Control
         $talk = new Talk();
         $talk->program->countStored();
 
-        $this->template->setFile(__DIR__ . '/SpeakerList.latte');
-        $this->template->talks = $talks;
-        $this->template->isProgram = $this->eventInfoProvider->getFeatures()->program;
-        $this->template->addFunction('gravatarize', $this->gravatarImageProvider->gravatarize(...));
-        $this->template->render();
+        /** @var LatteTemplate $template */
+        $template = $this->template;
+        $template->setFile(__DIR__ . '/SpeakerList.latte');
+        $template->talks = $talks;
+        $template->isProgram = $this->eventInfoProvider->getFeatures()->program;
+        $template->addFunction('gravatarize', $this->gravatarImageProvider->gravatarize(...));
+        $template->render();
     }
 }

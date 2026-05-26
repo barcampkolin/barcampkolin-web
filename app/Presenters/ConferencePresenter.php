@@ -12,6 +12,7 @@ use App\Orm\Talk\Talk;
 use App\Orm\Talk\TalkRepository;
 use DateTimeImmutable;
 use DateTimeZone;
+use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
 use Nette\Utils\Json;
 use Nextras\Orm\Collection\ICollection;
 
@@ -170,8 +171,10 @@ class ConferencePresenter extends BasePresenter
 
         $this->template->votes = $votes;
 
-        $this->template->addFilter('embedizeYouTube', $this->embedizeYouTube(...));
-        $this->template->addFilter('campainizeYouTube', $this->campainizeYouTube(...));
+        /** @var LatteTemplate $template */
+        $template = $this->template;
+        $template->addFilter('embedizeYouTube', $this->embedizeYouTube(...));
+        $template->addFilter('campainizeYouTube', $this->campainizeYouTube(...));
     }
 
     public function renderTvProgram(?int $roomId = null, ?int $offset = 20, ?string $now = null): void

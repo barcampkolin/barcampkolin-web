@@ -5,6 +5,7 @@ namespace App\Components\Schedule;
 use App\Model\EventInfoProvider;
 use App\Model\ScheduleManager;
 use Nette\Application\UI\Control;
+use Nette\Bridges\ApplicationLatte\Template as LatteTemplate;
 
 class ScheduleControl extends Control
 {
@@ -21,6 +22,7 @@ class ScheduleControl extends Control
         $features = $this->infoProvider->getFeatures();
         $steps = $this->scheduleManager->getSteps(false, false);
 
+        /** @var LatteTemplate $template */
         $template = $this->template;
         $template->setFile(__DIR__ . '/Schedule.latte');
         $template->addFilter(
