@@ -86,7 +86,7 @@ class MailPresenter extends BasePresenter
     }
 
 
-    public function renderView(int $id): never
+    public function renderView(string $id): never
     {
         $this->forward('preview', ['id' => $id]); //temporary
     }
